@@ -28,7 +28,7 @@ class Comment(models.Model):
   user                = models.ForeignKey(User, on_delete=models.DO_NOTHING)
 
   def __str__(self):
-    return f'{ self.user.get_full_name() if self.user.get_full_name() else self.user.username } { _('on') } {self.location.name}'
+    return f"{ self.user.get_full_name() if self.user.get_full_name() else self.user.username } { _('on') } {self.location.name}"
 
   def get_absolute_url(self):
     return reverse_lazy('location:location',  kwargs={'slug': self.location.slug }) + '#comments'

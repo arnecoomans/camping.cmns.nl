@@ -1,0 +1,1 @@
+{% if active_filters.query.items|length > 0 %}?{% for param, values in active_filters.query.items %}{{param}}={% for value in values %}{% if value != removedword %}{{ value }}{% if not forloop.last %},{% endif %}{% endif %}{% endfor %}{% if not forloop.last %}&{% endif %}{% endfor%}{% endif %}

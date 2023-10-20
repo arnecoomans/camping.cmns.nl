@@ -1,0 +1,11 @@
+{% load i18n %}
+<div class="message card">
+  <h1>{% if scope %}"{% translate scope|capfirst %}"{% else %}{% translate 'this feature'|capfirst %}{% endif %} {% translate 'is only available for logged in users' %}.</h1>
+  <p>
+    {% translate 'some features are only available for registerd users'|capfirst %}.
+    {% translate 'register to be able to add your own favorite locations, leave comments and manage your own lists'|capfirst %}.
+  </p>
+</div>
+<div class="login card">
+  {% include 'registration/snippet_login.html' %}
+</div>

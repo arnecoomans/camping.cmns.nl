@@ -1,0 +1,15 @@
+# Python
+pip >= 23.2.1
+
+# Django
+Django >= 4.2.4
+Pillow >= 10.0.0
+gunicorn >= 21.2.0
+
+# Location Services
+geopy >= 2.3.0
+django-phonenumber-field >= 7.1.0
+googlemaps >= 4.10.0
+
+# Markdown
+Markdown >= 3.4.4

@@ -1,0 +1,17 @@
+{% load i18n %}
+{% if forloop.first %}<div class="row">{% endif %}
+<div class="col location flash card">
+  <h2><a href="{% if location.isActivity %}{% url 'location:activity' location.slug %}{% else %}{% url 'location:location' location.slug %}{% endif %}">{{ location|title }}</a></h2>
+  <span class="descriptor">
+    {% if location.chain %}{{ location.chain }}{% endif %}
+    {% if location.category %}{{ location.category.name }}{% endif %}
+    {% if location.isActivity %}{% translate 'activity' %}{% endif %}
+    {% if location.location %}in {{ location.location }}{% endif %}
+    <span meta>{% if user.is_authenticated %}{% translate 'viewable by' %} {% if location.status == 'p' %}{% translate 'everyone' %}{% elif location.status == 'c' %}{% translate 'the community' %}{% elif location.status == '-' %}{% translate 'just me' %}{% else %}admins{% endif %}.{% endif %}</span>
+  </span>
+</div>
+{% if forloop.counter|divisibleby:2 %}</div><div class="row">{% endif %}
+{% if forloop.last %}
+  {% if not forloop.counter|divisibleby:2 %}<div class="col"><!-- empty block --></div>{% endif %}
+  </div>
+{% endif %}

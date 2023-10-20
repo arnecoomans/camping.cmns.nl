@@ -1,0 +1,34 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% load static %}
+{% block content %}
+
+<div class="comment list card">
+  <h1>{% translate 'lists'|title %}</h1>
+  <table>
+    <thead>
+      <tr>
+        <th><a href="{% url 'location:lists' %}">{% translate 'list'|capfirst %}</a></th>
+        <th><a href="{% url 'location:lists' %}?order_by=author">{% translate 'author'|capfirst %}</a></th>
+        <th><a href="{% url 'location:lists' %}?order_by=visibility">{% translate 'seen by'|capfirst %}</a></th>
+        <th>{% translate 'items'|capfirst %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for list in list_list %}
+        <tr>
+          <td><a href="{% url 'location:list' list.slug %}" {% if list.name|length >= 48 %}title="{{ list.name }}"{% endif %}>{{ list.name|truncatechars:48|title }}</a></td>
+          <td>{{ list.user.get_full_name|default:list.user.username }}</td>
+          <td>{% translate list.get_visibility_display|capfirst %}</td>
+          <td>{{ list.locations.all.count }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if perms.location.add_list %}
+    <div class="spacer">&nbsp;</div>
+    <a class="btn btn-outline-primary" href="{% url 'location:AddList' %}" role="button">{% translate 'add list'|capfirst %}</a>
+  {% endif %}
+</div>
+
+{% endblock %}

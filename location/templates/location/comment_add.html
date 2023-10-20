@@ -1,0 +1,24 @@
+{% load i18n %}
+<div class="addcomment">
+  <h2>Add comment</h2>
+  <form method="post" action="{% url 'location:AddComment' %}">
+    {% csrf_token %}
+    <input type="hidden" name="location" value="{{ location.id }}">
+    <div class="row">
+      <div class="col">
+        <textarea name="content" class="form-control" placeholder="{% translate 'add your comment'|capfirst %}" name="content"></textarea>
+      </div>
+      <div class="col form-floating">
+        <select name="visibility" id="comment-visibility" class="form-select" aria-label="{% translate 'select comment visibility'|capfirst %}">
+          <option value="p">{% translate 'private'|capfirst %}</option>
+          <option value="f">{% translate 'family'|capfirst %}</option>
+          <option value="c">{% translate 'community'|capfirst %}</option>
+          <option value="a" selected>{% translate 'public'|capfirst %}</option>
+        </select>
+        <label for="comment-visibility">{% translate 'select comment visibility'|capfirst %}</label>
+        <input class="btn btn-primary" type="submit" value="{% translate 'share comment'|title %}">
+      </div>
+    </div>
+    
+    
+</div>

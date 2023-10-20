@@ -1,0 +1,52 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% load static %}
+{% block content %}
+  {% if user.is_authenticated %}
+    <div class="tag list card">
+      <h1>{% translate 'tags'|title %}</h1>
+      <table>
+        <thead>
+          <tr>
+            <th colspan="2">{% translate 'tag'|capfirst %}</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for tag in tag_list %}
+            {% if tag.children.all.count == 0 %}
+              {% ifchanged tag.parent %}
+                {% if tag.parent is not None %}
+                  <tr>
+                    <td colspan="4"><strong>{{ tag.parent|title }}</strong></td>
+                  </tr>
+                  {% if tag.parent.locations.all.count > 0 %}
+                    <tr>
+                      <td></td>
+                      <td>{% include 'snippets/tag.html' with tag=tag.parent%}</td>
+                      <td>{% if tag.parent.getLocations|length > 0 %}<a href="{% url 'location:locations' %}?tag={{ tag.parent.slug }}">{{ tag.parent.getLocations|length }} {% blocktranslate count counter=tag.parent.getLocations|length %}location{% plural %}locations{% endblocktranslate %}{% endif %}</td>
+                      <td>{% if tag.parent.getActivities|length > 0 %}<a href="{% url 'location:activities' %}?tag={{ tag.parent.slug }}">{{ tag.parent.getActivities|length }} {% blocktranslate count counter=tag.parent.getActivities|length %}activity{% plural %}activities{% endblocktranslate %}{% endif %}</td>
+                    </tr>
+                  {% endif %}
+                {% endif %}
+              {% endifchanged %}
+              <tr>
+                <td></td>
+                <td>{% include 'snippets/tag.html' %}</td>
+                <td>{% if tag.getLocations|length > 0 %}<a href="{% url 'location:locations' %}?tag={{ tag.slug }}">{{ tag.getLocations|length }} {% blocktranslate count counter=tag.getLocations|length %}location{% plural %}locations{% endblocktranslate %}{% endif %}</td>
+                <td>{% if tag.getActivities|length > 0 %}<a href="{% url 'location:activities' %}?tag={{ tag.slug }}">{{ tag.getActivities|length }} {% blocktranslate count counter=tag.getActivities|length %}activity{% plural %}activities{% endblocktranslate %}{% endif %}</td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+      {% if perms.location.add_tag %}
+        <div class="spacer">&nbsp;</div>
+        <a class="btn btn-outline-primary" href="{% url 'location:AddTag' %}" role="button">{% translate 'add tag'|capfirst %}</a>
+      {% endif %}
+    </div>
+  {% else %}
+    {% include 'snippets/login_or_register.html' %}
+  {% endif %}
+{% endblock %}

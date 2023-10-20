@@ -1,0 +1,54 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% block content %}
+  {% if user.is_authenticated %}
+    <div class="edit comment card">
+      {% if comment %}
+        <h1>{% translate 'comment by'|capfirst %} {{ comment.user.get_full_name|default:comment.user.username }} {% translate 'on' %} <a href="{% url 'location:location' comment.location.slug %}#comments">{{ comment.location }}</a></h1>
+      {% else %}
+        <h1>{% translate 'add comment'|capfirst %}</h1>
+      {% endif %}
+      <form method="post" action="{% if comment %}{% url 'location:EditComment' comment.id%}{% endif %}">
+        {% csrf_token %}
+        <!-- Location -->
+        {% if user.is_superuser  %}
+          <div class="col form-floating">
+            <select name="location" id="comment-location" class="form-select" aria-label="{% translate 'select location'|capfirst %}">
+              {% for location in form.location %}
+                {{ location }}
+              {% endfor %}
+            </select>
+            <label for="comment-location">{% translate 'select comment location'|capfirst %}</label>
+          </div>
+        {% else %}
+          {{ comment.location }}<br>
+        {% endif %}
+        <!-- Visibility -->
+        {% if user.is_superuser or user == comment.user %}
+          <div class="col form-floating">
+            <select name="visibility" id="comment-visibility" class="form-select" aria-label="{% translate 'select comment visibility'|capfirst %}">
+              <option value="p" {% if comment.visibility == 'p' %}selected{% endif %}>{% translate 'private'|capfirst %}</option>
+              <option value="f" {% if comment.visibility == 'f' %}selected{% endif %}>{% translate 'family'|capfirst %}</option>
+              <option value="c" {% if comment.visibility == 'c' %}selected{% endif %}>{% translate 'community'|capfirst %}</option>
+              <option value="a" {% if comment.visibility == 'a' %}selected{% endif %}>{% translate 'public'|capfirst %}</option>
+            </select>
+            <!-- Content -->
+            <label for="comment-visibility">{% translate 'select comment visibility'|capfirst %}</label>
+          </div>
+        {% else %}
+          {{ comment.get_visibility_display }}<br>
+        {% endif %}
+        {% if user.is_superuser or user == comment.user %}
+          <textarea name="content" class="form-control" rows="8">{{ comment.content }}</textarea>
+        {% else %}
+          {{ comment.content }}<br>
+        {% endif %}
+        <input type="submit" value="{% translate 'submit'|capfirst %}" class="btn btn-success btn-lg {% if not user.is_superuser and user != comment.user %}disabled{% endif %}">
+        {% if comment %}<a href="{% url 'location:location' comment.location.slug %}#comments" class="btn btn-secondary btn-lg" role="button" aria-disabled="true">{% translate 'cancel'|capfirst %}</a>{% endif %}
+
+      </form>
+    </div>
+  {% else %}
+    {% include 'snippets/login_or_register.html' %}
+  {% endif %}
+{% endblock %}

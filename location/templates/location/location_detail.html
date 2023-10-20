@@ -1,0 +1,190 @@
+{% extends 'index.html' %}
+{% load i18n %}\
+{% load static %}
+{% block content %}
+  <div class="{{ location.getCategory }} card">
+    <!-- Header Line -->
+    <h1>{{ location.name }}</h1> 
+    <span class="locator">
+      {% if location.chain %}
+        {% include 'snippets/chain.html' with chain=location.chain %}
+      {% endif %}
+      <a href="{% if location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}?category={{ location.category.slug }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate location.getPCategory|capfirst %} {% translate 'marked' %} {{ location.category.name|title }}">{{ location.category.name|title }}</a> 
+      {% if location.location %}
+        in
+        <a href="{% if location.isActivity %}{% url 'location:ListLActivitiesByDepartment' location.location.parent.parent.slug location.location.parent.slug location.location.slug %}{% else %}{% url 'location:ListLocationsByDepartment' location.location.parent.parent.slug location.location.parent.slug location.location.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location }}">{{ location.location.name|title }}</a>,
+        <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByRegion' location.location.parent.parent.slug location.location.parent.slug %}{% else %}{% url 'location:ListLocationsByRegion' location.location.parent.parent.slug location.location.parent.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.parent }}">{{ location.location.parent.name|title }}</a>,
+        <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByCountry' location.location.parent.parent.slug %}{% else %}{% url 'location:ListLocationsByCountry' location.location.parent.parent.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.parent.parent.name }}">{{ location.location.parent.parent.name|title }}</a>.
+      {% endif %}
+      <!-- Action List -->
+      {% if user.is_authenticated %}
+        {% translate 'viewable by'|capfirst %} {{ location.get_visibility_display }}
+        <ul class="action list">
+          {% if location in user.profile.favorite.all %}
+            <li><a href="{% url 'location:ToggleFavorite' location.slug %}"><img src="{% static 'bootstrap-icons/balloon-heart-fill.svg' %}" height="30px"></a></li>
+          {% else %}
+            <li><a href="{% url 'location:ToggleFavorite' location.slug %}"><img src="{% static 'bootstrap-icons/balloon-heart.svg' %}" height="30px"></a></li>
+          {% endif %}
+          {% if perms.location.edit_location and location.user == user or location.visibility == 'p' or location.visibility == 'c' %}
+            <li><a href="{% if location.isActivity %}{% url 'location:EditActivity' location.slug %}{% else %}{% url 'location:EditLocation' location.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit information of'|capfirst %} {{ location.name }}"><img src="{% static 'bootstrap-icons/pencil.svg' %}"></a></li>
+          {% endif %}
+          {% if user.is_superuser %}
+            <li><a href="/admin/location/location/{{ location.id }}/change/" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit information of'|capfirst %} {{ location.name }} {% translate 'in admin' %}"><img src="{% static 'bootstrap-icons/pencil-square.svg' %}"></a></li>
+          {% endif %}
+        </ul>
+      {% endif %}
+    </span>
+
+    <!-- Verify User Permissions -->
+    {% if location.visibility == 'q' and location.user != user %}
+      {% include 'snippets/private.html' %}
+    {% elif location.visibility == 'f' and user not in location.user.profile.family.all %}
+      {% include 'snippets/family.html' %}
+    {% else %}
+
+    {% if location.description %}
+        <div class="spacer"></div>
+        <div class="object description">{{ location.description|safe }}</div>  
+      {% endif %}
+
+      <div class="spacer"></div>
+      
+      <!-- Location Address Details -->
+      <dl>
+        <dt>{% translate 'address'|title %}:</dt>
+          <dd>{{ location.address|default:'-' }}</dd>
+        <dt>{% translate 'website'|title %}:</dt>
+          <dd><a href="{{ location.website }}" target="_blank">{{ location.getWebsiteHostname }}</a></dd>
+        {% if user.is_authenticated %}
+          {% if  location.owners_names %}
+            <dt>{% translate 'owners names'|title %}:</dt>
+              <dd>{{ location.owners_names }}</dd>
+          {% endif %}
+          {% if location.phone %}
+            <dt>{% translate 'phone'|title %}:</dt>
+              <dd>{{ location.phone|default:'-' }}</dd>
+          {% endif %}
+          {% if location.home_of.all.count > 0 %}
+            <dt>{% translate 'home of'|capfirst %}</dt>
+              <dd>{% for profile in location.home_of.all %}{{ profile.user.get_full_name|default:profile.user.username }}{% if not forloop.last %}, {% endif %}{% endfor %}</dd>
+          {% endif %}
+        {% endif %}
+      </dl>
+
+      <!-- map -->
+      {% if location.coord_lat %}
+        <h3>{{ location.name }} {% translate 'on the map'|title %}:</h3>
+        <div id="map"></div>
+        <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap&v=weekly" defer></script>
+        <ul class="action list">
+          <li><a href="https://maps.google.com/maps?q={{ location.name|urlencode }}+{{ location.address|urlencode }}" rel="nofollow" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ location }} {% translate 'on google maps' %}"><img src="{% static 'bootstrap-icons/globe.svg' %}"></a></li>
+          <li><a href="https://www.google.com/maps/dir/{{ user.profile.get_home.address|urlencode }}/{{ location.address|urlencode }}/" rel="nofollow" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'navigate to from home'|capfirst %}"><img src="{% static 'bootstrap-icons/sign-turn-right.svg' %}"> to</a></li>
+          <li><a href="https://www.google.com/maps/dir/{{ location.address|urlencode }}/" rel="nofollow" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'navigate from'|capfirst %}"><img src="{% static 'bootstrap-icons/sign-turn-right.svg' %}"> from</a></li>
+        </ul>
+      {% endif %}
+    </div>
+
+    <!-- Categorisation and Tags -->
+    <div class="category tag card">
+      <h2>{% translate 'category'|capfirst %}</h2>
+      <dl>
+        <dt>{% translate 'category'|title %}:</dt>
+          <dd><a href="{% url 'location:locations' %}?category={{ location.category.slug }}">{{ location.category.name|title }}</a>{% if location.additional_category.all.count > 0 and user.is_authenticated %}, {% for category in location.additional_category.all %}<a href="{% url 'location:locations' %}?category={{ category.slug }}">{{ category|title }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}</dd>
+        {% if location.chain %}
+          <dt>{% translate 'chain'|title %}:</dt>
+            <dd>{% include 'snippets/chain.html' with chain=location.chain %}</dd>
+        {% endif %}
+        {% if location.tags.all.count > 0 and user.is_authenticated %}
+          <dt>{% translate 'tags'|title %}:</dt>
+            <dd class="tag-list">
+              {% for tag in tags %}
+                {% include 'snippets/tag.html' %}{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            </dd>
+        {% endif %}
+        {% if location.link.all.count > 0 %}
+          {% for link in location.link.all %}          
+            <dt>{% if forloop.first %}{% if location.link.all.count == 1 %}{% translate 'link' %}{% else %}{% translate 'links' %}{% endif %}:{% endif %}</dt>
+              <dd><a href="{{ link.url }}" target="_blank">{{ link.hostname }}</a></dd>
+          {% endfor %}
+
+        {% endif %}
+        
+      <!-- Lists -->
+      {% if lists.count > 0 %}
+        {% comment %} <dl> {% endcomment %}
+        {% for list in lists %}
+          <dt>{% if forloop.first %}{% translate 'lists'|capfirst %}{% else %}&nbsp;{% endif %}</dt>
+            <dd><a href="{% url 'location:list' list.list.slug %}">{{ list.list.name }}</a> {% translate 'by' %} {{ list.list.user.get_full_name|default:list.list.user.username }}: ({{ list.list.get_visibility_display }}, {{ list.list.locations.all.count }} location(s))</dd>
+        {% endfor %}
+      {% endif %}
+      {% if perms.location.add_listlocation %}
+        <dt>{% if lists.count == 0 %}{% translate 'lists'|capfirst %}{% else %}&nbsp;{% endif %}<dt>
+          <dd>
+            {%if  available_lists.count == 0 %}
+            <a href="{% url 'location:AddListWithLocation' location.slug %}">{% translate 'create new list with'|capfirst %} {{ location.name|title }}</a>
+            {% else %}
+              <form method="get" action="{% url 'location:LocationAddList' location.slug %}">
+                <select name="list" class="form-control form-control-sm" style="max-width: 40%;">
+                  <option selected>--------</option>
+                  <option value="create_new_list">{% translate 'create new list'|capfirst %}</option>
+                  {% for list in available_lists %}
+                    {% if list not in lists %}
+                      <option value="{{ list.slug }}">{{ list.name|truncatechars:64|title }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </dd>
+            <dt>&nbsp;</dt>
+              <dd>
+                <input type="submit" role="button" class="btn btn-outline-primary" value="{% translate 'add to list'|capfirst %}" style="max-width: 10%;">
+              </form>
+            {% endif %}
+          </dd>
+      {% endif %}
+    </dl>
+      <!-- Add Location To List -->
+      
+        
+      
+
+    </div>
+
+    <!-- Comments card -->
+    <div class="comments card">
+      <h2>{% translate 'comments'|capfirst %} ({{ comments.all.count }})</h2>
+      {% if perms.location.add_comment %}
+        {% include 'location/comment_add.html' %}
+      {% else %}
+        <div class="register promo">
+          <p><a href="{% url 'login' %}?next={{ request.get_full_path }}">{% translate 'sign in'|capfirst %}</a> {% translate 'or' %} <a href="#">{% translate 'register' %}</a> {% translate 'to comment' %}{% if could_have_comments %} {% translate 'or see comments shared with the community' %}{% endif %}.</p>
+        </div>
+      {% endif %}
+      {% for comment in comments %}
+        {% include 'snippets/comment.html' %}
+      {% endfor %}
+
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block scriptheader %}
+<script>
+  // Initialize and add the map
+  function initMap() {
+    // The location of {{ location.name }}
+    const pin = { lat: {{ location.coord_lat }}, lng: {{ location.coord_lng }} };
+    // The map, centered at {{ location.name }}
+    const map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 9,
+      center: pin,
+    });
+    // The marker, positioned at {{ location.name }}
+    const marker = new google.maps.Marker({
+      position: pin,
+      map: map,
+    });
+  }
+  window.initMap = initMap;
+</script>
+{% endblock %}

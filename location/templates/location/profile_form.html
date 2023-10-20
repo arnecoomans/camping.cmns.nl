@@ -1,0 +1,79 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% load static %}
+{% block content %}
+  <div class="list detail card">
+    <h1>{% translate 'profile of'|capfirst %} {{ profile.user.get_full_name }}:</h1>
+    <hr>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="user" value="{{ user.id }}">
+      <h3>{% translate 'your information'|capfirst %}</h3>
+      <dl>
+        <dt><label for="first_name">{% translate 'first name'|capfirst %}</label></dt>
+          <dd><input class="form-control form-control-lg" name="first_name" id="first_name" value="{{ profile.user.first_name }}"></dd>
+      </dl>
+      <dl>
+        <dt><label for="last_name">{% translate 'last name'|capfirst %}</label></dt>
+          <dd><input class="form-control form-control-lg" name="last_name" id="last_name" value="{{ profile.user.last_name }}"></dd>
+      </dl>
+      <dl>
+        <dt><label for="email">{% translate 'email'|capfirst %} ({% translate 'username'|capfirst %})</label></dt>
+          <dd><input class="form-control form-control-lg" type="email" name="email" id="email" value="{{ profile.user.email }}" disabled></dd>
+      </dl>
+
+      <div class="spacer"><hr></div>
+      <dl>
+        <dt><label for="home">{% translate 'home'|capfirst %}</dt>
+          <dd>
+            <select class="form-control" name="home" id="home">
+              <option selected>--------</option>
+              {% for home in homes.all %}
+                  <option value="{{ home.id }}" {% if home == profile.home %}selected{% endif %}>{{ home.name|title }}</option>
+              {% endfor %}
+            </select>
+          </dd>
+      </dl>
+
+      <div class="spacer"></div>
+      <dl>
+        <dt></dt>
+          <dd><input type="submit" value="{% translate 'save changes'|capfirst %}" class="btn btn-success btn-lg {% if not user.is_superuser and user != comment.user %}disabled{% endif %}"></dd>
+      </dl>
+      <div class="spacer"></div>
+      <div class="spacer"><hr></div>
+      
+      {% if profile.favorite.all.count > 0 %}
+      <dl>
+        <dt>{% translate 'favorites'|capfirst %}</dt>
+          <dd>
+            {% for location in profile.favorite.all %}
+              <span class="favorite">{% include 'snippets/location_link.html' %} <a href="{% url 'location:ToggleFavorite' location.slug %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove favorite '|capfirst %} {{ location.name }} {% translate 'from favorites' %}"></a></span>{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </dd>
+        </dl>
+      {% endif %}
+      
+      {% if profile.family.all.count > 0 %}
+        <dl>
+          <dt><label for="family">{% translate 'family members'|capfirst %}</dt>
+            <dd>
+              {% for member in profile.family.all %}
+                <span class="family member">{{ member.get_full_name|default:member.username }}<a href="{% url 'location:ToggleFamily' member.id %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove family member '|capfirst %} {{ member.get_full_name|default:member.username }}"></a></span>{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            </dd>
+        </dl>
+      {% endif %}
+      <dl>
+        <dt>{% translate 'add'|capfirst %} {% translate 'family members'|capfirst %}</dt>
+          <dd>
+            {% for member in available_family %}
+              <span class="family member"><a href="{% url 'location:ToggleFamily' member.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'add'|capfirst %} {{ member.get_full_name|default:member.username }} {% translate 'to your family' %}">{{ member.get_full_name|default:member.username }}</a></span>{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+            {% if available_family.count == 0 %}<p>{% translate 'no users available to add to your family'|capfirst %}.</p>{% endif %}
+          </dd>
+      </dl>
+      
+    </form>
+  </div>
+{% endblock %}

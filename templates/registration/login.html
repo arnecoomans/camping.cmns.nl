@@ -1,0 +1,13 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% block content %}
+  <div class="login card">
+    {% if user.is_authenticated %}
+      <div class="alert alert-danger" role="alert">
+        {% translate 'you are already logged in'|capfirst %}.
+      </div>
+    {% else %}
+      {% include 'registration/snippet_login.html' %}
+    {% endif %}
+  </div>
+{% endblock %}

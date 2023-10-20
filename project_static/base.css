@@ -1,0 +1,133 @@
+
+
+/** BODY */
+html > body {
+  background-color: var(--body-background-color);
+}
+/** GENERAL ELEMENTS */
+a { 
+  color: var(--link-color);
+  padding: 2px 4px;
+  text-decoration: none;
+  border-radius: 3px;
+}
+a:hover,
+a.tag:hover {
+  color: var(--contrast-color);
+  background-color: var(--highlight-color);
+}
+a:not(.tag):hover:has(img) {
+  background-color: inherit;
+}
+a.tag > img {
+  fill: orange;
+  color: green;
+}
+
+/** HEADER */
+header {
+  font-family: var(--font-header);
+  width: 100%;
+  min-height: 200px;
+  background: url('') no-repeat top center fixed;
+  background-size: cover;
+  background-color: var(--highlight-color);
+  margin: 0;
+  padding: 25px 75px 0 0;
+  text-align: right;
+}
+header > h1,
+header > h1 > a,
+header > h1 > a:hover,
+header > h2,
+header > h2 > a,
+header > h2 > a:hover {
+  color: var(--contrast-color);
+}
+header > h1 {
+  font-size: calc(var(--font-size) * 4);
+}
+header > h2 {
+  font-size: calc(var(--font-size) * 2);
+}
+
+/** CONTENT */
+html > body > div#content {
+  width: 1024px;
+  margin: 2em auto;
+}
+@media screen and (max-width: 840px) {
+  html > body > div#content {
+    width: 95%;
+  }
+}
+@media screen and (min-width: 845px) and (max-width: 1300px) {
+  html > body > div#content {
+    width: 840px;
+  }
+}
+
+/** CARDS */
+#content > div.card {
+  padding: 1em 1.5em 3em 1.5em;
+  margin: 1em auto;
+}
+
+div.spacer {
+  width: 100%;
+  min-height: 1em;
+  clear: both
+}
+/** TABLES */
+div.card > table {
+  margin-top: 1em;
+}
+div.card > table > thead > tr,
+div.card > table > thead > tr > th > a {
+  background-color: var(--highlight-color);
+  color: var(--contrast-color);
+}
+div.card > table > thead > tr > th,
+div.card > table > tbody > tr > td,
+div.card > table > tfoot > tr > td {
+  padding: 1em 0.75em;
+}
+div.card > table > thead > tr > th,
+div.card > table > tfoot > tr > td {
+ 
+white-space: nowrap;
+}
+div.card > table > tbody > tr:nth-child(even) {
+  background-color: rgba(0,0,0,0.1);
+}
+div.card > table > tbody > tr:hover {
+  background-color: var(--highlight-color-hover);
+}
+
+/** DEFINITION LISTS */
+div.card > dl,
+div.card > form > dl {
+  clear: both;
+}
+
+div.card > dl > dt,
+div.card > dl > dd,
+div.card > form > dl > dt,
+div.card > form > dl > dd {
+  display: inline-flexbox;
+}
+
+div.card > dl > dt,
+div.card > form > dl > dt {
+  min-width: 30%;
+  float: left;
+  clear: left;
+}
+
+.div.card > dl > dd,
+div.card > form > dl > dd {
+  width: 66%;
+  float: right;
+  clear: right;
+}
+

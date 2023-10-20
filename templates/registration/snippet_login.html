@@ -1,0 +1,19 @@
+{% load i18n %}
+<h1>{% translate 'log in'|capfirst %}</h1>
+<form method="POST" action=".">
+  {% csrf_token %}
+  <div class="form-floating mb-3">
+    <input type="email" class="form-control" name="username" id="id_username" placeholder="name@example.com" required autofocus>
+    <label for="id_username">{% translate 'username or email address'|capfirst %}*</label>
+  </div>
+  <div class="form-floating mb-3">
+    <div class="col-md">
+      <div class="form-floating mb-3">
+        <input type="password" class="form-control" name="password" id="id_password" placeholder="Password" required>
+        <label for="id_password">{% translate 'password'|capfirst %}*</label>
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-primary" type="submit">Log in</button>
+</form>
+<p class="text-center">{% translate 'ff you do not have an account'|capfirst %}, <a href="{% url 'location:register' %}">{% translate 'register here' %}</a>.</p>

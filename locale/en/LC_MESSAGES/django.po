@@ -1,0 +1,883 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-15 11:35+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: location/models/Comment.py:12 location/models/List.py:101
+#: location/models/Location.py:128
+#: location/templates/location/comment_add.html:16
+#: location/templates/location/comment_form.html:33
+msgid "public"
+msgstr ""
+
+#: location/models/Comment.py:13 location/models/List.py:102
+#: location/models/Location.py:129
+msgid "commmunity"
+msgstr ""
+
+#: location/models/Comment.py:14 location/models/List.py:103
+#: location/models/Location.py:130
+#: location/templates/location/comment_add.html:14
+#: location/templates/location/comment_form.html:31
+msgid "family"
+msgstr ""
+
+#: location/models/Comment.py:15 location/models/List.py:104
+#: location/models/Location.py:131
+#: location/templates/location/comment_add.html:13
+#: location/templates/location/comment_form.html:30
+msgid "private"
+msgstr ""
+
+#: location/models/Comment.py:21 location/models/List.py:109
+#: location/models/Location.py:136 location/models/Tag.py:24
+msgid "published"
+msgstr ""
+
+#: location/models/Comment.py:22 location/models/List.py:110
+#: location/models/Location.py:137 location/models/Tag.py:25
+msgid "revoked"
+msgstr ""
+
+#: location/models/Comment.py:23 location/models/List.py:111
+#: location/models/Location.py:138 location/models/Tag.py:26
+msgid "deleted"
+msgstr ""
+
+#: location/models/List.py:32 location/models/List.py:62
+#: location/models/List.py:85 location/models/List.py:233
+msgid "unknown"
+msgstr ""
+
+#: location/models/List.py:34 location/models/List.py:64
+msgid "under one minute"
+msgstr ""
+
+#: location/models/List.py:87 location/models/List.py:235
+msgid "under 1 km"
+msgstr ""
+
+#: location/models/List.py:96 location/models/Location.py:36
+#: location/models/Location.py:101
+msgid "Name of location as it is identified by"
+msgstr ""
+
+#: location/models/List.py:97 location/models/List.py:153
+#: location/models/Location.py:38 location/models/Location.py:107
+msgid "Markdown is supported"
+msgstr ""
+
+#: location/models/List.py:119 location/templates/location/list_detail.html:6
+#: location/templates/location/list_list.html:11
+msgid "list"
+msgstr ""
+
+#: location/models/List.py:120 location/templates/location/list_list.html:7
+#: location/templates/location/location_detail.html:104
+#: location/templates/location/location_detail.html:109
+#: location/views/List.py:17 templates/navigation.html:43
+msgid "lists"
+msgstr ""
+
+#: location/models/List.py:162
+msgid "list-location"
+msgstr ""
+
+#: location/models/List.py:163
+msgid "list-locations"
+msgstr ""
+
+#: location/models/Location.py:37 location/models/Location.py:102
+msgid "Full website address of location"
+msgstr ""
+
+#: location/models/Location.py:56
+msgid "full url of link"
+msgstr ""
+
+#: location/models/Location.py:77
+msgid "Name of category"
+msgstr ""
+
+#: location/models/Location.py:103
+msgid ""
+"Full street address of location, including as much information as possible, "
+"such as city, region, country"
+msgstr ""
+
+#: location/models/Location.py:105
+msgid "Name of owner(s), if known"
+msgstr ""
+
+#: location/models/Location.py:109
+msgid ""
+"Add links to related websites, such as blogs refering to this location or "
+"review websites"
+msgstr ""
+
+#: location/models/Location.py:118
+msgid "Meta description taken from website, if available"
+msgstr ""
+
+#: location/models/Profile.py:14
+#: location/templates/location/profile_form.html:59
+#: location/templates/location/profile_form.html:68
+msgid "family members"
+msgstr ""
+
+#: location/models/Tag.py:10
+msgid "Name of tag"
+msgstr ""
+
+#: location/templates/location/comment_add.html:9
+msgid "add your comment"
+msgstr ""
+
+#: location/templates/location/comment_add.html:12
+#: location/templates/location/comment_add.html:18
+#: location/templates/location/comment_form.html:29
+#: location/templates/location/comment_form.html:36
+msgid "select comment visibility"
+msgstr ""
+
+#: location/templates/location/comment_add.html:15
+#: location/templates/location/comment_form.html:32
+msgid "community"
+msgstr ""
+
+#: location/templates/location/comment_add.html:19
+msgid "share comment"
+msgstr ""
+
+#: location/templates/location/comment_form.html:7
+msgid "comment by"
+msgstr ""
+
+#: location/templates/location/comment_form.html:7
+#: location/templates/snippets/comment.html:9
+msgid "on"
+msgstr ""
+
+#: location/templates/location/comment_form.html:9
+msgid "add comment"
+msgstr ""
+
+#: location/templates/location/comment_form.html:16
+msgid "select location"
+msgstr ""
+
+#: location/templates/location/comment_form.html:21
+msgid "select comment location"
+msgstr ""
+
+#: location/templates/location/comment_form.html:46
+#: location/templates/location/list_form.html:28
+#: location/templates/location/tag_form.html:24
+msgid "submit"
+msgstr ""
+
+#: location/templates/location/comment_form.html:47
+#: location/templates/location/list_form.html:29
+#: location/templates/location/location_form.html:93
+#: location/templates/location/location_form.html:95
+#: location/templates/location/tag_form.html:25
+msgid "cancel"
+msgstr ""
+
+#: location/templates/location/comment_list.html:7
+#: location/templates/location/location_detail.html:137
+#: templates/navigation.html:38
+msgid "comments"
+msgstr ""
+
+#: location/templates/location/dashboard.html:6
+msgid "dashboard"
+msgstr ""
+
+#: location/templates/location/list_detail.html:7
+msgid "list by"
+msgstr ""
+
+#: location/templates/location/list_detail.html:7
+#: location/templates/location/list_form.html:18
+#: location/templates/location/location_detail.html:19
+#: location/templates/location/location_form.html:40
+#: location/templates/snippets/location_flashcard.html:10
+msgid "viewable by"
+msgstr ""
+
+#: location/templates/location/list_detail.html:7
+msgid "created"
+msgstr ""
+
+#: location/templates/location/list_detail.html:7
+msgid "last changed"
+msgstr ""
+
+#: location/templates/location/list_detail.html:13
+#: location/templates/location/list_detail.html:44
+msgid "distance from"
+msgstr ""
+
+#: location/templates/location/list_detail.html:13
+msgid "previous location"
+msgstr ""
+
+#: location/templates/location/list_detail.html:13
+msgid "distance"
+msgstr ""
+
+#: location/templates/location/list_detail.html:14
+msgid "travel time"
+msgstr ""
+
+#: location/templates/location/list_detail.html:15
+#: location/templates/location/location_list.html:16
+#: location/templates/location/tag_list.html:31
+msgid "location"
+msgid_plural "locations"
+msgstr[0] ""
+msgstr[1] ""
+
+#: location/templates/location/list_detail.html:16
+#: location/templates/location/location_list.html:15
+msgid "department"
+msgstr ""
+
+#: location/templates/location/list_detail.html:17
+msgid "nights"
+msgstr ""
+
+#: location/templates/location/list_detail.html:18
+msgid "price"
+msgstr ""
+
+#: location/templates/location/list_detail.html:26
+msgid "no locations have been added to this list"
+msgstr ""
+
+#: location/templates/location/list_detail.html:26
+msgid "by you"
+msgstr ""
+
+#: location/templates/location/list_detail.html:26
+msgid "by the list owner"
+msgstr ""
+
+#: location/templates/location/list_detail.html:30
+msgid ""
+"to add a location or activity to this list, visit the location or activity "
+"and select \"add to list\""
+msgstr ""
+
+#: location/templates/location/list_detail.html:35
+#: location/templates/location/location_detail.html:142
+msgid "sign in"
+msgstr ""
+
+#: location/templates/location/list_detail.html:35
+#: location/templates/location/location_detail.html:142
+msgid "or"
+msgstr ""
+
+#: location/templates/location/list_detail.html:35
+#: location/templates/location/location_detail.html:142
+#: templates/navigation.html:82
+#: templates/registration/user_register_form.html:6
+#: templates/registration/user_register_form.html:50
+msgid "register"
+msgstr ""
+
+#: location/templates/location/list_detail.html:35
+msgid "to manage your own lists"
+msgstr ""
+
+#: location/templates/location/list_detail.html:44
+msgid "to"
+msgstr ""
+
+#: location/templates/location/list_detail.html:44
+msgid "is"
+msgstr ""
+
+#: location/templates/location/list_detail.html:82
+#: location/templates/location/list_detail.html:85
+#: location/templates/location/location_form.html:6
+#: location/templates/snippets/comment.html:20
+#: location/templates/snippets/comment.html:23
+msgid "edit"
+msgstr ""
+
+#: location/templates/location/list_detail.html:82
+#: location/templates/location/list_detail.html:83
+msgid "my list"
+msgstr ""
+
+#: location/templates/location/list_detail.html:83
+#: location/templates/location/list_detail.html:86
+#: location/templates/snippets/comment.html:21
+#: location/templates/snippets/comment.html:24
+msgid "delete"
+msgstr ""
+
+#: location/templates/location/list_detail.html:85
+#: location/templates/location/list_detail.html:86
+msgid "this list"
+msgstr ""
+
+#: location/templates/location/list_detail.html:89
+msgid "edit my list"
+msgstr ""
+
+#: location/templates/location/list_detail.html:89
+msgid "edit this list"
+msgstr ""
+
+#: location/templates/location/list_detail.html:89
+#: location/templates/snippets/comment.html:27 templates/navigation.html:61
+#: templates/navigation.html:65
+msgid "in admin"
+msgstr ""
+
+#: location/templates/location/list_detail.html:94
+msgid "start from home"
+msgstr ""
+
+#: location/templates/location/list_detail.html:95
+msgid "end at home"
+msgstr ""
+
+#: location/templates/location/list_form.html:10
+#: location/templates/location/location_form.html:18
+#: location/templates/location/tag_form.html:10
+msgid "name"
+msgstr ""
+
+#: location/templates/location/list_form.html:14
+#: location/templates/location/location_form.html:26
+msgid "description"
+msgstr ""
+
+#: location/templates/location/list_list.html:12
+msgid "author"
+msgstr ""
+
+#: location/templates/location/list_list.html:13
+msgid "seen by"
+msgstr ""
+
+#: location/templates/location/list_list.html:14
+msgid "items"
+msgstr ""
+
+#: location/templates/location/list_list.html:30 templates/navigation.html:56
+msgid "add list"
+msgstr ""
+
+#: location/templates/location/location_detail.html:11
+msgid "marked"
+msgstr ""
+
+#: location/templates/location/location_detail.html:14
+#: location/templates/location/location_detail.html:15
+#: location/templates/location/location_detail.html:16
+msgid "see all in"
+msgstr ""
+
+#: location/templates/location/location_detail.html:27
+msgid "edit information of"
+msgstr ""
+
+#: location/templates/location/location_detail.html:41
+#: location/templates/location/location_form.html:53
+msgid "address"
+msgstr ""
+
+#: location/templates/location/location_detail.html:43
+#: location/templates/location/location_form.html:22
+msgid "website"
+msgstr ""
+
+#: location/templates/location/location_detail.html:47
+msgid "owners names"
+msgstr ""
+
+#: location/templates/location/location_detail.html:51
+#: location/templates/location/location_form.html:58
+msgid "phone"
+msgstr ""
+
+#: location/templates/location/location_detail.html:55
+msgid "home of"
+msgstr ""
+
+#: location/templates/location/location_detail.html:63
+msgid "on the map"
+msgstr ""
+
+#: location/templates/location/location_detail.html:67
+msgid "on google maps"
+msgstr ""
+
+#: location/templates/location/location_detail.html:68
+msgid "navigate to from home"
+msgstr ""
+
+#: location/templates/location/location_detail.html:69
+msgid "navigate from"
+msgstr ""
+
+#: location/templates/location/location_detail.html:76
+#: location/templates/location/location_detail.html:78
+#: location/templates/location/location_form.html:30
+msgid "category"
+msgstr ""
+
+#: location/templates/location/location_detail.html:81
+#: location/templates/location/location_form.html:66
+msgid "chain"
+msgstr ""
+
+#: location/templates/location/location_detail.html:85
+#: location/templates/location/tag_list.html:7 location/views/Tag.py:18
+#: templates/navigation.html:32
+msgid "tags"
+msgstr ""
+
+#: location/templates/location/location_detail.html:94
+msgid "link"
+msgstr ""
+
+#: location/templates/location/location_detail.html:94
+msgid "links"
+msgstr ""
+
+#: location/templates/location/location_detail.html:105
+#: location/templates/snippets/chain.html:2
+msgid "by"
+msgstr ""
+
+#: location/templates/location/location_detail.html:123
+msgid "add to list"
+msgstr ""
+
+#: location/templates/location/location_detail.html:142
+msgid "to comment"
+msgstr ""
+
+#: location/templates/location/location_detail.html:142
+msgid "or see comments shared with the community"
+msgstr ""
+
+#: location/templates/location/location_form.html:6
+#: location/templates/location/profile_form.html:68
+#: location/templates/location/profile_form.html:71
+msgid "add"
+msgstr ""
+
+#: location/templates/location/location_form.html:62
+msgid "owners"
+msgstr ""
+
+#: location/templates/location/location_form.html:77
+msgid "user"
+msgstr ""
+
+#: location/templates/location/location_form.html:91
+msgid "save changes to"
+msgstr ""
+
+#: location/templates/location/location_form.html:107
+msgid "Additional categories"
+msgstr ""
+
+#: location/templates/location/location_form.html:110
+msgid "remove category"
+msgstr ""
+
+#: location/templates/location/location_form.html:110
+#: location/templates/location/location_form.html:143
+msgid "from"
+msgstr ""
+
+#: location/templates/location/location_form.html:116
+msgid "Add additional category"
+msgstr ""
+
+#: location/templates/location/location_form.html:130
+msgid "add category"
+msgstr ""
+
+#: location/templates/location/location_form.html:140
+msgid "Tags"
+msgstr ""
+
+#: location/templates/location/location_form.html:143
+msgid "remove tag"
+msgstr ""
+
+#: location/templates/location/location_form.html:149
+msgid "Add tag"
+msgstr ""
+
+#: location/templates/location/location_form.html:163
+#: location/templates/location/tag_list.html:40 templates/navigation.html:55
+msgid "add tag"
+msgstr ""
+
+#: location/templates/location/location_form.html:166
+msgid "create new tag"
+msgstr ""
+
+#: location/templates/location/location_list.html:13
+msgid "country"
+msgstr ""
+
+#: location/templates/location/location_list.html:14
+msgid "region"
+msgstr ""
+
+#: location/templates/location/location_list.html:57
+msgid "this is marked as your home"
+msgstr ""
+
+#: location/templates/location/location_list.html:58
+msgid "this location is marked as favorite"
+msgstr ""
+
+#: location/templates/location/location_list.html:67
+#: templates/navigation.html:54
+msgid "add activity"
+msgstr ""
+
+#: location/templates/location/location_list.html:69
+#: templates/navigation.html:53
+msgid "add location"
+msgstr ""
+
+#: location/templates/location/profile_form.html:6
+msgid "profile of"
+msgstr ""
+
+#: location/templates/location/profile_form.html:11
+msgid "your information"
+msgstr ""
+
+#: location/templates/location/profile_form.html:13
+#: templates/registration/user_register_form.html:22
+msgid "first name"
+msgstr ""
+
+#: location/templates/location/profile_form.html:17
+#: templates/registration/user_register_form.html:28
+msgid "last name"
+msgstr ""
+
+#: location/templates/location/profile_form.html:21
+msgid "email"
+msgstr ""
+
+#: location/templates/location/profile_form.html:21
+msgid "username"
+msgstr ""
+
+#: location/templates/location/profile_form.html:27
+#: templates/navigation.html:15
+msgid "home"
+msgstr ""
+
+#: location/templates/location/profile_form.html:41
+msgid "save changes"
+msgstr ""
+
+#: location/templates/location/profile_form.html:48
+msgid "favorites"
+msgstr ""
+
+#: location/templates/location/profile_form.html:51
+msgid "remove favorite "
+msgstr ""
+
+#: location/templates/location/profile_form.html:51
+msgid "from favorites"
+msgstr ""
+
+#: location/templates/location/profile_form.html:62
+msgid "remove family member "
+msgstr ""
+
+#: location/templates/location/profile_form.html:71
+msgid "to your family"
+msgstr ""
+
+#: location/templates/location/profile_form.html:73
+msgid "no users available to add to your family"
+msgstr ""
+
+#: location/templates/location/tag_detail.html:6
+#: location/templates/location/tag_list.html:11
+msgid "tag"
+msgstr ""
+
+#: location/templates/location/tag_form.html:14
+msgid "parent"
+msgstr ""
+
+#: location/templates/location/tag_form.html:16
+msgid "select parent"
+msgstr ""
+
+#: location/templates/location/tag_list.html:32
+#: location/templates/snippets/location_flashcard.html:8
+msgid "activity"
+msgid_plural "activities"
+msgstr[0] ""
+msgstr[1] ""
+
+#: location/templates/snippets/comment.html:5
+msgctxt "how long ago"
+msgid "ago"
+msgstr ""
+
+#: location/templates/snippets/comment.html:6
+msgid "see all comments by"
+msgstr ""
+
+#: location/templates/snippets/comment.html:7
+msgid "commented"
+msgstr ""
+
+#: location/templates/snippets/comment.html:8
+msgctxt "who is object directed at"
+msgid "to"
+msgstr ""
+
+#: location/templates/snippets/comment.html:8
+msgid "comment can be viewed by"
+msgstr ""
+
+#: location/templates/snippets/comment.html:8
+#: location/templates/snippets/location_flashcard.html:10
+msgid "everyone"
+msgstr ""
+
+#: location/templates/snippets/comment.html:8
+msgid "registered and logged in users"
+msgstr ""
+
+#: location/templates/snippets/comment.html:8
+msgid "logged in users marked as family in commenters profile"
+msgstr ""
+
+#: location/templates/snippets/comment.html:8
+msgid "only you"
+msgstr ""
+
+#: location/templates/snippets/comment.html:20
+#: location/templates/snippets/comment.html:21
+msgid "my comment"
+msgstr ""
+
+#: location/templates/snippets/comment.html:23
+#: location/templates/snippets/comment.html:24
+msgid "this comment"
+msgstr ""
+
+#: location/templates/snippets/comment.html:27
+msgid "edit my comment"
+msgstr ""
+
+#: location/templates/snippets/comment.html:27
+msgid "edit this comment"
+msgstr ""
+
+#: location/templates/snippets/location_flashcard.html:10
+msgid "the community"
+msgstr ""
+
+#: location/templates/snippets/location_flashcard.html:10
+msgid "just me"
+msgstr ""
+
+#: location/templates/snippets/location_list_filters.html:5
+msgid "showing"
+msgstr ""
+
+#: location/templates/snippets/location_list_filters.html:7
+msgid "with filters"
+msgstr ""
+
+#: location/templates/snippets/location_list_filters.html:9
+#: location/templates/snippets/location_list_filters.html:12
+#: location/templates/snippets/location_list_filters.html:15
+#: location/templates/snippets/location_list_filters.html:23
+msgid "remove"
+msgstr ""
+
+#: location/templates/snippets/location_list_filters.html:9
+#: location/templates/snippets/location_list_filters.html:12
+#: location/templates/snippets/location_list_filters.html:15
+#: location/templates/snippets/location_list_filters.html:23
+msgid "from filter"
+msgstr ""
+
+#: location/templates/snippets/location_list_filters.html:31
+msgid "filter by"
+msgstr ""
+
+#: location/templates/snippets/login_or_register.html:3
+msgid "this feature"
+msgstr ""
+
+#: location/templates/snippets/login_or_register.html:3
+msgid "is only available for logged in users"
+msgstr ""
+
+#: location/templates/snippets/login_or_register.html:5
+msgid "some features are only available for registerd users"
+msgstr ""
+
+#: location/templates/snippets/login_or_register.html:6
+msgid ""
+"register to be able to add your own favorite locations, leave comments and "
+"manage your own lists"
+msgstr ""
+
+#: location/templates/snippets/tag.html:1
+msgid "see details of tag"
+msgstr ""
+
+#: location/views/Location.py:115 location/views/Location.py:319
+#: templates/navigation.html:21
+msgid "locations"
+msgstr ""
+
+#: location/views/Location.py:295 templates/navigation.html:26
+msgid "activities"
+msgstr ""
+
+#: location/views/Profile.py:147
+msgid ""
+"Succesfully registered your account. Please log in with your e-mail address "
+"and chosen password. "
+msgstr ""
+
+#: templates/navigation.html:60 templates/navigation.html:61
+msgid "edit location"
+msgstr ""
+
+#: templates/navigation.html:64 templates/navigation.html:65
+msgid "edit activity"
+msgstr ""
+
+#: templates/navigation.html:70
+msgid "admin"
+msgstr ""
+
+#: templates/navigation.html:73
+msgid "my profile"
+msgstr ""
+
+#: templates/navigation.html:74
+msgid "log out"
+msgstr ""
+
+#: templates/navigation.html:79 templates/registration/snippet_login.html:2
+msgid "log in"
+msgstr ""
+
+#: templates/registration/login.html:7
+#: templates/registration/user_register_form.html:9
+msgid "you are already logged in"
+msgstr ""
+
+#: templates/registration/snippet_login.html:7
+msgid "username or email address"
+msgstr ""
+
+#: templates/registration/snippet_login.html:13
+#: templates/registration/user_register_form.html:37
+msgid "password"
+msgstr ""
+
+#: templates/registration/snippet_login.html:19
+msgid "ff you do not have an account"
+msgstr ""
+
+#: templates/registration/snippet_login.html:19
+msgid "register here"
+msgstr ""
+
+#: templates/registration/user_register_form.html:9
+msgid "you already have an account"
+msgstr ""
+
+#: templates/registration/user_register_form.html:9
+msgid "and"
+msgstr ""
+
+#: templates/registration/user_register_form.html:9
+msgid "you cannot register"
+msgstr ""
+
+#: templates/registration/user_register_form.html:16
+msgid "email address"
+msgstr ""
+
+#: templates/registration/user_register_form.html:41
+msgid "your password must meet the following requirements"
+msgstr ""
+
+#: templates/registration/user_register_form.html:43
+#: templates/registration/user_register_form.html:44
+#: templates/registration/user_register_form.html:45
+#: templates/registration/user_register_form.html:46
+msgid "your password"
+msgstr ""
+
+#: templates/registration/user_register_form.html:43
+msgid "may not look like your personal details"
+msgstr ""
+
+#: templates/registration/user_register_form.html:44
+msgid "has 8 characters or more"
+msgstr ""
+
+#: templates/registration/user_register_form.html:45
+msgid "is not a widely used password"
+msgstr ""
+
+#: templates/registration/user_register_form.html:46
+msgid "may not only contain numbers"
+msgstr ""
+
+#: templates/registration/user_register_form.html:52
+msgid "If you already have an account"
+msgstr ""
+
+#: templates/registration/user_register_form.html:52
+msgid "login here"
+msgstr ""
+
+#: vknt/settings.py:121
+msgid "English"
+msgstr ""
+
+#: vknt/settings.py:122
+msgid "Dutch"
+msgstr ""

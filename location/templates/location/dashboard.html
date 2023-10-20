@@ -1,0 +1,38 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% load static %}
+{% block content %}
+  <div class="dashboard card">
+    <h1>{% translate 'dashboard'|capfirst %}</h1>
+
+    <!-- Recent Locations -->
+    <h2>Recent locations</h2>
+    {% for location in recent_locations %}
+      <li>{{ location }}
+    {% endfor %}
+
+    <!-- Comments -->
+    <h2>Recent comments</h2>
+    {% for comment in recent_comments %}
+      {% include 'snippets/comment.html' %}
+    {% endfor %}
+
+    <!-- Lists -->
+    <h2>Recent lists</h2>
+    {% for list in recent_lists %}
+      <li>{{ list }}
+    {% endfor %}
+
+    <!-- Favorites -->
+    <h2>Your favorites</h2>
+    {% for location in user.profile.favorite.all %}
+      <li>{{ location }}
+    {% endfor %}
+
+    <!-- Tags -->
+    <h2>Most Popular Tags</h2>
+      {% for tag in popular_tags %}
+        <li>{{ tag }} {{ tag.count }}
+      {% endfor %}
+  </div>
+{% endblock %}

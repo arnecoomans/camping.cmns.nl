@@ -1,0 +1,1 @@
+<a href="{% if location.category.parent.slug == 'activity' %}{% url 'location:activity' location.slug %}{% else %}{% url 'location:location' location.slug %}{% endif %}">{{ location.name }}</a></td>

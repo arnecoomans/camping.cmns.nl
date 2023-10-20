@@ -1,0 +1,32 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% block content %}
+  {% if user.is_authenticated %}
+    <div class="edit comment card">
+      <h1>{% translate 'chain'|capfirst %}</h1>
+      <form method="post" action="">
+        {% csrf_token %}
+        <dl>
+          <dt><label for="name">{% translate 'name'|capfirst %}</dt>
+          <dd><input class="form-control form-control-lg" name="name" id="name" value="{{ chain.name }}" required></dd>
+        </dl>
+        <dl>
+          <dt><label for="parent">{% translate 'parent'|capfirst %}</dt>
+            <dd>
+              <select name="parent" id="parent" class="form-select" aria-label="{% translate 'select parent'|capfirst %}">
+              {% for parent in form.parent %}
+                {{ parent }}
+              {% endfor %}
+            </select>
+            </dd>
+        </dl>
+        <div class="spacer"></div>
+        <input type="submit" value="{% translate 'submit'|capfirst %}" class="btn btn-success btn-lg {% if not user.is_superuser and user != comment.user %}disabled{% endif %}">
+        <a href="{% url 'location:tags' %}" class="btn btn-secondary btn-lg" role="button" aria-disabled="true">{% translate 'cancel'|capfirst %}</a>
+
+      </form>
+    </div>
+  {% else %}
+    {% include 'snippets/login_or_register.html' %}
+  {% endif %}
+{% endblock %}

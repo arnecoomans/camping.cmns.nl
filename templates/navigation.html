@@ -1,0 +1,95 @@
+{% load i18n %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'location:home' %}" accesskey="h">{{ app_title|truncatewords:2|title }}</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        {% comment %} <!-- Dashboard-->
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            {% url 'location:dashboard' as url %}
+            <a class="nav-link {% if request.path|lower == url|lower %}active{% endif %}" aria-current="page" href="{{ url }}">{% translate 'home'|title %}</a>
+          </li>
+        {% endif %} {% endcomment %}
+        <!-- Locations -->
+        <li class="nav-item">
+          {% url 'location:locations' as url %}
+          <a class="nav-link {% if request.path|lower == url|lower %}active{% endif %}" href="{{ url }}">{% translate 'locations'|title %}</a>
+        </li>
+        <!-- Activities -->
+        <li class="nav-item">
+          {% url 'location:activities' as url %}
+          <a class="nav-link {% if request.path|lower == url|lower %}active{% endif %}" href="{{ url }}">{% translate 'activities'|title %}</a>
+        </li>
+        <!-- Tags -->
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            {% url 'location:tags' as url %}
+            <a class="nav-link {% if request.path|lower == url|lower %}active{% endif %}" href="{{ url }}">{% translate 'tags'|title %}</a>
+          </li>
+        {% endif %}
+        <!-- Comments -->
+        <li class="nav-item">
+          {% url 'location:comments' as url %}
+          <a class="nav-link {% if request.path|lower == url|lower %}active{% endif %}" href="{{ url }}">{% translate 'comments'|title %}</a>
+        </li>
+        <!-- Lists -->
+        <li class="nav-item">
+          {% url 'location:lists' as url %}
+          <a class="nav-link {% if request.path|lower == url|lower %}active{% endif %}" href="{{ url }}">{% translate 'lists'|title %}</a>
+        </li>
+        {% if user.is_authenticated %}
+          <!-- Admin Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Tasks
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <!-- Add content -->
+              <li><a class="dropdown-item" href="{% url 'location:AddLocation' %}">{% translate 'add location'|title %}</a></li>
+              <li><a class="dropdown-item" href="{% url 'location:AddActivity' %}">{% translate 'add activity'|title %}</a></li>
+              <li><a class="dropdown-item" href="{% url 'location:AddTag' %}">{% translate 'add tag'|title %}</a></li>
+              <li><a class="dropdown-item" href="{% url 'location:AddList' %}">{% translate 'add list'|title %}</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <!-- Edit content -->
+              {% if location %}
+                <li><a class="dropdown-item" href="{% url 'location:EditLocation' location.slug %}">{% translate 'edit location'|title %}</a></li>
+                {% if user.is_superuser %}<li><a class="dropdown-item" href="/admin/location/location/{{ location.id }}/change/">{% translate 'edit location'|title %} {% translate 'in admin'|title %}</a></li>{% endif %}
+              {% endif %}
+              {% if tag %}
+                <li><a class="dropdown-item" href="{% url 'editTag' tag.slug %}">{% translate 'edit tag'|title %}</a></li>
+                {% if user.is_superuser %}<li><a class="dropdown-item" href="/admin/location/tag/{{ tag.id }}}}/change/">{% translate 'edit tag'|title %} {% translate 'in admin'|title %}</a></li>{% endif %}
+              {% endif %}
+              {% if list %}
+                <li><a class="dropdown-item" href="{% url 'location:EditList' list.slug %}">{% translate 'edit list'|title %}</a></li>
+                {% if user.is_superuser %}<li><a class="dropdown-item" href="/admin/location/list/{{ list.id }}/change/">{% translate 'edit list'|title %} {% translate 'in admin'|title %}</a></li>{% endif %}
+              {% endif %}
+              <!-- Admin tasks -->
+              {% if  user.is_superuser %}
+                <li><a class="dropdown-item" href="/admin/" tabindex="-1" {% if not user.is_authenticated %}aria-disabled="true"{% endif %}>{% translate 'admin'|title %}</a></li>
+                <li><hr class="dropdown-divider"></li>
+              {% endif %}
+              <li><a class="dropdown-item" href="{% url 'location:profile' %}">{% translate 'my profile'|title %}</a></li>
+              <li><a class="dropdown-item" href="/logout/">{% translate 'log out'|title %}</a></li>
+            </ul>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link {% if request.path|lower == url|lower %}active{% endif %}" href="{% url 'login' %}?next={{ request.get_full_path }}">{% translate 'log in'|title %}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path|lower == url|lower %}active{% endif %}" href="{% url 'location:register' %}">{% translate 'register'|title %}</a>
+          </li>
+        {% endif %}
+      </ul>
+      <form class="d-flex" action="{% url 'location:search' %}" method="get">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q" {% if q %}value="{{ q }}"{% endif %}>
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>

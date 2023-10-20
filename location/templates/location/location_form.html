@@ -1,0 +1,209 @@
+{% extends 'index.html' %}
+{% load i18n %}{% load static %}
+{% block content %}
+  {% if user.is_authenticated %}
+    <div class="location card">
+      <h1>{% if location %}{% translate 'edit'|capfirst %}{% else %}{% translate 'add'|capfirst %}{% endif %} {% if location %}: {{ location.name }}{% else %}.{% endif %}</h1>
+      <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+          {% for error in field.errors %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              {{ field.name|title }}: {{ error|escape }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        {% endfor %}
+        <dl>
+          <dt><label for="name">{% translate 'name'|capfirst %}</dt>
+          <dd><input class="form-control form-control-lg" name="name" id="name" value="{{ location.name }}" required></dd>
+        </dl>
+        <dl>
+          <dt><label for="website">{% translate 'website'|capfirst %}</dt>
+          <dd><input class="form-control" name="website" id="website" value="{{ location.website }}"></dd>
+        </dl>
+        <dl>
+          <dt><label for="description">{% translate 'description'|capfirst %}</dt>
+          <dd><textarea class="form-control" name="description" id="description" rows="8">{{ location.description }}</textarea></dd>
+        </dl>
+        <dl>
+          <dt><label for="category">{% translate 'category'|capfirst %}</dt>
+          <dd>
+            <select class="form-control" name="category" id="category">
+              {% for category in categories %}
+                <option value="{{ category.id }}"{% if category.slug == location.category.slug %} selected{% endif %}{% if not location and category.slug == "camping" %}selected{% endif %}>{{ category.name }}</option>
+              {% endfor %}
+            </select>
+          </dd>
+        </dl>
+        <dl>
+          <dt><label for="status">{% translate 'viewable by'|capfirst %}</dt>
+          <dd>
+            <select class="form-control" name="visibility" id="visibility">
+              {% for key, value in form.fields.visibility.choices %}
+                <option value="{{ key }}" {% if location.visibility == key %}selected{% elif not location and key == 'p' %}selected{% endif %}>{{ value|title }}</option>
+              {% endfor %}
+            </select>
+          </dd>
+        </dl>
+        <dt>&nbsp;</dt>
+          <dd><hr></dd>
+        {% if location %}
+          <dl>
+            <dt><label for="address">{% translate 'address'|capfirst %}{% if not location.address %} fetch{% endif %}</dt>
+            <dd><input class="form-control" name="address" id="address" value="{{ location.address }}"></dd>
+            <dd>Address can be fetched by google based on name</dd>
+          </dl>
+          <dl>
+            <dt><label for="phone">{% translate 'phone'|capfirst %}</dt>
+            <dd><input class="form-control" name="phone" id="phone" value="{{ location.phone|default:'' }}" type="tel"></dd>
+          </dl>
+          <dl>
+            <dt><label for="owners_names">{% translate 'owners'|capfirst %}</dt>
+            <dd><input class="form-control" name="owners_names" id="owners_names" value="{{ location.owners_names }}"></dd>
+          </dl>
+
+            {% if user.is_superuser %}
+              <dl>
+                <dt>{% translate 'user'|capfirst %}</dt>
+                  <dd>
+                    <select id="user" name="user" class="form-control">
+                      {% for key, value in form.fields.user.choices %}
+                        {% if key %}
+                          <option value="{{ key }}" {% if location.user.id == key %}selected{% endif %}>{{ value }}</option>
+                        {% endif %}
+                    {% endfor %}
+                    </select>
+                  </dd>
+            {% endif %}
+          {% endif %}
+          <dt>&nbsp;</dt>
+            <dd>
+              <input type="submit" class="btn btn-primary" value="{% translate 'save changes to'|capfirst %} {% translate location.name %}">
+              {% if location %}
+                <a class="btn btn-secondary" href="{% if location.isActivity %}{% url 'location:activity' location.slug %}{% else %}{% url 'location:location' location.slug %}{% endif %}" role="button">{% translate 'cancel'|capfirst %}</a>
+              {% else %}
+                <a class="btn btn-secondary" href="{% if location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}" role="button">{% translate 'cancel'|capfirst %}</a>
+              {% endif %}
+            </dd>
+        </dl>
+      </form>
+    </div>
+
+    {% if location %}
+      <!-- Location Relations-->
+      <div class="relations card">
+        <!-- Manage Chain -->
+        {% if location.chain %}
+          <dl>
+            <dt>{% translate 'chain'|capfirst %}</dt>
+              <dd>
+                {{ location.chain }} <a href="{% url 'location:ToggleChain' location.slug location.chain.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove chain' %} {{ category.name|title }} {% translate 'from'|capfirst %} {{ location.name }}"><img src="{% static 'bootstrap-icons/x.svg' %}"></a>
+              </dd>
+          </dl>
+        {% else %}
+          <dl>
+            <dt><label for="chain">Chains</label></dt>
+              <dd>
+                <form method="post" action="{% url 'location:ToggleChainForm' location.slug %}">
+                  <table class="inline-form">
+                      <tr>
+                        <td>
+                          {% csrf_token %}
+                          <select id="object_slug" name="object_slug" class="form-control">
+                            <option>--------</option>
+                            <option value="create_new">{% translate 'new chain'|capfirst %}</option>
+                            {% for chain in available_chains %}
+                              <option value="{{ chain.slug }}">{{ chain.name|title }}</option>
+                            {% endfor %}
+                          </select>
+                        </td>
+                        <td>
+                          <input type="submit" role="button" class="btn btn-outline-primary" value="{% translate 'add chain'|capfirst %}">
+                        </td>
+                      </tr>
+                    </table>
+                  </form>
+                {{ available_chains }}
+              </dd>
+          </dl>
+        {% endif %}
+        <!-- Manage Additional Categories -->
+        {% if location.additional_category.all.count > 0 %}
+          <dl> 
+            <dt>{% translate 'Additional categories' %}</dt>
+              <dd> 
+                {% for category in location.additional_category.all %}
+                  {{ category }} <a href="{% url 'location:ToggleCategory' location.slug category.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove category' %} {{ category.name|title }} {% translate 'from'|capfirst %} {{ location.name }}"><img src="{% static 'bootstrap-icons/x.svg' %}"></a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+              </dd>
+          </dl>
+        {% endif %}
+        {% if additional_categories.count > 0 %}
+          <dl> 
+            <dt>{% translate 'Add additional category' %}</dt>
+              <dd>
+                <form method="post" action="{% url 'location:ToggleCategoryForm' location.slug  %}">
+                  {% csrf_token %}
+                  <table class="inline-form">
+                    <tr>
+                      <td>
+                        <select class="form-control" name="object_slug" id="object_slug">
+                          <option>--------</option>
+                          {% for category in additional_categories %}
+                            <option value="{{ category.slug }}"{% if category.slug == location.category.slug %} selected{% endif %}>{{ category.name }}</option>
+                          {% endfor %}
+                        </select>
+                      </td>
+                      <td>
+                        <input type="submit" role="button" class="btn btn-outline-primary" value="{% translate 'add category'|capfirst %}">
+                      </td>
+                    <tr>
+                  </table>
+                </form>
+              </dd>
+          </dl>
+        {% endif %}
+        <!-- Manage Tags -->
+        {% if location.tags.all.count > 0 %}
+          <dl>
+            <dt>{% translate 'Tags' %}:</dt>
+              <dd> 
+                {% for tag in location.tags.all %}
+                  {{ tag|title }} <a href="{% url 'location:ToggleTag' location.slug tag.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove tag' %} {{ tag.name|title }} {% translate 'from'|capfirst %} {{ location.name }}"><img src="{% static 'bootstrap-icons/x.svg' %}"></a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+              </dd>
+          </dl>
+        {% endif %}
+        <dl>
+          <dt>{% translate 'Add tag' %}:</dt>
+            <dd>
+              <form method="post" action="{% url 'location:ToggleTagForm' location.slug %}">
+                {% csrf_token %}
+                <table class="inline-form">
+                  <tr>
+                    <td>
+                      <select class="form-control" name="object_slug" id="object_slug">
+                        <option>--------</option>
+                        <option value="create_new">{% translate "new tag"|capfirst %}</option>
+                        {% for tag in available_tags %}
+                          <option value="{{ tag.slug }}"{% if tag.slug == location.tag.slug %} selected{% endif %}>{{ tag }}</option>
+                        {% endfor %}
+                      </select>
+                    </td>
+                    <td>
+                      <input type="submit" role="button" class="btn btn-outline-primary" value="{% translate 'add tag'|capfirst %}">
+                    </td>
+                    <td>
+                      <a href="{% url 'location:AddTag' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'create new tag'|capfirst %}"><img src="{% static 'bootstrap-icons/plus.svg' %}"></a>
+                    </td>
+                  <tr>
+                </table>
+              </form>      
+          </dl>
+      </div>
+    {% endif %}
+  {% else %}
+    {% include 'snippets/login_or_register.html' %}
+  {% endif %}
+{% endblock %}

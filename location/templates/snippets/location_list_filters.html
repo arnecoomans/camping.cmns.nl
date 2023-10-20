@@ -1,0 +1,43 @@
+{% load i18n %}
+
+<div class="filters card">
+  <div class="active filters">
+    {% translate 'showing'|capfirst %} {{ location_list.all.count }} {% translate scope %}:
+    {% if active_filters|length > 1 or active_filters.query|length > 0 %}
+      {% translate 'with filters' %}:
+      {% if 'country' in active_filters %}
+        <a href="{% url 'location:locations' %}{% include 'snippets/filter_url_queryparams.html' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location_list.first.country }} {% translate 'from filter' %}">{{ location_list.first.country }}</a>
+      {% endif %}
+      {% if 'region' in active_filters %}
+        &gt; <a href="{% url 'location:ListLocationsByCountry' active_filters.country %}{% include 'snippets/filter_url_queryparams.html' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location_list.first.region }} {% translate 'from filter' %}">{{ location_list.first.region }}</a>
+      {% endif %}
+      {% if 'department' in active_filters %}
+        &gt; <a href="{% url 'location:ListLocationsByRegion' active_filters.country active_filters.region %}{% include 'snippets/filter_url_queryparams.html' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location_list.first.department }} {% translate 'from filter' %}">{{ location_list.first.department }}</a>
+      {% endif %}
+      {% if 'country' in active_filters or 'region' in active_filters or 'department' in active_filters%}, {% endif %}
+      {% comment %}URL Query Filters{% endcomment %}
+      {% for param, values in active_filters.query.items %}
+        {{ param|capfirst }}:
+        {% for value in values %}
+          <a href="{% include 'snippets/filter_url_queryparams.html' with removedword=value %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ param }}: {{ value }} {% translate 'from filter' %}">{{ value }}</a>{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+      {% endfor %}
+    {% endif %}
+  </div>
+  
+  {% if available_filters.tag|length > 1 or available_filters.category|length > 1 %}
+    <div class="available filters">
+      {% translate 'filter by'|capfirst %}
+      {% if available_filters.category|length > 1 %}
+        {% for category in available_filters.category %}
+            <a href="?category={{ category.0 }}{% if active_filters.query.tag|length > 0 %}&tag={{ active_filters.query.tag|join:',' }}{% endif %}">{{ category.1|title }}</a>{% if not forloop.last %}, {% else %}{% if available_filters.tag|length > 1 %},{% endif %}{% endif %}
+        {% endfor %}
+      {% endif %}
+      {% if available_filters.tag|length > 1 %}
+        {% for tag in available_filters.tag %}
+          <a href="?tag={{ tag.0 }}{% if active_filters.query.category|length > 0 %}&category={{ active_filters.query.category|join:',' }}{% endif %}">{{ tag.1|title }}</a>{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
+  {% endif %}
+</div>

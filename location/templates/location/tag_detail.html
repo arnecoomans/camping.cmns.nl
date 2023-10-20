@@ -1,0 +1,13 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% load static %}
+{% block content %}
+<div class="tag detail card">
+  <h1>{% translate 'tag'|title %}: {{ tag.name|title }}</h1>
+  <div class="container">
+    {% for location in tag.locations.all %}
+      {% include 'snippets/location_flashcard.html' %}
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% load static %}
+{% block content %}
+
+<div class="comment list card">
+  <h1>{% translate 'comments'|title %}</h1>
+  {% for comment in comment_list %}
+    {% include 'snippets/comment.html' with location=comment.location%}
+  {% endfor %}
+  
+</div>
+
+{% endblock %}

@@ -1,0 +1,5 @@
+<!-- Header -->
+<header>
+  <h1><a href="{% url 'location:home' %}">{{ app_title }}</a></h1>
+  <h2>{{ scope|truncatechars:96|default:'let\'s go on holiday'|title }}</h2>
+</header>

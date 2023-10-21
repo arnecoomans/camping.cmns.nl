@@ -8,3 +8,5 @@ myvenv
 /documents
 .DS_Store
 /*/settings.py
+/public/
+

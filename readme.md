@@ -15,20 +15,20 @@ or your family can edit your list. Distances to the previous location are automa
 
 ## Installation
 Install the application in your desired location:
-$ git clone https://github.com/arnecoomans/camping.cmns.nl .
+> $ git clone https://github.com/arnecoomans/camping.cmns.nl .
 
 You should really run the application in a python virtual environment:
-$ python -m venv ~/.venv/vknt
-$ source ~/.venv/vknt/bin/activate
+> $ python -m venv ~/.venv/vknt
+> $ source ~/.venv/vknt/bin/activate
 
 The Package requirements are listed in requirements.txt. 
-(vknt) $ python -m pip install -r requirements.txt
+> (vknt) $ python -m pip install -r requirements.txt
 
 Create a superuser:
 Use a username, this way the superuser only has access to the admin login page and avoid using the superuser for regular use
-(vknt) $ python manage.py createsuperuser
+> (vknt) $ python manage.py createsuperuser
 
-
+Create a settings.py file in /vknt/ based on the settings.example file. Make some required changes.
 
 ## WishList / Feature Request List
 * Add description for location in list
@@ -51,7 +51,7 @@ Use a username, this way the superuser only has access to the admin login page a
 * ~~location form: add tag and add to location (create tag)~~
 * ~~mark location visibility in locations list when visibility is private or family~~
 * order by distance from NL
-* Move feature request list to Github 
+* ~~Move feature request list to Github~~
   
 
 ## Known bugs [production stopping]
@@ -64,9 +64,9 @@ Use a username, this way the superuser only has access to the admin login page a
   * ~~Lists~~
 * ~~Als gebruiker nog geen profiel heeft, maak profiel aan bij bezoeken /profile~~
 * When adding a location - example Domaine Sante Marie - that is not found, it throws an error
-* add tag doesnt work? -> rework permissions in forms
-* add location doesnt work?
-* add list doesnt work?
+* ~~add tag doesnt work? -> rework permissions in forms~~ #1
+* ~~add location doesnt work?~~ #1 
+* ~~add list doesnt work?~~ #1
 * css is not fully loading?
 
 ## Knwon bugs [to be solved]

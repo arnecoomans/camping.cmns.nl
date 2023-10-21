@@ -25,7 +25,7 @@
             </dd>
         </dl>
         <div class="spacer"></div>
-        <input type="submit" value="{% translate 'submit'|capfirst %}" class="btn btn-success btn-lg {% if not user.is_superuser and user != comment.user %}disabled{% endif %}">
+        <input type="submit" value="{% translate 'submit'|capfirst %}" class="btn btn-success btn-lg {% if list and not user.is_superuser and user != list.user %}disabled{% endif %}">
         <a href="{% url 'location:tags' %}" class="btn btn-secondary btn-lg" role="button" aria-disabled="true">{% translate 'cancel'|capfirst %}</a>
 
       </form>

@@ -14,6 +14,8 @@ Lists are the way to make your plans more manageble. Make a list of locations th
 or your family can edit your list. Distances to the previous location are automatically calculated. 
 
 ## Installation
+Install the application in your desired location:
+$ git clone https://github.com/arnecoomans/camping.cmns.nl .
 
 You should really run the application in a python virtual environment:
 $ python -m venv ~/.venv/vknt
@@ -21,6 +23,11 @@ $ source ~/.venv/vknt/bin/activate
 
 The Package requirements are listed in requirements.txt. 
 (vknt) $ python -m pip install -r requirements.txt
+
+Create a superuser:
+Use a username, this way the superuser only has access to the admin login page and avoid using the superuser for regular use
+(vknt) $ python manage.py createsuperuser
+
 
 
 ## WishList / Feature Request List

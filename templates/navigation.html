@@ -60,10 +60,10 @@
                 <li><a class="dropdown-item" href="{% url 'location:EditLocation' location.slug %}">{% translate 'edit location'|title %}</a></li>
                 {% if user.is_superuser %}<li><a class="dropdown-item" href="/admin/location/location/{{ location.id }}/change/">{% translate 'edit location'|title %} {% translate 'in admin'|title %}</a></li>{% endif %}
               {% endif %}
-              {% if tag %}
+              {% comment %} {% if tag %}
                 <li><a class="dropdown-item" href="{% url 'editTag' tag.slug %}">{% translate 'edit tag'|title %}</a></li>
                 {% if user.is_superuser %}<li><a class="dropdown-item" href="/admin/location/tag/{{ tag.id }}}}/change/">{% translate 'edit tag'|title %} {% translate 'in admin'|title %}</a></li>{% endif %}
-              {% endif %}
+              {% endif %} {% endcomment %}
               {% if list %}
                 <li><a class="dropdown-item" href="{% url 'location:EditList' list.slug %}">{% translate 'edit list'|title %}</a></li>
                 {% if user.is_superuser %}<li><a class="dropdown-item" href="/admin/location/list/{{ list.id }}/change/">{% translate 'edit list'|title %} {% translate 'in admin'|title %}</a></li>{% endif %}

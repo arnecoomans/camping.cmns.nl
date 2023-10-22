@@ -11,6 +11,7 @@ from django.shortcuts import redirect
 from django.db import IntegrityError, models
 from django.conf import settings
 
+from .func_filter_visibility import filter_visibility
 
 from location.models.Location import Location, Category, Chain
 from location.models.Comment import Comment
@@ -55,19 +56,6 @@ class LocationMasterView:
     if self.request.GET.get('q', ''):
       context['q'] = self.request.GET.get('q', '')
     return context
-
-  def filter_visibility(self, queryset):
-    ''' Add private objects for current user to queryset '''
-    if self.request.user.is_authenticated:
-      ''' Process visibility filters '''
-      queryset =  queryset.filter(visibility='p') |\
-                  queryset.filter(visibility='c') |\
-                  queryset.filter(visibility='f', user=self.request.user) |\
-                  queryset.filter(visibility='f', user__profile__family=self.request.user) |\
-                  queryset.filter(visibility='q', user=self.request.user)
-    else:
-      queryset =  queryset.filter(visibility='p')
-    return queryset
 
   def filter_queryset(self, queryset):
     ''' Process Location filters '''
@@ -212,7 +200,7 @@ class LocationListView(LocationMasterView, ListView):
   def get_queryset(self):
     ''' Fetch all published locations '''
     queryset = Location.objects.filter(status='p').exclude(category__slug=settings.ACTIVITY_SLUG).exclude(category__parent__slug=settings.ACTIVITY_SLUG)
-    queryset = self.filter_visibility(queryset)
+    queryset = filter_visibility(self.request.user, queryset)
     queryset = self.filter_queryset(queryset)
     ''' Result Ordering '''
     queryset = queryset.order_by('location__parent__parent', 'location__parent', 'location__name').distinct()
@@ -236,7 +224,7 @@ class ActivityListView(LocationMasterView, ListView):
     ''' Fetch all published locations '''
     queryset = Location.objects.filter(status='p')
     queryset = queryset.filter(category__slug=settings.ACTIVITY_SLUG) | queryset.filter(category__parent__slug=settings.ACTIVITY_SLUG)
-    queryset = self.filter_visibility(queryset)
+    queryset = filter_visibility(self.request.user, queryset)
     queryset = self.filter_queryset(queryset)
     ''' Result Ordering '''
     queryset = queryset.order_by('location__parent__parent', 'location__parent', 'location__name')

@@ -1,0 +1,50 @@
+/** Google Maps */
+div#map {
+  width: 100%;
+  height: 400px;
+}
+
+/** Action list */
+ul.action.list {
+  list-style-type: none;
+  padding: 0;
+  text-align: right;
+}
+ul.action.list > li {
+  display: inline-block;
+  padding: 0 5px;
+}
+ul.action.list > li > a {
+
+}
+ul.action.list > li > a:hover {
+  color: var(--highlight-color);
+  text-decoration: underline;
+}
+
+/** Comments */
+div.comment {
+  border: 1px solid var(--highlight-color);
+  margin: 2em 1em;
+  border-radius: 1em;
+}
+  div.comment > div.header {
+    background-color: var(--highlight-color);
+    color: var(--contrast-color);
+    border-radius: 1em 1em 0 0;
+    padding: 1em 2em;
+  }
+  div.comment > div.header > a,
+  div.comment > div.header > strong > a {
+    color: var(--contrast-color);
+  }
+  div.comment > div.content {
+    margin: 1em 1em;
+  }
+
+/** Tags */
+
+/** Location */
+div.location.flash.card {
+  margin: 10px;
+}

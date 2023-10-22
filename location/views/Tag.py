@@ -42,7 +42,7 @@ class AddTag(CreateView):
     context['scope'] = f"{ _('tags') }: { _('add tag') }"
     ''' Available parent tags used in form
         is filtered to avoid multi-level tags and recursion '''
-    context['available_parent_tags'] = Tag.objects.filter(parent=None)
+    context['available_parent_tags'] = Tag.objects.filter(status='p', parent=None)
     return context
 
   

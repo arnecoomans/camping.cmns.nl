@@ -43,7 +43,9 @@ div.comment {
   }
 
 /** Tags */
-
+a.tag {
+  white-space: nowrap;
+}
 /** Location */
 div.location.flash.card {
   margin: 10px;

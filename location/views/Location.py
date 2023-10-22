@@ -124,7 +124,7 @@ class EditLocationMaster(UpdateView):
       context['scope'] = f"{ _('edit') } { self.object .name}"
       context['categories'] = Category.objects.exclude(slug=settings.ACTIVITY_SLUG).exclude(parent__slug=settings.ACTIVITY_SLUG).order_by('name')
     context['additional_categories'] = context['categories'].exclude(slug=self.object.category.slug).exclude(slug='home').exclude(secondary_for=self.object)
-    context['available_tags'] = Tag.objects.exclude(locations=self.object)
+    context['available_tags'] = Tag.objects.exclude(locations=self.object).exclude(children__gt=1).order_by('parent__name', 'name')
     context['available_chains'] = Chain.objects.filter(children=None).exclude(locations=self.object)
     return context
 

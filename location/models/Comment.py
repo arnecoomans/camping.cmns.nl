@@ -5,6 +5,8 @@ from django.urls import reverse_lazy
 
 from .Location import Location
 
+from datetime import datetime
+
 class Comment(models.Model):
   content             = models.TextField(blank=True, help_text='Markdown is supported')
   location            = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='comments')
@@ -23,8 +25,11 @@ class Comment(models.Model):
       ('x', _('deleted')),
     )
   status              = models.CharField(max_length=1, choices=status_choices, default='p')
-  date_added          = models.DateTimeField(editable=False, auto_now_add=True)
-  date_modified       = models.DateTimeField(editable=False, auto_now=True)
+  # date_added          = models.DateTimeField(auto_now_add=True, editable=True)
+  # date_modified       = models.DateTimeField(auto_now=True, editable=True)
+  ''' During content migration, comment dates should be editable in admin '''
+  date_added          = models.DateTimeField(default=datetime.now(), editable=True)
+  date_modified       = models.DateTimeField(default=datetime.now(), editable=True)
   user                = models.ForeignKey(User, on_delete=models.DO_NOTHING)
 
   def __str__(self):

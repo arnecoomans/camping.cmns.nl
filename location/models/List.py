@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.utils.safestring import mark_safe
 
+from .base_model import BaseModel
 from .Location import Location
 
 from math import floor
@@ -88,7 +89,7 @@ def metersToKilometers(meters):
   return f"{ str(floor(meters/100)/10) } km"
 
 
-class List(models.Model):
+class List(BaseModel):
   ''' Internal Identifier '''
   slug                = models.CharField(max_length=255, unique=True, help_text=f"{ _('Identifier in URL') } ({ _('automatically generated') })")
 
@@ -96,24 +97,6 @@ class List(models.Model):
   name                = models.CharField(max_length=255, help_text=_('Name of location as it is identified by'))
   description         = models.TextField(blank=True, help_text=_('Markdown is supported'))
   
-  ''' Record Meta information '''
-  visibility_choices      = (
-      ('p', _('public')),
-      ('c', _('commmunity')),
-      ('f', _('family')),
-      ('q', _('private')),
-    )
-  visibility          = models.CharField(max_length=1, choices=visibility_choices, default='p')
-  
-  status_choices      = (
-      ('p', _('published')),
-      ('r', _('revoked')),
-      ('x', _('deleted')),
-    )
-  status              = models.CharField(max_length=1, choices=status_choices, default='p')
-  date_added          = models.DateTimeField(editable=False, auto_now_add=True)
-  date_modified       = models.DateTimeField(editable=False, auto_now=True)
-  user                = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='lists')
     
   class Meta:
     verbose_name = _("list")
@@ -145,7 +128,7 @@ class List(models.Model):
   def getPrice(self):
     return self.location.aggregate(Sum('price'))['price__sum']
 
-class ListLocation(models.Model):
+class ListLocation(BaseModel):
   list                = models.ForeignKey(List, related_name='locations', on_delete=models.CASCADE)
   location            = models.ForeignKey(Location, related_name='list', on_delete=models.CASCADE)
   order               = models.IntegerField(default=0)
@@ -154,9 +137,6 @@ class ListLocation(models.Model):
   nights              = models.IntegerField(default=0)
   price               = models.IntegerField(default=0)
 
-  date_added          = models.DateTimeField(editable=False, auto_now_add=True)
-  date_modified       = models.DateTimeField(editable=False, auto_now=True)
-  user                = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='listlocations')
 
   class Meta:
     verbose_name = _("list-location")

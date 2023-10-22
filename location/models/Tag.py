@@ -4,7 +4,10 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy as __
 
 from django.urls import reverse_lazy
-class Tag(models.Model):
+
+from .base_model import BaseModel
+
+class Tag(BaseModel):
   slug                = models.CharField(max_length=64, unique=True, help_text=f"{ _('Identifier in URL') } ({ _('automatically generated') })")
 
   name                = models.CharField(max_length=128, help_text=_('Name of tag'))
@@ -19,16 +22,16 @@ class Tag(models.Model):
   )
   list_as             = models.CharField(max_length=1, choices=list_as_choices, default='b')
 
-  ''' Record Meta information '''
-  status_choices      = (
-      ('p', _('published')),
-      ('r', _('revoked')),
-      ('x', _('deleted')),
-    )
-  status              = models.CharField(max_length=1, choices=status_choices, default='p')
-  date_added          = models.DateTimeField(editable=False, auto_now_add=True)
-  date_modified       = models.DateTimeField(editable=False, auto_now=True)
-  user                = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+  # ''' Record Meta information '''
+  # status_choices      = (
+  #     ('p', _('published')),
+  #     ('r', _('revoked')),
+  #     ('x', _('deleted')),
+  #   )
+  # status              = models.CharField(max_length=1, choices=status_choices, default='p')
+  # date_added          = models.DateTimeField(editable=False, auto_now_add=True)
+  # date_modified       = models.DateTimeField(editable=False, auto_now=True)
+  # user                = models.ForeignKey(User, on_delete=models.DO_NOTHING)
 
   class Meta:
     ordering = ['-list_as', 'name']

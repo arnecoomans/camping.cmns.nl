@@ -12,8 +12,8 @@
         <select name="visibility" id="comment-visibility" class="form-select" aria-label="{% translate 'select comment visibility'|capfirst %}">
           <option value="p">{% translate 'private'|capfirst %}</option>
           <option value="f">{% translate 'family'|capfirst %}</option>
-          <option value="c">{% translate 'community'|capfirst %}</option>
-          <option value="a" selected>{% translate 'public'|capfirst %}</option>
+          <option value="c" selected>{% translate 'community'|capfirst %}</option>
+          <option value="q">{% translate 'public'|capfirst %}</option>
         </select>
         <label for="comment-visibility">{% translate 'select comment visibility'|capfirst %}</label>
         <input class="btn btn-primary" type="submit" value="{% translate 'share comment'|title %}">

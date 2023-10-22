@@ -1,3 +1,4 @@
+from django.forms.models import BaseModelForm
 from django.views.generic import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
@@ -44,6 +45,7 @@ class AddTag(CreateView):
     context['available_parent_tags'] = Tags.objects.filter(parent=None)
     return context
 
+  
   def post(self, request, *args, **kwargs):
     ''' Build fields '''
     slug          = slugify(self.request.POST.get('name', ''))

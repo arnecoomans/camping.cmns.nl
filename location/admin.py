@@ -81,8 +81,9 @@ class LocationAdmin(SlugDefaultAdmin):
 
 class ListDistanceAdmin(DefaultAdmin):
   actions = [getData, ]  
-# class RegionAdmin(ReadOnlyAdmin):
-#   pass
+
+class CommentAdmin(DefaultAdmin):
+  pass
 
 admin.site.register(Category, SlugDefaultAdmin)
 admin.site.register(Location, LocationAdmin)
@@ -90,7 +91,7 @@ admin.site.register(Chain, SlugDefaultAdmin)
 admin.site.register(Link, DefaultAdmin)
 admin.site.register(Geo.Region, SlugDefaultAdmin)
 admin.site.register(Tag, SlugDefaultAdmin)
-admin.site.register(Comment, DefaultAdmin)
+admin.site.register(Comment, CommentAdmin)
 admin.site.register(List, SlugDefaultAdmin)
 admin.site.register(ListLocation, DefaultAdmin)
 admin.site.register(ListDistance, ListDistanceAdmin)

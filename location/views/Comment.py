@@ -4,10 +4,10 @@ from django.views.generic import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
 from django.shortcuts import redirect, reverse
-
 from django.contrib import messages
-
 from django.utils.translation import gettext as _
+
+from .func_filter_visibility import filter_visibility
 
 from location.models.Comment import Comment
 
@@ -32,15 +32,7 @@ class CommentListView(ListView):
   def get_queryset(self):
     queryset = Comment.objects.filter(status='p')
     ''' Add private objects for current user to queryset '''
-    if self.request.user.is_authenticated:
-      ''' Process visibility filters '''
-      queryset =  queryset.filter(visibility='p') |\
-                  queryset.filter(visibility='c') |\
-                  queryset.filter(visibility='f', user=self.request.user) |\
-                  queryset.filter(visibility='f', user__profile__family=self.request.user) |\
-                  queryset.filter(visibility='q', user=self.request.user)
-    else:
-      queryset =  queryset.filter(visibility='p')
+    queryset = filter_visibility(self.request.user, queryset)
     queryset = queryset.order_by('-date_modified').distinct()
 
     return queryset

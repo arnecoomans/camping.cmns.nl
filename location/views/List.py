@@ -7,6 +7,7 @@ from django.utils.translation import gettext as _
 from django.shortcuts import redirect, reverse
 from django.db import IntegrityError
 
+from .func_filter_visibility import filter_visibility
 
 from location.models.List import List, ListLocation, ListDistance
 from location.models.Location import Location
@@ -21,14 +22,7 @@ class ListListView(ListView):
   
   def get_queryset(self):
     queryset = List.objects.filter(status='p')
-    if self.request.user.is_authenticated:
-      queryset =  queryset.filter(visibility='p') |\
-                  queryset.filter(visibility='c') |\
-                  queryset.filter(visibility='f', user__profile__family=self.request.user) |\
-                  queryset.filter(visibility='f', user=self.request.user) |\
-                  queryset.filter(visibility='q', user=self.request.user)
-    else:
-      queryset = queryset.filter(visibility='p')
+    queryset = filter_visibility(self.request.user, queryset)
     if self.request.GET.get('order_by', '').lower() == 'author':
       queryset = queryset.order_by('user', 'name').distinct()
     elif self.request.GET.get('order_by', '').lower() == 'visibility':

@@ -19,8 +19,8 @@ from django.utils.translation import gettext_lazy as _
 from geopy import distance, exc
 from geopy.geocoders import Nominatim, GoogleV3
 
-#import PIL
 
+from .base_model import BaseModel
 from .Geo import Region
 from .Tag import Tag
 
@@ -52,13 +52,8 @@ class Chain(models.Model):
 ''' Links model
     Any location may have multiple links related to the location, such as several review websites
 '''
-class Link(models.Model):
+class Link(BaseModel):
   url                 = models.CharField(max_length=512, unique=True, help_text=_('full url of link'))
-
-  ''' Record Meta information '''
-  date_added          = models.DateTimeField(editable=False, auto_now_add=True)
-  date_modified       = models.DateTimeField(editable=False, auto_now=True)
-  user                = models.ForeignKey(User, on_delete=models.DO_NOTHING)
 
   def __str__(self) -> str:
     return self.url
@@ -93,7 +88,7 @@ class Category(models.Model):
 
 ''' Location model
 '''
-class Location(models.Model):
+class Location(BaseModel):
   ''' Internal Identifier '''
   slug                = models.CharField(max_length=255, unique=True, help_text=f"{ _('Identifier in URL') } ({ _('automatically generated') })")
 
@@ -123,24 +118,24 @@ class Location(models.Model):
   coord_lat           = models.CharField(max_length=64, blank=True, editable=False, help_text=f"{ _('Coordinates') }: Lat ({ _('fetched from location service based on name and/or address') })")
   coord_lng           = models.CharField(max_length=64, blank=True, editable=False, help_text=f"{ _('Coordinates') }: Lng ({ _('fetched from location service based on name and/or address') })")
 
-  ''' Record Meta information '''
-  visibility_choices      = (
-      ('p', _('public')),
-      ('c', _('commmunity')),
-      ('f', _('family')),
-      ('q', _('private')),
-    )
-  visibility          = models.CharField(max_length=1, choices=visibility_choices, default='p')
+  # ''' Record Meta information '''
+  # visibility_choices      = (
+  #     ('p', _('public')),
+  #     ('c', _('commmunity')),
+  #     ('f', _('family')),
+  #     ('q', _('private')),
+  #   )
+  # visibility          = models.CharField(max_length=1, choices=visibility_choices, default='p')
   
-  status_choices      = (
-      ('p', _('published')),
-      ('r', _('revoked')),
-      ('x', _('deleted')),
-    )
-  status              = models.CharField(max_length=1, choices=status_choices, default='p')
-  date_added          = models.DateTimeField(editable=False, auto_now_add=True)
-  date_modified       = models.DateTimeField(editable=False, auto_now=True)
-  user                = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='locations')
+  # status_choices      = (
+  #     ('p', _('published')),
+  #     ('r', _('revoked')),
+  #     ('x', _('deleted')),
+  #   )
+  # status              = models.CharField(max_length=1, choices=status_choices, default='p')
+  # date_added          = models.DateTimeField(editable=False, auto_now_add=True)
+  # date_modified       = models.DateTimeField(editable=False, auto_now=True)
+  # user                = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='locations')
 
   ''' Data Cache '''
   automated_changelog = models.TextField(editable=False, blank=True)

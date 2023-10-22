@@ -55,7 +55,7 @@ class AddTag(CreateView):
     status        = 'p'
     user          = self.request.user
     ''' Check if parent tag should be used '''
-    if self.request.POST.get('parent', ''):
+    if self.request.POST.get('parent', '') and self.request.POST.get('parent', '') != '-'*len(self.request.POST.get('parent', '')):
       parent = Tag.objects.get(pk=self.request.POST.get('parent', ''))
     ''' Avoid Specific Tags '''
     if name[:8] == '-'*8 or name.lower() == 'create_new':

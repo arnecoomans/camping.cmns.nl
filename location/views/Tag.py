@@ -1,3 +1,4 @@
+from django.forms.models import BaseModelForm
 from django.views.generic import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
@@ -39,8 +40,10 @@ class AddTag(CreateView):
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context['scope'] = f"{ _('tags') }: { _('add tag') }"
+    context['available_parent_tags'] = Tag.objects.filter(parent=None)
     return context
 
+  
   def post(self, request, *args, **kwargs):
     ''' Build fields '''
     slug          = slugify(self.request.POST.get('name', ''))

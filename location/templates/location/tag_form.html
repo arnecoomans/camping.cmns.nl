@@ -14,8 +14,9 @@
           <dt><label for="parent">{% translate 'parent'|capfirst %}</dt>
             <dd>
               <select name="parent" id="parent" class="form-select" aria-label="{% translate 'select parent'|capfirst %}">
-              {% for parent in form.parent %}
-                {{ parent }}
+              <option>--------</option>
+              {% for parent in available_parent_tags %}
+                <option value="{{ parent.id }}">{{ parent.name }}</option>
               {% endfor %}
             </select>
             </dd>

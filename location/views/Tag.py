@@ -39,6 +39,9 @@ class AddTag(CreateView):
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context['scope'] = f"{ _('tags') }: { _('add tag') }"
+    ''' Available parent tags used in form
+        is filtered to avoid multi-level tags and recursion '''
+    context['available_parent_tags'] = Tags.objects.filter(parent=None)
     return context
 
   def post(self, request, *args, **kwargs):

@@ -108,7 +108,7 @@ class SignUpView(CreateView):
   #form_class = UserCreationForm
   success_url = reverse_lazy('location:register')
   template_name = 'registration/user_register_form.html'
-  fields = ['password', 'first_name', 'last_name', 'email']
+  fields = ['password', 'first_name', 'last_name', 'email', 'username']
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -121,7 +121,7 @@ class SignUpView(CreateView):
 
   def form_valid(self, form):
     ''' Process form input '''
-    username = form.cleaned_data['email'].lower()
+    username = form.cleaned_data['username']
     email = form.cleaned_data['email']
     password = form.cleaned_data['password']
     first_name = form.cleaned_data['first_name']
@@ -147,7 +147,7 @@ class SignUpView(CreateView):
     ''' Create new user '''
     user = User.objects.create_user(username, email, password, first_name=first_name, last_name=last_name)
     user.save()
-    messages.add_message(self.request, messages.SUCCESS, _('Succesfully registered your account. Please log in with your e-mail address and chosen password. '))
+    messages.add_message(self.request, messages.SUCCESS, _('Succesfully registered your account. Please log in with your username and chosen password.'))
     ''' Set default groups '''
     if hasattr(settings, 'NEW_USER_DEFAULT_GROUP'):
       group = Group.objects.get_or_create(name=settings.NEW_USER_DEFAULT_GROUP)[0]

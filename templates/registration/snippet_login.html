@@ -3,8 +3,8 @@
 <form method="POST" action=".">
   {% csrf_token %}
   <div class="form-floating mb-3">
-    <input type="email" class="form-control" name="username" id="id_username" placeholder="name@example.com" required autofocus>
-    <label for="id_username">{% translate 'username or email address'|capfirst %}*</label>
+    <input type="text" class="form-control" name="username" id="id_username" placeholder="johndoe" required autofocus>
+    <label for="id_username">{% translate 'username'|capfirst %}*</label>
   </div>
   <div class="form-floating mb-3">
     <div class="col-md">

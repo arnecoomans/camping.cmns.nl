@@ -9,10 +9,14 @@
         {% translate 'you already have an account'|capfirst %} {% translate 'and' %} {% translate 'you are already logged in' %}. {% translate 'you cannot register'|capfirst %}.
       </div>
     {% else %}
-      <form method="POST">
+      <form method="post">
         {% csrf_token %}
         <div class="form-floating mb-3">
-          <input type="email" class="form-control" name="email" id="id_email" placeholder="name@example.com" required autofocus>
+          <input type="text" class="form-control" name="username" id="id_username" placeholder="johndoe" required autofocus>
+          <label for="id_username">{% translate 'username'|capfirst %}*</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="email" class="form-control" name="email" id="id_email" placeholder="name@example.com" required >
           <label for="id_email">{% translate 'email address'|capfirst %}*</label>
         </div>
         <div class="row mb-3 g-2">

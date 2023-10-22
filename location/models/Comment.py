@@ -25,11 +25,11 @@ class Comment(models.Model):
       ('x', _('deleted')),
     )
   status              = models.CharField(max_length=1, choices=status_choices, default='p')
-  # date_added          = models.DateTimeField(auto_now_add=True, editable=True)
-  # date_modified       = models.DateTimeField(auto_now=True, editable=True)
-  ''' During content migration, comment dates should be editable in admin '''
-  date_added          = models.DateTimeField(default=datetime.now(), editable=True)
-  date_modified       = models.DateTimeField(default=datetime.now(), editable=True)
+  date_added          = models.DateTimeField(auto_now_add=True, editable=True)
+  date_modified       = models.DateTimeField(auto_now=True, editable=True)
+  # ''' During content migration, comment dates should be editable in admin '''
+  # date_added          = models.DateTimeField(default=datetime.now(), editable=True)
+  # date_modified       = models.DateTimeField(default=datetime.now(), editable=True)
   user                = models.ForeignKey(User, on_delete=models.DO_NOTHING)
 
   def __str__(self):

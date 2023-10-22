@@ -22,17 +22,6 @@ class Tag(BaseModel):
   )
   list_as             = models.CharField(max_length=1, choices=list_as_choices, default='b')
 
-  # ''' Record Meta information '''
-  # status_choices      = (
-  #     ('p', _('published')),
-  #     ('r', _('revoked')),
-  #     ('x', _('deleted')),
-  #   )
-  # status              = models.CharField(max_length=1, choices=status_choices, default='p')
-  # date_added          = models.DateTimeField(editable=False, auto_now_add=True)
-  # date_modified       = models.DateTimeField(editable=False, auto_now=True)
-  # user                = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-
   class Meta:
     ordering = ['-list_as', 'name']
 

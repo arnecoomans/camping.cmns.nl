@@ -3,11 +3,23 @@
 {% load static %}
 {% block content %}
 <div class="tag detail card">
-  <h1>{% translate 'tag'|title %}: {{ tag.name|title }}</h1>
-  <div class="container">
-    {% for location in tag.locations.all %}
-      {% include 'snippets/location_flashcard.html' %}
+  <h1>{% if tag.parent %}<a href="{% url 'location:tag' tag.parent.slug %}">{{ tag.parent.name|title }}</a>: {% endif %}{% translate 'tag'|title %}: {{ tag.name|title }}</h1>
+  <!-- Show Tag Contents -->
+  {% for location in tag.locations.all %}
+    {% include 'snippets/location_flashcard.html' %}
+  {% endfor %}
+  <!-- Tag Children -->
+  {% if tag.children.all.count > 0 %}
+</div>
+    
+    {% for child in tag.children.all %}
+      <div class="card">
+        <h2>{{ tag.name|title }}: <a href="{% url 'location:tag' child.slug %}">{{ child.name|title }}</a></h2>
+        {% for location in child.locations.all %}
+          {% include 'snippets/location_flashcard.html' %}
+        {% endfor %}
+      </div>
     {% endfor %}
-  </div>
+  {% endif %}
 </div>
 {% endblock %}

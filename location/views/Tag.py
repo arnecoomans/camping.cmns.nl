@@ -1,7 +1,6 @@
-from django.forms.models import BaseModelForm
 from django.views.generic import DetailView
 from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView
 from django.contrib import messages
 from django.utils.text import slugify
 from django.utils.translation import gettext as _

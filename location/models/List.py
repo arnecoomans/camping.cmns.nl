@@ -11,9 +11,7 @@ from .base_model import BaseModel
 from .Location import Location
 
 from math import floor
-from datetime import datetime, timedelta
-# from geopy import distance, exc
-# from geopy.geocoders import Nominatim, GoogleV3
+from datetime import datetime
 import googlemaps
 
 

@@ -17,7 +17,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 from geopy import distance, exc
-from geopy.geocoders import Nominatim, GoogleV3
+from geopy.geocoders import GoogleV3
 
 
 from .base_model import BaseModel

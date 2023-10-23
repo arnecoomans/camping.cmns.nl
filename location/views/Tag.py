@@ -51,7 +51,6 @@ class AddTag(CreateView):
     name          = self.request.POST.get('name', '')
     parent        = None
     list_as       = 'b'
-    status        = 'p'
     user          = self.request.user
     ''' Check if parent tag should be used '''
     if self.request.POST.get('parent', '') and self.request.POST.get('parent', '') != '-'*len(self.request.POST.get('parent', '')):
@@ -67,7 +66,6 @@ class AddTag(CreateView):
         name = name,
         parent = parent,
         list_as = list_as,
-        status = status,
         user = user,
       )
       tag.save()

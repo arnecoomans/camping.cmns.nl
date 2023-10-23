@@ -1,14 +1,12 @@
-from typing import Any
 from django.views.generic import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
-
 from django.contrib import messages
 from django.utils.translation import gettext as _
 from django.utils.text import slugify
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
-from django.db import IntegrityError, models
+from django.db import IntegrityError
 from django.conf import settings
 
 from .func_filter_visibility import filter_visibility

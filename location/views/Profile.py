@@ -1,6 +1,3 @@
-from typing import Any
-from django.db import models
-from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
 
@@ -24,12 +21,11 @@ class ProfileView(UpdateView):
   def get_object(self):
     if not hasattr(self.request.user, 'profile'):
       profile = Profile.objects.create(user=self.request.user)
-      messages.add_message(self.request, messages.INFO, f"{ _('created profile for ') } { self.request.user.get_full_name() }")
+      messages.add_message(self.request, messages.INFO, f"{ _('created profile for ') } { profile.user.get_full_name() }")
     return self.request.user.profile 
   
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
-    # profile = SE
     context['profile'] = self.get_object()
     context['homes'] = Location.objects.filter(category__slug='home', user=self.request.user)
     context['available_family'] = User.objects.exclude(id__in=self.get_object().family.all()).exclude(id=self.request.user.id)

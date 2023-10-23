@@ -1,4 +1,4 @@
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView
 from django.contrib import messages
 from django.utils.text import slugify
 from django.utils.translation import gettext as _

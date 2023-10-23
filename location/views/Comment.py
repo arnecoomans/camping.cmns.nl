@@ -1,6 +1,4 @@
 
-from django.db.models.query import QuerySet
-from django.views.generic import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
 from django.shortcuts import redirect, reverse

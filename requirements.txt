@@ -8,7 +8,6 @@ gunicorn >= 21.2.0
 
 # Location Services
 geopy >= 2.3.0
-django-phonenumber-field >= 7.1.0
 googlemaps >= 4.10.0
 
 # Markdown

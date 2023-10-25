@@ -15,6 +15,7 @@ from location.models.Location import Location, Category, Chain
 from location.models.Comment import Comment
 from location.models.Tag import Tag
 from location.models.List import List, ListLocation
+from location.models.Profile import VisitedIn
 
 
 ''' MASTER VIEWS '''
@@ -303,8 +304,13 @@ class LocationView(DetailView):
     if self.get_object().visibility == 'f':
       if hasattr(self.get_object().user, 'profile'):
         context['family'] = self.get_object().user.profile.family.all()
+    context['visitors'] = self.get_visitors()
     return context
   
+  def get_visitors(self):
+    result = VisitedIn.objects.filter(user=self.request.user, location=self.get_object())
+    result = filter_visibility(self.request.user, result)
+    return result
 
 ''' CREATE VIEWS '''
 

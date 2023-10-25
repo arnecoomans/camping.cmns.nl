@@ -86,7 +86,7 @@
 
     <!-- Categorisation and Tags -->
     <div class="category tag card">
-      <h2>{% translate 'category'|capfirst %}</h2>
+      <h2>{% translate 'more information'|capfirst %}:</h2>
       <dl>
         <dt>{% translate 'category'|title %}:</dt>
           <dd><a href="{% url 'location:locations' %}?category={{ location.category.slug }}">{{ location.category.name|title }}</a>{% if location.additional_category.all.count > 0 and user.is_authenticated %}, {% for category in location.additional_category.all %}<a href="{% url 'location:locations' %}?category={{ category.slug }}">{{ category|title }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}</dd>
@@ -143,11 +143,21 @@
           </dd>
       {% endif %}
     </dl>
-      <!-- Add Location To List -->
-      
-        
-      
-
+    
+    <!-- Visited In -->
+    {% if visitors.all.count > 0 %}
+      <dl>
+        <dt>{% translate 'your visits'|capfirst %}</dt>
+          <dd>
+            {% for visit in visitors.all %}
+              {% if visit.location == location %}{{ visit.year }}{% if not forloop.last %}, {% endif %}{% endif %}
+            {% endfor %}
+      </dl>
+    {% endif %}
+    {% comment %} <dl>
+      <dt>{% if visitors.all.count == 0 %}{% translate 'add your visit'|capfirst %}{% else %}&nbsp;{% endif %}</dt>
+        <dd><a href="#">{% translate 'add visit'|capfirst %}</a></dd>
+    </dl> {% endcomment %}
     </div>
 
     <!-- Comments card -->

@@ -22,11 +22,11 @@
         <ul class="action list">
           {% if not location in user.profile.least_liked.all %}
             <!-- Favorite -->
-            <li><a href="{% url 'location:ToggleFavorite' location.slug %}"><img src="{% if location in user.profile.favorite.all %}{% static 'bootstrap-icons/balloon-heart-fill.svg' %}{% else %}{% static 'bootstrap-icons/balloon-heart.svg' %}{% endif %}" height="30px"></a></li>
+            <li><a href="{% url 'location:ToggleFavorite' location.slug %}"><img src="{% if location in user.profile.favorite.all %}{% static 'bootstrap-icons/balloon-heart-fill.svg' %}{% else %}{% static 'bootstrap-icons/balloon-heart.svg' %}{% endif %}" height="30px" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if location in user.profile.favorite.all %}{% translate 'you like this location'|capfirst %}{% else %}{% translate 'like this location'|capfirst %}{% endif %}"></a></li>
           {% endif %}
           {% if not location in user.profile.favorite.all %}<!-- Favorite -->
             <!-- Least liked -->
-            <li><a href="{% url 'location:ToggleLeastLiked' location.slug %}"><img src="{% if location in user.profile.least_liked.all %}{% static 'bootstrap-icons/heartbreak-fill.svg' %}{% else %}{% static 'bootstrap-icons/heartbreak.svg' %}{% endif %}"></a></li>
+            <li><a href="{% url 'location:ToggleLeastLiked' location.slug %}"><img src="{% if location in user.profile.least_liked.all %}{% static 'bootstrap-icons/heartbreak-fill.svg' %}{% else %}{% static 'bootstrap-icons/heartbreak.svg' %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if location in user.profile.least_liked.all %}{% translate 'you dislike this location'|capfirst %}{% else %}{% translate 'dislike this location'|capfirst %}{% endif %}"></a></li>
           {% endif %}
           {% if perms.location.edit_location and location.user == user or location.visibility == 'p' or location.visibility == 'c' %}
             <li><a href="{% if location.isActivity %}{% url 'location:EditActivity' location.slug %}{% else %}{% url 'location:EditLocation' location.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit information of'|capfirst %} {{ location.name }}"><img src="{% static 'bootstrap-icons/pencil.svg' %}"></a></li>

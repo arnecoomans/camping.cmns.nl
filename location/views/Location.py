@@ -76,6 +76,10 @@ class LocationMasterView:
     if self.request.GET.get('chain', ''):
       chain = self.request.GET.get('chain', '').split(',')
       queryset = queryset.filter(chain__slug__in=chain) | queryset.filter(chain__parent__slug__in=chain)
+    ''' Process the dislike filter '''
+    if hasattr(self.request.user, 'profile'):
+      if self.request.user.profile.hide_least_liked:
+        queryset = queryset.exclude(slug__in=self.request.user.profile.least_liked.values_list('slug', flat=True))
     ''' Process ?q= filters '''
     if self.request.GET.get('q', ''):
       query = self.request.GET.get('q', '').split(' ')

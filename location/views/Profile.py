@@ -16,7 +16,7 @@ from location.models.Profile import Profile
 from location.models.Location import Location
 
 class ProfileView(UpdateView):
-  fields = ['home']
+  fields = ['home', 'hide_least_liked']
 
   def get_object(self):
     if not hasattr(self.request.user, 'profile'):
@@ -45,9 +45,8 @@ class ProfileView(UpdateView):
       if self.request.POST.get(field, '') != getattr(user, field):
         setattr(user, field, self.request.POST.get(field, ''))
         changes += 1
-    if user.email != user.username:
-      messages.add_message(self.request, messages.INFO, f"{ _('Your email address has changed') }. { _('This means your username has changed as well') }.")
     if changes > 1:
+      ''' If changes have been made to the user, save the user object '''
       user.save()
     ''' Non-user changes are handled by class and should be handled without other care '''
     messages.add_message(self.request, messages.SUCCESS, f"{ _('Your changes have been saved') }.")

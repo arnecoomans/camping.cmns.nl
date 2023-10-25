@@ -48,7 +48,17 @@
         <dt>{% translate 'favorites'|capfirst %}</dt>
           <dd>
             {% for location in profile.favorite.all %}
-              <span class="favorite">{% include 'snippets/location_link.html' %} <a href="{% url 'location:ToggleFavorite' location.slug %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove favorite '|capfirst %} {{ location.name }} {% translate 'from favorites' %}"></a></span>{% if not forloop.last %}, {% endif %}
+              <span class="favorite">{% include 'snippets/location_link.html' %} <a href="{% url 'location:ToggleFavorite' location.slug %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location.name }} {% translate 'from favorites' %}"></a></span>{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </dd>
+        </dl>
+      {% endif %}
+      {% if user.profile.least_liked.all.count > 0 %}
+        <dl>
+        <dt>{% translate 'least liked'|capfirst %}</dt>
+          <dd>
+            {% for location in profile.least_liked.all %}
+              <span class="favorite">{% include 'snippets/location_link.html' %} <a href="{% url 'location:ToggleLeastLiked' location.slug %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location.name }} {% translate 'from least-liked' %}"></a></span>{% if not forloop.last %}, {% endif %}
             {% endfor %}
           </dd>
         </dl>

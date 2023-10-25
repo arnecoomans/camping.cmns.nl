@@ -28,3 +28,6 @@ class BaseModel(models.Model):
 
   class Meta:
     abstract = True
+
+  def get_model_fields(self):
+    return [field.name for field in self._meta.get_fields()]

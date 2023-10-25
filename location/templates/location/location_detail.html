@@ -20,10 +20,13 @@
       {% if user.is_authenticated %}
         {% translate 'viewable by'|capfirst %} {{ location.get_visibility_display }}
         <ul class="action list">
-          {% if location in user.profile.favorite.all %}
-            <li><a href="{% url 'location:ToggleFavorite' location.slug %}"><img src="{% static 'bootstrap-icons/balloon-heart-fill.svg' %}" height="30px"></a></li>
-          {% else %}
-            <li><a href="{% url 'location:ToggleFavorite' location.slug %}"><img src="{% static 'bootstrap-icons/balloon-heart.svg' %}" height="30px"></a></li>
+          {% if not location in user.profile.least_liked.all %}
+            <!-- Favorite -->
+            <li><a href="{% url 'location:ToggleFavorite' location.slug %}"><img src="{% if location in user.profile.favorite.all %}{% static 'bootstrap-icons/balloon-heart-fill.svg' %}{% else %}{% static 'bootstrap-icons/balloon-heart.svg' %}{% endif %}" height="30px" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if location in user.profile.favorite.all %}{% translate 'you like this location'|capfirst %}{% else %}{% translate 'like this location'|capfirst %}{% endif %}"></a></li>
+          {% endif %}
+          {% if not location in user.profile.favorite.all %}<!-- Favorite -->
+            <!-- Least liked -->
+            <li><a href="{% url 'location:ToggleLeastLiked' location.slug %}"><img src="{% if location in user.profile.least_liked.all %}{% static 'bootstrap-icons/heartbreak-fill.svg' %}{% else %}{% static 'bootstrap-icons/heartbreak.svg' %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if location in user.profile.least_liked.all %}{% translate 'you dislike this location'|capfirst %}{% else %}{% translate 'dislike this location'|capfirst %}{% endif %}"></a></li>
           {% endif %}
           {% if perms.location.edit_location and location.user == user or location.visibility == 'p' or location.visibility == 'c' %}
             <li><a href="{% if location.isActivity %}{% url 'location:EditActivity' location.slug %}{% else %}{% url 'location:EditLocation' location.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit information of'|capfirst %} {{ location.name }}"><img src="{% static 'bootstrap-icons/pencil.svg' %}"></a></li>
@@ -72,7 +75,7 @@
       </dl>
 
       <!-- map -->
-      {% if location.coord_lat %}
+      {% if not location in user.profile.least_liked.all and location.coord_lat %}
         <h3>{{ location.name }} {% translate 'on the map'|title %}:</h3>
         <div id="map"></div>
         <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap&v=weekly" defer></script>
@@ -118,7 +121,7 @@
             <dd><a href="{% url 'location:list' list.list.slug %}">{{ list.list.name }}</a> {% translate 'by' %} {{ list.list.user.get_full_name|default:list.list.user.username }}: ({{ list.list.get_visibility_display }}, {{ list.list.locations.all.count }} location(s))</dd>
         {% endfor %}
       {% endif %}
-      {% if perms.location.add_listlocation %}
+      {% if not location in user.profile.least_liked.all and perms.location.add_listlocation %}
         <dt>{% if lists.count == 0 %}{% translate 'lists'|capfirst %}{% else %}&nbsp;{% endif %}<dt>
           <dd>
             {%if  available_lists.count == 0 %}

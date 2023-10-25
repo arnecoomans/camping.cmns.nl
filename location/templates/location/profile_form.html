@@ -48,9 +48,30 @@
         <dt>{% translate 'favorites'|capfirst %}</dt>
           <dd>
             {% for location in profile.favorite.all %}
-              <span class="favorite">{% include 'snippets/location_link.html' %} <a href="{% url 'location:ToggleFavorite' location.slug %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove favorite '|capfirst %} {{ location.name }} {% translate 'from favorites' %}"></a></span>{% if not forloop.last %}, {% endif %}
+              <span class="favorite">{% include 'snippets/location_link.html' %} <a href="{% url 'location:ToggleFavorite' location.slug %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location.name }} {% translate 'from favorites' %}"></a></span>{% if not forloop.last %}, {% endif %}
             {% endfor %}
           </dd>
+        </dl>
+      {% endif %}
+      {% if user.profile.least_liked.all.count > 0 %}
+        <dl>
+          <dt>{% translate 'least liked'|capfirst %}</dt>
+            <dd>
+              {% for location in profile.least_liked.all %}
+                <span class="favorite">{% include 'snippets/location_link.html' %} <a href="{% url 'location:ToggleLeastLiked' location.slug %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location.name }} {% translate 'from least-liked' %}"></a></span>{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            </dd>
+        </dl>
+        <dl>
+          <dt>&nbsp;</dt>
+            <dd>
+              <form method="post">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" role="switch" name="hide_least_liked" id="hide_least_liked" {% if user.profile.hide_least_liked %}checked{% endif %} onchange="this.form.submit();" >
+                  <label class="form-check-label" for="hide_least_liked">{% translate 'hide locations from search results'|capfirst %} </label>
+                </div>
+              </form>
+            </dd>
         </dl>
       {% endif %}
       

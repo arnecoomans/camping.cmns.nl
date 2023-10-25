@@ -55,7 +55,8 @@
             <td class="col-4"></td>
             <td class="col-8">
               {% if location == user.profile.home %}<img src="{% static 'bootstrap-icons/house.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'this is marked as your home'|capfirst %}">{% endif %}
-              {% if location in user.profile.favorite.all %}<img src="{% static 'bootstrap-icons/balloon-heart-fill.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'this location is marked as favorite'|capfirst %}">{% endif %}
+              {% if location in user.profile.favorite.all %}<img src="{% static 'bootstrap-icons/balloon-heart-fill.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'you like this location'|capfirst %}">{% endif %}
+              {% if location in user.profile.least_liked.all %}<img src="{% static 'bootstrap-icons/heartbreak-fill.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'you don\'t like this location'|capfirst %}">{% endif %}
               {% if location.visibility in 'f,q' %}<img src="{% if location.visibility == 'q' %}{% static 'bootstrap-icons/person.svg' %}{% else %}{% static 'bootstrap-icons/people.svg' %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'viewable by'|capfirst %} {{ location.get_visibility_display }}">{% endif %}
               {% include 'snippets/location_link.html' %}
           </tr>

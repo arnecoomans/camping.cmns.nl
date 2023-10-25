@@ -15,6 +15,8 @@ class Profile(models.Model):
   family              = models.ManyToManyField(User, blank=True, help_text=_('family members'), related_name='famlily_of')
 
   favorite            = models.ManyToManyField(Location, blank=True, related_name='favorite_of')
+  least_liked         = models.ManyToManyField(Location, blank=True, related_name='least_liked_of')
+  hide_least_liked    = models.BooleanField(default=False, help_text=_('It is possible to "unlike" a location. Enable this field to hide the least-liked locations.'))
   def __str__(self) -> str:
     return f'Profile of { self.user.get_full_name() if self.user.get_full_name() else self.user.username }'
   

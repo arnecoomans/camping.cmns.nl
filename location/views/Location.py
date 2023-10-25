@@ -76,6 +76,10 @@ class LocationMasterView:
     if self.request.GET.get('chain', ''):
       chain = self.request.GET.get('chain', '').split(',')
       queryset = queryset.filter(chain__slug__in=chain) | queryset.filter(chain__parent__slug__in=chain)
+    ''' Process the dislike filter '''
+    if hasattr(self.request.user, 'profile'):
+      if self.request.user.profile.hide_least_liked:
+        queryset = queryset.exclude(slug__in=self.request.user.profile.least_liked.values_list('slug', flat=True))
     ''' Process ?q= filters '''
     if self.request.GET.get('q', ''):
       query = self.request.GET.get('q', '').split(' ')
@@ -384,133 +388,3 @@ class EditActivity(EditLocationMaster):
 
   def get_success_url(self):
     return reverse_lazy('location:location', kwargs={'slug': self.object.slug})
-
-
-''' TOGGLE VIEW '''
-class ToggleView(UpdateView):
-  def get_success_url(self) -> str:
-    return reverse_lazy('location:EditLocation', kwargs={'slug': self.get_object().slug})
-  
-  def get(self, request, *args, **kwargs):
-    if 'object_slug' in kwargs:
-      object_slug = kwargs['object_slug']
-    elif self.request.GET.get('object_slug', ''):
-      object_slug = self.request.GET.get('object_slug', '')
-    else:
-      messages.add_message(self.request, messages.ERROR(f"{ _('no searchable object passed in URL') }."))
-    if object_slug in ['--------', 'create_new']:
-      return self.handle_exceptions(object_slug)
-    self.toggle(object_slug)
-    return redirect(self.get_success_url())
-  
-  def post(self, request, *args, **kwargs):
-    object_slug = request.POST.get('object_slug')
-    # messages.add_message(self.request, messages.INFO, object_slug)
-    if object_slug in ['--------', 'create_new']:
-      return self.handle_exceptions(object_slug)
-    self.toggle(object_slug)
-    return redirect(self.get_success_url())
-
-''' Toggle Chain '''
-class ToggleChain(ToggleView):
-  model = Location
-  fields = ['chain']
-
-  def handle_exceptions(self, object_slug):
-    if object_slug[:8] == '-'*8:
-      messages.add_message(self.request, messages.ERROR, f"{ _('no chain selected from dropdown list') }.")
-      return redirect(self.get_success_url())
-    elif object_slug == 'create_new':
-      messages.add_message(self.request, messages.INFO, f"{ _('new chain will be added to') } { self.get_object().name }.")
-      return redirect('location:AddChainTo', self.get_object().slug)
-    return True
-
-  def toggle(self, object_slug):
-    try:
-      object = Chain.objects.get(slug=object_slug)
-    except Chain.DoesNotExist:
-      messages.add_message(self.request, messages.ERROR, f"{ _('can not find chain with slug ')} { object_slug }")
-      return redirect(self.get_success_url())
-    if object == self.get_object().chain:
-      ''' Chain should be removed '''
-      # self.get_object().chain = None
-      object.locations.remove(self.get_object())
-      messages.add_message(self.request, messages.SUCCESS, f"{ _('removed') } { _('chain') } { object.name } { _('from') } { self.get_object().name }")
-    else:
-      ''' Chain should be added '''
-      # self.get_object().chain = object
-      object.locations.add(self.get_object())
-      messages.add_message(self.request, messages.SUCCESS, f"{ _('added') } { _('chain') } { object.name } { _('to') } { self.get_object().name }")
-    self.get_object().save()
-
-
-''' Toggle Category '''
-class ToggleCategory(ToggleView):
-  model = Location
-  fields = ['additional_category']
-
-  def get_success_url(self) -> str:
-    return reverse_lazy('location:EditLocation', kwargs={'slug': self.get_object().slug})
-  
-  def handle_exceptions(self, object_slug):
-    if object_slug[:8] == '-'*8:
-      messages.add_message(self.request, messages.ERROR, f"{ _('no category selected from dropdown list') }.")
-      return redirect(self.get_success_url())
-    # elif object_slug == 'create_new':
-    #   messages.add_message(self.request, messages.INFO, f"{ _('new category will be added to') } { self.get_object().name }.")
-    #   return redirect('location:AddTagTo', self.get_object().slug)
-    return True
-
-  def toggle(self, object_slug):
-    ''' Find Category '''
-    try:
-      object = Category.objects.get(slug=object_slug)
-    except Category.DoesNotExist:
-      messages.add_message(self.request, messages.ERROR, f"{ _('can not find category with slug ')} { object_slug }")
-      return redirect(self.get_success_url())
-    ''' Toggle '''
-    if object in self.get_object().additional_category.all():
-      ''' Tag should be removed '''
-      self.get_object().additional_category.remove(object)
-      messages.add_message(self.request, messages.SUCCESS, f"{ _('removed') } { _('category') } { object.name } { _('from') } { self.get_object().name }")
-    else:
-      ''' Tag should be added '''
-      self.get_object().additional_category.add(object)
-      messages.add_message(self.request, messages.SUCCESS, f"{ _('added') } { _('category') } { object.name } { _('to') } { self.get_object().name }")
-  
-
-''' Toggle Tag '''
-class ToggleTag(ToggleView):
-  model = Location
-  fields = ['tags']
-
-  def get_success_url(self) -> str:
-    return reverse_lazy('location:EditLocation', kwargs={'slug': self.get_object().slug})
-  
-  def handle_exceptions(self, object_slug):
-    if object_slug[:8] == '-'*8:
-      messages.add_message(self.request, messages.ERROR, f"{ _('no tag selected from dropdown list') }.")
-      return redirect(self.get_success_url())
-    elif object_slug == 'create_new':
-      messages.add_message(self.request, messages.INFO, f"{ _('new tag will be added to') } { self.get_object().name }.")
-      return redirect('location:AddTagTo', self.get_object().slug)
-    return True
-
-  def toggle(self, object_slug):
-    ''' Find Tag '''
-    try:
-      object = Tag.objects.get(slug=object_slug)
-    except Tag.DoesNotExist:
-      messages.add_message(self.request, messages.ERROR, f"{ _('can not find tag with slug ')} { object_slug }")
-      return redirect(self.get_success_url())
-    ''' Toggle '''
-    if object in self.get_object().tags.all():
-      ''' Tag should be removed '''
-      self.get_object().tags.remove(object)
-      messages.add_message(self.request, messages.SUCCESS, f"{ _('removed') } { _('tag') } { object.name } { _('from') } { self.get_object().name }")
-    else:
-      ''' Tag should be added '''
-      self.get_object().tags.add(object)
-      messages.add_message(self.request, messages.SUCCESS, f"{ _('added') } { _('tag') } { object.name } { _('to') } { self.get_object().name }")
-  
-  

@@ -24,18 +24,19 @@ def addDistance(origin, destination, request):
                                                 )
   if not distance[0].hasData():
     distance[0].getData(request=request)
+    return 1
+  return 0
 
 def calculateDistances(request, list):
   queries = 0
   for leg in list.locations.all():
     if leg.getPrevious():
-      addDistance(leg.getPrevious().location, leg.location, request)
+      queries += addDistance(leg.getPrevious().location, leg.location, request)
     if leg.getPreviousLocation():
-      addDistance(leg.getPreviousLocation().location, leg.location, request)
+      queries += addDistance(leg.getPreviousLocation().location, leg.location, request)
     if queries >= settings.MAX_LIST_DISTANCE_QUERIES:
       messages.add_message(request, messages.WARNING, f"{ _('Can calculate a maximum of') } { str(settings.MAX_LIST_DISTANCE_QUERIES) } { _('distances at a time' ) }.")
       return True
-    queries += 1
     
 
 class ListListView(ListView):

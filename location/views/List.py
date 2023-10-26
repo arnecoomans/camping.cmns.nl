@@ -6,12 +6,35 @@ from django.utils.text import slugify
 from django.utils.translation import gettext as _
 from django.shortcuts import redirect, reverse
 from django.db import IntegrityError
+from django.conf import settings
+
 
 from .func_filter_visibility import filter_visibility
 
 from location.models.List import List, ListLocation, ListDistance
 from location.models.Location import Location
 
+
+def addDistance(origin, destination, request):
+  distance = ListDistance.objects.get_or_create(origin=origin,
+                                                destination=destination,
+                                                user=request.user,
+                                                )
+  if not distance[0].hasData():
+    distance[0].getData(request=request)
+
+def calculateDistances(request, list):
+  queries = 0
+  for leg in list.locations.all():
+    if leg.getPrevious():
+      addDistance(leg.getPrevious().location, leg.location, request)
+    if leg.getPreviousLocation():
+      addDistance(leg.getPreviousLocation().location, leg.location, request)
+    queries += 1
+    if queries > settings.MAX_LIST_DISTANCE_QUERIES:
+      messages.add_message(request, messages.WARNING, f"{ _('Can calculate a maximum of') } { str(settings.MAX_LIST_DISTANCE_QUERIES) } { _('distances at a time' ) }.")
+      return True
+    
 
 class ListListView(ListView):
   model = List
@@ -32,7 +55,7 @@ class ListListView(ListView):
     return queryset
   
 
-class ListView(DetailView):
+class ListDetailView(DetailView):
   model = List
 
   def get_context_data(self, **kwargs):
@@ -213,20 +236,20 @@ class StartListFromHome(UpdateView):
     ''' Compare first entry with home of user'''
     ''' Only allow action from List User or Staff'''
     if list.user == self.request.user or self.request.user.is_superuser:
-      if list.locations.count() == 0 or first != self.request.user.profile.home.last():
+      if list.locations.count() == 0 or first != self.request.user.profile.home:
         ListLocation.objects.create(list=list,
-                                    location=self.request.user.profile.home.last(),
+                                    location=self.request.user.profile.home,
                                     order=self.order,
                                     user=self.request.user)
-        messages.add_message(self.request, messages.SUCCESS, f"{ list.name } { _('now departs from')} { self.request.user.profile.home.last() }")
-        distance = ListDistance.objects.get_or_create(origin=self.request.user.profile.home.last(),
+        messages.add_message(self.request, messages.SUCCESS, f"{ list.name } { _('now departs from')} { self.request.user.profile.home }")
+        distance = ListDistance.objects.get_or_create(origin=self.request.user.profile.home,
                                                       destination=first,
                                                       user=self.request.user,
                                                       )
         if not distance[0].hasData():
           distance[0].getData(request=self.request)
       else:
-        messages.add_message(self.request, messages.INFO, f"{ list.name } { _('already departs from')} { self.request.user.profile.home.last() }")
+        messages.add_message(self.request, messages.INFO, f"{ list.name } { _('already departs from')} { self.request.user.profile.home }")
     else:
       ''' Share errormessage that the list cannot be modified '''
       messages.add_message(self.request, messages.ERROR, f"{ _('List') } \"{ list }\" { _('cannot be modified')}. { _('This is not your list') }.")
@@ -243,21 +266,66 @@ class EndListAtHome(UpdateView):
     ''' Compare first entry with home of user'''
     ''' Only allow action from List User or Staff'''
     if list.user == self.request.user or self.request.user.is_superuser:
-      if list.locations.count() == 0 or last != self.request.user.profile.home.last():
+      if list.locations.count() == 0 or last != self.request.user.profile.home:
         ListLocation.objects.create(list=list,
-                                    location=self.request.user.profile.home.last(),
+                                    location=self.request.user.profile.home,
                                     order=order,
                                     user=self.request.user)
-        messages.add_message(self.request, messages.SUCCESS, f"{ list.name } { _('now ends at')} { self.request.user.profile.home.last() }")
+        messages.add_message(self.request, messages.SUCCESS, f"{ list.name } { _('now ends at')} { self.request.user.profile.home }")
         distance = ListDistance.objects.get_or_create(origin=last,
-                                                      destination=self.request.user.profile.home.last(),
+                                                      destination=self.request.user.profile.home,
                                                       user=self.request.user,
                                                       )
         if not distance[0].hasData():
           distance[0].getData(request=self.request)
       else:
-        messages.add_message(self.request, messages.INFO, f"{ list.name } { _('already ends at')} { self.request.user.profile.home.last() }")
+        messages.add_message(self.request, messages.INFO, f"{ list.name } { _('already ends at')} { self.request.user.profile.home }")
     else:
       ''' Share errormessage that the list cannot be modified '''
       messages.add_message(self.request, messages.ERROR, f"{ _('List') } \"{ list }\" { _('cannot be modified')}. { _('This is not your list') }.")
     return redirect('location:list', self.kwargs['slug'])
+  
+
+class ListLocationUpDown(UpdateView):
+  model = List
+  fields = ['location', 'location__order']
+
+  def get(self, request, direction, *args, **kwargs):
+    list = self.get_object()
+    location = list.locations.get(pk=self.kwargs['id'], location__slug=self.kwargs['location'])
+    ''' Check that location is in list '''
+    if location not in list.locations.all():
+      messages.add_message(self.request, messages.ERROR, f"{ _('cannot move location') } { location.location.name } { _(direction) }: { _('location is') } { _('not in list') } \"{ list.name }\".")
+      return redirect('location:list', self.get_object().slug)
+    ''' Get location to change order with '''
+    if direction == 'up':
+      change_with = location.getPrevious()
+      origin = location.location
+      destination = change_with.location
+    else:
+      change_with = location.getNext()
+      origin = change_with.location
+      destination = location.location
+      
+    ''' Check if location is not already first or last'''
+    if change_with == None:
+      messages.add_message(self.request, messages.ERROR, f"{ _('cannot move location') } { location.location.name } { _(direction) }: { _('location is') } { _('first') if direction == 'up' else _('last') }  { _('in list') } \"{ list.name }\".")
+      return redirect('location:list', self.get_object().slug)
+    ''' Store ordering '''
+    change_with_new_order = location.order
+    location.order = change_with.order
+    change_with.order = change_with_new_order
+    location.save()
+    change_with.save()
+    messages.add_message(self.request, messages.SUCCESS, f"{ _('moved location') } { location.location.name } { _(direction) } { _('in list') } \"{ list.name }\".")
+    ''' See if distances should be calculated '''
+    calculateDistances(self.request, list)
+    return redirect('location:list', self.get_object().slug)
+  
+class ListLocationUp(ListLocationUpDown):
+  def get(self, request, *args, **kwargs):
+    return super().get(request, direction='up', *args, **kwargs)
+  
+class ListLocationDown(ListLocationUpDown):
+  def get(self, request, *args, **kwargs):
+    return super().get(request, direction='down', *args, **kwargs)

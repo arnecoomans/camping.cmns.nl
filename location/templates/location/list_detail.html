@@ -10,7 +10,7 @@
   <!-- Verify User Permissions -->
   {% if location.visibility == 'q' and location.user != user %}
     {% include 'snippets/private.html' %}
-  {% elif list.visibility == 'f' and user not in list.user.profile.family.all %}
+  {% elif list.visibility == 'f' and user not in list.user.profile.family.all and user != list.user %}
     {% include 'snippets/family.html' %}
   {% else %}
     <table class="location list">

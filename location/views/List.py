@@ -30,10 +30,10 @@ def calculateDistances(request, list):
       addDistance(leg.getPrevious().location, leg.location, request)
     if leg.getPreviousLocation():
       addDistance(leg.getPreviousLocation().location, leg.location, request)
-    queries += 1
-    if queries > settings.MAX_LIST_DISTANCE_QUERIES:
+    if queries >= settings.MAX_LIST_DISTANCE_QUERIES:
       messages.add_message(request, messages.WARNING, f"{ _('Can calculate a maximum of') } { str(settings.MAX_LIST_DISTANCE_QUERIES) } { _('distances at a time' ) }.")
       return True
+    queries += 1
     
 
 class ListListView(ListView):

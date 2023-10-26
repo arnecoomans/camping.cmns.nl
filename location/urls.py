@@ -59,7 +59,7 @@ urlpatterns = [
   path('lists/', views.ListListView.as_view(), name='lists'),
   path('list/add/', views.AddList.as_view(), name='AddList'),
   path('list/add/<location>', views.AddList.as_view(), name='AddListWithLocation'),
-  path('list/<slug>/', views.ListView.as_view(), name='list'),
+  path('list/<slug>/', views.ListDetailView.as_view(), name='list'),
   path('list/<slug>/edit/', views.EditList.as_view(), name='EditList'),
   path('list/<slug>/start-from-home/', views.StartListFromHome.as_view(), name='StartListFromHome'),
   path('list/<slug>/end-at-home/', views.EndListAtHome.as_view(), name='EndListAtHome'),
@@ -67,8 +67,10 @@ urlpatterns = [
   path('list/<slug>/undelete/', views.UndeleteList.as_view(), name='UndeleteList'),
   path('list/<slug>/add/', views.AddLocationToList.as_view(), name='GetAddLocationToList'),
   path('list/<slug>/add/<location>/', views.AddLocationToList.as_view(), name='AddLocationToList'),
-  path('list/<slug>/delete/<pk>/<location>/', views.DeleteLocationFromList.as_view(), name='DeleteLocationFromList'),
-  
+  path('list/<slug>/<pk>:<location>/delete/', views.DeleteLocationFromList.as_view(), name='DeleteLocationFromList'),
+  path('list/<slug>/<id>:<location>/up/', views.ListLocationUp.as_view(), name="ListLocationUp"),
+  path('list/<slug>/<id>:<location>/down/', views.ListLocationDown.as_view(), name="ListLocationDown"),
+
   path('profile/', views.ProfileView.as_view(), name='profile'),
   path('profile/family/<id>/', views.ToggleFamilyMember.as_view(), name='ToggleFamily'),
   path('profile/favorite/<slug>/', views.ToggleFavorite.as_view(), name='ToggleFavorite'),

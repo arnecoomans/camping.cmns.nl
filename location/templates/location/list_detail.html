@@ -61,8 +61,33 @@
             <td class="align-right">{% if location.price > 0 %}&euro; {{ location.price }}{% endif %}</td>
             <td>
               {% if perms.location.edit_list and list.user == user or user.is_superuser %}
-                {% comment %} <a href="#"><img src="{% static 'bootstrap-icons/pencil.svg' %}"></a> {% endcomment %}
-                <a href="{% url 'location:DeleteLocationFromList' list.slug location.id location.location.slug %}"><img src="{% static 'bootstrap-icons/trash.svg' %}"></a>
+              {% if forloop.first %}
+                <svg class="bi" width="18" height="18" fill="#ccc">
+                  <use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#arrow-up"/>
+                </svg>
+              {% else %}
+                <a href="{% url 'location:ListLocationUp' list.slug location.id location.location.slug %}">
+                  <svg class="bi" width="18" height="18" fill="#333">
+                    <use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#arrow-up"/>
+                  </svg>
+                </a>
+              {% endif %}
+              {% if forloop.last %}
+                <svg class="bi" width="18" height="18" fill="#ccc">
+                  <use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#arrow-down"/>
+                </svg>
+              {% else %}
+                <a href="{% url 'location:ListLocationDown' list.slug location.id location.location.slug %}">
+                  <svg class="bi" width="18" height="18" fill="#333">
+                    <use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#arrow-down"/>
+                  </svg>
+                </a>
+              {% endif %}
+                <a href="{% url 'location:DeleteLocationFromList' list.slug location.id location.location.slug %}">
+                  <svg class="bi" width="18" height="18" fill="#333">
+                    <use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#trash"/>
+                  </svg>
+                </a>
               {% endif %}
             </td>
           </tr>
@@ -96,7 +121,7 @@
       {% endif %}
     </ul>
     <ul class="action list">
-      {% if user.profile.home.all.count > 0 %}
+      {% if user.profile.home %}
         <li><a href="{% url 'location:StartListFromHome' list.slug %}">{% translate 'start from home' %}</a></li>
         <li><a href="{% url 'location:EndListAtHome' list.slug %}">{% translate 'end at home' %}</a></li>
       {% endif %}

@@ -16,8 +16,14 @@ a.tag:hover {
   color: var(--contrast-color);
   background-color: var(--highlight-color);
 }
-a:not(.tag):hover:has(img) {
+a:not(.tag):has(img),
+a:not(.tag):has(svg) {
+  padding: 0;
+}
+a:not(.tag):hover:has(img),
+a:not(.tag):hover:has(svg) {
   background-color: inherit;
+  padding: 0;
 }
 a.tag > img {
   fill: orange;

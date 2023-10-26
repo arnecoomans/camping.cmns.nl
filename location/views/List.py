@@ -190,17 +190,7 @@ class AddLocationToList(UpdateView):
                                                   order=order,
                                                   user=self.request.user)
       messages.add_message(self.request, messages.SUCCESS, f"{ _('Added') } \"{ location.name }\"  { _('to list')} \"{ list.name }\".")
-      ''' Check if distances should be calculated '''
-      previous = listlocation.getPreviousLocation()
-      if previous:
-        ''' Store distance to previous location '''
-        previous = previous.location
-        distance = ListDistance.objects.get_or_create(origin=previous,
-                                                      destination=location,
-                                                      user=self.request.user,
-                                                      )
-        if not distance[0].hasData():
-          distance[0].getData(request=self.request)
+      calculateDistances(self.request, list)
     else:
       ''' Share errormessage that the list cannot be modified '''
       messages.add_message(self.request, messages.ERROR, f"{ _('List') } \"{ list }\" { _('cannot be modified')}. { _('This is not your list') }.")
@@ -242,13 +232,7 @@ class StartListFromHome(UpdateView):
                                     order=self.order,
                                     user=self.request.user)
         messages.add_message(self.request, messages.SUCCESS, f"{ list.name } { _('now departs from')} { self.request.user.profile.home }")
-        distance = ListDistance.objects.get_or_create(origin=self.request.user.profile.home,
-                                                      destination=first,
-                                                      user=self.request.user,
-                                                      )
-        if not distance[0].hasData():
-          distance[0].getData(request=self.request)
-      else:
+        calculateDistances(self.request, list)
         messages.add_message(self.request, messages.INFO, f"{ list.name } { _('already departs from')} { self.request.user.profile.home }")
     else:
       ''' Share errormessage that the list cannot be modified '''
@@ -272,12 +256,7 @@ class EndListAtHome(UpdateView):
                                     order=order,
                                     user=self.request.user)
         messages.add_message(self.request, messages.SUCCESS, f"{ list.name } { _('now ends at')} { self.request.user.profile.home }")
-        distance = ListDistance.objects.get_or_create(origin=last,
-                                                      destination=self.request.user.profile.home,
-                                                      user=self.request.user,
-                                                      )
-        if not distance[0].hasData():
-          distance[0].getData(request=self.request)
+        calculateDistances(self.request, list)
       else:
         messages.add_message(self.request, messages.INFO, f"{ list.name } { _('already ends at')} { self.request.user.profile.home }")
     else:
@@ -300,13 +279,8 @@ class ListLocationUpDown(UpdateView):
     ''' Get location to change order with '''
     if direction == 'up':
       change_with = location.getPrevious()
-      origin = location.location
-      destination = change_with.location
     else:
       change_with = location.getNext()
-      origin = change_with.location
-      destination = location.location
-      
     ''' Check if location is not already first or last'''
     if change_with == None:
       messages.add_message(self.request, messages.ERROR, f"{ _('cannot move location') } { location.location.name } { _(direction) }: { _('location is') } { _('first') if direction == 'up' else _('last') }  { _('in list') } \"{ list.name }\".")

@@ -108,14 +108,18 @@ class EditLocationMaster(UpdateView):
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
-    if self.request.resolver_match.view_name == 'location:AddActivity':
-      context['scope'] = f"{ _('edit') } { self.object .name}"
-      context['categories'] = Category.objects.filter(parent__slug=settings.ACTIVITY_SLUG).order_by('name')
-    else:
-      context['scope'] = f"{ _('edit') } { self.object .name}"
+    context['scope'] = f"{ _('edit') }: { self.object .name}"
+    ''' Categories '''
+    if self.get_object().isActivity():
       context['categories'] = Category.objects.exclude(slug=settings.ACTIVITY_SLUG).exclude(parent__slug=settings.ACTIVITY_SLUG).order_by('name')
-    context['additional_categories'] = context['categories'].exclude(slug=self.object.category.slug).exclude(slug='home').exclude(secondary_for=self.object)
+      context['additional_categories'] = Category.objects.filter(parent__slug=settings.ACTIVITY_SLUG).exclude(slug=self.get_object().category.slug).exclude(slug='home').exclude(secondary_for=self.object).order_by('name')
+    else:  
+      #if self.request.resolver_match.view_name == 'location:AddActivity':
+      context['categories'] = Category.objects.filter(parent__slug=settings.ACTIVITY_SLUG).order_by('name')
+      context['additional_categories'] = Category.objects.exclude(slug=settings.ACTIVITY_SLUG).exclude(parent__slug=settings.ACTIVITY_SLUG).exclude(slug=self.get_object().category.slug).exclude(secondary_for=self.object).order_by('name')
+    ''' Tags '''
     context['available_tags'] = Tag.objects.exclude(locations=self.object).exclude(children__gt=1).order_by('parent__name', 'name')
+    ''' Chains '''
     context['available_chains'] = Chain.objects.filter(children=None).exclude(locations=self.object)
     return context
 

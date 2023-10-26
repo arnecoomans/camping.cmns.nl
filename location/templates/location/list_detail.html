@@ -122,8 +122,8 @@
     </ul>
     <ul class="action list">
       {% if user.profile.home %}
-        <li><a href="{% url 'location:StartListFromHome' list.slug %}">{% translate 'start from home' %}</a></li>
-        <li><a href="{% url 'location:EndListAtHome' list.slug %}">{% translate 'end at home' %}</a></li>
+        {% if list.locations.first.location != user.profile.home %}<li><a href="{% url 'location:StartListFromHome' list.slug %}">{% translate 'start from home' %}</a></li>{% endif %}
+        {% if list.locations.last.location != user.profile.home %}<li><a href="{% url 'location:EndListAtHome' list.slug %}">{% translate 'end at home' %}</a></li>{% endif %}
       {% endif %}
     </ul>
   {% endif %}

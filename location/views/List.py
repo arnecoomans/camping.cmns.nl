@@ -18,7 +18,9 @@ from location.models.Location import Location
 def addDistance(origin, destination, request):
   distance = ListDistance.objects.get_or_create(origin=origin,
                                                 destination=destination,
-                                                user=request.user,
+                                                defaults={
+                                                  'user': request.user,
+                                                  },
                                                 )
   if not distance[0].hasData():
     distance[0].getData(request=request)

@@ -58,6 +58,10 @@
           <dd>{{ location.address|default:'-' }}</dd>
         <dt>{% translate 'website'|title %}:</dt>
           <dd><a href="{{ location.website }}" target="_blank">{{ location.getWebsiteHostname }}</a></dd>
+        {% for link in location.link.all %}
+          <dt>&nbsp;</dt>
+            <dd><a href="{{ link.url }}" target="_blank">{{ link.hostname }}</a></dd>
+        {% endfor %}
         {% if user.is_authenticated %}
           {% if  location.owners_names %}
             <dt>{% translate 'owners names'|title %}:</dt>

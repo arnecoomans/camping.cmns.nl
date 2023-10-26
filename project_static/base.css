@@ -100,8 +100,10 @@ div.card > table > tfoot > tr > td {
 }
 div.card > table > thead > tr > th,
 div.card > table > tfoot > tr > td {
- 
-white-space: nowrap;
+  white-space: nowrap;
+}
+td.nowrap {
+  white-space: nowrap;
 }
 div.card > table > tbody > tr:nth-child(even) {
   background-color: rgba(0,0,0,0.1);

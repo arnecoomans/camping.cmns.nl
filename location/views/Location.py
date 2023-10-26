@@ -11,7 +11,7 @@ from django.conf import settings
 
 from .func_filter_visibility import filter_visibility
 
-from location.models.Location import Location, Category, Chain
+from location.models.Location import Location, Category, Chain, Link
 from location.models.Comment import Comment
 from location.models.Tag import Tag
 from location.models.List import List, ListLocation
@@ -104,7 +104,7 @@ class LocationMasterView:
 '''
 class EditLocationMaster(UpdateView):
   model = Location
-  fields = ['name', 'website', 'description', 'category', 'additional_category', 'visibility', 'address', 'phone', 'owners_names', 'chain']
+  fields = ['name', 'website', 'link', 'description', 'category', 'additional_category', 'visibility', 'address', 'phone', 'owners_names', 'chain']
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -137,7 +137,10 @@ class EditLocationMaster(UpdateView):
       messages.add_message(self.request, messages.INFO, f"{ _('visibility of your home is set to family') }.") 
     ''' Ensure URL is stored for this location '''
     if not form.instance.website:
-      form.instance.website = f'https://google.com/?q={ form.instance.name }'
+      form.instance.website = f'https://google.com/search?q={ form.instance.name }'
+    elif 'google' not in form.instance.website:
+      link = Link.objects.get_or_create(url=f'https://google.com/search?q={ form.cleaned_data["name"] }', defaults={'user': self.request.user})
+      form.instance.link.add(link[0].id)
     ''' Only allow user change by superuser '''
     if not self.request.user.is_superuser and 'user' in form.changed_data: 
       ''' User change is initiated by non_superuser. 
@@ -341,7 +344,10 @@ class AddLocation(CreateView):
       messages.add_message(self.request, messages.INFO, f"{ _('visibility of your home is set to family') }.") 
     if not form.instance.website:
       ''' If no website is submitted, store a Google Search for this location name'''
-      form.instance.website = f'https://google.com/?q={ form.instance.name }'
+      form.instance.website = f'https://google.com/search?q={ form.instance.name }'
+    elif 'google' not in form.instance.website:
+      link = Link.objects.get_or_create(url=f'https://google.com/search?q={ form.cleaned_data["name"] }', defaults={'user': self.request.user})
+      form.instance.link.add(link[0].id)
     try:
       location = Location.objects.create(
         slug = slugify(form.instance.name),

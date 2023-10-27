@@ -34,6 +34,16 @@
             </select>
           </dd>
       </dl>
+      {% if user.family_of.all.count > 0 %}
+        <dl>
+          <dt>{% translate 'family members'|capfirst %}</dt>
+            <dd>
+              {% for person in user.family_of.all %}
+                {{ person.user.get_full_name|default:person }} {% if person.home %}{% translate 'has home' %} {{ person.home }}{% else %}{% translate 'has no home' %}{% endif %}{% if not forloop.last %}<br>{% endif %}
+              {% endfor %}
+            </dd>
+        </dl>
+      {% endif %}
 
       <div class="spacer"></div>
       <dl>
@@ -85,11 +95,28 @@
             </dd>
         </dl>
       {% endif %}
+      {% if user.family_of.all.count > 0 %}
+      <dl>
+        <dt>{% translate 'you are marked family of'|capfirst %}</dt>
+          <dd>
+            {% for person in user.family_of.all %}
+               <span class="family member">
+                {% if person.user not in user.profile.family.all %}<svg class="bi" width="16" height="16" fill="#333"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#person-plus"/></svg><a href="{% url 'location:ToggleFamily' person.user.id %}">{% endif %}
+                {{ person.user.get_full_name|default:person.user.username }}
+                {% if person.user not in user.profile.family.all %}</a>{% endif %}
+              </span>
+              {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </dd>
+      </dl>
+      {% endif %}
       <dl>
         <dt>{% translate 'add'|capfirst %} {% translate 'family members'|capfirst %}</dt>
           <dd>
             {% for member in available_family %}
-              <span class="family member"><a href="{% url 'location:ToggleFamily' member.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'add'|capfirst %} {{ member.get_full_name|default:member.username }} {% translate 'to your family' %}">{{ member.get_full_name|default:member.username }}</a></span>{% if not forloop.last %}, {% endif %}
+              {% if member.profile not in user.family_of.all %}
+                <span class="family member"><svg class="bi" width="16" height="16" fill="#333"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#person-plus"/></svg><a href="{% url 'location:ToggleFamily' member.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'add'|capfirst %} {{ member.get_full_name|default:member.username }} {% translate 'to your family' %}">{{ member.get_full_name|default:member.username }}</a></span>{% if not forloop.last %}, {% endif %}
+              {% endif %}
             {% endfor %}
             {% if available_family.count == 0 %}<p>{% translate 'no users available to add to your family'|capfirst %}.</p>{% endif %}
           </dd>

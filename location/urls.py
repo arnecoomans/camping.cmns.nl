@@ -24,14 +24,8 @@ urlpatterns = [
   path('location/<slug>/toggle/chain/<object_slug>/', views.ToggleChain.as_view(), name='ToggleChain'),
   path('location/<slug>/toggle/tag/', views.ToggleTag.as_view(), name='ToggleTagForm'),
   path('location/<slug>/toggle/tag/<object_slug>/', views.ToggleTag.as_view(), name='ToggleTag'),
+  path('location/<slug>/reset/', views.ResetLocationData.as_view(), name='ResetLocation'),
   
-  # path('location/<slug>/toggle/<object>/', views.ToggleObject.as_view(), name='ToggleObjectLocationForm'),
-  # path('location/<slug>/toggle/<object>/<id>/', views.ToggleObject.as_view(), name='ToggleObjectLocation'),
-  # path('location/<slug>/edit/tag/', views.ToggleTag.as_view(), name='ToggleTagLocation'),
-  # path('location/<slug>/edit/tag/<tag>/', views.ToggleTag.as_view(), name='ToggleTagLocationUrl'),
-  # path('location/<slug>/edit/category/', views.ToggleCategory.as_view(), name='ToggleCategoryLocation'),
-  # path('location/<slug>/edit/chain/<object>/', views.ToggleChain.as_view(), name='ToggleChainLocation'),
-
 
   path('activities/', views.ActivityListView.as_view(), name='activities'),
   path('activities/<country>/', views.ActivityListView.as_view(), name='ListActivitiesByCountry'),

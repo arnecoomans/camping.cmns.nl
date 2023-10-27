@@ -27,7 +27,7 @@
         <dt><label for="home">{% translate 'home'|capfirst %}</dt>
           <dd>
             <select class="form-control" name="home" id="home">
-              <option selected>--------</option>
+              <option value="" {% if not profile.home %}selected{% endif %}>--------</option>
               {% for home in homes.all %}
                   <option value="{{ home.id }}" {% if home == profile.home %}selected{% endif %}>{{ home.name|title }}</option>
               {% endfor %}

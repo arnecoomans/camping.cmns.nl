@@ -32,7 +32,6 @@ class ProfileView(UpdateView):
     context['scope'] = f"{ _('profile') }: { _('edit your profile') }"
     return context
   
-    return form
   def form_invalid(self, form):
     messages.add_message(self.request, messages.WARNING, f"{ _('Form cannot be saved because of the following error(s)') }: { form.errors }")
     return super().form_invalid(form)

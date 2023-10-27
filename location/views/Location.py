@@ -398,3 +398,20 @@ class EditActivity(EditLocationMaster):
 
   def get_success_url(self):
     return reverse_lazy('location:location', kwargs={'slug': self.object.slug})
+  
+class ResetLocationData(UpdateView):
+  model = Location
+  fields = ['location', 'coord_lat', 'coord_lng']
+
+  def get(self, request, *args, **kwargs):
+    if request.user.is_staff or request.user.is_superuser:
+      ''' Drop stored data '''
+      self.get_object().location = None
+      self.get_object().coord_lng = None
+      self.get_object().coord_lat = None
+      ''' Fetch information again '''
+      self.get_object().getLatLng(request)
+      self.get_object().getDistanceFromDepartureCenter(request)
+      self.get_object().getRegion(request)
+
+    return redirect('location:location', self.get_object().slug)

@@ -16,6 +16,7 @@
         <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByRegion' location.location.parent.parent.slug location.location.parent.slug %}{% else %}{% url 'location:ListLocationsByRegion' location.location.parent.parent.slug location.location.parent.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.parent }}">{{ location.location.parent.name|title }}</a>,
         <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByCountry' location.location.parent.parent.slug %}{% else %}{% url 'location:ListLocationsByCountry' location.location.parent.parent.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.parent.parent.name }}">{{ location.location.parent.parent.name|title }}</a>.
       {% endif %}
+
       <!-- Action List -->
       {% if user.is_authenticated %}
         {% translate 'viewable by'|capfirst %} {{ location.get_visibility_display }}
@@ -44,6 +45,9 @@
           {% endif %}
           {% if user.is_superuser %}
             <li><a href="/admin/location/location/{{ location.id }}/change/" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit information of'|capfirst %} {{ location.name }} {% translate 'in admin' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil-square"/></svg></a></li>
+          {% endif %}
+          {% if user.is_staff %}
+            <li><a href="{% url 'location:ResetLocation' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'reset location data and fetch again'|capfirst %}"><svg class="bi" width="16" height="16" fill="#aaa"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#arrow-clockwise{% if location in user.profile.least_liked.all %}-fill{% endif %}"/></svg></a></li>
           {% endif %}
         </ul>
       {% endif %}

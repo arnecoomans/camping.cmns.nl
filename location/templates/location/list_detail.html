@@ -110,14 +110,14 @@
     <div class="spacer"></div>
     <ul class="action list">
       {% if request.user == list.user %}
-        <li><a href="{% url 'location:EditList' list.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit'|capfirst %} {% translate 'my list' %}"><img src="{% static 'bootstrap-icons/pencil.svg' %}"></a></li>
-        <li><a href="{% url 'location:DeleteList' list.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'delete'|capfirst %} {% translate 'my list' %}"><img src="{% static 'bootstrap-icons/trash.svg' %}"></a></li>
+        <li><a href="{% url 'location:EditList' list.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit'|capfirst %} {% translate 'my list' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil"/></svg></a></li>
+        <li><a href="{% url 'location:DeleteList' list.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'delete'|capfirst %} {% translate 'my list' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#trash"/></svg></a></li>
       {% elif request.user.is_superuser %}
-        <li><a href="{% url 'location:EditList' list.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit'|capfirst %} {% translate 'this list' %}"><img src="{% static 'bootstrap-icons/pencil.svg' %}"></a></li>
-        <li><a href="{% url 'location:DeleteList' list.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'delete'|capfirst %} {% translate 'this list' %}"><img src="{% static 'bootstrap-icons/trash.svg' %}"></a></li>
+        <li><a href="{% url 'location:EditList' list.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit'|capfirst %} {% translate 'this list' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil"/></svg></a></li>
+        <li><a href="{% url 'location:DeleteList' list.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'delete'|capfirst %} {% translate 'this list' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#trash"/></svg></a></li>
       {% endif %}
       {% if request.user.is_superuser %}
-        <li><a href="/admin/location/list/{{ list.id }}/change/" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if request.user == list.user %}{% translate 'edit my list'|capfirst %}{% else %}{% translate 'edit this list'|capfirst %}{% endif %} {% translate 'in admin' %}"><img src="{% static 'bootstrap-icons/pencil-square.svg' %}"></a></li>
+        <li><a href="/admin/location/list/{{ list.id }}/change/" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if request.user == list.user %}{% translate 'edit my list'|capfirst %}{% else %}{% translate 'edit this list'|capfirst %}{% endif %} {% translate 'in admin' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil-square"/></svg></a></li>
       {% endif %}
     </ul>
     <ul class="action list">

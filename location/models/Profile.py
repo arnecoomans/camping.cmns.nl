@@ -12,7 +12,7 @@ class Profile(models.Model):
   user                = models.OneToOneField(User, on_delete=models.DO_NOTHING, related_name='profile', unique=True)
 
   home                = models.ForeignKey(Location, blank=True, null=True, on_delete=models.DO_NOTHING, related_name='home_of')
-  family              = models.ManyToManyField(User, blank=True, help_text=_('family members'), related_name='famlily_of')
+  family              = models.ManyToManyField(User, blank=True, help_text=_('family members'), related_name='family_of')
 
   favorite            = models.ManyToManyField(Location, blank=True, related_name='favorite_of')
   least_liked         = models.ManyToManyField(Location, blank=True, related_name='least_liked_of')
@@ -25,6 +25,7 @@ class Profile(models.Model):
   
   def get_home(self):
     return self.home
+
   
 class VisitedIn(BaseModel):
   user                = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='visits')

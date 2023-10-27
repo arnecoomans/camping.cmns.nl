@@ -17,14 +17,14 @@
   {% if request.user == comment.user or request.user.is_superuser%}
     <ul class="action list">
       {% if request.user == comment.user %}
-        <li><a href="{% url 'location:EditComment' comment.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit'|capfirst %} {% translate 'my comment' %}"><img src="{% static 'bootstrap-icons/pencil.svg' %}"></a></li>
-        <li><a href="{% url 'location:DeleteComment' comment.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'delete'|capfirst %} {% translate 'my comment' %}"><img src="{% static 'bootstrap-icons/trash.svg' %}"></a></li>
+        <li><a href="{% url 'location:EditComment' comment.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit'|capfirst %} {% translate 'my comment' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil"/></svg></a></li>
+        <li><a href="{% url 'location:DeleteComment' comment.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'delete'|capfirst %} {% translate 'my comment' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#trash"/></svg></a></li>
       {% elif request.user.is_superuser %}
-        <li><a href="{% url 'location:EditComment' comment.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit'|capfirst %} {% translate 'this comment' %}"><img src="{% static 'bootstrap-icons/pencil.svg' %}"></a></li>
-        <li><a href="{% url 'location:DeleteComment' comment.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'delete'|capfirst %} {% translate 'this comment' %}"><img src="{% static 'bootstrap-icons/trash.svg' %}"></a></li>
+        <li><a href="{% url 'location:EditComment' comment.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit'|capfirst %} {% translate 'this comment' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil"/></svg></a></li>
+        <li><a href="{% url 'location:DeleteComment' comment.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'delete'|capfirst %} {% translate 'this comment' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#trash"/></svg></a></li>
       {% endif %}
       {% if request.user.is_superuser %}
-        <li><a href="/admin/location/comment/{{ comment.id }}/change/" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if request.user == comment.user %}{% translate 'edit my comment'|capfirst %}{% else %}{% translate 'edit this comment'|capfirst %}{% endif %} {% translate 'in admin' %}"><img src="{% static 'bootstrap-icons/pencil-square.svg' %}"></a></li>
+        <li><a href="/admin/location/comment/{{ comment.id }}/change/" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if request.user == comment.user %}{% translate 'edit my comment'|capfirst %}{% else %}{% translate 'edit this comment'|capfirst %}{% endif %} {% translate 'in admin' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil-square"/></svg></a></li>
       {% endif %}
     </ul>
   {% endif %}

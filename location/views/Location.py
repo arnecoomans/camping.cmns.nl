@@ -369,7 +369,9 @@ class AddLocation(CreateView):
     messages.add_message(self.request, messages.SUCCESS, f"{ _('added new location') }: \"{ location.name }\"")
     ''' Since the object has been added, now we can automate fetch additional data '''
     location.getLatLng(self.request)
+    location.getDistanceFromDepartureCenter(self.request)
     location.getRegion(self.request)
+    
     return redirect('location:location', location.slug)
 
 

@@ -56,7 +56,7 @@
     <!-- Verify User Permissions -->
     {% if location.visibility == 'q' and location.user != user %}
       {% include 'snippets/private.html' %}
-    {% elif location.visibility == 'f' and user not in location.user.profile.family.all %}
+    {% elif location.visibility == 'f' and location.user != user and user not in location.user.profile.family.all %}
       {% include 'snippets/family.html' %}
     {% else %}
 

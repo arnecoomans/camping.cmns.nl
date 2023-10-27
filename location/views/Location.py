@@ -359,6 +359,7 @@ class AddLocation(CreateView):
         website = form.instance.website,
         description = form.instance.description,
         category = form.instance.category,
+        visibility= form.instance.visibility,
         status = form.instance.status,
         user=self.request.user,
       )

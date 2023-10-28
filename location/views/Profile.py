@@ -114,4 +114,4 @@ class SignUpView(CreateView):
       group = Group.objects.get_or_create(name=settings.NEW_USER_DEFAULT_GROUP)[0]
       group.user_set.add(user)
     ''' Redirect to login page '''
-    return redirect(reverse_lazy('location:home'))
+    return redirect(reverse_lazy('login'))

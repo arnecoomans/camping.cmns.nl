@@ -9,6 +9,7 @@ from django.shortcuts import redirect
 from django.db import IntegrityError
 from django.conf import settings
 
+from .func_filter_status import filter_status
 from .func_filter_visibility import filter_visibility
 
 from location.models.Location import Location, Category, Chain, Link
@@ -118,7 +119,17 @@ class EditLocationMaster(UpdateView):
       context['categories'] = Category.objects.filter(parent__slug=settings.ACTIVITY_SLUG).order_by('name')
       context['additional_categories'] = Category.objects.exclude(slug=settings.ACTIVITY_SLUG).exclude(parent__slug=settings.ACTIVITY_SLUG).exclude(slug=self.get_object().category.slug).exclude(secondary_for=self.object).order_by('name')
     ''' Tags '''
-    context['available_tags'] = Tag.objects.exclude(locations=self.object).exclude(children__gt=1).order_by('parent__name', 'name')
+    ''' Tags '''
+    tags = Tag.objects.filter(locations__slug=self.object.slug)
+    tags = filter_status(self.request.user, tags)
+    tags = filter_visibility(self.request.user, tags)
+    tags = tags.order_by('list_as', 'name').distinct()
+    context['tags'] = tags
+    available_tags = Tag.objects.exclude(locations=self.object).exclude(children__gt=1)
+    available_tags = filter_status(self.request.user, available_tags)
+    available_tags = filter_visibility(self.request.user, available_tags)
+    available_tags = available_tags.order_by('parent__name', 'name')
+    context['available_tags'] = available_tags
     ''' Chains '''
     context['available_chains'] = Chain.objects.filter(children=None).exclude(locations=self.object)
     return context
@@ -285,34 +296,27 @@ class LocationView(DetailView):
     comments = Comment.objects.filter(location__slug=self.object.slug, status='p')
     comments = filter_visibility(self.request.user, comments)
     if not self.request.user.is_authenticated:
-    #   comments =  comments.filter(visibility__in='a,c') |\
-    #               comments.filter(visibility='p', user=self.request.user) |\
-    #               comments.filter(visibility='f', user__profile__family=self.request.user) |\
-    #               comments.filter(visibility='f', user=self.request.user)
-    # else:
       comments = comments.filter(visibility='a')
       context['could_have_comments'] = Comment.objects.filter(location__slug=self.object.slug, status='p', visibility='c')
     context['comments'] = comments.order_by('-date_added').distinct()
     ''' Lists '''
     lists = ListLocation.objects.filter(list__status='p', location=self.object)
     available_lists = List.objects.filter(status='p')
-    if self.request.user.is_authenticated:
-      lists = lists.filter(list__visibility__in='p,c') |\
-              lists.filter(list__visibility='f', list__user__profile__family=self.request.user) |\
-              lists.filter(list__visibility__in='f,q', list__user=self.request.user)
-      available_lists = available_lists.filter(visibility__in='p,c') |\
-                        available_lists.filter(visibility='f', user__profile__family=self.request.user) |\
-                        available_lists.filter(visibility__in='f,q', user=self.request.user)
-    else:
-      lists = lists.filter(list__visibility='p')
-      available_lists = available_lists.filter(visibility='p')
+    lists = filter_status(self.request.user, lists)
+    lists = filter_visibility(self.request.user, lists)
+    available_lists = filter_status(self.request.user, available_lists)
+    available_lists=filter_visibility(self.request.user, available_lists)
     lists = lists.order_by('list__name').distinct()
     available_lists = available_lists.exclude(locations__location=self.object).order_by().distinct()
     context['lists'] = lists
-    
     context['available_lists'] = available_lists
     ''' Tags '''
-    context['tags'] = Tag.objects.filter(locations__slug=self.object.slug).order_by('list_as', 'name').distinct()
+    tags = Tag.objects.filter(locations__slug=self.object.slug)
+    tags = filter_status(self.request.user, tags)
+    tags = filter_visibility(self.request.user, tags)
+    tags = tags.order_by('list_as', 'name').distinct()
+    context['tags'] = tags
+    ''' Visits '''
     if self.get_object().visibility == 'f':
       if hasattr(self.get_object().user, 'profile'):
         context['family'] = self.get_object().user.profile.family.all()

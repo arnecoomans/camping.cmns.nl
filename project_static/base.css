@@ -25,11 +25,10 @@ a:not(.tag):hover:has(svg) {
   background-color: inherit;
   padding: 0;
 }
-a.tag > img {
-  fill: orange;
-  color: green;
+a.navbar-brand:hover,
+a.nav-link:hover {
+  color: var(--contrast-color);
 }
-
 /** HEADER */
 header {
   font-family: var(--font-header);

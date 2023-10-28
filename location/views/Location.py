@@ -283,14 +283,16 @@ class LocationView(DetailView):
     context['scope'] = f"{ _(self.object.getCategory()) }: { self.object.name }"
     ''' Comments '''
     comments = Comment.objects.filter(location__slug=self.object.slug, status='p')
-    if self.request.user.is_authenticated:
-      comments =  comments.filter(visibility__in='a,c') |\
-                  comments.filter(visibility='p', user=self.request.user) |\
-                  comments.filter(visibility='f', user__profile__family=self.request.user) |\
-                  comments.filter(visibility='f', user=self.request.user)
-    else:
+    comments = filter_visibility(self.request.user, comments)
+    if not self.request.user.is_authenticated:
+    #   comments =  comments.filter(visibility__in='a,c') |\
+    #               comments.filter(visibility='p', user=self.request.user) |\
+    #               comments.filter(visibility='f', user__profile__family=self.request.user) |\
+    #               comments.filter(visibility='f', user=self.request.user)
+    # else:
       comments = comments.filter(visibility='a')
       context['could_have_comments'] = Comment.objects.filter(location__slug=self.object.slug, status='p', visibility='c')
+    context['comments'] = comments.order_by('-date_added').distinct()
     ''' Lists '''
     lists = ListLocation.objects.filter(list__status='p', location=self.object)
     available_lists = List.objects.filter(status='p')
@@ -311,7 +313,6 @@ class LocationView(DetailView):
     context['available_lists'] = available_lists
     ''' Tags '''
     context['tags'] = Tag.objects.filter(locations__slug=self.object.slug).order_by('list_as', 'name').distinct()
-    context['comments'] = comments.order_by('-date_added').distinct()
     if self.get_object().visibility == 'f':
       if hasattr(self.get_object().user, 'profile'):
         context['family'] = self.get_object().user.profile.family.all()
@@ -319,9 +320,10 @@ class LocationView(DetailView):
     return context
   
   def get_visitors(self):
-    result = VisitedIn.objects.filter(user=self.request.user, location=self.get_object())
-    result = filter_visibility(self.request.user, result)
-    return result
+    if self.request.user.is_authenticated:
+      result = VisitedIn.objects.filter(user=self.request.user, location=self.get_object())
+      result = filter_visibility(self.request.user, result)
+      return result
 
 ''' CREATE VIEWS '''
 

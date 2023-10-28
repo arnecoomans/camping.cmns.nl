@@ -9,6 +9,9 @@ from django.contrib.auth.password_validation import validate_password
 from django.conf import settings
 from django.shortcuts import redirect
 
+from .func_filter_status import filter_status
+from .func_filter_visibility import filter_visibility
+
 
 from django.utils.translation import gettext as _
 
@@ -27,7 +30,11 @@ class ProfileView(UpdateView):
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context['profile'] = self.get_object()
-    context['homes'] = Location.objects.filter(category__slug='home', user=self.request.user)
+    homes = Location.objects.filter(category__slug='home')
+    homes = filter_status(self.request.user, homes)
+    homes = filter_visibility(self.request.user, homes)
+    homes = homes.order_by().distinct
+    context['homes'] = homes
     context['available_family'] = User.objects.exclude(id__in=self.get_object().family.all()).exclude(id=self.request.user.id)
     context['scope'] = f"{ _('profile') }: { _('edit your profile') }"
     return context

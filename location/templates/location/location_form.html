@@ -164,11 +164,11 @@
           </dl>
         {% endif %}
         <!-- Manage Tags -->
-        {% if location.tags.all.count > 0 %}
+        {% if tags.all.count > 0 %}
           <dl>
             <dt>{% translate 'Tags' %}:</dt>
               <dd> 
-                {% for tag in location.tags.all %}
+                {% for tag in tags.all %}
                   {{ tag|title }} <a href="{% url 'location:ToggleTag' location.slug tag.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove tag' %} {{ tag.name|title }} {% translate 'from'|capfirst %} {{ location.name }}"><img src="{% static 'bootstrap-icons/x.svg' %}"></a>{% if not forloop.last %}, {% endif %}
                 {% endfor %}
               </dd>

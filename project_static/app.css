@@ -50,3 +50,18 @@ a.tag {
 div.location.flash.card {
   margin: 10px;
 }
+
+/** Filters */
+ul.filter.list {
+  list-style-type: none;
+}
+ul.filter.list > li {
+
+}
+#content>div.card.filter.card {
+  padding-bottom: 0em;
+  margin: 1em auto;
+}
+ul.filter.list > li > a:not(.tag):hover:has(svg) {
+  color: inherit;
+}

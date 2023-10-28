@@ -53,8 +53,13 @@ class LocationMasterView:
         if 'chain' not in context['active_filters']['query']:
           context['active_filters']['query']['chain'] = []
         context['active_filters']['query']['chain'].append(chain)
+    ''' Favorites '''
+    if 'favorites' in self.request.GET and self.request.GET.get('filters', '') != 'false':
+      context['active_filters']['favorites'] = True
+    ''' Search Q '''
     if self.request.GET.get('q', ''):
       context['q'] = self.request.GET.get('q', '')
+    context['favorites'] = self.get_queryset().filter(favorite_of__user=self.request.user)
     return context
 
   def filter_queryset(self, queryset):
@@ -81,6 +86,10 @@ class LocationMasterView:
     if hasattr(self.request.user, 'profile'):
       if self.request.user.profile.hide_least_liked:
         queryset = queryset.exclude(slug__in=self.request.user.profile.least_liked.values_list('slug', flat=True))
+    ''' Process the favorites filter '''
+    if 'favorites' in self.request.GET:
+      if hasattr(self.request.user, 'profile'):
+        queryset = queryset.filter(favorite_of__user=self.request.user)
     ''' Process ?q= filters '''
     if self.request.GET.get('q', ''):
       query = self.request.GET.get('q', '').split(' ')

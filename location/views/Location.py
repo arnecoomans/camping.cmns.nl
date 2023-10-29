@@ -77,7 +77,8 @@ class LocationMasterView:
     ''' Search Q '''
     if self.request.GET.get('q', ''):
       context['q'] = self.request.GET.get('q', '')
-    context['favorites'] = self.get_queryset().filter(favorite_of__user=self.request.user)
+    if self.request.user.is_authenticated:
+      context['favorites'] = self.get_queryset().filter(favorite_of__user=self.request.user)
     return context
 
   def filter_queryset(self, queryset):

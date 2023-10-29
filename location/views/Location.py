@@ -207,7 +207,7 @@ class EditLocationMaster(UpdateView):
 ''' Special Functions'''
 def CreatCategories(request):
   parent = None
-  for category in ['Home', 'Camping', 'Hotel', 'Bed & Breakfast', 'Chambre D\'Hôtes', 'Safaritent', 'Gite']:
+  for category in ['Home', 'Camping', 'Hotel', 'Bed & Breakfast', 'Chambre D\'Hôtes', 'Safaritent', 'Gite', 'Caravan (rental)']:
     Category.objects.create(
       slug = slugify(category),
       name = category,

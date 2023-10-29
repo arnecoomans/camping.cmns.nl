@@ -11,14 +11,18 @@
       <h3>{% translate 'your information'|capfirst %}</h3>
       <dl>
         <dt><label for="first_name">{% translate 'first name'|capfirst %}</label></dt>
-          <dd><input class="form-control form-control-lg" name="first_name" id="first_name" value="{{ profile.user.first_name }}"></dd>
+          <dd><input class="form-control form-control-lg" name="first_name" id="first_name" value="{{ profile.user.first_name }}" required></dd>
       </dl>
       <dl>
         <dt><label for="last_name">{% translate 'last name'|capfirst %}</label></dt>
           <dd><input class="form-control form-control-lg" name="last_name" id="last_name" value="{{ profile.user.last_name }}"></dd>
       </dl>
       <dl>
-        <dt><label for="email">{% translate 'email'|capfirst %} ({% translate 'username'|capfirst %})</label></dt>
+        <dt><label for="username">{% translate 'username'|capfirst %}</label></dt>
+          <dd><input class="form-control form-control-lg" name="username" id="username" value="{{ profile.user.username }}" required disabled></dd>
+      </dl>
+      <dl>
+        <dt><label for="email">{% translate 'email'|capfirst %}</label></dt>
           <dd><input class="form-control form-control-lg" type="email" name="email" id="email" value="{{ profile.user.email }}" disabled></dd>
       </dl>
 

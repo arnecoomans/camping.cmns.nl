@@ -79,6 +79,7 @@ class Category(models.Model):
 
   class Meta:
     verbose_name_plural = 'categories'
+    ordering = ['parent__name', 'name']
 
   def __str__(self) -> str:
     if self.parent:

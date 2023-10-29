@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-15 11:35+0200\n"
-"PO-Revision-Date: 2023-10-15 12:19+0200\n"
+"POT-Creation-Date: 2023-10-29 19:40+0100\n"
+"PO-Revision-Date: 2023-10-29 19:46+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -16,93 +16,52 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4\n"
+"X-Generator: Poedit 3.4.1\n"
 
-#: location/models/Comment.py:12 location/models/List.py:101
-#: location/models/Location.py:128
-#: location/templates/location/comment_add.html:16
-#: location/templates/location/comment_form.html:33
-msgid "public"
-msgstr "publiek"
-
-#: location/models/Comment.py:13 location/models/List.py:102
-#: location/models/Location.py:129
-msgid "commmunity"
-msgstr ""
-
-#: location/models/Comment.py:14 location/models/List.py:103
-#: location/models/Location.py:130
-#: location/templates/location/comment_add.html:14
-#: location/templates/location/comment_form.html:31
-msgid "family"
-msgstr "familie"
-
-#: location/models/Comment.py:15 location/models/List.py:104
-#: location/models/Location.py:131
-#: location/templates/location/comment_add.html:13
-#: location/templates/location/comment_form.html:30
-msgid "private"
-msgstr "privé"
-
-#: location/models/Comment.py:21 location/models/List.py:109
-#: location/models/Location.py:136 location/models/Tag.py:24
-msgid "published"
-msgstr "gepubliceerd"
-
-#: location/models/Comment.py:22 location/models/List.py:110
-#: location/models/Location.py:137 location/models/Tag.py:25
-msgid "revoked"
-msgstr "teruggetrokken"
-
-#: location/models/Comment.py:23 location/models/List.py:111
-#: location/models/Location.py:138 location/models/Tag.py:26
-msgid "deleted"
-msgstr "verwijderd"
-
-#: location/models/List.py:32 location/models/List.py:62
-#: location/models/List.py:85 location/models/List.py:233
+#: location/models/List.py:31 location/models/List.py:61
+#: location/models/List.py:84 location/models/List.py:211
 msgid "unknown"
 msgstr "onbekend"
 
-#: location/models/List.py:34 location/models/List.py:64
+#: location/models/List.py:33 location/models/List.py:63
 msgid "under one minute"
 msgstr "minder dan één minuut"
 
-#: location/models/List.py:87 location/models/List.py:235
+#: location/models/List.py:86 location/models/List.py:213
 msgid "under 1 km"
 msgstr "minder dan 1 km"
 
-#: location/models/List.py:96 location/models/Location.py:36
-#: location/models/Location.py:101
+#: location/models/List.py:95 location/models/Location.py:36
+#: location/models/Location.py:97
 msgid "Name of location as it is identified by"
 msgstr "Naam van locatie"
 
-#: location/models/List.py:97 location/models/List.py:153
-#: location/models/Location.py:38 location/models/Location.py:107
+#: location/models/List.py:96 location/models/List.py:134
+#: location/models/Location.py:38 location/models/Location.py:103
 msgid "Markdown is supported"
 msgstr "Markdown wordt ondersteund"
 
-#: location/models/List.py:119 location/templates/location/list_detail.html:6
+#: location/models/List.py:100 location/templates/location/list_detail.html:6
 #: location/templates/location/list_list.html:11
 msgid "list"
 msgstr "lijst"
 
-#: location/models/List.py:120 location/templates/location/list_list.html:7
-#: location/templates/location/location_detail.html:104
-#: location/templates/location/location_detail.html:109
-#: location/views/List.py:17 templates/navigation.html:43
+#: location/models/List.py:101 location/templates/location/list_list.html:7
+#: location/templates/location/location_detail.html:140
+#: location/templates/location/location_detail.html:145
+#: location/views/List.py:46 templates/navigation.html:44
 msgid "lists"
 msgstr "lijsten"
 
-#: location/models/List.py:162
+#: location/models/List.py:140
 msgid "list-location"
 msgstr "lijst-locatie"
 
-#: location/models/List.py:163
+#: location/models/List.py:141
 msgid "list-locations"
 msgstr "lijst-locaties"
 
-#: location/models/Location.py:37 location/models/Location.py:102
+#: location/models/Location.py:37 location/models/Location.py:98
 msgid "Full website address of location"
 msgstr "Volledige website van locatie"
 
@@ -110,21 +69,21 @@ msgstr "Volledige website van locatie"
 msgid "full url of link"
 msgstr "volledige url van link"
 
-#: location/models/Location.py:77
+#: location/models/Location.py:72
 msgid "Name of category"
 msgstr "Categorienaam"
 
-#: location/models/Location.py:103
+#: location/models/Location.py:99
 msgid ""
 "Full street address of location, including as much information as possible, "
 "such as city, region, country"
 msgstr ""
 
-#: location/models/Location.py:105
+#: location/models/Location.py:101
 msgid "Name of owner(s), if known"
 msgstr "Naam van eigenaar/eigenaren (indien bekend)"
 
-#: location/models/Location.py:109
+#: location/models/Location.py:105
 msgid ""
 "Add links to related websites, such as blogs refering to this location or "
 "review websites"
@@ -132,19 +91,149 @@ msgstr ""
 "Links naar gerelateerde websites toevoegen, zoals blogs die naar deze "
 "locatie verwijzen of review-websites"
 
-#: location/models/Location.py:118
+#: location/models/Location.py:114
 msgid "Meta description taken from website, if available"
 msgstr ""
 
-#: location/models/Profile.py:14
-#: location/templates/location/profile_form.html:59
-#: location/templates/location/profile_form.html:68
+#: location/models/Profile.py:15
+#: location/templates/location/profile_form.html:39
+#: location/templates/location/profile_form.html:90
+#: location/templates/location/profile_form.html:114
 msgid "family members"
 msgstr "familieleden"
 
-#: location/models/Tag.py:10
+#: location/models/Profile.py:19
+msgid ""
+"It is possible to \"unlike\" a location. Enable this field to hide the least-"
+"liked locations."
+msgstr ""
+"Het is mogelijk om een locatie niet-leuk te vinden. Vink dit veld aan om "
+"niet-leuke locaties te verbergen."
+
+#: location/models/Profile.py:34
+msgid "january"
+msgstr "januari"
+
+#: location/models/Profile.py:34
+msgid "february"
+msgstr "februari"
+
+#: location/models/Profile.py:34
+msgid "march"
+msgstr "maart"
+
+#: location/models/Profile.py:34
+msgid "april"
+msgstr "april"
+
+#: location/models/Profile.py:34
+msgid "may"
+msgstr "mei"
+
+#: location/models/Profile.py:34
+msgid "june"
+msgstr "juni"
+
+#: location/models/Profile.py:34
+msgid "july"
+msgstr "juli"
+
+#: location/models/Profile.py:34
+msgid "august"
+msgstr "augustus"
+
+#: location/models/Profile.py:34
+msgid "september"
+msgstr "september"
+
+#: location/models/Profile.py:34
+msgid "october"
+msgstr "oktober"
+
+#: location/models/Profile.py:34
+msgid "november"
+msgstr "november"
+
+#: location/models/Profile.py:34
+msgid "december"
+msgstr "december"
+
+#: location/models/Tag.py:11
 msgid "Name of tag"
 msgstr "Naam van tag"
+
+#: location/models/base_model.py:12
+#: location/templates/location/comment_add.html:16
+#: location/templates/location/comment_form.html:33
+msgid "public"
+msgstr "publiek"
+
+#: location/models/base_model.py:13
+msgid "commmunity"
+msgstr ""
+
+#: location/models/base_model.py:14
+#: location/templates/location/comment_add.html:14
+#: location/templates/location/comment_form.html:31
+msgid "family"
+msgstr "familie"
+
+#: location/models/base_model.py:15
+#: location/templates/location/comment_add.html:13
+#: location/templates/location/comment_form.html:30
+msgid "private"
+msgstr "privé"
+
+#: location/models/base_model.py:20
+msgid "published"
+msgstr "gepubliceerd"
+
+#: location/models/base_model.py:21
+msgid "revoked"
+msgstr "teruggetrokken"
+
+#: location/models/base_model.py:22
+msgid "deleted"
+msgstr "verwijderd"
+
+#: location/templates/location/chain_form.html:6
+#: location/templates/location/location_detail.html:116
+#: location/templates/location/location_form.html:99
+msgid "chain"
+msgstr "keten"
+
+#: location/templates/location/chain_form.html:10
+#: location/templates/location/list_form.html:10
+#: location/templates/location/location_form.html:18
+#: location/templates/location/tag_form.html:10
+msgid "name"
+msgstr "naam"
+
+#: location/templates/location/chain_form.html:14
+#: location/templates/location/tag_form.html:14
+msgid "parent"
+msgstr ""
+
+#: location/templates/location/chain_form.html:16
+#: location/templates/location/tag_form.html:16
+msgid "select parent"
+msgstr "selecteer parent"
+
+#: location/templates/location/chain_form.html:24
+#: location/templates/location/comment_form.html:46
+#: location/templates/location/list_form.html:28
+#: location/templates/location/tag_form.html:38
+msgid "submit"
+msgstr "verstuur"
+
+#: location/templates/location/chain_form.html:25
+#: location/templates/location/comment_form.html:47
+#: location/templates/location/list_form.html:29
+#: location/templates/location/location_form.html:84
+#: location/templates/location/location_form.html:86
+#: location/templates/location/tag_form.html:39
+msgid "cancel"
+msgstr "annuleren"
 
 #: location/templates/location/comment_add.html:9
 msgid "add your comment"
@@ -187,23 +276,9 @@ msgstr "selecteer locatie"
 msgid "select comment location"
 msgstr "selecter locatie van opmerking"
 
-#: location/templates/location/comment_form.html:46
-#: location/templates/location/list_form.html:28
-#: location/templates/location/tag_form.html:24
-msgid "submit"
-msgstr "verstuur"
-
-#: location/templates/location/comment_form.html:47
-#: location/templates/location/list_form.html:29
-#: location/templates/location/location_form.html:93
-#: location/templates/location/location_form.html:95
-#: location/templates/location/tag_form.html:25
-msgid "cancel"
-msgstr "annuleren"
-
 #: location/templates/location/comment_list.html:7
-#: location/templates/location/location_detail.html:137
-#: templates/navigation.html:38
+#: location/templates/location/location_detail.html:189
+#: templates/navigation.html:39
 msgid "comments"
 msgstr "opmerkingen"
 
@@ -217,8 +292,10 @@ msgstr "lijst van"
 
 #: location/templates/location/list_detail.html:7
 #: location/templates/location/list_form.html:18
-#: location/templates/location/location_detail.html:19
+#: location/templates/location/location_detail.html:22
+#: location/templates/location/location_detail.html:30
 #: location/templates/location/location_form.html:40
+#: location/templates/location/location_list.html:61
 #: location/templates/snippets/location_flashcard.html:10
 msgid "viewable by"
 msgstr "zichtbaar door"
@@ -231,144 +308,141 @@ msgstr "aangemaakt"
 msgid "last changed"
 msgstr "laatst gewijzigd"
 
-#: location/templates/location/list_detail.html:13
-#: location/templates/location/list_detail.html:44
+#: location/templates/location/list_detail.html:19
+#: location/templates/location/list_detail.html:50
 msgid "distance from"
 msgstr "afstand van"
 
-#: location/templates/location/list_detail.html:13
+#: location/templates/location/list_detail.html:19
 msgid "previous location"
 msgstr "vorige locatie"
 
-#: location/templates/location/list_detail.html:13
+#: location/templates/location/list_detail.html:19
 msgid "distance"
 msgstr "afstand"
 
-#: location/templates/location/list_detail.html:14
+#: location/templates/location/list_detail.html:20
 msgid "travel time"
 msgstr "reistijd"
 
-#: location/templates/location/list_detail.html:15
+#: location/templates/location/list_detail.html:21
 #: location/templates/location/location_list.html:16
-#: location/templates/location/tag_list.html:31
+#: location/templates/location/tag_list.html:28
+#: location/templates/location/tag_list.html:37
 msgid "location"
 msgid_plural "locations"
 msgstr[0] "locatie"
 msgstr[1] "locaties"
 
-#: location/templates/location/list_detail.html:16
+#: location/templates/location/list_detail.html:22
 #: location/templates/location/location_list.html:15
 msgid "department"
 msgstr "departement"
 
-#: location/templates/location/list_detail.html:17
+#: location/templates/location/list_detail.html:23
 msgid "nights"
 msgstr "nachten"
 
-#: location/templates/location/list_detail.html:18
+#: location/templates/location/list_detail.html:24
 msgid "price"
 msgstr "prijs"
 
-#: location/templates/location/list_detail.html:26
+#: location/templates/location/list_detail.html:32
 msgid "no locations have been added to this list"
 msgstr "er zijn geen locaties toegevoegd aan deze lijst"
 
-#: location/templates/location/list_detail.html:26
+#: location/templates/location/list_detail.html:32
 msgid "by you"
 msgstr "door jou"
 
-#: location/templates/location/list_detail.html:26
+#: location/templates/location/list_detail.html:32
 msgid "by the list owner"
 msgstr "door de lijst-gebruiker"
 
-#: location/templates/location/list_detail.html:30
+#: location/templates/location/list_detail.html:36
 msgid ""
 "to add a location or activity to this list, visit the location or activity "
 "and select \"add to list\""
 msgstr ""
 
-#: location/templates/location/list_detail.html:35
-#: location/templates/location/location_detail.html:142
+#: location/templates/location/list_detail.html:41
+#: location/templates/location/location_detail.html:194
 msgid "sign in"
 msgstr "inloggen"
 
-#: location/templates/location/list_detail.html:35
-#: location/templates/location/location_detail.html:142
+#: location/templates/location/list_detail.html:41
+#: location/templates/location/location_detail.html:194
 msgid "or"
 msgstr "of"
 
-#: location/templates/location/list_detail.html:35
-#: location/templates/location/location_detail.html:142
-#: templates/navigation.html:82
+#: location/templates/location/list_detail.html:41
+#: location/templates/location/location_detail.html:194
+#: templates/navigation.html:87
 #: templates/registration/user_register_form.html:6
-#: templates/registration/user_register_form.html:50
+#: templates/registration/user_register_form.html:54
 msgid "register"
 msgstr "registreer"
 
-#: location/templates/location/list_detail.html:35
+#: location/templates/location/list_detail.html:41
 msgid "to manage your own lists"
 msgstr "beheer jouw eigen lijsten"
 
-#: location/templates/location/list_detail.html:44
+#: location/templates/location/list_detail.html:50
 msgid "to"
 msgstr ""
 
-#: location/templates/location/list_detail.html:44
+#: location/templates/location/list_detail.html:50
 msgid "is"
-msgstr ""
+msgstr "is"
 
-#: location/templates/location/list_detail.html:82
-#: location/templates/location/list_detail.html:85
+#: location/templates/location/list_detail.html:113
+#: location/templates/location/list_detail.html:116
 #: location/templates/location/location_form.html:6
 #: location/templates/snippets/comment.html:20
 #: location/templates/snippets/comment.html:23
 msgid "edit"
-msgstr "bewerken"
+msgstr "bewerk"
 
-#: location/templates/location/list_detail.html:82
-#: location/templates/location/list_detail.html:83
+#: location/templates/location/list_detail.html:113
+#: location/templates/location/list_detail.html:114
 msgid "my list"
 msgstr "mijn lijst"
 
-#: location/templates/location/list_detail.html:83
-#: location/templates/location/list_detail.html:86
+#: location/templates/location/list_detail.html:114
+#: location/templates/location/list_detail.html:117
+#: location/templates/location/tag_detail.html:11
 #: location/templates/snippets/comment.html:21
 #: location/templates/snippets/comment.html:24
 msgid "delete"
 msgstr "verwijderen"
 
-#: location/templates/location/list_detail.html:85
-#: location/templates/location/list_detail.html:86
+#: location/templates/location/list_detail.html:116
+#: location/templates/location/list_detail.html:117
 msgid "this list"
 msgstr "deze lijst"
 
-#: location/templates/location/list_detail.html:89
+#: location/templates/location/list_detail.html:120
 msgid "edit my list"
 msgstr "bewerk mijn lijst"
 
-#: location/templates/location/list_detail.html:89
+#: location/templates/location/list_detail.html:120
 msgid "edit this list"
 msgstr "bewerk deze lijst"
 
-#: location/templates/location/list_detail.html:89
-#: location/templates/snippets/comment.html:27 templates/navigation.html:61
-#: templates/navigation.html:65
+#: location/templates/location/list_detail.html:120
+#: location/templates/location/location_detail.html:47
+#: location/templates/snippets/comment.html:27 templates/navigation.html:62
+#: templates/navigation.html:71
 msgid "in admin"
-msgstr ""
+msgstr "in admin"
 
-#: location/templates/location/list_detail.html:94
+#: location/templates/location/list_detail.html:125
 msgid "start from home"
 msgstr "start thuis"
 
-#: location/templates/location/list_detail.html:95
+#: location/templates/location/list_detail.html:126
 msgid "end at home"
 msgstr "eindig thuis"
-
-#: location/templates/location/list_form.html:10
-#: location/templates/location/location_form.html:18
-#: location/templates/location/tag_form.html:10
-msgid "name"
-msgstr "naam"
 
 #: location/templates/location/list_form.html:14
 #: location/templates/location/location_form.html:26
@@ -387,108 +461,151 @@ msgstr "gezien door"
 msgid "items"
 msgstr ""
 
-#: location/templates/location/list_list.html:30 templates/navigation.html:56
+#: location/templates/location/list_list.html:30 templates/navigation.html:57
 msgid "add list"
 msgstr "lijst toevoegen"
 
-#: location/templates/location/location_detail.html:11
+#: location/templates/location/location_detail.html:12
 msgid "marked"
 msgstr "gemarkeerd"
 
-#: location/templates/location/location_detail.html:14
 #: location/templates/location/location_detail.html:15
 #: location/templates/location/location_detail.html:16
+#: location/templates/location/location_detail.html:17
 msgid "see all in"
 msgstr "zie alles in"
 
-#: location/templates/location/location_detail.html:27
+#: location/templates/location/location_detail.html:26
+#: location/templates/location/location_list.html:58
+msgid "this is marked as your home"
+msgstr "dit is jouw thuis"
+
+#: location/templates/location/location_detail.html:36
+msgid "you like"
+msgstr "je vindt leuk"
+
+#: location/templates/location/location_detail.html:36
+msgid "like"
+msgstr "leuk vinden"
+
+#: location/templates/location/location_detail.html:36
+#: location/templates/location/location_detail.html:40
+msgid "this location"
+msgstr "deze locatie"
+
+#: location/templates/location/location_detail.html:40
+msgid "you don't like"
+msgstr "je vindt niet leuk"
+
+#: location/templates/location/location_detail.html:40
+msgid "dislike"
+msgstr "niet leuk"
+
+#: location/templates/location/location_detail.html:44
+#: location/templates/location/location_detail.html:47
+#: location/templates/location/tag_detail.html:9
 msgid "edit information of"
 msgstr "bewerk informatie van"
 
-#: location/templates/location/location_detail.html:41
+#: location/templates/location/location_detail.html:50
+msgid "reset location data and fetch again"
+msgstr "reset locatiegegevens en opnieuw ophalen"
+
+#: location/templates/location/location_detail.html:72
 #: location/templates/location/location_form.html:53
 msgid "address"
 msgstr "adres"
 
-#: location/templates/location/location_detail.html:43
+#: location/templates/location/location_detail.html:74
 #: location/templates/location/location_form.html:22
 msgid "website"
 msgstr ""
 
-#: location/templates/location/location_detail.html:47
+#: location/templates/location/location_detail.html:82
 msgid "owners names"
 msgstr "namen van de eigenaren"
 
-#: location/templates/location/location_detail.html:51
+#: location/templates/location/location_detail.html:86
 #: location/templates/location/location_form.html:58
 msgid "phone"
 msgstr "telefoon"
 
-#: location/templates/location/location_detail.html:55
+#: location/templates/location/location_detail.html:90
 msgid "home of"
 msgstr "thuis van"
 
-#: location/templates/location/location_detail.html:63
+#: location/templates/location/location_detail.html:98
 msgid "on the map"
 msgstr "op de kaart"
 
-#: location/templates/location/location_detail.html:67
+#: location/templates/location/location_detail.html:102
 msgid "on google maps"
 msgstr "op Google Maps"
 
-#: location/templates/location/location_detail.html:68
+#: location/templates/location/location_detail.html:103
 msgid "navigate to from home"
 msgstr "navigeer naar huis"
 
-#: location/templates/location/location_detail.html:69
+#: location/templates/location/location_detail.html:104
 msgid "navigate from"
 msgstr "navigeer vanaf"
 
-#: location/templates/location/location_detail.html:76
-#: location/templates/location/location_detail.html:78
+#: location/templates/location/location_detail.html:111
+msgid "more information"
+msgstr "jouw gegevens"
+
+#: location/templates/location/location_detail.html:113
 #: location/templates/location/location_form.html:30
+#: location/templates/snippets/location_list_filters.html:65
 msgid "category"
 msgstr "categorie"
 
-#: location/templates/location/location_detail.html:81
-#: location/templates/location/location_form.html:66
-msgid "chain"
-msgstr ""
-
-#: location/templates/location/location_detail.html:85
-#: location/templates/location/tag_list.html:7 location/views/Tag.py:18
-#: templates/navigation.html:32
+#: location/templates/location/location_detail.html:120
+#: location/templates/location/tag_list.html:7 location/views/Tag.py:23
+#: templates/navigation.html:33
 msgid "tags"
 msgstr ""
 
-#: location/templates/location/location_detail.html:94
+#: location/templates/location/location_detail.html:129
 msgid "link"
 msgstr ""
 
-#: location/templates/location/location_detail.html:94
+#: location/templates/location/location_detail.html:129
 msgid "links"
 msgstr ""
 
-#: location/templates/location/location_detail.html:105
+#: location/templates/location/location_detail.html:141
 #: location/templates/snippets/chain.html:2
 msgid "by"
 msgstr "door"
 
-#: location/templates/location/location_detail.html:123
+#: location/templates/location/location_detail.html:148
+msgid "create new list with"
+msgstr "nieuwe tag aanmaken"
+
+#: location/templates/location/location_detail.html:153
+msgid "create new list"
+msgstr "nieuwe tag aanmaken"
+
+#: location/templates/location/location_detail.html:163
 msgid "add to list"
 msgstr "toevoegen aan lijst"
 
-#: location/templates/location/location_detail.html:142
+#: location/templates/location/location_detail.html:173
+msgid "your visits"
+msgstr "jouw bezoeken"
+
+#: location/templates/location/location_detail.html:194
 msgid "to comment"
 msgstr "om een opmerking te plaatsen"
 
-#: location/templates/location/location_detail.html:142
+#: location/templates/location/location_detail.html:194
 msgid "or see comments shared with the community"
 msgstr "of zie opmerkingen die gedeeld zijn met de community"
 
 #: location/templates/location/location_form.html:6
-#: location/templates/location/profile_form.html:68
-#: location/templates/location/profile_form.html:71
+#: location/templates/location/profile_form.html:114
+#: location/templates/location/profile_form.html:118
 msgid "add"
 msgstr "toevoegen"
 
@@ -496,53 +613,70 @@ msgstr "toevoegen"
 msgid "owners"
 msgstr "eigenaren"
 
-#: location/templates/location/location_form.html:77
+#: location/templates/location/location_form.html:68
 msgid "user"
 msgstr "gebruiker"
 
-#: location/templates/location/location_form.html:91
+#: location/templates/location/location_form.html:82
 msgid "save changes to"
 msgstr "bewaar wijzigingen naar"
 
-#: location/templates/location/location_form.html:107
-msgid "Additional categories"
-msgstr "Extra categorieën"
+#: location/templates/location/location_form.html:101
+msgid "remove chain"
+msgstr "verwijder keten"
 
-#: location/templates/location/location_form.html:110
-msgid "remove category"
-msgstr "verwijder categorie"
-
-#: location/templates/location/location_form.html:110
-#: location/templates/location/location_form.html:143
+#: location/templates/location/location_form.html:101
+#: location/templates/location/location_form.html:136
+#: location/templates/location/location_form.html:172
 msgid "from"
 msgstr "van"
 
-#: location/templates/location/location_form.html:116
+#: location/templates/location/location_form.html:115
+msgid "new chain"
+msgstr "keten aanmaken"
+
+#: location/templates/location/location_form.html:122
+msgid "add chain"
+msgstr "keten toevoegen"
+
+#: location/templates/location/location_form.html:133
+msgid "Additional categories"
+msgstr "Extra categorieën"
+
+#: location/templates/location/location_form.html:136
+msgid "remove category"
+msgstr "verwijder categorie"
+
+#: location/templates/location/location_form.html:143
 msgid "Add additional category"
 msgstr "Extra categorie toevoegen"
 
-#: location/templates/location/location_form.html:130
+#: location/templates/location/location_form.html:158
 msgid "add category"
 msgstr "categorie toevoegen"
 
-#: location/templates/location/location_form.html:140
+#: location/templates/location/location_form.html:169
 msgid "Tags"
 msgstr ""
 
-#: location/templates/location/location_form.html:143
+#: location/templates/location/location_form.html:172
 msgid "remove tag"
 msgstr "verwijder tag"
 
-#: location/templates/location/location_form.html:149
+#: location/templates/location/location_form.html:178
 msgid "Add tag"
 msgstr "Tag toevoegen"
 
-#: location/templates/location/location_form.html:163
-#: location/templates/location/tag_list.html:40 templates/navigation.html:55
+#: location/templates/location/location_form.html:187
+msgid "new tag"
+msgstr "nieuwe tag aanmaken"
+
+#: location/templates/location/location_form.html:194
+#: location/templates/location/tag_list.html:46 templates/navigation.html:56
 msgid "add tag"
 msgstr "tag toevoegen"
 
-#: location/templates/location/location_form.html:166
+#: location/templates/location/location_form.html:197
 msgid "create new tag"
 msgstr "nieuwe tag aanmaken"
 
@@ -554,21 +688,21 @@ msgstr "land"
 msgid "region"
 msgstr "regio"
 
-#: location/templates/location/location_list.html:57
-msgid "this is marked as your home"
-msgstr "dit is jouw thuis"
+#: location/templates/location/location_list.html:59
+msgid "you like this location"
+msgstr "je vindt deze locatie leuk"
 
-#: location/templates/location/location_list.html:58
-msgid "this location is marked as favorite"
-msgstr "deze locatie is jouw favoriet"
+#: location/templates/location/location_list.html:60
+msgid "you don't like this location"
+msgstr "je vindt deze locatie niet leuk"
 
-#: location/templates/location/location_list.html:67
-#: templates/navigation.html:54
+#: location/templates/location/location_list.html:70
+#: templates/navigation.html:55
 msgid "add activity"
 msgstr "activiteit toevoegen"
 
-#: location/templates/location/location_list.html:69
-#: templates/navigation.html:53
+#: location/templates/location/location_list.html:72
+#: templates/navigation.html:54
 msgid "add location"
 msgstr "locatie toevoegen"
 
@@ -581,12 +715,12 @@ msgid "your information"
 msgstr "jouw gegevens"
 
 #: location/templates/location/profile_form.html:13
-#: templates/registration/user_register_form.html:22
+#: templates/registration/user_register_form.html:26
 msgid "first name"
 msgstr "voornaam"
 
 #: location/templates/location/profile_form.html:17
-#: templates/registration/user_register_form.html:28
+#: templates/registration/user_register_form.html:32
 msgid "last name"
 msgstr "achternaam"
 
@@ -595,56 +729,93 @@ msgid "email"
 msgstr "e-mail"
 
 #: location/templates/location/profile_form.html:21
+#: templates/registration/snippet_login.html:7
+#: templates/registration/user_register_form.html:16
 msgid "username"
 msgstr "gebruikersnaam"
 
 #: location/templates/location/profile_form.html:27
-#: templates/navigation.html:15
 msgid "home"
 msgstr "thuis"
 
-#: location/templates/location/profile_form.html:41
+#: location/templates/location/profile_form.html:42
+msgid "has home"
+msgstr "thuis"
+
+#: location/templates/location/profile_form.html:42
+msgid "has no home"
+msgstr "start thuis"
+
+#: location/templates/location/profile_form.html:51
 msgid "save changes"
 msgstr "bewaar wijzigingen"
 
-#: location/templates/location/profile_form.html:48
+#: location/templates/location/profile_form.html:58
+#: location/templates/snippets/location_list_filters.html:35
 msgid "favorites"
 msgstr "favorieten"
 
-#: location/templates/location/profile_form.html:51
-msgid "remove favorite "
-msgstr "verwijder favoriet "
+#: location/templates/location/profile_form.html:61
+#: location/templates/location/profile_form.html:71
+#: location/templates/snippets/location_list_filters.html:15
+#: location/templates/snippets/location_list_filters.html:18
+#: location/templates/snippets/location_list_filters.html:21
+#: location/templates/snippets/location_list_filters.html:29
+msgid "remove"
+msgstr "verwijder"
 
-#: location/templates/location/profile_form.html:51
+#: location/templates/location/profile_form.html:61
 msgid "from favorites"
 msgstr "van favorieten"
 
-#: location/templates/location/profile_form.html:62
+#: location/templates/location/profile_form.html:68
+msgid "least liked"
+msgstr "niet leuk gevonden"
+
+#: location/templates/location/profile_form.html:71
+msgid "from least-liked"
+msgstr "van niet leuk gevonden"
+
+#: location/templates/location/profile_form.html:81
+msgid "hide locations from search results"
+msgstr "verberg locaties in zoekresultaten"
+
+#: location/templates/location/profile_form.html:93
 msgid "remove family member "
 msgstr "verwijder familielid "
 
-#: location/templates/location/profile_form.html:71
+#: location/templates/location/profile_form.html:100
+msgid "you are marked family of"
+msgstr "je bent familie van"
+
+#: location/templates/location/profile_form.html:118
 msgid "to your family"
 msgstr "aan jouw familie"
 
-#: location/templates/location/profile_form.html:73
+#: location/templates/location/profile_form.html:121
 msgid "no users available to add to your family"
 msgstr "er zijn geen gebruikers beschikbaar om aan jouw familie toe te voegen"
 
 #: location/templates/location/tag_detail.html:6
 #: location/templates/location/tag_list.html:11
+#: location/templates/snippets/location_list_filters.html:73
 msgid "tag"
 msgstr ""
 
-#: location/templates/location/tag_form.html:14
-msgid "parent"
-msgstr ""
+#: location/templates/location/tag_detail.html:11
+msgid "restore"
+msgstr "herstellen"
 
-#: location/templates/location/tag_form.html:16
-msgid "select parent"
-msgstr "selecteer parent"
+#: location/templates/location/tag_form.html:26
+msgid "show as"
+msgstr "toon als"
 
-#: location/templates/location/tag_list.html:32
+#: location/templates/location/tag_form.html:28
+msgid "select list as"
+msgstr "selecteer lijst als"
+
+#: location/templates/location/tag_list.html:29
+#: location/templates/location/tag_list.html:38
 #: location/templates/snippets/location_flashcard.html:8
 msgid "activity"
 msgid_plural "activities"
@@ -716,31 +887,35 @@ msgstr "de community"
 msgid "just me"
 msgstr "alleen ik"
 
-#: location/templates/snippets/location_list_filters.html:5
+#: location/templates/snippets/location_list_filters.html:4
 msgid "showing"
-msgstr ""
-
-#: location/templates/snippets/location_list_filters.html:7
-msgid "with filters"
-msgstr "met filters"
+msgstr "tonen"
 
 #: location/templates/snippets/location_list_filters.html:9
-#: location/templates/snippets/location_list_filters.html:12
-#: location/templates/snippets/location_list_filters.html:15
-#: location/templates/snippets/location_list_filters.html:23
-msgid "remove"
-msgstr "verwijder"
+#, fuzzy
+#| msgid "filter by"
+msgid "filtered on"
+msgstr "filter op"
 
-#: location/templates/snippets/location_list_filters.html:9
-#: location/templates/snippets/location_list_filters.html:12
 #: location/templates/snippets/location_list_filters.html:15
-#: location/templates/snippets/location_list_filters.html:23
+#: location/templates/snippets/location_list_filters.html:18
+#: location/templates/snippets/location_list_filters.html:21
+#: location/templates/snippets/location_list_filters.html:29
 msgid "from filter"
 msgstr "van filter"
 
-#: location/templates/snippets/location_list_filters.html:31
+#: location/templates/snippets/location_list_filters.html:35
+#: location/templates/snippets/location_list_filters.html:81
+msgid "show only favorites"
+msgstr "alleen favorieten tonen"
+
+#: location/templates/snippets/location_list_filters.html:43
 msgid "filter by"
 msgstr "filter op"
+
+#: location/templates/snippets/location_list_filters.html:47
+msgid "list locations in"
+msgstr "toon locaties in"
 
 #: location/templates/snippets/login_or_register.html:3
 msgid "this feature"
@@ -764,42 +939,41 @@ msgstr ""
 msgid "see details of tag"
 msgstr "zie details van tag"
 
-#: location/views/Location.py:115 location/views/Location.py:319
-#: templates/navigation.html:21
+#: location/views/Location.py:302 templates/navigation.html:22
 msgid "locations"
 msgstr "locaties"
 
-#: location/views/Location.py:295 templates/navigation.html:26
+#: location/views/Profile.py:111
+msgid ""
+"Succesfully registered your account. Please log in with your username and "
+"chosen password."
+msgstr ""
+
+#: templates/navigation.html:27
 msgid "activities"
 msgstr "activiteiten"
 
-#: location/views/Profile.py:147
-msgid ""
-"Succesfully registered your account. Please log in with your e-mail address "
-"and chosen password. "
-msgstr ""
-
-#: templates/navigation.html:60 templates/navigation.html:61
+#: templates/navigation.html:61 templates/navigation.html:62
 msgid "edit location"
 msgstr "bewerk locatie"
 
-#: templates/navigation.html:64 templates/navigation.html:65
-msgid "edit activity"
-msgstr "activiteit bewerken"
+#: templates/navigation.html:70 templates/navigation.html:71
+msgid "edit list"
+msgstr "bewerk mijn lijst"
 
-#: templates/navigation.html:70
+#: templates/navigation.html:75
 msgid "admin"
 msgstr "admin"
 
-#: templates/navigation.html:73
+#: templates/navigation.html:78
 msgid "my profile"
 msgstr "mijn profiel"
 
-#: templates/navigation.html:74
+#: templates/navigation.html:79
 msgid "log out"
 msgstr "uitloggen"
 
-#: templates/navigation.html:79 templates/registration/snippet_login.html:2
+#: templates/navigation.html:84 templates/registration/snippet_login.html:2
 msgid "log in"
 msgstr "inloggen"
 
@@ -808,12 +982,8 @@ msgstr "inloggen"
 msgid "you are already logged in"
 msgstr "je bent al ingelogd"
 
-#: templates/registration/snippet_login.html:7
-msgid "username or email address"
-msgstr "gebruikersnaam of e-mailadres"
-
 #: templates/registration/snippet_login.html:13
-#: templates/registration/user_register_form.html:37
+#: templates/registration/user_register_form.html:41
 msgid "password"
 msgstr "wachtwoord"
 
@@ -837,49 +1007,64 @@ msgstr "en"
 msgid "you cannot register"
 msgstr "je kan niet registreren"
 
-#: templates/registration/user_register_form.html:16
+#: templates/registration/user_register_form.html:20
 msgid "email address"
 msgstr "e-mail adres"
 
-#: templates/registration/user_register_form.html:41
+#: templates/registration/user_register_form.html:45
 msgid "your password must meet the following requirements"
 msgstr "jouw wachtwoord moet voldoen aan de hiernagenoemde eisen"
 
-#: templates/registration/user_register_form.html:43
-#: templates/registration/user_register_form.html:44
-#: templates/registration/user_register_form.html:45
-#: templates/registration/user_register_form.html:46
+#: templates/registration/user_register_form.html:47
+#: templates/registration/user_register_form.html:48
+#: templates/registration/user_register_form.html:49
+#: templates/registration/user_register_form.html:50
 msgid "your password"
 msgstr "jouw wachtwoord"
 
-#: templates/registration/user_register_form.html:43
+#: templates/registration/user_register_form.html:47
 msgid "may not look like your personal details"
 msgstr "mag niet op jouw persoonlijke gegevens lijken"
 
-#: templates/registration/user_register_form.html:44
+#: templates/registration/user_register_form.html:48
 msgid "has 8 characters or more"
 msgstr "heeft 8 tekens of meer"
 
-#: templates/registration/user_register_form.html:45
+#: templates/registration/user_register_form.html:49
 msgid "is not a widely used password"
 msgstr "is geen veelgebruikt wachtwoord"
 
-#: templates/registration/user_register_form.html:46
+#: templates/registration/user_register_form.html:50
 msgid "may not only contain numbers"
 msgstr "mag niet alleen cijfers bevatten"
 
-#: templates/registration/user_register_form.html:52
+#: templates/registration/user_register_form.html:56
 msgid "If you already have an account"
 msgstr "Als je al een account hebt"
 
-#: templates/registration/user_register_form.html:52
+#: templates/registration/user_register_form.html:56
 msgid "login here"
 msgstr "hier inloggen"
 
-#: vknt/settings.py:121
+#: vknt/settings.py:120
 msgid "English"
 msgstr "Engels"
 
-#: vknt/settings.py:122
+#: vknt/settings.py:121
 msgid "Dutch"
 msgstr "Nederlands"
+
+#~ msgid "this location is marked as favorite"
+#~ msgstr "deze locatie is jouw favoriet"
+
+#~ msgid "remove favorite "
+#~ msgstr "verwijder favoriet "
+
+#~ msgid "with filters"
+#~ msgstr "met filters"
+
+#~ msgid "edit activity"
+#~ msgstr "activiteit bewerken"
+
+#~ msgid "username or email address"
+#~ msgstr "gebruikersnaam of e-mailadres"

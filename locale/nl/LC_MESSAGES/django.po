@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 19:40+0100\n"
-"PO-Revision-Date: 2023-10-29 19:49+0100\n"
+"PO-Revision-Date: 2023-10-29 19:56+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -414,7 +414,7 @@ msgstr "mijn lijst"
 #: location/templates/snippets/comment.html:21
 #: location/templates/snippets/comment.html:24
 msgid "delete"
-msgstr "verwijderen"
+msgstr "verwijder"
 
 #: location/templates/location/list_detail.html:116
 #: location/templates/location/list_detail.html:117

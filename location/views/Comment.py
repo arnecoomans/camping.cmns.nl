@@ -4,7 +4,9 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.shortcuts import redirect, reverse
 from django.contrib import messages
 from django.utils.translation import gettext as _
+from django.contrib.auth.models import User
 
+from .func_filter_status import filter_status
 from .func_filter_visibility import filter_visibility
 
 from location.models.Comment import Comment
@@ -28,12 +30,28 @@ class CommentListView(ListView):
   model = Comment
 
   def get_queryset(self):
-    queryset = Comment.objects.filter(status='p')
-    ''' Add private objects for current user to queryset '''
+    queryset = Comment.objects.all()
+    queryset = filter_status(self.request.user, queryset)
     queryset = filter_visibility(self.request.user, queryset)
     queryset = queryset.order_by('-date_modified').distinct()
 
     return queryset
+
+class CommentByUserListView(ListView):
+  model = Comment
+
+  def get_queryset(self):
+    try:
+      user = User.objects.get(username=self.kwargs['username'])
+    except User.DoesNotExist:
+      messages.add_message(self.request, messages.ERROR, f"{ _('can not find user') } { _('to list comments of') }.")
+      return Comment.objects.none()
+    queryset = Comment.objects.filter(user=user)
+    queryset = filter_status(self.request.user, queryset)
+    queryset = filter_visibility(self.request.user, queryset)
+    queryset = queryset.order_by('-date_modified').distinct()
+    return queryset
+
 
 class DeleteComment(UpdateView):
   model = Comment

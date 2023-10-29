@@ -43,6 +43,7 @@ urlpatterns = [
   path('comment/<pk>/undelete/', views.UndeleteComment.as_view(), name='UndeleteComment'),
   path('comment/<pk>/edit/', views.EditComment.as_view(), name='EditComment'),
   path('comments/', views.CommentListView.as_view(), name='comments'),
+  path('comments/by:<username>/', views.CommentByUserListView.as_view(), name='CommentsByUser'),
 
   path('tags/', views.TagListView.as_view(), name='tags'),
   path('tag/add/', views.AddTag.as_view(), name='AddTag'),

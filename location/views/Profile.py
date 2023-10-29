@@ -1,6 +1,5 @@
 from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
-
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group

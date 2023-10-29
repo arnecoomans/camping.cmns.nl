@@ -3,7 +3,7 @@
 <div class="comment">
   <div class="header">    
     <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ comment.date_added|date:'d/m/Y h:m' }}">{{ comment.date_added|timesince  }} {% translate 'ago' context 'how long ago' %}</span>
-    <a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all comments by'|capfirst %} {{ comment.user.get_full_name|default:comment.user.username }}">{{ comment.user.get_full_name|default:comment.user.username }}</a>
+    <a href="{% url 'location:CommentsByUser' comment.user.username %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all comments by'|capfirst %} {{ comment.user.get_full_name|default:comment.user.username }}">{{ comment.user.get_full_name|default:comment.user.username }}</a>
     {% translate 'commented' %}
     {% if comment.visibility != 'p'%}{% translate 'to' context 'who is object directed at' %} {% endif %}<span data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'comment can be viewed by'|capfirst %} {% if comment.visibility == 'a' %}{% translate 'everyone' %}{% elif comment.visibility == 'c' %}{% translate 'registered and logged in users' %}{% elif comment.visibility == 'f' %}{% translate 'logged in users marked as family in commenters profile' %}{% elif comment.visibility == 'p' %}{% translate 'only you' %}{% endif %}">{{ comment.get_visibility_display }}</span>
     {% translate 'on' %}

@@ -38,31 +38,49 @@
     </div>
   {% endif %}
   <!-- Available Filters -->
-  <div class="available filters">
-    {% translate 'filter by'|capfirst %}:
-    <ul class="filter list">
-      <!-- Largest Location -->
-
-      <!-- Category -->
-      {% if available_filters.category|length > 1 %}
-        <li>{% translate 'category'|capfirst %}:
-        {% for category in available_filters.category %}
-            <a href="?category={{ category.0 }}{% if active_filters.query.tag|length > 0 %}&tag={{ active_filters.query.tag|join:',' }}{% endif %}">{{ category.1|title }}</a>{% if not forloop.last %}, {% else %}{% if available_filters.tag|length > 1 %},{% endif %}{% endif %}
-        {% endfor %}
-        </li>
-      {% endif %}
-      <!-- Tags -->
-      {% if available_filters.tag|length > 1 %}
-        <li>{% translate 'tag'|capfirst %}:
-        {% for tag in available_filters.tag %}
-          <a href="?tag={{ tag.0 }}{% if active_filters.query.category|length > 0 %}&category={{ active_filters.query.category|join:',' }}{% endif %}">{{ tag.1|title }}</a>{% if not forloop.last %}, {% endif %}
-        {% endfor %}
-      {% endif %}
-    
-    <!-- Special status -->
-      {% if favorites.all.count > 0 and 'favorites' not in active_filters %}
-        <li><a href="?favorites{% if active_filters.query.tags|length > 0 %}&tag={{ active_filters.query.tags|join:',' }}{% endif %}{% if active_filters.query.category|length > 0 %}&category={{ active_filters.query.category|join:',' }}{% endif %}">{% translate 'show only favorites'|capfirst %}</a></li>
-      {% endif %}
-    </ul>
-  </div>
+  {% if available_filters %}
+    <div class="available filters">
+      {% translate 'filter by'|capfirst %}:
+      <ul class="filter list">
+        <!-- Largest Location -->
+        {% if country_filter.filter %}
+          <li>{% translate 'list locations in'|capfirst %}: 
+            {% if not country_filter.country %}
+              {% for country in country_filter.countries %}
+                <a href="{% if scope == 'locations' %}{% url 'location:ListLocationsByCountry' country.0 %}{% else %}{% url 'location:ListActivitiesByCountry' country.0 %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{{ country.1|title }}</a>{% if not forloop.last %}, {% endif %} 
+              {% endfor %}
+            {% elif not country_filter.region %}
+              {% for region in country_filter.regions %}
+                <a href="{% if scope == 'locations' %}{% url 'location:ListLocationsByRegion' country_filter.country.0 region.0 %}{% else %}{% url 'location:ListActivitiesByRegion' country_filter.country.0 region.0 %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{{ region.1|title }}</a>{% if not forloop.last %}, {% endif %} 
+              {% endfor %}
+            {% else %}
+              {% for department in country_filter.departments %}
+                <a href="{% if scope == 'locations' %}{% url 'location:ListLocationsByDepartment' country_filter.country.0 country_filter.region.0 department.0 %}{% else %}{% url 'location:ListLActivitiesByDepartment' country_filter.country.0 country_filter.region.0 department.0 %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{{ department.1|title }}</a>{% if not forloop.last %}, {% endif %} 
+              {% endfor %}
+            {% endif %}
+          </li>
+        {% endif %}
+        <!-- Category -->
+        {% if available_filters.category|length > 1 %}
+          <li>{% translate 'category'|capfirst %}:
+          {% for category in available_filters.category %}
+              <a href="?category={{ category.0 }}{% if active_filters.query.tag|length > 0 %}&tag={{ active_filters.query.tag|join:',' }}{% endif %}">{{ category.1|title }}</a>{% if not forloop.last %}, {% else %}{% if available_filters.tag|length > 1 %},{% endif %}{% endif %}
+          {% endfor %}
+          </li>
+        {% endif %}
+        <!-- Tags -->
+        {% if available_filters.tag|length > 1 %}
+          <li>{% translate 'tag'|capfirst %}:
+          {% for tag in available_filters.tag %}
+            <a href="?tag={{ tag.0 }}{% if active_filters.query.category|length > 0 %}&category={{ active_filters.query.category|join:',' }}{% endif %}">{{ tag.1|title }}</a>{% if not forloop.last %}, {% endif %}
+          {% endfor %}
+        {% endif %}
+      
+      <!-- Special status -->
+        {% if favorites.all.count > 0 and 'favorites' not in active_filters %}
+          <li><a href="?favorites{% if active_filters.query.tags|length > 0 %}&tag={{ active_filters.query.tags|join:',' }}{% endif %}{% if active_filters.query.category|length > 0 %}&category={{ active_filters.query.category|join:',' }}{% endif %}">{% translate 'show only favorites'|capfirst %}</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  {% endif %}
 </div>

@@ -56,6 +56,24 @@ class LocationMasterView:
     ''' Favorites '''
     if 'favorites' in self.request.GET and self.request.GET.get('filters', '') != 'false':
       context['active_filters']['favorites'] = True
+    ''' Country Filter options '''
+    country_filter = {}
+    for field in ['filter', 'country', 'countries', 'region', 'regions', 'departments']:
+      country_filter[field] = None
+    '''   Countries '''
+    country_filter['countries'] = self.get_queryset().exclude(location__parent__parent=None).values_list('location__parent__parent__slug', 'location__parent__parent__name').order_by('location__parent__parent__name').distinct()
+    if len(country_filter['countries']) >= 1:
+      country_filter['filter'] = True
+    if len(country_filter['countries']) == 1:
+      country_filter['country'] = country_filter['countries'].first()
+      country_filter['regions'] = self.get_queryset().values_list('location__parent__slug', 'location__parent__name').order_by('location__parent__name').distinct()
+      if len(country_filter['regions']) == 1:
+        country_filter['region'] = country_filter['regions'].first()
+        country_filter['departments'] = self.get_queryset().values_list('location__slug', 'location__name').order_by('location__name').distinct()
+        if len(country_filter['departments']) == 1:
+          country_filter['filter'] = None
+    context['country_filter'] = country_filter
+
     ''' Search Q '''
     if self.request.GET.get('q', ''):
       context['q'] = self.request.GET.get('q', '')
@@ -220,11 +238,19 @@ class LocationListView(LocationMasterView, ListView):
     ''' Scope '''
     context['scope'] = 'locations'
     ''' Available filters '''
-    context['available_filters'] = {
-      # 'category':     Category.objects.exclude(parent__slug=settings.ACTIVITY_SLUG).exclude(slug=settings.ACTIVITY_SLUG),
+    available_filters = {
       'category':     self.get_queryset().values_list('category__slug', 'category__name').order_by().distinct(),
       'tag':          self.get_queryset().values_list('tags__slug', 'tags__name').exclude(tags__slug__isnull=True).distinct().order_by(),
     }
+    use_available_filters = False
+    for filter in available_filters:
+      if available_filters[filter].count() > 1:
+        use_available_filters = True
+    if context['country_filter']['filter'] == True:
+      use_available_filters = True
+    else:
+      context['foo'] = context['country_filter']['filter']
+    context['available_filters'] = available_filters if use_available_filters else False
     return context
 
   def get_queryset(self):
@@ -244,10 +270,17 @@ class ActivityListView(LocationMasterView, ListView):
     ''' Scope '''
     context['scope'] = 'activities'
     ''' Available filters '''
-    context['available_filters'] = {
+    available_filters = {
       'category':     self.get_queryset().values_list('category__slug', 'category__name').order_by().distinct(),
       'tag':          self.get_queryset().values_list('tags__slug', 'tags__name').exclude(tags__slug__isnull=True).distinct().order_by(),
     }
+    use_available_filters = False
+    for filter in available_filters:
+      if available_filters[filter].count() > 1:
+        use_available_filters = True
+    if context['country_filter']['filter'] == True:
+      use_available_filters = True
+    context['available_filters'] = available_filters if use_available_filters else False
     return context
 
   def get_queryset(self):

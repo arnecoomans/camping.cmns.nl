@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 19:40+0100\n"
-"PO-Revision-Date: 2023-10-29 19:46+0100\n"
+"PO-Revision-Date: 2023-10-29 19:49+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -552,7 +552,7 @@ msgstr "navigeer vanaf"
 
 #: location/templates/location/location_detail.html:111
 msgid "more information"
-msgstr "jouw gegevens"
+msgstr "meer informatie"
 
 #: location/templates/location/location_detail.html:113
 #: location/templates/location/location_form.html:30

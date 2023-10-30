@@ -1,0 +1,58 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% block content %}
+  {% if user.is_authenticated %}
+    <div class="edit card">
+      <h1>{% translate 'visit'|capfirst %}</h1>
+      <table>
+        <tbody>
+          <tr>
+            <form method="post" action="{% url 'location:EditVisit' visit.id %}">
+              {% csrf_token %}
+              <td class="title"><strong>{% if visit %}{% translate 'edit visit'|capfirst %}{% else %}{% translate 'add visit'|capfirst %}{% endif %}</strong></td>
+              <td>
+                <select name="location" id="location" class="form-control" required>
+                  {% for location in form.location.field.choices %}
+                    <option value="{{ location.0 }}" {% if location.0 == visit.location.id %}selected{% endif %}>{{ location.1|title }}</option>
+                  {% endfor %}
+                </select>
+              </td>
+              <td>
+                <input type="number" min="1" max="31" name="day" class="form-control form-control" placeholder="day" value="{{ visit.day|default:'' }}">
+              </td>
+              <td>
+                {% now "n" as month %}
+              <select name="month" id="month" class="form-control">
+                  <option value="">--------</option>
+                  <option value="1" {% if visit %}{% if visit.month == 1 %}selected{% endif %}{% else %}{% if month == '1' %}selected{% endif %}{% endif %}>{% translate 'january'|capfirst %}</option>
+                  <option value="2" {% if visit %}{% if visit.month == 2 %}selected{% endif %}{% else %}{% if month == '2' %}selected{% endif %}{% endif %}>{% translate 'februari'|capfirst %}</option>
+                  <option value="3" {% if visit %}{% if visit.month == 3 %}selected{% endif %}{% else %}{% if month == '3' %}selected{% endif %}{% endif %}>{% translate 'march'|capfirst %}</option>
+                  <option value="4" {% if visit %}{% if visit.month == 4 %}selected{% endif %}{% else %}{% if month == '4' %}selected{% endif %}{% endif %}>{% translate 'april'|capfirst %}</option>
+                  <option value="5" {% if visit %}{% if visit.month == 5 %}selected{% endif %}{% else %}{% if month == '5' %}selected{% endif %}{% endif %}>{% translate 'may'|capfirst %}</option>
+                  <option value="6" {% if visit %}{% if visit.month == 6 %}selected{% endif %}{% else %}{% if month == '6' %}selected{% endif %}{% endif %}>{% translate 'june'|capfirst %}</option>
+                  <option value="7" {% if visit %}{% if visit.month == 7 %}selected{% endif %}{% else %}{% if month == '7' %}selected{% endif %}{% endif %}>{% translate 'juli'|capfirst %}</option>
+                  <option value="8" {% if visit %}{% if visit.month == 8 %}selected{% endif %}{% else %}{% if month == '8' %}selected{% endif %}{% endif %}>{% translate 'august'|capfirst %}</option>
+                  <option value="9" {% if visit %}{% if visit.month == 9 %}selected{% endif %}{% else %}{% if month == '9' %}selected{% endif %}{% endif %}>{% translate 'september'|capfirst %}</option>
+                  <option value="10" {% if visit %}{% if visit.month == 10 %}selected{% endif %}{% else %}{% if month == '10' %}selected{% endif %}{% endif %}>{% translate 'october'|capfirst %}</option>
+                  <option value="11" {% if visit %}{% if visit.month == 11 %}selected{% endif %}{% else %}{% if month == '11' %}selected{% endif %}{% endif %}>{% translate 'november'|capfirst %}</option>
+                  <option value="12" {% if visit %}{% if visit.month == 12 %}selected{% endif %}{% else %}{% if month == '12' %}selected{% endif %}{% endif %}>{% translate 'december'|capfirst %}</option>
+                </select>
+              </td>
+              <td>
+                {% now "Y" as year %}
+                <input type="number" min="1970" max="{% now "Y" %}" name="year" required class="form-control form-control" value="{{ visit.year|default:year }}">
+              </td>
+          </tr>
+          <tr>
+            <td colspan="4"></td>
+            <td><input type="submit" value="{% if visit %}{% translate 'edit visit'|capfirst %}{% else %}{% translate 'add visit'|capfirst %}{% endif %}">
+            </td>
+            </form>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    {% include 'snippets/login_or_register.html' %}
+  {% endif %}
+{% endblock %}

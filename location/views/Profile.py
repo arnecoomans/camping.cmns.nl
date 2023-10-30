@@ -1,5 +1,5 @@
 from django.views.generic.edit import CreateView, UpdateView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
@@ -14,7 +14,7 @@ from .func_filter_visibility import filter_visibility
 
 from django.utils.translation import gettext as _
 
-from location.models.Profile import Profile
+from location.models.Profile import Profile, VisitedIn
 from location.models.Location import Location
 
 class ProfileView(UpdateView):
@@ -36,6 +36,13 @@ class ProfileView(UpdateView):
     context['homes'] = homes
     context['available_family'] = User.objects.exclude(id__in=self.get_object().family.all()).exclude(id=self.request.user.id)
     context['scope'] = f"{ _('profile') }: { _('edit your profile') }"
+    available_locations = filter_status(self.request.user, Location.objects.all())
+    available_locations = filter_visibility(self.request.user, available_locations)
+    context['available_locations'] = available_locations
+    visits = VisitedIn.objects.filter(user=self.request.user)
+    visits = filter_status(self.request.user, visits)
+    visits = filter_visibility(self.request.user, visits)
+    context['visits'] = visits
     return context
   
   def form_invalid(self, form):
@@ -57,7 +64,66 @@ class ProfileView(UpdateView):
     messages.add_message(self.request, messages.SUCCESS, f"{ _('Your changes have been saved') }.")
     return super().form_valid(form)
   
+class AddVisit(CreateView):
+  model = VisitedIn
+  fields = ['location', 'day', 'month', 'year']
 
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['scope'] = f"{ _('profile') }: { _('add your visit') }"
+    return context
+
+  def form_invalid(self, form):
+    messages.add_message(self.request, messages.WARNING, f"{ _('Form cannot be saved because of the following error(s)') }: { form.errors }")
+    return super().form_invalid(form)
+  
+  def form_valid(self, form):
+    form.instance.user = self.request.user
+    return super().form_valid(form)
+  
+  def get_success_url(self) -> str:
+    return reverse_lazy('location:profile')
+
+class EditVisit(UpdateView):
+  model = VisitedIn
+  fields = ['location', 'day', 'month', 'year']
+  context_object_name = 'visit'
+
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['scope'] = f"{ _('profile') }: { _('edit your visit to') } { self.get_object().location.name }"
+    return context
+  
+  def get_object(self):
+    return VisitedIn.objects.get(pk=self.kwargs['pk'])
+  
+  def form_invalid(self, form):
+    messages.add_message(self.request, messages.WARNING, f"{ _('Form cannot be saved because of the following error(s)') }: { form.errors }")
+    return super().form_invalid(form)
+  
+  def form_valid(self, form):
+    if self.get_object().user != self.request.user:
+      messages.add_message(self.request, messages.ERROR, f"{ _('cannot proceed with operation') }: { _('you can only edit your own item') }.")
+      return redirect('location:profile')
+    form.instance.user = self.request.user
+    return super().form_valid(form)
+  
+  def get_success_url(self) -> str:
+    return reverse_lazy('location:profile')
+  
+class ToggleDeletedVisit(UpdateView):
+  model = VisitedIn
+
+  def get(self, request, *args, **kwargs):
+    if self.get_object().user != self.request.user:
+      messages.add_message(self.request, messages.ERROR, f"{ _('cannot proceed with operation') }: { _('you can only edit your own item') }.")
+      return redirect('location:profile')
+    new_status = 'x' if self.get_object().status == 'p' else 'p'
+    visit = VisitedIn.objects.get(id=self.get_object().id)
+    visit.status = new_status
+    visit.save()
+    messages.add_message(self.request, messages.SUCCESS, f"{ _('succesfully') } { _('deleted') if new_status == 'x' else _('restored') } { _('your visit to') } { self.get_object().location.name }. <a href=\"{ reverse('location:DeleteVisit', kwargs={'pk':visit.id}) }\">undo</a>.")
+    return redirect('location:profile')
 
 
 

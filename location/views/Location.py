@@ -56,6 +56,11 @@ class LocationMasterView:
     ''' Favorites '''
     if 'favorites' in self.request.GET and self.request.GET.get('filters', '') != 'false':
       context['active_filters']['favorites'] = True
+    ''' Visited '''
+    if 'visited' in self.request.GET and self.request.GET.get('visited', '') != 'false':
+      context['active_filters']['visited'] = True
+      if self.request.GET.get('visited', '') != '':
+        context['active_filters']['visited'] = self.request.GET.get('visited', '')
     ''' Country Filter options '''
     country_filter = {}
     for field in ['filter', 'country', 'countries', 'region', 'regions', 'departments']:
@@ -101,14 +106,21 @@ class LocationMasterView:
     if self.request.GET.get('chain', ''):
       chain = self.request.GET.get('chain', '').split(',')
       queryset = queryset.filter(chain__slug__in=chain) | queryset.filter(chain__parent__slug__in=chain)
-    ''' Process the dislike filter '''
+    ''' PROFILE required filters '''
     if hasattr(self.request.user, 'profile'):
+      ''' Process the dislike filter '''
       if self.request.user.profile.hide_least_liked:
         queryset = queryset.exclude(slug__in=self.request.user.profile.least_liked.values_list('slug', flat=True))
-    ''' Process the favorites filter '''
-    if 'favorites' in self.request.GET:
-      if hasattr(self.request.user, 'profile'):
-        queryset = queryset.filter(favorite_of__user=self.request.user)
+      ''' Process the favorites filter '''
+      if 'favorites' in self.request.GET:
+        if self.request.GET.get('favorites', '') != 'false':
+          queryset = queryset.filter(favorite_of__user=self.request.user)
+      ''' Visited In filter '''
+      if 'visited' in self.request.GET:
+        if self.request.GET.get('visited', '') == '':
+          queryset = queryset.filter(slug__in=self.request.user.visits.filter(status='p').values_list('location__slug', flat=True))
+        elif self.request.GET.get('visited', '') != 'false':
+          queryset = queryset.filter(slug__in=self.request.user.visits.filter(status='p', year=self.request.GET.get('visited', '')).values_list('location__slug', flat=True))
     ''' Process ?q= filters '''
     if self.request.GET.get('q', ''):
       query = self.request.GET.get('q', '').split(' ')

@@ -40,4 +40,4 @@ class VisitedIn(BaseModel):
     return f"{ self.user.get_full_name() } visited { self.location.name } in { str(self.year) }"
   
   class Meta:
-    ordering = ['year']
+    ordering = ['location', 'year']

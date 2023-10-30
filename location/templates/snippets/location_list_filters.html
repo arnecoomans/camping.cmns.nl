@@ -32,13 +32,17 @@
         {% endfor %}
         <!-- Favorites -->
         {% if 'favorites' in active_filters %}
-          <li><a href="?filters=false{% include 'snippets/filter_url_queryparams.html' with removedword='favorites' %}">{% translate 'favorites'|capfirst %}: {% translate 'show only favorites' %} <svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#x"/></svg></a></li>
+          <li><a href="?favorites=false{% include 'snippets/filter_url_queryparams.html' with removedword='favorites' %}">{% translate 'favorites'|capfirst %}: {% translate 'show only favorites' %} <svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#x"/></svg></a></li>
+        {% endif %}
+        {% if 'visited' in active_filters %}
+          <li><a href="?visited=false{% include 'snippets/filter_url_queryparams.html' with removedword='favorites' %}">{% translate 'visited'|capfirst %}: {% if active_filters.visited == 'True' %}{% translate 'in' %} {{ active_filters.visited }}{% else %}{% translate 'all visited locations'|capfirst %}{% endif %} <svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#x"/></svg></a></li>
         {% endif %}
       </ul>
     </div>
   {% endif %}
+
   <!-- Available Filters -->
-  {% if available_filters %}
+  {% if available_filters and 'visited' not in active_filters %}
     <div class="available filters">
       {% translate 'filter by'|capfirst %}:
       <ul class="filter list">

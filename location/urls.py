@@ -72,6 +72,9 @@ urlpatterns = [
   path('profile/family/<id>/', views.ToggleFamilyMember.as_view(), name='ToggleFamily'),
   path('profile/favorite/<slug>/', views.ToggleFavorite.as_view(), name='ToggleFavorite'),
   path('profile/least-like/<slug>/', views.ToggleLeastLiked.as_view(), name='ToggleLeastLiked'),
+  path('profile/visit/add/', views.AddVisit.as_view(), name='AddVisit'),
+  path('profile/visit/edit:<pk>/', views.EditVisit.as_view(), name='EditVisit'),
+  path('profile/visit/delete:<pk>/', views.ToggleDeletedVisit.as_view(), name='DeleteVisit'),
 
   path('chain/add/', views.AddChain.as_view(), name='AddChainTo'),
   path('chain/add/<slug>/', views.AddChain.as_view(), name='AddChainTo'),

@@ -108,9 +108,6 @@ class LocationMasterView:
       queryset = queryset.filter(chain__slug__in=chain) | queryset.filter(chain__parent__slug__in=chain)
     ''' PROFILE required filters '''
     if hasattr(self.request.user, 'profile'):
-      ''' Process the dislike filter '''
-      if self.request.user.profile.hide_least_liked:
-        queryset = queryset.exclude(slug__in=self.request.user.profile.least_liked.values_list('slug', flat=True))
       ''' Process the favorites filter '''
       if 'favorites' in self.request.GET:
         if self.request.GET.get('favorites', '') != 'false':
@@ -422,9 +419,9 @@ class AddLocation(CreateView):
     if not form.instance.website:
       ''' If no website is submitted, store a Google Search for this location name'''
       form.instance.website = f'https://google.com/search?q={ form.instance.name }'
-    elif 'google' not in form.instance.website:
-      link = Link.objects.get_or_create(url=f'https://google.com/search?q={ form.cleaned_data["name"] }', defaults={'user': self.request.user})
-      form.instance.link.add(link[0].id)
+    # elif 'google' not in form.instance.website:
+    #   link = Link.objects.get_or_create(url=f'https://google.com/search?q={ form.cleaned_data["name"] }', defaults={'user': self.request.user})
+    #   form.instance.link.add(link[0].id)
     try:
       location = Location.objects.create(
         slug = slugify(form.instance.name),

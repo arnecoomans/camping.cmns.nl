@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-29 19:40+0100\n"
-"PO-Revision-Date: 2023-10-29 19:56+0100\n"
+"PO-Revision-Date: 2023-11-05 20:34+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -585,7 +585,7 @@ msgstr "nieuwe tag aanmaken"
 
 #: location/templates/location/location_detail.html:153
 msgid "create new list"
-msgstr "nieuwe tag aanmaken"
+msgstr "nieuwe lijst aanmaken"
 
 #: location/templates/location/location_detail.html:163
 msgid "add to list"

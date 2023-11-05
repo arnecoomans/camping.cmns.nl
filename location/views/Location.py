@@ -309,7 +309,7 @@ class LocationSearchView(LocationMasterView, ListView):
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     ''' Scope '''
-    context['scope'] = _('locations')
+    context['scope'] = _('search')
     ''' Available filters '''
     context['available_filters'] = {
       'category':     self.get_queryset().values_list('category__slug', 'category__name').order_by().distinct(),

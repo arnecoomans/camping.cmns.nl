@@ -37,6 +37,9 @@ urlpatterns = [
   path('activity/<slug>/edit/', views.EditActivity.as_view(), name='EditActivity'),
 
   path('search/', views.LocationSearchView.as_view(), name='search'),
+  path('search/<country>/', views.LocationSearchView.as_view(), name='SearchByCountry'),
+  path('search/<country>/<region>/', views.LocationSearchView.as_view(), name='SearchByRegion'),
+  path('search/<country>/<region>/<department>/', views.LocationSearchView.as_view(), name='SearchByDepartment'),
 
   path('comment/add/', views.AddComment.as_view(), name='AddComment'),
   path('comment/<pk>/delete/', views.DeleteComment.as_view(), name='DeleteComment'),

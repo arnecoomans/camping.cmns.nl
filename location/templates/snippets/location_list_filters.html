@@ -51,15 +51,15 @@
           <li>{% translate 'list locations in'|capfirst %}: 
             {% if not country_filter.country %}
               {% for country in country_filter.countries %}
-                <a href="{% if scope == 'locations' %}{% url 'location:ListLocationsByCountry' country.0 %}{% else %}{% url 'location:ListActivitiesByCountry' country.0 %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{{ country.1|title }}</a>{% if not forloop.last %}, {% endif %} 
+                <a href="{% if scope == 'locations' %}{% url 'location:ListLocationsByCountry' country.0 %}{% elif scope == 'activities' %}{% url 'location:ListActivitiesByCountry' country.0 %}{% else %}{% url 'location:SearchByCountry' country.0 %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{{ country.1|title }}</a>{% if not forloop.last %}, {% endif %} 
               {% endfor %}
             {% elif not country_filter.region %}
               {% for region in country_filter.regions %}
-                <a href="{% if scope == 'locations' %}{% url 'location:ListLocationsByRegion' country_filter.country.0 region.0 %}{% else %}{% url 'location:ListActivitiesByRegion' country_filter.country.0 region.0 %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{{ region.1|title }}</a>{% if not forloop.last %}, {% endif %} 
+                <a href="{% if scope == 'locations' %}{% url 'location:ListLocationsByRegion' country_filter.country.0 region.0 %}{% elif scope == 'activities' %}{% url 'location:ListActivitiesByRegion' country_filter.country.0 region.0 %}{% else %}{% url 'location:SearchByRegion' country_filter.country.0 region.0 %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{{ region.1|title }}</a>{% if not forloop.last %}, {% endif %} 
               {% endfor %}
             {% else %}
               {% for department in country_filter.departments %}
-                <a href="{% if scope == 'locations' %}{% url 'location:ListLocationsByDepartment' country_filter.country.0 country_filter.region.0 department.0 %}{% else %}{% url 'location:ListLActivitiesByDepartment' country_filter.country.0 country_filter.region.0 department.0 %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{{ department.1|title }}</a>{% if not forloop.last %}, {% endif %} 
+                <a href="{% if scope == 'locations' %}{% url 'location:ListLocationsByDepartment' country_filter.country.0 country_filter.region.0 department.0 %}{% elif scope == 'activities' %}{% url 'location:ListLActivitiesByDepartment' country_filter.country.0 country_filter.region.0 department.0 %}{% else %}{% url 'location:SearchByDepartment' country_filter.country.0 country_filter.region.0 department.0 %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{{ department.1|title }}</a>{% if not forloop.last %}, {% endif %} 
               {% endfor %}
             {% endif %}
           </li>

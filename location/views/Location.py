@@ -376,6 +376,18 @@ class LocationView(DetailView):
       if hasattr(self.get_object().user, 'profile'):
         context['family'] = self.get_object().user.profile.family.all()
     context['visitors'] = self.get_visitors()
+    ''' Nearby '''
+    all_locations = Location.objects.exclude(pk=self.get_object().id)
+    all_locations = filter_status(self.request.user, all_locations)
+    all_locations = filter_visibility(self.request.user, all_locations)
+    nearby_locations = []
+    from geopy.distance import geodesic
+    for location in all_locations:
+      distance = geodesic((self.get_object().coord_lat, self.get_object().coord_lng), (location.coord_lat, location.coord_lng)).kilometers
+      if distance <= settings.NEARBY_RANGE:
+        nearby_locations.append((location, distance))
+    nearby_locations.sort(key=lambda x: x[1])
+    context['nearby_locations'] = nearby_locations
     return context
   
   def get_visitors(self):

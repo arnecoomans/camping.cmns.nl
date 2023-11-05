@@ -182,6 +182,18 @@
     </dl> {% endcomment %}
     </div>
 
+    <!-- Nearby -->
+    {% if nearby_locations|length > 1%}
+      <div class="nearby card">
+        <h2>{% translate 'nearby'|capfirst %}</h2>
+        <ul>
+          {% for location in nearby_locations %}
+            <li>{% include 'snippets/location_link.html' with location=location.0 %} ( {{ location.1|floatformat }} km)</a>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
     <!-- Comments card -->
     <div class="comments card">
       <h2>{% translate 'comments'|capfirst %} ({{ comments.all.count }})</h2>

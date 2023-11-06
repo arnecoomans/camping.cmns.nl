@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 from django.utils.text import slugify
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
-from django.db import IntegrityError
+from django.db import IntegrityError, models
 from django.conf import settings
 
 from .func_filter_status import filter_status
@@ -336,62 +336,7 @@ class LocationSearchView(LocationMasterView, ListView):
 
 ''' DETAIL VIEWS '''
 
-''' Location Detail View '''  
-class LocationView(DetailView):
-  model = Location
 
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    ''' Scope '''
-    context['scope'] = f"{ _(self.object.getCategory()) }: { self.object.name }"
-    ''' Comments '''
-    comments = Comment.objects.filter(location__slug=self.object.slug, status='p')
-    comments = filter_visibility(self.request.user, comments)
-    if not self.request.user.is_authenticated:
-      comments = comments.filter(visibility='a')
-      context['could_have_comments'] = Comment.objects.filter(location__slug=self.object.slug, status='p', visibility='c')
-    context['comments'] = comments.order_by('-date_added').distinct()
-    ''' Lists '''
-    lists = ListLocation.objects.filter(list__status='p', location=self.object)
-    available_lists = List.objects.filter(status='p')
-    lists = filter_status(self.request.user, lists)
-    lists = filter_visibility(self.request.user, lists)
-    available_lists = filter_status(self.request.user, available_lists)
-    available_lists=filter_visibility(self.request.user, available_lists)
-    lists = lists.order_by('list__name').distinct()
-    available_lists = available_lists.exclude(locations__location=self.object).order_by().distinct()
-    context['lists'] = lists
-    context['available_lists'] = available_lists
-    ''' Tags '''
-    tags = Tag.objects.filter(locations__slug=self.object.slug)
-    tags = filter_status(self.request.user, tags)
-    tags = filter_visibility(self.request.user, tags)
-    tags = tags.order_by('list_as', 'name').distinct()
-    context['tags'] = tags
-    ''' Visits '''
-    if self.get_object().visibility == 'f':
-      if hasattr(self.get_object().user, 'profile'):
-        context['family'] = self.get_object().user.profile.family.all()
-    context['visitors'] = self.get_visitors()
-    ''' Nearby '''
-    all_locations = Location.objects.exclude(pk=self.get_object().id)
-    all_locations = filter_status(self.request.user, all_locations)
-    all_locations = filter_visibility(self.request.user, all_locations)
-    nearby_locations = []
-    from geopy.distance import geodesic
-    for location in all_locations:
-      distance = geodesic((self.get_object().coord_lat, self.get_object().coord_lng), (location.coord_lat, location.coord_lng)).kilometers
-      if distance <= settings.NEARBY_RANGE:
-        nearby_locations.append((location, distance))
-    nearby_locations.sort(key=lambda x: x[1])
-    context['nearby_locations'] = nearby_locations
-    return context
-  
-  def get_visitors(self):
-    if self.request.user.is_authenticated:
-      result = VisitedIn.objects.filter(user=self.request.user, location=self.get_object())
-      result = filter_visibility(self.request.user, result)
-      return result
 
 ''' CREATE VIEWS '''
 

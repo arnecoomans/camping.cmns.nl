@@ -5,6 +5,7 @@ from django.shortcuts import redirect, reverse
 from django.contrib import messages
 from django.utils.translation import gettext as _
 from django.contrib.auth.models import User
+from django.conf import settings
 
 from .func_filter_status import filter_status
 from .func_filter_visibility import filter_visibility
@@ -28,6 +29,7 @@ class EditComment(UpdateView):
 
 class CommentListView(ListView):
   model = Comment
+  paginate_by = settings.PAGINATE
 
   def get_queryset(self):
     queryset = Comment.objects.all()
@@ -39,6 +41,7 @@ class CommentListView(ListView):
 
 class CommentByUserListView(ListView):
   model = Comment
+  paginate_by = settings.PAGINATE
 
   def get_queryset(self):
     try:

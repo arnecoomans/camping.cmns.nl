@@ -196,7 +196,7 @@
 
     <!-- Comments card -->
     <div class="comments card">
-      <h2>{% translate 'comments'|capfirst %} ({{ comments.all.count }})</h2>
+      <h2>{% translate 'comments'|capfirst %} ({{ comment_list.all.count }})</h2>
       {% if perms.location.add_comment %}
         {% include 'location/comment_add.html' %}
       {% else %}
@@ -204,9 +204,7 @@
           <p><a href="{% url 'login' %}?next={{ request.get_full_path }}">{% translate 'sign in'|capfirst %}</a> {% translate 'or' %} <a href="#">{% translate 'register' %}</a> {% translate 'to comment' %}{% if could_have_comments %} {% translate 'or see comments shared with the community' %}{% endif %}.</p>
         </div>
       {% endif %}
-      {% for comment in comments %}
-        {% include 'snippets/comment.html' %}
-      {% endfor %}
+      {% include 'snippets/list_comments.html' %}
 
     {% endif %}
   </div>

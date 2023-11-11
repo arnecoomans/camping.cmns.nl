@@ -1,6 +1,7 @@
-from .Location import *
+# from .Location import *
 from .location.location_detail import *
 from .location.location_list import *
+from .location.location_edit import *
 from .Dashboard import *
 from .Comment import *
 from .Tag import *

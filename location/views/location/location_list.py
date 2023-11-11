@@ -88,8 +88,9 @@ class LocationListMaster(FilterClass):
       self.available_filters['tags']          = self.get_queryset().values('tags__slug', 'tags__name', 'tags__parent__name').exclude(tags__name=None).order_by('tags__parent__name', 'tags__name').distinct()
       self.available_filters['categories']    = self.get_queryset().values('category__slug', 'category__name').order_by().distinct()
       ''' Special Filters '''
-      self.available_filters['has_favorites'] = True if self.get_queryset().filter(favorite_of=self.request.user.profile).count() > 1 else False
-      self.available_filters['has_visited']   = True if self.get_queryset().filter(visitors__user=self.request.user).count() > 1 else False
+      if hasattr(self.request.user, 'profile'):
+        self.available_filters['has_favorites'] = True if self.get_queryset().filter(favorite_of=self.request.user.profile).count() > 1 else False
+        self.available_filters['has_visited']   = True if self.get_queryset().filter(visitors__user=self.request.user).count() > 1 else False
       return self.available_filters
 
   

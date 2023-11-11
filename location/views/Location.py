@@ -24,117 +24,117 @@ from location.models.Profile import VisitedIn
     Class that holds the functionality that is used in the Location List view,
     Activity List view and Search view.
 '''
-class LocationMasterView:
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    ''' Active filters '''
-    context['active_filters'] = {}
-    ''' URL Structured filters: Country, region and department '''
-    if 'country' in self.kwargs:
-      context['active_filters']['country'] = self.kwargs['country']
-    if 'region' in self.kwargs:
-      context['active_filters']['region'] = self.kwargs['region']
-    if 'department' in self.kwargs:
-      context['active_filters']['department'] = self.kwargs['department']
-    ''' URL queryset filters '''
-    context['active_filters']['query'] = {}
-    if self.request.GET.get('category', ''):
-      for category in self.request.GET.get('category', '').split(','):
-        if 'category' not in context['active_filters']['query']:
-          context['active_filters']['query']['category'] = []
-        context['active_filters']['query']['category'].append(category)
-    if self.request.GET.get('tag', ''):
-      for tag in self.request.GET.get('tag', '').split(','):
-        if 'tag' not in context['active_filters']['query']:
-          context['active_filters']['query']['tag'] = []
-        context['active_filters']['query']['tag'].append(tag)
-    if self.request.GET.get('chain', ''):
-      for chain in self.request.GET.get('chain', '').split(','):
-        if 'chain' not in context['active_filters']['query']:
-          context['active_filters']['query']['chain'] = []
-        context['active_filters']['query']['chain'].append(chain)
-    ''' Favorites '''
-    if 'favorites' in self.request.GET and self.request.GET.get('filters', '') != 'false':
-      context['active_filters']['favorites'] = True
-    ''' Visited '''
-    if 'visited' in self.request.GET and self.request.GET.get('visited', '') != 'false':
-      context['active_filters']['visited'] = True
-      if self.request.GET.get('visited', '') != '':
-        context['active_filters']['visited'] = self.request.GET.get('visited', '')
-    ''' Country Filter options '''
-    country_filter = {}
-    for field in ['filter', 'country', 'countries', 'region', 'regions', 'departments']:
-      country_filter[field] = None
-    '''   Countries '''
-    country_filter['countries'] = self.get_queryset().exclude(location__parent__parent=None).values_list('location__parent__parent__slug', 'location__parent__parent__name').order_by('location__parent__parent__name').distinct()
-    if len(country_filter['countries']) >= 1:
-      country_filter['filter'] = True
-    if len(country_filter['countries']) == 1:
-      country_filter['country'] = country_filter['countries'].first()
-      country_filter['regions'] = self.get_queryset().values_list('location__parent__slug', 'location__parent__name').order_by('location__parent__name').distinct()
-      if len(country_filter['regions']) == 1:
-        country_filter['region'] = country_filter['regions'].first()
-        country_filter['departments'] = self.get_queryset().values_list('location__slug', 'location__name').order_by('location__name').distinct()
-        if len(country_filter['departments']) == 1:
-          country_filter['filter'] = None
-    context['country_filter'] = country_filter
+# class LocationMasterView:
+#   def get_context_data(self, **kwargs):
+#     context = super().get_context_data(**kwargs)
+#     ''' Active filters '''
+#     context['active_filters'] = {}
+#     ''' URL Structured filters: Country, region and department '''
+#     if 'country' in self.kwargs:
+#       context['active_filters']['country'] = self.kwargs['country']
+#     if 'region' in self.kwargs:
+#       context['active_filters']['region'] = self.kwargs['region']
+#     if 'department' in self.kwargs:
+#       context['active_filters']['department'] = self.kwargs['department']
+#     ''' URL queryset filters '''
+#     context['active_filters']['query'] = {}
+#     if self.request.GET.get('category', ''):
+#       for category in self.request.GET.get('category', '').split(','):
+#         if 'category' not in context['active_filters']['query']:
+#           context['active_filters']['query']['category'] = []
+#         context['active_filters']['query']['category'].append(category)
+#     if self.request.GET.get('tag', ''):
+#       for tag in self.request.GET.get('tag', '').split(','):
+#         if 'tag' not in context['active_filters']['query']:
+#           context['active_filters']['query']['tag'] = []
+#         context['active_filters']['query']['tag'].append(tag)
+#     if self.request.GET.get('chain', ''):
+#       for chain in self.request.GET.get('chain', '').split(','):
+#         if 'chain' not in context['active_filters']['query']:
+#           context['active_filters']['query']['chain'] = []
+#         context['active_filters']['query']['chain'].append(chain)
+#     ''' Favorites '''
+#     if 'favorites' in self.request.GET and self.request.GET.get('filters', '') != 'false':
+#       context['active_filters']['favorites'] = True
+#     ''' Visited '''
+#     if 'visited' in self.request.GET and self.request.GET.get('visited', '') != 'false':
+#       context['active_filters']['visited'] = True
+#       if self.request.GET.get('visited', '') != '':
+#         context['active_filters']['visited'] = self.request.GET.get('visited', '')
+#     ''' Country Filter options '''
+#     country_filter = {}
+#     for field in ['filter', 'country', 'countries', 'region', 'regions', 'departments']:
+#       country_filter[field] = None
+#     '''   Countries '''
+#     country_filter['countries'] = self.get_queryset().exclude(location__parent__parent=None).values_list('location__parent__parent__slug', 'location__parent__parent__name').order_by('location__parent__parent__name').distinct()
+#     if len(country_filter['countries']) >= 1:
+#       country_filter['filter'] = True
+#     if len(country_filter['countries']) == 1:
+#       country_filter['country'] = country_filter['countries'].first()
+#       country_filter['regions'] = self.get_queryset().values_list('location__parent__slug', 'location__parent__name').order_by('location__parent__name').distinct()
+#       if len(country_filter['regions']) == 1:
+#         country_filter['region'] = country_filter['regions'].first()
+#         country_filter['departments'] = self.get_queryset().values_list('location__slug', 'location__name').order_by('location__name').distinct()
+#         if len(country_filter['departments']) == 1:
+#           country_filter['filter'] = None
+#     context['country_filter'] = country_filter
 
-    ''' Search Q '''
-    if self.request.GET.get('q', ''):
-      context['q'] = self.request.GET.get('q', '')
-    if self.request.user.is_authenticated:
-      context['favorites'] = self.get_queryset().filter(favorite_of__user=self.request.user)
-    return context
+#     ''' Search Q '''
+#     if self.request.GET.get('q', ''):
+#       context['q'] = self.request.GET.get('q', '')
+#     if self.request.user.is_authenticated:
+#       context['favorites'] = self.get_queryset().filter(favorite_of__user=self.request.user)
+#     return context
 
-  def filter_queryset(self, queryset):
-    ''' Process Location filters '''
-    if 'country' in self.kwargs:
-      queryset = queryset.filter(location__parent__parent__slug__iexact=self.kwargs['country'])
-    if 'region' in self.kwargs:
-      queryset = queryset.filter(location__parent__slug__iexact=self.kwargs['region'])
-    if 'department' in self.kwargs:
-      queryset = queryset.filter(location__slug__iexact=self.kwargs['department'])
-    ''' Process Category filters '''
-    if self.request.GET.get('category', ''):
-      categories = self.request.GET.get('category', '').split(',')
-      queryset = queryset.filter(category__slug__in=categories) | queryset.filter(additional_category__slug__in=categories)
-    ''' Process Tag filters '''
-    if self.request.GET.get('tag', ''):
-      tags = self.request.GET.get('tag', '').split(',')
-      queryset = queryset.filter(tags__slug__in=tags)
-    ''' Process Chain filters '''
-    if self.request.GET.get('chain', ''):
-      chain = self.request.GET.get('chain', '').split(',')
-      queryset = queryset.filter(chain__slug__in=chain) | queryset.filter(chain__parent__slug__in=chain)
-    ''' PROFILE required filters '''
-    if hasattr(self.request.user, 'profile'):
-      ''' Process the favorites filter '''
-      if 'favorites' in self.request.GET:
-        if self.request.GET.get('favorites', '') != 'false':
-          queryset = queryset.filter(favorite_of__user=self.request.user)
-      ''' Visited In filter '''
-      if 'visited' in self.request.GET:
-        if self.request.GET.get('visited', '') == '':
-          queryset = queryset.filter(slug__in=self.request.user.visits.filter(status='p').values_list('location__slug', flat=True))
-        elif self.request.GET.get('visited', '') != 'false':
-          queryset = queryset.filter(slug__in=self.request.user.visits.filter(status='p', year=self.request.GET.get('visited', '')).values_list('location__slug', flat=True))
-    ''' Process ?q= filters '''
-    if self.request.GET.get('q', ''):
-      query = self.request.GET.get('q', '').split(' ')
-      for q in query:
-        queryset = queryset.filter(name__icontains=q) |\
-                   queryset.filter(address__icontains=q) |\
-                   queryset.filter(owners_names__icontains=q) |\
-                   queryset.filter(description__icontains=q) |\
-                   queryset.filter(category__name__icontains=q) |\
-                   queryset.filter(additional_category__name__icontains=q) |\
-                   queryset.filter(chain__name__icontains=q) |\
-                   queryset.filter(chain__parent__name__icontains=q) |\
-                   queryset.filter(tags__name__icontains=q) |\
-                   queryset.filter(location__name__icontains=q) |\
-                   queryset.filter(location__parent__name__icontains=q) |\
-                   queryset.filter(location__parent__parent__name__icontains=q)
-    return queryset
+#   def filter_queryset(self, queryset):
+#     ''' Process Location filters '''
+#     if 'country' in self.kwargs:
+#       queryset = queryset.filter(location__parent__parent__slug__iexact=self.kwargs['country'])
+#     if 'region' in self.kwargs:
+#       queryset = queryset.filter(location__parent__slug__iexact=self.kwargs['region'])
+#     if 'department' in self.kwargs:
+#       queryset = queryset.filter(location__slug__iexact=self.kwargs['department'])
+#     ''' Process Category filters '''
+#     if self.request.GET.get('category', ''):
+#       categories = self.request.GET.get('category', '').split(',')
+#       queryset = queryset.filter(category__slug__in=categories) | queryset.filter(additional_category__slug__in=categories)
+#     ''' Process Tag filters '''
+#     if self.request.GET.get('tag', ''):
+#       tags = self.request.GET.get('tag', '').split(',')
+#       queryset = queryset.filter(tags__slug__in=tags)
+#     ''' Process Chain filters '''
+#     if self.request.GET.get('chain', ''):
+#       chain = self.request.GET.get('chain', '').split(',')
+#       queryset = queryset.filter(chain__slug__in=chain) | queryset.filter(chain__parent__slug__in=chain)
+#     ''' PROFILE required filters '''
+#     if hasattr(self.request.user, 'profile'):
+#       ''' Process the favorites filter '''
+#       if 'favorites' in self.request.GET:
+#         if self.request.GET.get('favorites', '') != 'false':
+#           queryset = queryset.filter(favorite_of__user=self.request.user)
+#       ''' Visited In filter '''
+#       if 'visited' in self.request.GET:
+#         if self.request.GET.get('visited', '') == '':
+#           queryset = queryset.filter(slug__in=self.request.user.visits.filter(status='p').values_list('location__slug', flat=True))
+#         elif self.request.GET.get('visited', '') != 'false':
+#           queryset = queryset.filter(slug__in=self.request.user.visits.filter(status='p', year=self.request.GET.get('visited', '')).values_list('location__slug', flat=True))
+#     ''' Process ?q= filters '''
+#     if self.request.GET.get('q', ''):
+#       query = self.request.GET.get('q', '').split(' ')
+#       for q in query:
+#         queryset = queryset.filter(name__icontains=q) |\
+#                    queryset.filter(address__icontains=q) |\
+#                    queryset.filter(owners_names__icontains=q) |\
+#                    queryset.filter(description__icontains=q) |\
+#                    queryset.filter(category__name__icontains=q) |\
+#                    queryset.filter(additional_category__name__icontains=q) |\
+#                    queryset.filter(chain__name__icontains=q) |\
+#                    queryset.filter(chain__parent__name__icontains=q) |\
+#                    queryset.filter(tags__name__icontains=q) |\
+#                    queryset.filter(location__name__icontains=q) |\
+#                    queryset.filter(location__parent__name__icontains=q) |\
+#                    queryset.filter(location__parent__parent__name__icontains=q)
+#     return queryset
 
 
 ''' EditLocationMaster
@@ -239,100 +239,7 @@ def CreatCategories(request):
     )
 ''' LIST VIEWS '''
 
-''' Location List '''
-class LocationListView(LocationMasterView, ListView):
-  model = Location
 
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    ''' Scope '''
-    context['scope'] = 'locations'
-    ''' Available filters '''
-    available_filters = {
-      'category':     self.get_queryset().values_list('category__slug', 'category__name').order_by().distinct(),
-      'tag':          self.get_queryset().values_list('tags__slug', 'tags__name').exclude(tags__slug__isnull=True).distinct().order_by(),
-    }
-    use_available_filters = False
-    for filter in available_filters:
-      if available_filters[filter].count() > 1:
-        use_available_filters = True
-    if context['country_filter']['filter'] == True:
-      use_available_filters = True
-    else:
-      context['foo'] = context['country_filter']['filter']
-    context['available_filters'] = available_filters if use_available_filters else False
-    return context
-
-  def get_queryset(self):
-    ''' Fetch all published locations '''
-    queryset = Location.objects.filter(status='p').exclude(category__slug=settings.ACTIVITY_SLUG).exclude(category__parent__slug=settings.ACTIVITY_SLUG)
-    queryset = filter_visibility(self.request.user, queryset)
-    queryset = self.filter_queryset(queryset)
-    ''' Result Ordering '''
-    queryset = queryset.order_by('location__parent__parent', 'location__parent', 'location__name').distinct()
-    return queryset
-
-class ActivityListView(LocationMasterView, ListView):
-  model = Location
-
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    ''' Scope '''
-    context['scope'] = 'activities'
-    ''' Available filters '''
-    available_filters = {
-      'category':     self.get_queryset().values_list('category__slug', 'category__name').order_by().distinct(),
-      'tag':          self.get_queryset().values_list('tags__slug', 'tags__name').exclude(tags__slug__isnull=True).distinct().order_by(),
-    }
-    use_available_filters = False
-    for filter in available_filters:
-      if available_filters[filter].count() > 1:
-        use_available_filters = True
-    if context['country_filter']['filter'] == True:
-      use_available_filters = True
-    context['available_filters'] = available_filters if use_available_filters else False
-    return context
-
-  def get_queryset(self):
-    ''' Fetch all published locations '''
-    queryset = Location.objects.filter(status='p')
-    queryset = queryset.filter(category__slug=settings.ACTIVITY_SLUG) | queryset.filter(category__parent__slug=settings.ACTIVITY_SLUG)
-    queryset = filter_visibility(self.request.user, queryset)
-    queryset = self.filter_queryset(queryset)
-    ''' Result Ordering '''
-    queryset = queryset.order_by('location__parent__parent', 'location__parent', 'location__name')
-    return queryset
-
-class LocationSearchView(LocationMasterView, ListView):
-  model = Location
-  
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    ''' Scope '''
-    context['scope'] = _('search')
-    ''' Available filters '''
-    context['available_filters'] = {
-      'category':     self.get_queryset().values_list('category__slug', 'category__name').order_by().distinct(),
-      'tag':          self.get_queryset().values_list('tags__slug', 'tags__name').exclude(tags__slug__isnull=True).distinct().order_by(),
-    }
-    return context
-
-  def get_queryset(self):
-    ''' Fetch all published locations and activities '''
-    queryset = Location.objects.filter(status='p')
-    ''' Add private objects for current user to queryset '''
-    if self.request.user.is_authenticated:
-      queryset |= Location.objects.filter(status='c')
-      queryset |= Location.objects.filter(status='-', user=self.request.user)
-      ''' Exclude home other than mine '''
-      queryset = queryset.exclude(category__name='Home')
-      if hasattr(self.request.user, 'profile'):
-        queryset |= Location.objects.filter(home_of=self.request.user.profile)
-    ''' Apply filtering based on url or query parameters'''
-    queryset = self.filter_queryset(queryset)
-    ''' Result Ordering '''
-    queryset = queryset.order_by('location__parent__parent', 'location__parent', 'location__name').distinct()
-    return queryset
 
 ''' DETAIL VIEWS '''
 

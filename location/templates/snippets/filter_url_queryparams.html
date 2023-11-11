@@ -1,1 +1,16 @@
-{% if active_filters.query.items|length > 0 %}?{% for param, values in active_filters.query.items %}{{param}}={% for value in values %}{% if value != removedword %}{{ value }}{% if not forloop.last %},{% endif %}{% endif %}{% endfor %}{% if not forloop.last %}&{% endif %}{% endfor%}{% endif %}
+{% if 'tag' in active_filters or 'category' in active_filters or 'favorites' in active_filters or 'visited' in active_filters %}?{% endif %}
+{% if 'tag' in active_filters %}
+tag={% for word in active_filters.tag %}{% if word != removedword %}{{ word }}{% if not forloop.last %},{% endif %}{% endif %}{% endfor %}
+{% endif %}
+{% if 'category' in active_filters %}
+{% if 'tag' in active_filters %}&{% endif %}
+category={% for word in active_filters.category %}{% if word != removedword %}{{ word }}{% if not forloop.last %},{% endif %}{% endif %}{% endfor %}
+{% endif %}
+{% if 'favorites' in active_filters %}
+{% if 'tag' in active_filters or 'category' in active_filters %}&{% endif %}
+{% if 'favorites' != removedword %}favorites{% endif %}
+{% endif %}
+{% if 'visited' in active_filters %}
+{% if 'tag' in active_filters or 'category' in active_filters or 'favorites' in active_filters %}&{% endif %}
+{% if 'visited' != removedword %}visited{% endif %}
+{% endif %}

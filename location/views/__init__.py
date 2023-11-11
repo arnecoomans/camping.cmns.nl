@@ -1,5 +1,6 @@
 from .Location import *
 from .location.location_detail import *
+from .location.location_list import *
 from .Dashboard import *
 from .Comment import *
 from .Tag import *

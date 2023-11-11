@@ -1,22 +1,12 @@
-from django.views.generic import DetailView
 from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, UpdateView
 from django.contrib import messages
 from django.utils.translation import gettext as _
-from django.utils.text import slugify
 from django.urls import reverse_lazy, reverse
-from django.shortcuts import redirect
-from django.db import IntegrityError, models
 from django.conf import settings
 
 from ..snippets.filter_class import FilterClass
 
-from location.models.Location import Location, Category, Chain, Link
-from location.models.Comment import Comment
-from location.models.Tag import Tag
-from location.models.List import List, ListLocation
-from location.models.Profile import VisitedIn
-
+from location.models.Location import Location
 
 ''' MASTER VIEWS '''
 ''' Location List Master View

@@ -7,8 +7,7 @@ from django.shortcuts import redirect
 from django.db import IntegrityError
 from django.conf import settings
 
-from .func_filter_status import filter_status
-from .func_filter_visibility import filter_visibility
+from ..snippets.filter_class import FilterClass
 
 from location.models.Location import Location, Category, Chain, Link
 from location.models.Tag import Tag
@@ -23,7 +22,7 @@ from location.models.Tag import Tag
 ''' EditLocationMaster
     Holds the functionality that is used in both Location as well as Avtivity update page
 '''
-class EditLocationMaster(UpdateView):
+class EditLocationMaster(UpdateView, FilterClass):
   model = Location
   fields = ['name', 'website', 'link', 'description', 'category', 'additional_category', 'visibility', 'address', 'phone', 'owners_names', 'chain']
 
@@ -31,23 +30,20 @@ class EditLocationMaster(UpdateView):
     context = super().get_context_data(**kwargs)
     context['scope'] = f"{ _('edit') }: { self.object .name}"
     ''' Categories '''
+    context['additional_categories'] = Category.objects.exclude(slug=self.get_object().category.slug).exclude(secondary_for=self.object).order_by('parent__name', 'name')
     if self.get_object().isActivity():
       context['categories'] = Category.objects.exclude(slug=settings.ACTIVITY_SLUG).exclude(parent__slug=settings.ACTIVITY_SLUG).order_by('name')
-      context['additional_categories'] = Category.objects.filter(parent__slug=settings.ACTIVITY_SLUG).exclude(slug=self.get_object().category.slug).exclude(slug='home').exclude(secondary_for=self.object).order_by('name')
     else:  
-      #if self.request.resolver_match.view_name == 'location:AddActivity':
       context['categories'] = Category.objects.filter(parent__slug=settings.ACTIVITY_SLUG).order_by('name')
-      context['additional_categories'] = Category.objects.exclude(slug=settings.ACTIVITY_SLUG).exclude(parent__slug=settings.ACTIVITY_SLUG).exclude(slug=self.get_object().category.slug).exclude(secondary_for=self.object).order_by('name')
-    ''' Tags '''
     ''' Tags '''
     tags = Tag.objects.filter(locations__slug=self.object.slug)
-    tags = filter_status(self.request.user, tags)
-    tags = filter_visibility(self.request.user, tags)
+    tags = self.filter_status(tags)
+    tags = self.filter_visibility(tags)
     tags = tags.order_by('list_as', 'name').distinct()
     context['tags'] = tags
     available_tags = Tag.objects.exclude(locations=self.object).exclude(children__gt=1)
-    available_tags = filter_status(self.request.user, available_tags)
-    available_tags = filter_visibility(self.request.user, available_tags)
+    available_tags = self.filter_status(available_tags)
+    available_tags = self.filter_visibility(available_tags)
     available_tags = available_tags.order_by('parent__name', 'name')
     context['available_tags'] = available_tags
     ''' Chains '''
@@ -120,16 +116,7 @@ def CreateCategories(request):
       parent = parent,
       user = request.user,
     )
-''' LIST VIEWS '''
-
-
-
-''' DETAIL VIEWS '''
-
-
-
 ''' CREATE VIEWS '''
-
 class AddLocation(CreateView):
   model = Location
   fields = ['name', 'website', 'description', 'category', 'visibility']
@@ -199,9 +186,8 @@ class EditLocation(EditLocationMaster):
 class EditActivity(EditLocationMaster):
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
-    context['categories'] = Category.objects.filter(parent__slug=settings.ACTIVITY_SLUG).order_by('name')
-    if self.request.user.is_authenticated:
-      context['categories'] |= Category.objects.filter(slug='home')
+    context['categories'] = Category.objects.filter(parent__slug=settings.ACTIVITY_SLUG) | Category.objects.filter(slug=settings.ACTIVITY_SLUG)
+    context['categories'] = context['categories'].order_by('name')
     return context
 
   def get_success_url(self):

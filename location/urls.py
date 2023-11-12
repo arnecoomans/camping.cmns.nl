@@ -82,5 +82,6 @@ urlpatterns = [
   path('chain/add/', views.AddChain.as_view(), name='AddChainTo'),
   path('chain/add/<slug>/', views.AddChain.as_view(), name='AddChainTo'),
 
+  path('media/add/<slug>/', views.AddMediaToLocation.as_view(), name='AddMediaToLocation'),
   path('register/', views.SignUpView.as_view(), name='register'),
 ]

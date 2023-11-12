@@ -6,7 +6,6 @@ from .Location import Location
 
 class Media(BaseModel):
   source = models.ImageField()
-  thumbnail = models.CharField(max_length=2000, blank=True, null=True)
   title = models.CharField(max_length=255)
 
   location = models.ForeignKey(

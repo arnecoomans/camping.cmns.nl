@@ -1,0 +1,45 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% block content %}
+  {% if user.is_authenticated %}
+    <div class="edit media card">
+      <h1>{% if media %}{% translate 'update media'|capfirst %}{% else %}{% translate 'add media'|capfirst %}{% endif %}</h1>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <dl>
+          <dt><label for="title">{% translate 'title'|capfirst %}</dt>
+            <dd><input class="form-control form-control-lg" name="title" id="title" value="{{ form.title.value|default:'' }}"></dd>
+        </dl>
+        <dl>
+          <dt><label for="source">{% translate 'source'|capfirst %}</dt>
+            <dd>
+              <input class="form-control" type="file" id="source" name="source" accept="image/png, image/gif, image/jpeg" required>
+            </dd>
+        </dl>
+        <dl>
+          <dt><label for="visibility">{% translate 'viewable by'|capfirst %}</dt>
+            <dd>
+              <select class="form-control" name="visibility" id="visibility">
+                {% for key, value in form.fields.visibility.choices %}
+                  <option value="{{ key }}" {% if form.visibility == key %}selected{% elif not media and key == 'c' %}selected{% endif %}>{{ value|title }}</option>
+                {% endfor %}
+              </select>
+            </dd>
+        </dl>
+        <dl>
+          <dt><label for="location">{% translate 'location'|capfirst %}</dt>
+            <dd>
+              <input type="hidden" name="location" id="location" value="{{ location.id }}">
+              <input type="text" class="form-control" name="location_name" id="location_name" value="{{ location.name }}" disabled>
+            </dd>
+        </dl>
+        <div class="spacer"></div>
+        <input type="submit" value="{% translate 'submit'|capfirst %}" class="btn btn-success btn-lg {% if list and not user.is_superuser and user != list.user %}disabled{% endif %}">
+        <a href="{% url 'location:tags' %}" class="btn btn-secondary btn-lg" role="button" aria-disabled="true">{% translate 'cancel'|capfirst %}</a>
+
+      </form>
+    </div>
+  {% else %}
+    {% include 'snippets/login_or_register.html' %}
+  {% endif %}
+{% endblock %}

@@ -8,5 +8,5 @@ from .Tag import *
 from .List import *
 from .Profile import *
 from .Chain import *
-
+from .Media import *
 from .Toggle import *

@@ -16,4 +16,4 @@ class Media(BaseModel):
 
   class Meta:
     verbose_name_plural = 'media'
-    ordering = ['date_modified']
+    ordering = ['visibility', 'date_modified']

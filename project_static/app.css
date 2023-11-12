@@ -1,3 +1,22 @@
+/** Location Header */
+div.card>header.withmedia {
+  background-color: orange;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding-top: 200px;
+  width: 100%;
+}
+
+div.card>header>* {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+div.card>header>h1,
+div.card>header>span {
+  padding: 5px 10px;
+}
+
 /** Google Maps */
 div#map {
   width: 100%;
@@ -10,14 +29,15 @@ ul.action.list {
   padding: 0;
   text-align: right;
 }
-ul.action.list > li {
+
+ul.action.list>li {
   display: inline-block;
   padding: 0 5px;
 }
-ul.action.list > li > a {
 
-}
-ul.action.list > li > a:hover {
+ul.action.list>li>a {}
+
+ul.action.list>li>a:hover {
   color: var(--highlight-color);
   text-decoration: underline;
 }
@@ -28,24 +48,28 @@ div.comment {
   margin: 2em 1em;
   border-radius: 1em;
 }
-  div.comment > div.header {
-    background-color: var(--highlight-color);
-    color: var(--contrast-color);
-    border-radius: 1em 1em 0 0;
-    padding: 1em 2em;
-  }
-  div.comment > div.header > a,
-  div.comment > div.header > strong > a {
-    color: var(--contrast-color);
-  }
-  div.comment > div.content {
-    margin: 1em 1em;
-  }
+
+div.comment>div.header {
+  background-color: var(--highlight-color);
+  color: var(--contrast-color);
+  border-radius: 1em 1em 0 0;
+  padding: 1em 2em;
+}
+
+div.comment>div.header>a,
+div.comment>div.header>strong>a {
+  color: var(--contrast-color);
+}
+
+div.comment>div.content {
+  margin: 1em 1em;
+}
 
 /** Tags */
 a.tag {
   white-space: nowrap;
 }
+
 /** Location */
 div.location.flash.card {
   margin: 10px;
@@ -55,13 +79,14 @@ div.location.flash.card {
 ul.filter.list {
   list-style-type: none;
 }
-ul.filter.list > li {
 
-}
+ul.filter.list>li {}
+
 #content>div.card.filter.card {
   padding-bottom: 0em;
   margin: 1em auto;
 }
-ul.filter.list > li > a:not(.tag):hover:has(svg) {
+
+ul.filter.list>li>a:not(.tag):hover:has(svg) {
   color: inherit;
 }

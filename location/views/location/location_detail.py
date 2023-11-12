@@ -11,9 +11,11 @@ from location.models.Comment import Comment
 from location.models.Tag import Tag
 from location.models.List import List, ListLocation
 from location.models.Profile import VisitedIn
+from location.models.Media import Media
+
+''' Location Detail View '''
 
 
-''' Location Detail View '''  
 class LocationView(ListView, FilterClass):
   ''' Location View 
       The location view loads all information about the location and displays this to the user.
@@ -28,14 +30,16 @@ class LocationView(ListView, FilterClass):
   ''' Get Location
       Use Slug from URL to identify location. If not found, trigger a 404
   '''
+
   def get_location(self):
     if not hasattr(self, 'location'):
       self.location = Location.objects.get(slug=self.kwargs['slug'])
     return self.location
-  
+
   ''' Queryset 
       Get Comments for selected location
   '''
+
   def get_queryset(self):
     queryset = Comment.objects.filter(location__slug=self.get_location().slug)
     queryset = self.filter_status(queryset)
@@ -45,6 +49,7 @@ class LocationView(ListView, FilterClass):
   ''' Context Data
       Most information in this view is stowed away in the Context Data.
   '''
+
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     ''' Location: use self.get_location() to return the location '''
@@ -71,13 +76,13 @@ class LocationView(ListView, FilterClass):
     ''' Nearby '''
     context['nearby_locations'] = self.get_nearby()
     context['visitors'] = self.get_visitors()
-  
+    ''' Media '''
+    context['media'] = self.get_media()
     return context
-  
-
 
   ''' Get Tags
   '''
+
   def get_tags(self):
     tags = Tag.objects.filter(locations__slug=self.get_location().slug)
     tags = self.filter_status(tags)
@@ -86,26 +91,30 @@ class LocationView(ListView, FilterClass):
   ''' Get Lists 
       Returns a queryset of lists this location is mentioned in
   '''
+
   def get_lists(self):
-    lists = ListLocation.objects.filter(list__status='p', location=self.get_location())
+    lists = ListLocation.objects.filter(
+        list__status='p', location=self.get_location())
     lists = self.filter_status(lists)
     lists = self.filter_visibility(lists)
     lists = lists.order_by('list__name').distinct()
     return lists
-  
+
   def get_available_lists(self):
-    available_lists = List.objects.exclude(locations__location=self.get_location())
+    available_lists = List.objects.exclude(
+        locations__location=self.get_location())
     available_lists = self.filter_status(available_lists)
     available_lists = self.filter_visibility(available_lists)
     available_lists = available_lists.order_by().distinct()
     return available_lists
-  
+
   def get_visitors(self):
     if self.request.user.is_authenticated:
-      result = VisitedIn.objects.filter(user=self.request.user, location=Location.objects.get(slug=self.kwargs['slug']))
+      result = VisitedIn.objects.filter(
+          user=self.request.user, location=Location.objects.get(slug=self.kwargs['slug']))
       result = self.filter_visibility(result)
       return result
-    
+
   def get_nearby(self):
     all_locations = Location.objects.exclude(pk=self.get_location().id)
     all_locations = self.filter_status(all_locations)
@@ -113,8 +122,15 @@ class LocationView(ListView, FilterClass):
     nearby_locations = []
     from geopy.distance import geodesic
     for location in all_locations:
-      distance = geodesic((self.get_location().coord_lat, self.get_location().coord_lng), (location.coord_lat, location.coord_lng)).kilometers
+      distance = geodesic((self.get_location().coord_lat, self.get_location(
+      ).coord_lng), (location.coord_lat, location.coord_lng)).kilometers
       if distance <= settings.NEARBY_RANGE:
         nearby_locations.append((location, distance))
     nearby_locations.sort(key=lambda x: x[1])
     return nearby_locations
+
+  def get_media(self):
+    media = Media.objects.filter(location=self.get_location())
+    media = self.filter_status(media)
+    media = self.filter_visibility(media)
+    return media

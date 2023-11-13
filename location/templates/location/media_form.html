@@ -13,7 +13,7 @@
         <dl>
           <dt><label for="source">{% translate 'source'|capfirst %}</dt>
             <dd>
-              <input class="form-control" type="file" id="source" name="source" accept="image/png, image/gif, image/jpeg" required>
+              <input class="form-control" type="file" id="source" name="source" accept="image/png, image/gif, image/jpeg, image/heic" required value="{{ form.source.value }}">
             </dd>
         </dl>
         <dl>
@@ -29,7 +29,7 @@
         <dl>
           <dt><label for="location">{% translate 'location'|capfirst %}</dt>
             <dd>
-              <input type="hidden" name="location" id="location" value="{{ location.id }}">
+              <input type="hidden" name="location" id="location" value="{{ location.slug }}">
               <input type="text" class="form-control" name="location_name" id="location_name" value="{{ location.name }}" disabled>
             </dd>
         </dl>

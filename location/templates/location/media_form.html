@@ -4,6 +4,7 @@
   {% if user.is_authenticated %}
     <div class="edit media card">
       <h1>{% if media %}{% translate 'update media'|capfirst %}{% else %}{% translate 'add media'|capfirst %}{% endif %}</h1>
+      <p>{% translate 'accepted formats:'|capfirst %} .jpg, .png, .gif, .heic.</p>
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <dl>

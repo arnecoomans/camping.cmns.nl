@@ -1,5 +1,6 @@
 /** Location Header */
 div.card>header.withmedia {
+  background-color: rgba(50,50,50,0.2);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;

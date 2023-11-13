@@ -5,6 +5,7 @@ from django.utils.translation import gettext as _
 from django.conf import settings
 
 from ..snippets.filter_class import FilterClass
+from ..snippets.order_media import order_media
 
 from location.models.Location import Location, Category, Chain, Link
 from location.models.Comment import Comment
@@ -133,4 +134,5 @@ class LocationView(ListView, FilterClass):
     media = Media.objects.filter(location=self.get_location())
     media = self.filter_status(media)
     media = self.filter_visibility(media)
+    media = order_media(media)
     return media

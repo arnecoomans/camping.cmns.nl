@@ -1,4 +1,5 @@
 from typing import Any
+from django.db.models.query import QuerySet
 from django.http import HttpRequest, HttpResponse
 from django.views.generic import DetailView
 from django.views.generic.list import ListView
@@ -15,8 +16,12 @@ from pathlib import Path
 from PIL import Image
 from pillow_heif import register_heif_opener
 
+from .snippets.filter_class import FilterClass
+from .snippets.order_media import order_media
+
 from location.models.Media import Media
 from location.models.Location import Location
+
 
 class AddMediaToLocation(CreateView):
   model = Media
@@ -93,3 +98,20 @@ class AddMediaToLocation(CreateView):
 
   def get_success_url(self) -> str:
     return reverse('location:location', kwargs={'slug': self.kwargs['slug']})
+
+class StackView(FilterClass, ListView):
+  model = Media
+
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['scope'] = f"{ _('media') }: { _('list media') }"
+    context['location'] = Location.objects.get(slug=self.kwargs['slug'])
+    context['media'] = order_media(self.get_queryset())
+    return context
+  
+  def get_queryset(self):
+    queryset = Media.objects.all()
+    queryset = self.filter_status(queryset)
+    queryset = self.filter_visibility(queryset)
+    return queryset
+  

@@ -83,5 +83,7 @@ urlpatterns = [
   path('chain/add/<slug>/', views.AddChain.as_view(), name='AddChainTo'),
 
   path('media/add/<slug>/', views.AddMediaToLocation.as_view(), name='AddMediaToLocation'),
+  path('media/stack/<slug>/', views.StackView.as_view(), name='MediaStack'),
+
   path('register/', views.SignUpView.as_view(), name='register'),
 ]

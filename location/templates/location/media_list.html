@@ -1,0 +1,30 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% load static %}
+{% block content %}
+
+<div class="comment list card">
+  <h1>{% translate 'media of'|title %} {% include 'snippets/location_link.html' %}</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>visibility</th>
+        <th>title</th>
+        <th>filename</th>
+        <th>image link</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for media in media %}
+        <tr>
+          <td>{% ifchanged media.visibility %}{{ media.get_visibility_display }}{% endifchanged %}</td>
+          <td>{{ media.title }}</td>
+          <td>{{ media.source }}</td>
+          <td><a href="/media/{{ media.source }}">link</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

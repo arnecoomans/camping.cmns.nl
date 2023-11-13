@@ -5,10 +5,12 @@ div.card>header.withmedia {
   background-repeat: no-repeat;
   background-size: cover;
   padding-top: 200px;
+  padding-bottom: 30px;
   width: 100%;
 }
 
-div.card>header>* {
+div.card>header.withmedia>h1,
+div.card>header.withmedia>span {
   background-color: rgba(255, 255, 255, 0.6);
 }
 

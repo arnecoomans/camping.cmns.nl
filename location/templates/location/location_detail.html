@@ -46,7 +46,9 @@
           {% endif %}
           {% if media|length > 0 %}
               <li data-bs-toggle="tooltip" data-bs-placement="top" title="&quot;{{ media.0.title }}&quot; by {{ media.0.user.get_full_name }} ({{ media.0.get_visibility_display }} visible)">
+                {% if user.is_staff %}<a href="{% url 'location:MediaStack' location.slug %}">{% endif %}
                 <svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#image"/></svg>
+                {% if user.is_staff %}</a>{% endif %}
               </li>
           {% endif %}
           <!-- Edit -->

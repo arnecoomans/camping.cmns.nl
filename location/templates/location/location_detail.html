@@ -67,11 +67,17 @@
         </ul>
       {% endif %}
     </header>
+
     <!-- Verify User Permissions -->
     {% if location.visibility == 'q' and location.user != user %}
       {% include 'snippets/private.html' %}
+      {% include 'snippets/click_here_to_register_login.html' %}
     {% elif location.visibility == 'f' and location.user != user and user not in location.user.profile.family.all %}
       {% include 'snippets/family.html' %}
+      {% include 'snippets/click_here_to_register_login.html' %}
+    {% elif location.visibility == 'c' and not user.is_authenticated %}
+      {% include 'snippets/community.html' %}
+      {% include 'snippets/click_here_to_register_login.html' %}
     {% else %}
 
     {% if location.description %}

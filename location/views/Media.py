@@ -110,7 +110,7 @@ class StackView(FilterClass, ListView):
     return context
   
   def get_queryset(self):
-    queryset = Media.objects.all()
+    queryset = Media.objects.filter(location__slug=self.kwargs['slug'])
     queryset = self.filter_status(queryset)
     queryset = self.filter_visibility(queryset)
     return queryset

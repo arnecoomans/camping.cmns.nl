@@ -1,4 +1,14 @@
-{% for comment in comment_list %}
+{% load i18n %}{% for comment in comment_list %}
   {% include 'snippets/comment.html' %}
+  {% empty %}
+    <tr>
+      <td class="col-12">
+        <p>{% translate 'there are no comments to show at this moment'|capfirst %}. </p>
+        {% if not user.is_authenticated %}
+          <p>{% translate 'locations and activities are often available to registered users'|capfirst %}.</p>
+          {% include 'snippets/click_here_to_register_login.html'%}
+        {% endif %}
+      </td>
+    </tr>
 {% endfor %}
 {% include 'snippets/pagination.html' %}

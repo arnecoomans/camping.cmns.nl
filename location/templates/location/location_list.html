@@ -57,6 +57,16 @@
               {% if location.visibility in 'f,q' %}<svg class="bi" width="16" height="16" fill="currentColor" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'viewable by'|capfirst %} {{ location.get_visibility_display }}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#{% if location.visibility == 'q' %}person{% else %}people{% endif %}"/></svg>{% endif %}
               {% include 'snippets/location_link.html' %}
           </tr>
+        {% empty %}
+          <tr>
+            <td class="col-12">
+              <p>{% translate 'there are no locations to show at this moment'|capfirst %}. </p>
+              {% if not user.is_authenticated %}
+                <p>{% translate 'locations and activities are often available to registered users'|capfirst %}.</p>
+                {% include 'snippets/click_here_to_register_login.html'%}
+              {% endif %}
+            </td>
+          </tr>
         {% endfor %}
       </tbody>
     </table>

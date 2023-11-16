@@ -84,6 +84,7 @@ urlpatterns = [
 
   path('media/add/<slug>/', views.AddMediaToLocation.as_view(), name='AddMediaToLocation'),
   path('media/stack/<slug>/', views.StackView.as_view(), name='MediaStack'),
-
+  path('media/refresh/<slug>:<pk>/', views.MediaRefreshView.as_view(), name='MediaRefresh'),
+  path('media/delete/<object_slug>:<pk>', views.ToggleMediaDeleted.as_view(), name='MediaDelete'),
   path('register/', views.SignUpView.as_view(), name='register'),
 ]

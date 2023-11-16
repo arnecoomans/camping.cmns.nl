@@ -1,14 +1,9 @@
-from typing import Any
-from django.db.models.query import QuerySet
-from django.http import HttpRequest, HttpResponse
 from django.views.generic import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib import messages
-from django.utils.text import slugify
 from django.utils.translation import gettext as _
 from django.shortcuts import redirect, reverse
-from django.db import IntegrityError
 from django.conf import settings
 
 from datetime import datetime
@@ -21,7 +16,6 @@ from .snippets.order_media import order_media
 
 from location.models.Media import Media
 from location.models.Location import Location
-
 
 class AddMediaToLocation(CreateView):
   model = Media
@@ -77,12 +71,24 @@ class AddMediaToLocation(CreateView):
     location = Location.objects.get(slug=self.request.POST.get('location', ''))
     ''' Store Image to Filesystem '''
     original_image = self.request.FILES['source']
-    image = Image.open(original_image)
-    if heic:
-      image = image.save(settings.MEDIA_ROOT / target_filename,
-                          format="JPEG")
-    else:
-      image = image.save(settings.MEDIA_ROOT / target_filename)
+    tgt_width = 2048
+    with Image.open(original_image) as image:
+      ''' If image is wider than 2048 px, resize the image to 2048px'''
+      width, height = image.size
+      if width > tgt_width:
+        messages.add_message(self.request, messages.INFO,
+                             f"{ _('detected large image, resizing to maximum of') } { str(tgt_width) } pixels.")
+        ratio = width / height
+        tgt_height = int(tgt_width / ratio)
+        image = image.resize((tgt_width, tgt_height),
+                             Image.Resampling.LANCZOS)
+      elif width > tgt_width / 2:
+        messages.add_message(self.request, messages.WARNING, f"{ _('the resolution of the uploaded image is very low') }. { _('You might want to concider using a high resulution image') }.")
+      if heic:
+        image = image.save(settings.MEDIA_ROOT / target_filename,
+                            format="JPEG")
+      else:
+        image = image.save(settings.MEDIA_ROOT / target_filename)
     ''' Store Media Object '''
     media = Media.objects.update_or_create(location=location, 
                                            source=str(target_filename),
@@ -99,6 +105,15 @@ class AddMediaToLocation(CreateView):
   def get_success_url(self) -> str:
     return reverse('location:location', kwargs={'slug': self.kwargs['slug']})
 
+class MediaRefreshView(UpdateView):
+  model = Media
+  fields = ['date_updated']
+
+  def get(self, *args, **kwargs):
+    messages.add_message(self.request, messages.SUCCESS, f"{ _('updated timestamp for image') } { self.get_object().title } { _('and moved up in ordering') }.")
+    self.get_object().save()
+    return redirect('location:MediaStack', self.get_object().location.slug)
+  
 class StackView(FilterClass, ListView):
   model = Media
 

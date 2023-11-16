@@ -16,7 +16,7 @@ class Media(BaseModel):
 
   class Meta:
     verbose_name_plural = 'media'
-    ordering = ['visibility', 'date_modified']
+    ordering = ['visibility', '-date_modified']
   
   def save(self, *args, **kwargs):
     ''' If no title is given, use source file name as title '''

@@ -80,7 +80,7 @@
         {% if available_filters.tags.all.count > 1 and 'tag' not in active_filters %}
           <li>{% translate 'tag'|capfirst %}:
           {% for tag in available_filters.tags.all %}
-            <a href="{% include 'snippets/filter_url_queryparams.html' %}&tag={{ tag.tags__slug }}">{{ tag.tags__name|title }}</a>{% if not forloop.last %}, {% endif %}
+            <a href="?{% include 'snippets/filter_url_queryparams.html' %}&tag={{ tag.tags__slug }}">{{ tag.tags__name|title }}</a>{% if not forloop.last %}, {% endif %}
           {% endfor %}
         {% endif %}
       <!-- Special status -->

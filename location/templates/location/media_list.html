@@ -8,11 +8,11 @@
   <table>
     <thead>
       <tr>
-        <th>visibility</th>
-        <th>title</th>
-        <th>filename</th>
-        <th>user</th>
-        <th>image link</th>
+        <th>Visibility</th>
+        <th>Title</th>
+        <th>Filename</th>
+        <th>User</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -20,9 +20,22 @@
         <tr>
           <td>{% ifchanged media.visibility %}{{ media.get_visibility_display }}{% endifchanged %}</td>
           <td>{{ media.title }}</td>
-          <td>{{ media.source }}</td>
+          <td><a href="/media/{{ media.source }}">{{ media.source }}</a></td>
           <td>{{ media.user.get_full_name }}</td>
-          <td><a href="/media/{{ media.source }}">link</a></td>
+          <td>
+            <ul class="action list">
+              {% if request.user == media.user %}
+                {% if not forloop.first %}<li><a href="{% url 'location:MediaRefresh' media.location.slug media.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'refresh'|capfirst %} {% translate 'my image' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#arrow-clockwise"/></svg></a></li>{% endif %}
+                <li><a href="{% url 'location:MediaDelete' media.location.slug media.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'delete'|capfirst %} {% translate 'my image' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#trash"/></svg></a></li>
+              {% elif request.user.is_superuser %}
+                {% if not forloop.first %}<li><a href="{% url 'location:MediaRefresh' media.location.slug media.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'refresh'|capfirst %} {% translate 'this image' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#arrow-clockwise"/></svg></a></li>{% endif %}
+                <li><a href="{% url 'location:MediaDelete' media.location.slug media.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'delete'|capfirst %} {% translate 'this image' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#trash"/></svg></a></li>
+              {% endif %}
+              {% if request.user.is_superuser %}
+                <li><a href="/admin/location/media/{{ media.id }}/change/" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if request.user == list.user %}{% translate 'edit my list'|capfirst %}{% else %}{% translate 'edit this image'|capfirst %}{% endif %} {% translate 'in admin' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil-square"/></svg></a></li>
+              {% endif %}
+            </ul>
+          </td>
         </tr>
       {% endfor %}
     </tbody>

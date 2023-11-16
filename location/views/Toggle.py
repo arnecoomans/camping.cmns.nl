@@ -19,6 +19,7 @@ from location.models.Comment import Comment
 from location.models.Tag import Tag
 from location.models.List import List, ListLocation
 from location.models.Profile import VisitedIn
+from location.models.Media import Media
 
 ''' TOGGLE View
     The ToggleView holds some basic functionaliy that is used in all Toggle functions.
@@ -39,7 +40,7 @@ class ToggleView(UpdateView):
     elif self.request.GET.get('object_slug', ''):
       object_slug = self.request.GET.get('object_slug', '')
     else:
-      messages.add_message(self.request, messages.ERROR(f"{ _('no searchable object passed in URL') }."))
+      messages.add_message(self.request, messages.ERROR, (f"{ _('no searchable object passed in URL') }."))
     if object_slug in ['--------', 'create_new']:
       return self.handle_exceptions(object_slug)
     self.toggle(object_slug)
@@ -47,7 +48,6 @@ class ToggleView(UpdateView):
   
   def post(self, request, *args, **kwargs):
     object_slug = request.POST.get('object_slug')
-    # messages.add_message(self.request, messages.INFO, object_slug)
     if object_slug in ['--------', 'create_new']:
       return self.handle_exceptions(object_slug)
     self.toggle(object_slug)
@@ -217,3 +217,32 @@ class ToggleFamilyMember(UpdateView):
       profile.family.add(family_member)
       messages.add_message(self.request, messages.SUCCESS, f"{ _('Added') } { family_member.get_full_name() } { _('to family') }.")
     return redirect('location:profile')
+  
+class ToggleMediaDeleted(ToggleView):
+  model = Media
+  fields = ['status']
+
+  def get_success_url(self) -> str:
+    return reverse_lazy('location:MediaStack', kwargs={'slug': self.get_object().location.slug})
+  
+  def handle_exceptions(self, object_slug):
+    return redirect('location:MediaStack', self.get_object().location.slug)
+    
+  def toggle(self, object_slug):
+    try:
+      object = Media.objects.get(location__slug=self.kwargs['object_slug'], id=self.kwargs['pk'])
+    except Media.DoesNotExist:
+      messages.add_message(self.request, messages.ERROR,
+                           f"{ _('can not find media with id ')} { object_slug }")
+      return redirect(self.get_success_url())
+    if object.status != 'x':
+      ''' Media should be removed '''
+      object.status = 'x'
+      messages.add_message(self.request, messages.SUCCESS,
+                           f"{ _('removed') } { _('media') } { object.title } { _('from') } { object.location.name }.")
+    else:
+      ''' Chain should be added '''
+      object.status = 'p'
+      messages.add_message(self.request, messages.SUCCESS,
+                           f"{ _('restored') } { _('media') } { object.title } { _('to') } { object.location.name }.")
+    object.save()

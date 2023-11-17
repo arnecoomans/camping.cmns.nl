@@ -57,6 +57,7 @@ urlpatterns = [
 
 
   path('lists/', views.ListListView.as_view(), name='lists'),
+  path('list/favorites/', views.AutomatedFavoriteList.as_view()),
   path('list/add/', views.AddList.as_view(), name='AddList'),
   path('list/add/<location>', views.AddList.as_view(), name='AddListWithLocation'),
   path('list/<slug>/', views.ListDetailView.as_view(), name='list'),

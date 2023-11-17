@@ -1,3 +1,5 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.views.generic import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
@@ -8,11 +10,12 @@ from django.shortcuts import redirect, reverse
 from django.db import IntegrityError
 from django.conf import settings
 
-
+from .snippets.filter_class import FilterClass
 from .func_filter_visibility import filter_visibility
 
 from location.models.List import List, ListLocation, ListDistance
 from location.models.Location import Location
+from location.models.Profile import Profile
 
 
 def addDistance(origin, destination, request):
@@ -306,3 +309,18 @@ class ListLocationUp(ListLocationUpDown):
 class ListLocationDown(ListLocationUpDown):
   def get(self, request, *args, **kwargs):
     return super().get(request, direction='down', *args, **kwargs)
+
+class AutomatedFavoriteList(FilterClass, ListView):
+  model = Location
+  template_name = 'location/list_favorite_detail.html'
+
+  def get_queryset(self):
+    ''' Fetch Logged In User Favorites '''
+    queryset = Location.objects.none()
+    if hasattr(self.request.user, 'profile'):
+      queryset = self.filter_favorites(Location.objects.all())
+    family_members = Profile.objects.filter(family=self.request.user)
+    queryset |= Location.objects.filter(favorite_of__in=family_members)
+    queryset = self.filter(queryset).order_by(
+        'location__parent__parent', 'location__parent', 'location__name', 'name').distinct()
+    return queryset

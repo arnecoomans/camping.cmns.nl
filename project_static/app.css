@@ -73,10 +73,18 @@ a.tag {
 }
 
 /** Location */
-div.location.flash.card {
-  margin: 10px;
+div.locations.list > div {
+  margin: 10px 0 20px 0;
 }
-
+div.locations.list > div.location > span,
+div.locations.list > div.location > p {
+  margin-left: 3em;
+}
+div.location.mini {
+  border-left: 3em solid var(--highlight-color);
+  border-top: 1px solid var(--highlight-color);
+  padding-left: 1em;
+}
 /** Filters */
 ul.filter.list {
   list-style-type: none;

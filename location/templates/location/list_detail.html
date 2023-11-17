@@ -8,10 +8,12 @@
   {% if list.description %}<p class="list description">{{ list.description|markdown|safe }}</p>{% endif %}
 
   <!-- Verify User Permissions -->
-  {% if location.visibility == 'q' and location.user != user %}
+  {% if list.visibility == 'q' and list.user != user %}
     {% include 'snippets/private.html' %}
   {% elif list.visibility == 'f' and user not in list.user.profile.family.all and user != list.user %}
     {% include 'snippets/family.html' %}
+  {% elif list.visibility == 'c' and not user.is_authenticated %}
+    {% include 'snippets/community.html' %}
   {% else %}
     <table class="location list">
       <thead>

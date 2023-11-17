@@ -1,0 +1,27 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% load static %}
+{% block content %}
+<div class="list detail card">
+  <h1>{% translate 'list'|title %}: {% translate 'favorites' %}</h1>
+  <p>{% translate 'list by'|capfirst %} {{ user.get_full_name|default:user.username }} | {% translate 'viewable by'|capfirst %} {% translate 'you' %}.</p>  
+  <p>{% translate 'automatically generated list with your favorite locations and your family&apos;s favorite locations'|capfirst %}.</p>
+  <!-- Verify User Permissions -->
+  {% if list.visibility == 'q' and list.user != user %}
+    {% include 'snippets/private.html' %}
+  {% elif list.visibility == 'f' and user not in list.user.profile.family.all and user != list.user %}
+    {% include 'snippets/family.html' %}
+  {% elif list.visibility == 'c' and not user.is_authenticated %}
+    {% include 'snippets/community.html' %}
+  {% else %}
+    <div class="locations list">
+      {% for location in location_list %}
+        {% include 'snippets/location_flashcard.html' %}
+      {% endfor %}
+    </div>
+    <div class="spacer"></div>
+    
+  {% endif %}
+  <p>{% translate 'to add a location, visit the location and set as favorite'|capfirst %}.</p>
+</div>
+{% endblock %}

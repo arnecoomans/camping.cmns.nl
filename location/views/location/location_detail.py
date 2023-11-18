@@ -70,7 +70,8 @@ class LocationView(ListView, FilterClass):
         Fetch a queryset of lists where this location is not mentioned in
     '''
     context['available_lists'] = self.get_available_lists()
-    context['has_bucketlist'] = True if List.objects.filter(name='Bucketlist', user=self.request.user).count() > 0 else False
+    if self.request.user.is_authenticated:
+      context['has_bucketlist'] = True if List.objects.filter(name='Bucketlist', user=self.request.user).count() > 0 else False
     ''' Visits '''
     if location.visibility == 'f':
       if hasattr(location.user, 'profile'):

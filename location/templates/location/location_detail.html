@@ -166,11 +166,15 @@
             {%if  available_lists.count == 0 %}
             <a href="{% url 'location:AddListWithLocation' location.slug %}">{% translate 'create new list with'|capfirst %} {{ location.name|title }}</a>
             {% else %}
+            {{ has_bucketlist }}
               <form method="get" action="{% url 'location:LocationAddList' location.slug %}">
                 <select name="list" class="form-control form-control-sm" style="max-width: 40%;">
                   <option selected>--------</option>
                   <option value="create_new_list">{% translate 'create new list'|capfirst %}</option>
-                  {% for list in available_lists %}
+                  {% if not has_bucketlist %}
+                    <option value="bucketlist_of_{{ user.username }}">{% translate 'bucketlist'|capfirst %}</option>
+                  {% endif %}
+                  {% for list in available_lists.all %}
                     {% if list not in lists %}
                       <option value="{{ list.slug }}">{{ list.name|truncatechars:64|title }}</option>
                     {% endif %}

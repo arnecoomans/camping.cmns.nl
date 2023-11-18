@@ -28,7 +28,7 @@
                   <select class="form-control" name="media" id="media">
                       <option value="">--------</option>
                     {% for file in media.all %}
-                        <option value="{{ file.id }}" {% if listlocation.media.id == file.id %}selected{% endif %}>{{ file.title }}</option>
+                        <option value="{{ file.id }}" {% if listlocation.media.id == file.id %}selected{% endif %}>{{ file.title }} - {{ file.source }} - {{ file.user.get_full_name|default:file.user.username }}</option>
                       {% endfor %} 
                   </select>
                 </td>

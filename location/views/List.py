@@ -9,6 +9,7 @@ from django.utils.translation import gettext as _
 from django.shortcuts import redirect, reverse
 from django.db import IntegrityError, models
 from django.conf import settings
+from django.http import Http404
 
 from .snippets.filter_class import FilterClass
 from .func_filter_visibility import filter_visibility
@@ -77,8 +78,21 @@ class ListDetailView(FilterClass, DetailView):
     return context
   
   def get_object(self):
-    list = List.objects.get(slug=self.kwargs['slug'])
+    try:
+      list = List.objects.get(slug=self.kwargs['slug'])
+    except List.DoesNotExist:
+      messages.add_message(self.request, messages.ERROR,
+                           f"{ _('selected list does not exist') }: { self.kwargs['slug'] }.")
+      raise Http404(
+            _("No list found with the name")
+        )
     return list
+  
+  def get(self, request, *args, **kwargs):
+    try:
+      return super().get(request, *args, **kwargs)
+    except Http404:
+      return redirect('location:lists')
 
 class AddList(CreateView):
   model = List
@@ -211,10 +225,27 @@ class AddLocationToList(UpdateView):
     elif self.request.GET.get('list', '') == 'create_new_list':
       return redirect('location:AddListWithLocation', self.kwargs['slug'])
     elif 'location' in self.kwargs:
-      list = List.objects.get(slug=self.kwargs['slug'])
+      try:
+        list = List.objects.get_or_create(slug=self.kwargs['slug'],
+                                        defaults={'slug': 'bucketlist_of_' + self.request.user.username,
+                                                    'name': 'Bucketlist',
+                                                    'visibility': 'f',
+                                                    'template': 'l',
+                                                    'user': self.request.user})[0]
+      except List.DoesNotExist:
+        messages.add_message(self.request, messages.ERROR, f"{ _('selected list does not exist') }: { self.kwargs['slug'] }.")
       location = Location.objects.get(slug=self.kwargs['location'])
     elif self.request.GET.get('list', ''):
-      list = List.objects.get(slug=self.request.GET.get('list', ''))
+      try:
+        list = List.objects.get_or_create(slug=self.request.GET.get('list', ''),
+                                          defaults={'slug': 'bucketlist_of_' + self.request.user.username,
+                                                    'name': 'Bucketlist',
+                                                    'visibility': 'f',
+                                                    'template': 'l',
+                                                    'user': self.request.user})[0]
+      except List.DoesNotExist:
+        messages.add_message(self.request, messages.ERROR,
+                             f"{ _('selected list does not exist') }: { self.request.GET.get('list', '') }.")
       location = Location.objects.get(slug=self.kwargs['slug'])
     
     ''' Add as last item on the list, add self.steps to the last order entry '''

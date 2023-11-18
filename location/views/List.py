@@ -1,3 +1,5 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.views.generic import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
@@ -5,14 +7,15 @@ from django.contrib import messages
 from django.utils.text import slugify
 from django.utils.translation import gettext as _
 from django.shortcuts import redirect, reverse
-from django.db import IntegrityError
+from django.db import IntegrityError, models
 from django.conf import settings
 
-
+from .snippets.filter_class import FilterClass
 from .func_filter_visibility import filter_visibility
 
 from location.models.List import List, ListLocation, ListDistance
 from location.models.Location import Location
+from location.models.Profile import Profile
 
 
 def addDistance(origin, destination, request):
@@ -58,17 +61,28 @@ class ListListView(ListView):
     return queryset
   
 
-class ListDetailView(DetailView):
+class ListDetailView(FilterClass, DetailView):
   model = List
 
+  def get_template_names(self):
+    if self.get_object().template == 't':
+      return ('location/list_trip_detail.html')
+    else:
+      return ('location/list_list_detail.html')
+  
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context['scope'] = f"{ _('list') }: { self.object.name } { _('by') } { self.object.user }"
+    context['locations'] = self.filter(ListLocation.objects.filter(list=self.get_object()))
     return context
+  
+  def get_object(self):
+    list = List.objects.get(slug=self.kwargs['slug'])
+    return list
 
 class AddList(CreateView):
   model = List
-  fields = ['name', 'description', 'visibility']
+  fields = ['name', 'description', 'visibility', 'template']
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -106,7 +120,7 @@ class AddList(CreateView):
   
 class EditList(UpdateView):
   model = List
-  fields = ['name', 'description', 'visibility']
+  fields = ['name', 'description', 'visibility', 'template']
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -118,6 +132,31 @@ class EditList(UpdateView):
     return super().form_valid(form)
 
 
+''' Edit ListLocation '''
+class EditListLocation(FilterClass, UpdateView):
+  model = ListLocation
+  fields = ['comment', 'visibility', 'nights', 'price', 'media']
+  
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['media'] = self.filter(self.get_object().location.media)
+    return context
+  
+  def get_object(self):
+    return ListLocation.objects.get(pk=self.kwargs['pk'], location__slug=self.kwargs['location'])
+
+  def form_invalid(self, form):
+    messages.add_message(self.request, messages.WARNING,
+                         f"{ _('Form cannot be saved because of the following error(s)') }: { form.errors }")
+    return super().form_invalid(form)
+  
+  def form_valid(self, form):
+    if len(form.changed_data) > 0:
+      messages.add_message(self.request, messages.SUCCESS, f"{ _('succesfully changed data') }.")
+    else:
+      messages.add_message(self.request, messages.INFO, f"{ _('no changes made')} ")
+    return super().form_valid(form)
+  
 ''' DELETE LIST 
     UNDELETE LIST
     When sharing a message an item has been deleted, it allows for the item to be undeleted. 
@@ -210,8 +249,16 @@ class DeleteLocationFromList(UpdateView):
     location = list.locations.get(id=self.kwargs['pk'], location__slug=self.kwargs['location'])
     ''' Only allow action from List User or Staff'''
     if list.user == self.request.user or self.request.user.is_superuser:
-        location.delete()
-        messages.add_message(self.request, messages.SUCCESS, f"{ _('Removed') } \"{ location.location.name }\"  { _('from list')} \"{ list.name }\". <a href=\"{reverse('location:AddLocationToList', args=[list.slug, location.location.slug])}\">{ _('Undo') }</a>.")
+        if location.status != 'x':
+          # location.delete()
+          location.status = 'x'
+          messages.add_message(self.request, messages.SUCCESS,
+                               f"{ _('Removed') } \"{ location.location.name }\"  { _('from list')} \"{ list.name }\". <a href=\"{reverse('location:DeleteLocationFromList', args=[list.slug, location.id, location.location.slug])}\">{ _('Undo') }</a>.")
+        else:
+          location.status = 'p'
+          messages.add_message(self.request, messages.SUCCESS,
+                               f"{ _('Restpred') } \"{ location.location.name }\"  { _('to list')} \"{ list.name }\". <a href=\"{reverse('location:DeleteLocationFromList', args=[list.slug, location.id, location.location.slug])}\">{ _('Undo') }</a>.")
+        location.save()
     else:
       ''' Share errormessage that the list cannot be modified '''
       messages.add_message(self.request, messages.ERROR, f"{ _('List') } \"{ list }\" { _('cannot be modified')}. { _('This is not your list') }.")
@@ -236,7 +283,7 @@ class StartListFromHome(UpdateView):
                                     user=self.request.user)
         messages.add_message(self.request, messages.SUCCESS, f"{ list.name } { _('now departs from')} { self.request.user.profile.home }")
         calculateDistances(self.request, list)
-        messages.add_message(self.request, messages.INFO, f"{ list.name } { _('already departs from')} { self.request.user.profile.home }")
+        # messages.add_message(self.request, messages.INFO, f"{ list.name } { _('already departs from')} { self.request.user.profile.home }")
     else:
       ''' Share errormessage that the list cannot be modified '''
       messages.add_message(self.request, messages.ERROR, f"{ _('List') } \"{ list }\" { _('cannot be modified')}. { _('This is not your list') }.")
@@ -306,3 +353,30 @@ class ListLocationUp(ListLocationUpDown):
 class ListLocationDown(ListLocationUpDown):
   def get(self, request, *args, **kwargs):
     return super().get(request, direction='down', *args, **kwargs)
+
+class AutomatedFavoriteList(FilterClass, ListView):
+  model = Location
+  template_name = 'location/list_favorite_detail.html'
+
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['scope'] = _('favorites')
+    media = {}
+    for location in self.get_queryset():
+      if self.filter(location.media).count() > 0:
+        media[location.id] = self.filter(location.media).first()
+    context['media'] = media
+    return context
+
+
+  def get_queryset(self):
+    ''' Fetch Logged In User Favorites '''
+    queryset = Location.objects.none()
+    if hasattr(self.request.user, 'profile'):
+      return self.filter(self.request.user.profile.get_favorites())
+      queryset = self.filter_favorites(Location.objects.all())
+    family_members = Profile.objects.filter(family=self.request.user)
+    queryset = Location.objects.filter(favorite_of__in=family_members)
+    queryset = self.filter(queryset).order_by(
+        'location__parent__parent', 'location__parent', 'location__name', 'name').distinct()
+    return queryset

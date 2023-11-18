@@ -150,7 +150,7 @@ class LocationListMaster(FilterClass):
     ''' Filtering '''
     queryset = self.filter_queryset(queryset)
     ''' Ordering '''
-    queryset = queryset.order_by('location__parent__parent', 'location__parent', 'location__name').distinct()
+    queryset = queryset.order_by('location__parent__parent', 'location__parent', 'location__name', 'name').distinct()
     self.cached_queryset = queryset
     return queryset
 

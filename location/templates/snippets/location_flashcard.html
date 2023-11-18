@@ -1,17 +1,26 @@
 {% load i18n %}
-{% if forloop.first %}<div class="row">{% endif %}
-<div class="col location flash card">
-  <h2><a href="{% if location.isActivity %}{% url 'location:activity' location.slug %}{% else %}{% url 'location:location' location.slug %}{% endif %}">{{ location|title }}</a></h2>
-  <span class="descriptor">
-    {% if location.chain %}{{ location.chain }}{% endif %}
-    {% if location.category %}{{ location.category.name }}{% endif %}
-    {% if location.isActivity %}{% translate 'activity' %}{% endif %}
-    {% if location.location %}in {{ location.location }}{% endif %}
-    <span meta>{% if user.is_authenticated %}{% translate 'viewable by' %} {% if location.status == 'p' %}{% translate 'everyone' %}{% elif location.status == 'c' %}{% translate 'the community' %}{% elif location.status == '-' %}{% translate 'just me' %}{% else %}admins{% endif %}.{% endif %}</span>
+<div class="location mini">
+  <h3>{% include 'snippets/location_link.html' %}</h3>
+  <span class="locator" data-type="{{ location.getCategory }}" data-country="{{ location.location.parent.parent.slug }}" data-region="{{ location.location.parent.slug }}" data-department="{{ location.location.slug }}">
+    {% if location.chain %}
+      {% include 'snippets/chain.html' with chain=location.chain %}
+    {% endif %}
+    <a href="{% if location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}?category={{ location.category.slug }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate location.getPCategory|capfirst %} {% translate 'marked' %} {{ location.category.name|title }}">{{ location.category.name|title }}</a> 
+    {% if location.location %}
+      in
+      <a href="{% if location.isActivity %}{% url 'location:ListLActivitiesByDepartment' location.location.parent.parent.slug location.location.parent.slug location.location.slug %}{% else %}{% url 'location:ListLocationsByDepartment' location.location.parent.parent.slug location.location.parent.slug location.location.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location }}">{{ location.location.name|title }}</a>,
+      <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByRegion' location.location.parent.parent.slug location.location.parent.slug %}{% else %}{% url 'location:ListLocationsByRegion' location.location.parent.parent.slug location.location.parent.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.parent }}">{{ location.location.parent.name|title }}</a>,
+      <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByCountry' location.location.parent.parent.slug %}{% else %}{% url 'location:ListLocationsByCountry' location.location.parent.parent.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.parent.parent.name }}">{{ location.location.parent.parent.name|title }}</a>.
+    {% endif %}
+    {% if user.is_authenticated %}
+      {% translate 'viewable by'|capfirst %} {{ location.get_visibility_display }}
+    {% endif %}
   </span>
+  {% if location.favorite_of.all.count > 0 %}
+    <p>{% translate 'favorite of'|capfirst %}: 
+      {% for favorite_of in location.favorite_of.all %}
+        {% if user == favorite_of.user %}{% translate 'you'|capfirst %}{% else %}{{ favorite_of.user.get_full_name|default:favorite_of.user.username }}{% endif %}{% if not forloop.last %}, {% endif %}
+      {% endfor %}
+    </p>
+  {% endif %}
 </div>
-{% if forloop.counter|divisibleby:2 %}</div><div class="row">{% endif %}
-{% if forloop.last %}
-  {% if not forloop.counter|divisibleby:2 %}<div class="col"><!-- empty block --></div>{% endif %}
-  </div>
-{% endif %}

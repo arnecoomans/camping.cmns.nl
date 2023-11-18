@@ -9,6 +9,7 @@ from django.utils.safestring import mark_safe
 
 from .base_model import BaseModel
 from .Location import Location
+from .Media import Media
 
 from math import floor
 from datetime import datetime
@@ -71,7 +72,7 @@ def secondsToTime(seconds):
     seconds = seconds - (hours * (60*60))
     minutes = round(seconds / 600)*10
     
-    time.append(f"{ '0' if hours < 10 else '' }{ str(hours) }:{ '0' if len(str(minutes)) <= 1 else '' }{ str(minutes) }")
+    time.append(f"{ '0' if hours < 10 else '' }{ str(hours) }h{ '0' if len(str(minutes)) <= 1 else '' }{ str(minutes) }m")
     # time.append(f"{ '0' if hours < 10 else '' }{ str(hours) }:{ '0' if floor(seconds/60) < 10 else '' }{ str(floor(seconds/60)) }")
   elif seconds >= 60:
     minutes = floor(seconds/(60))
@@ -95,6 +96,11 @@ class List(BaseModel):
   name                = models.CharField(max_length=255, help_text=_('Name of location as it is identified by'))
   description         = models.TextField(blank=True, help_text=_('Markdown is supported'))
   
+  template_choices = (
+      ('l', _('list')),
+      ('t', _('trip')),
+  )
+  template            = models.CharField(max_length=1, choices=template_choices, default='t')
     
   class Meta:
     verbose_name = _("list")
@@ -135,6 +141,7 @@ class ListLocation(BaseModel):
   nights              = models.IntegerField(default=0)
   price               = models.IntegerField(default=0)
 
+  media               = models.ForeignKey(Media, on_delete=models.DO_NOTHING, null=True)
 
   class Meta:
     verbose_name = _("list-location")

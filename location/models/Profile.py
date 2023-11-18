@@ -17,6 +17,7 @@ class Profile(models.Model):
   favorite            = models.ManyToManyField(Location, blank=True, related_name='favorite_of')
   least_liked         = models.ManyToManyField(Location, blank=True, related_name='least_liked_of')
   hide_least_liked    = models.BooleanField(default=False, help_text=_('It is possible to "unlike" a location. Enable this field to hide the least-liked locations.'))
+
   def __str__(self) -> str:
     return f'Profile of { self.user.get_full_name() if self.user.get_full_name() else self.user.username }'
   
@@ -25,6 +26,14 @@ class Profile(models.Model):
   
   def get_home(self):
     return self.home
+  
+  def get_favorites(self):
+    queryset = Location.objects.filter(favorite_of=self.user.profile)
+    family_members = Profile.objects.filter(family=self.user)
+    queryset |= Location.objects.filter(favorite_of__in=family_members)
+    queryset = queryset.order_by(
+        'location__parent__parent', 'location__parent', 'location__name', 'name').distinct()
+    return queryset
 
   
 class VisitedIn(BaseModel):

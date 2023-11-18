@@ -57,6 +57,7 @@ urlpatterns = [
 
 
   path('lists/', views.ListListView.as_view(), name='lists'),
+  path('list/favorites/', views.AutomatedFavoriteList.as_view(), name="ListFavorites"),
   path('list/add/', views.AddList.as_view(), name='AddList'),
   path('list/add/<location>', views.AddList.as_view(), name='AddListWithLocation'),
   path('list/<slug>/', views.ListDetailView.as_view(), name='list'),
@@ -67,6 +68,7 @@ urlpatterns = [
   path('list/<slug>/undelete/', views.UndeleteList.as_view(), name='UndeleteList'),
   path('list/<slug>/add/', views.AddLocationToList.as_view(), name='GetAddLocationToList'),
   path('list/<slug>/add/<location>/', views.AddLocationToList.as_view(), name='AddLocationToList'),
+  path('list/<slug>/<pk>:<location>/edit/', views.EditListLocation.as_view(), name="EditListLocation"),
   path('list/<slug>/<pk>:<location>/delete/', views.DeleteLocationFromList.as_view(), name='DeleteLocationFromList'),
   path('list/<slug>/<id>:<location>/up/', views.ListLocationUp.as_view(), name="ListLocationUp"),
   path('list/<slug>/<id>:<location>/down/', views.ListLocationDown.as_view(), name="ListLocationDown"),

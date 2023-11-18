@@ -1,5 +1,6 @@
 /** Location Header */
-div.card>header.withmedia {
+div.card>header.withmedia,
+div.location>header.withmedia {
   background-color: rgba(50,50,50,0.2);
   background-position: center center;
   background-repeat: no-repeat;
@@ -10,7 +11,9 @@ div.card>header.withmedia {
 }
 
 div.card>header.withmedia>h1,
-div.card>header.withmedia>span {
+div.card>header.withmedia>span,
+div.location>header.withmedia>h1,
+div.location>header.withmedia>span {
   background-color: rgba(255, 255, 255, 0.6);
 }
 
@@ -73,10 +76,18 @@ a.tag {
 }
 
 /** Location */
-div.location.flash.card {
-  margin: 10px;
+div.locations.list > div {
+  margin: 10px 0 20px 0;
 }
-
+div.locations.list > div.location > span,
+div.locations.list > div.location > p {
+  margin-left: 3em;
+}
+div.location.mini {
+  border-left: 3em solid var(--highlight-color);
+  border-top: 1px solid var(--highlight-color);
+  padding-left: 1em;
+}
 /** Filters */
 ul.filter.list {
   list-style-type: none;
@@ -91,4 +102,8 @@ ul.filter.list>li {}
 
 ul.filter.list>li>a:not(.tag):hover:has(svg) {
   color: inherit;
+}
+/** Lists */
+table.location.list > tbody > tr.activity {
+  color: #999;
 }

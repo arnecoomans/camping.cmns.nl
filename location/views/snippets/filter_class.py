@@ -19,3 +19,13 @@ class FilterClass:
     else:
       queryset =  queryset.filter(visibility='p')
     return queryset
+  
+  def filter(self, queryset):
+    queryset = self.filter_status(queryset)
+    queryset = self.filter_visibility(queryset)
+    return queryset
+
+  def filter_favorites(self, queryset):
+    if hasattr(self.request.user, 'profile'):
+      return queryset.filter(favorite_of=self.request.user.profile)
+    return None

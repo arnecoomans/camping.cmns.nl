@@ -19,11 +19,19 @@
             <dd>
               <select class="form-control" name="visibility" id="visibility">
                 {% for key, value in form.fields.visibility.choices %}
-                    <option value="{{ key }}" {% if list.visibility == key %}selected{% elif not list and key == 'p' %}selected{% endif %}>{{ value|title }}</option>
-                {% endfor %}
+                  <option value="{{ key }}" {% if list.visibility == key %}selected{% elif not list and key == 'p' %}selected{% endif %}>{{ value|title }}</option>
+                {% endfor %} 
               </select>
             </dd>
         </dl>
+        <dl>
+          <dt><label for="template">{% translate 'template'|capfirst %}</dt>
+            <dd>
+              <select class="form-control" name="template" id="template">
+                {% for key, value in form.fields.template.choices %}
+                  <option value="{{ key }}" {% if list.template == key %}selected{% elif not list and key == 't' %}selected{% endif %}>{{ value|title }}</option>
+                {% endfor %}
+              </select>
         <div class="spacer"></div>
         <input type="submit" value="{% translate 'submit'|capfirst %}" class="btn btn-success btn-lg {% if list and not user.is_superuser and user != list.user %}disabled{% endif %}">
         <a href="{% url 'location:tags' %}" class="btn btn-secondary btn-lg" role="button" aria-disabled="true">{% translate 'cancel'|capfirst %}</a>

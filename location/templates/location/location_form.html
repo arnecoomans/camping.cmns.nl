@@ -79,7 +79,7 @@
           {% endif %}
           <dt>&nbsp;</dt>
             <dd>
-              <input type="submit" class="btn btn-primary" value="{% translate 'save changes to'|capfirst %} {% translate location.name %}">
+              <input type="submit" class="btn btn-primary" value="{% translate 'save changes'|capfirst %}{% if location %} {% translate 'to' %} {% translate location.name %}{% endif %}">
               {% if location %}
                 <a class="btn btn-secondary" href="{% if location.isActivity %}{% url 'location:activity' location.slug %}{% else %}{% url 'location:location' location.slug %}{% endif %}" role="button">{% translate 'cancel'|capfirst %}</a>
               {% else %}

@@ -9,7 +9,7 @@ class Media(BaseModel):
   title = models.CharField(max_length=255)
 
   location = models.ForeignKey(
-      Location, on_delete=models.DO_NOTHING, null=True, blank=True)
+      Location, on_delete=models.DO_NOTHING, null=True, blank=True, related_name='media')
 
   def __str__(self) -> str:
     return f"{ self.title } ({ self.location.name })"

@@ -15,6 +15,14 @@
       </tr>
     </thead>
     <tbody>
+      {% if user.profile.get_favorites.all.count > 0 %}
+        <tr>
+          <td><a href="{% url 'location:ListFavorites' %}">{% translate 'favorites'|capfirst %}</a></td>
+          <td>{% translate 'automatic'|capfirst %}</td>
+          <td>{% translate 'you'|capfirst %}</td>
+          <td>{{ user.profile.get_favorites.all.count }}</td>
+        </tr>
+      {% endif %}
       {% for list in list_list %}
         <tr>
           <td><a href="{% url 'location:list' list.slug %}" {% if list.name|length >= 48 %}title="{{ list.name }}"{% endif %}>{{ list.name|truncatechars:48|title }}</a></td>

@@ -1,0 +1,91 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% block content %}
+  {% if user.is_authenticated %}
+    <div class="edit comment card">
+      <h1>List{% if listlocation %}: <a href="{% url 'location:list' listlocation.list.slug %}">{{ listlocation.list.name|title }}</a>{% endif %}</h1>
+      <form method="post">
+        {{ listlocation }}
+        {% csrf_token %}
+        <table class="table">
+          <tbody>
+            <tr>
+              <td><label for="name">{% translate 'list'|capfirst %}</td>
+              <td colspan="2"><input class="form-control form-control-lg" name="list" id="list" value="{{ listlocation.list.name }}" disabled></td>
+            </tr>
+            <tr>
+              <td><label for="name">{% translate 'location'|capfirst %}</td>
+              <td colspan="2"><input class="form-control form-control-lg" name="location" id="location" value="{{ listlocation.location.name }}" disabled></td>
+            </tr>
+            <tr>
+              <td><label for="comment">{% translate 'comment'|capfirst %}</td>
+              <td colspan="2"><textarea class="form-control" name="comment" id="comment" rows="8">{{ listlocation.comment }}</textarea></td>
+            </tr>
+            {% if media.all.count > 0 %}
+              <tr>
+                <td><label for="media">{% translate 'image'|capfirst %}</td>
+                <td colspan="2">
+                  <select class="form-control" name="media" id="media">
+                      <option value="">--------</option>
+                    {% for file in media.all %}
+                        <option value="{{ file.id }}" {% if listlocation.media.id == file.id %}selected{% endif %}>{{ file.title }}</option>
+                      {% endfor %} 
+                  </select>
+                </td>
+              </tr>
+            {% endif %}
+            <tr>
+              <td>&nbsp;</td>
+              <td>
+                {% if listlocation.location.isActivity %}
+                  <input type="hidden" name="nights" value="0">
+                {% else %}
+                  <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">{% translate 'nights'|capfirst %}</span>
+                    <input type="number" class="form-control" placeholder="1" aria-label="nights" aria-describedby="basic-addon1" name="nights" value="{{ listlocation.nights|default:'0' }}">
+                  </div>
+                {% endif %}
+              </td>
+              <td>
+                <div class="input-group mb-3">
+                  <span class="input-group-text" id="basic-addon2">{% translate 'price'|capfirst %}</span>
+                  <input type="currency" class="form-control" placeholder="&euro;" aria-label="price" aria-describedby="basic-addon2" name="price" value="{{ listlocation.price|default:'0' }}">
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><label for="visibility">{% translate 'viewable by'|capfirst %}</td>
+              <td colspan="2">
+                <select class="form-control" name="visibility" id="visibility">
+                  {% for key, value in form.fields.visibility.choices %}
+                    <option value="{{ key }}" {% if listlocation.visibility == key %}selected{% elif not list and key == 'p' %}selected{% endif %}>{{ value|title }}</option>
+                  {% endfor %} 
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <input type="submit" value="{% translate 'submit'|capfirst %}" class="btn btn-success btn-lg {% if list and not user.is_superuser and user != list.user %}disabled{% endif %}">
+                <a href="{% url 'location:list' listlocation.list.slug %}" class="btn btn-secondary btn-lg" role="button" aria-disabled="true">{% translate 'cancel'|capfirst %}</a>
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td><a href="{% url 'location:DeleteLocationFromList' listlocation.list.slug listlocation.id listlocation.location.slug %}" class="btn btn-danger btn-lg" role="button" aria-disabled="true">{% translate 'delete location from list'|capfirst %}</a></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="spacer"></div>
+        
+        
+
+      </form>
+    </div>
+  {% else %}
+    {% include 'snippets/login_or_register.html' %}
+  {% endif %}
+{% endblock %}

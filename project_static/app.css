@@ -1,5 +1,6 @@
 /** Location Header */
-div.card>header.withmedia {
+div.card>header.withmedia,
+div.location>header.withmedia {
   background-color: rgba(50,50,50,0.2);
   background-position: center center;
   background-repeat: no-repeat;
@@ -10,7 +11,9 @@ div.card>header.withmedia {
 }
 
 div.card>header.withmedia>h1,
-div.card>header.withmedia>span {
+div.card>header.withmedia>span,
+div.location>header.withmedia>h1,
+div.location>header.withmedia>span {
   background-color: rgba(255, 255, 255, 0.6);
 }
 
@@ -99,4 +102,8 @@ ul.filter.list>li {}
 
 ul.filter.list>li>a:not(.tag):hover:has(svg) {
   color: inherit;
+}
+/** Lists */
+table.location.list > tbody > tr.activity {
+  color: #999;
 }

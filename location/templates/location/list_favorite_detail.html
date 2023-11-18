@@ -16,11 +16,29 @@
   {% else %}
     <div class="locations list">
       {% for location in location_list %}
-        {% include 'snippets/location_flashcard.html' %}
+        <div class="location {{ location.getCategory }} card">
+          <header {% if location.id in media.keys %}class="withmedia" style="background-image: url('/media/{% for id, image in media.items %}{% if id == location.id %}{{ image.source }}{% endif %}{% endfor %}');"{% endif %}>
+            <!-- Header Line -->
+            <h1>{% include 'snippets/location_link.html' %}</h1> 
+            <span class="locator">
+              {% if location.location.chain %}
+                {% include 'snippets/chain.html' with chain=location.location.chain %}
+              {% endif %}
+              <a href="{% if location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}?category={{ location.category.slug }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate location.getPCategory|capfirst %} {% translate 'marked' %} {{ location.category.name|title }}">{{ location.category.name|title }}</a> 
+              {% if location.location %}
+                in
+                <a href="{% if location.isActivity %}{% url 'location:ListLActivitiesByDepartment' location.location.parent.parent.slug location.location.parent.slug location.location.slug %}{% else %}{% url 'location:ListLocationsByDepartment' location.location.parent.parent.slug location.location.parent.slug location.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location }}">{{ location.location.name|title }}</a>,
+                <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByRegion' location.location.parent.parent.slug location.location.parent.slug %}{% else %}{% url 'location:ListLocationsByRegion' location.location.parent.parent.slug location.location.parent.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.parent }}">{{ location.location.parent.name|title }}</a>,
+                <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByCountry' location.location.parent.parent.slug %}{% else %}{% url 'location:ListLocationsByCountry' location.location.parent.parent.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.parent.parent.name }}">{{ location.location.parent.parent.name|title }}</a>.
+              {% endif %}
+            </span><br>
+            
+          </header>
+          {% if location.comment %}<p class="comment">{{ location.comment|markdown|safe }}</p>{% endif%}
+        </div>
       {% endfor %}
     </div>
     <div class="spacer"></div>
-    
   {% endif %}
   <p>{% translate 'to add a location, visit the location and set as favorite'|capfirst %}.</p>
 </div>

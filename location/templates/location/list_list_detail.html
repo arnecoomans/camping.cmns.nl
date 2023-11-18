@@ -1,0 +1,104 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% load static %}
+{% block content %}
+<div class="list detail card">
+  <h1>{% translate 'list'|title %}: {{ list.name|title }}</h1>
+  <p>{% translate 'list by'|capfirst %} {{ list.user.get_full_name|default:list.user.username }} | {% translate 'viewable by'|capfirst %} {{ list.get_visibility_display }} | {% translate 'created'|capfirst %} {{ list.date_added|date:"d/m/Y" }} {% if list.date_added|date:"d/m/Y" != list.date_modified|date:"d/m/Y" %}| {% translate 'last changed'|capfirst %} {{ list.date_modified|date:"d/m/Y" }}{% endif %}
+  <!-- Verify User Permissions -->
+  {% if list.visibility == 'q' and list.user != user %}
+    {% include 'snippets/private.html' %}
+  {% elif list.visibility == 'f' and user not in list.user.profile.family.all and user != list.user %}
+    {% include 'snippets/family.html' %}
+  {% elif list.visibility == 'c' and not user.is_authenticated %}
+    {% include 'snippets/community.html' %}
+  {% else %}
+    {% if list.description %}<p class="list description">{{ list.description|markdown|safe }}</p>{% endif %}
+    <ul class="action list">
+      {% if request.user == list.user %}
+        <li><a href="{% url 'location:EditList' list.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit'|capfirst %} {% translate 'my list' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil"/></svg></a></li>
+        <li><a href="{% url 'location:DeleteList' list.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'delete'|capfirst %} {% translate 'my list' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#trash"/></svg></a></li>
+      {% elif request.user.is_superuser %}
+        <li><a href="{% url 'location:EditList' list.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit'|capfirst %} {% translate 'this list' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil"/></svg></a></li>
+        <li><a href="{% url 'location:DeleteList' list.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'delete'|capfirst %} {% translate 'this list' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#trash"/></svg></a></li>
+      {% endif %}
+      {% if request.user.is_superuser %}
+        <li><a href="/admin/location/list/{{ list.id }}/change/" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if request.user == list.user %}{% translate 'edit my list'|capfirst %}{% else %}{% translate 'edit this list'|capfirst %}{% endif %} {% translate 'in admin' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil-square"/></svg></a></li>
+      {% endif %}
+    </ul>
+    <ul class="action list">
+      {% if user.profile.home %}
+        {% if list.locations.first.location != user.profile.home %}<li><a href="{% url 'location:StartListFromHome' list.slug %}">{% translate 'start from home' %}</a></li>{% endif %}
+        {% if list.locations.last.location != user.profile.home %}<li><a href="{% url 'location:EndListAtHome' list.slug %}">{% translate 'end at home' %}</a></li>{% endif %}
+      {% endif %}
+    </ul>
+    <div class="locations list">
+      {% for location in locations %}
+        <div class="location {{ location.getCategory }} card">
+          <header {% if location.media %}class="withmedia" style="background-image: url('/media/{{ location.media.source }}');"{% endif %}>
+            <!-- Header Line -->
+            <h1>{% include 'snippets/location_link.html' with location=location.location %}</h1> 
+            <span class="locator">
+              {% if location.location.chain %}
+                {% include 'snippets/chain.html' with chain=location.location.chain %}
+              {% endif %}
+              <a href="{% if location.location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}?category={{ location.location.category.slug }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate location.location.getPCategory|capfirst %} {% translate 'marked' %} {{ location.location.category.name|title }}">{{ location.location.category.name|title }}</a> 
+              {% if location.location %}
+                in
+                <a href="{% if location.isActivity %}{% url 'location:ListLActivitiesByDepartment' location.location.location.parent.parent.slug location.location.location.parent.slug location.location.location.slug %}{% else %}{% url 'location:ListLocationsByDepartment' location.location.location.parent.parent.slug location.location.location.parent.slug location.location.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.location }}">{{ location.location.location.name|title }}</a>,
+                <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByRegion' location.location.location.parent.parent.slug location.location.location.parent.slug %}{% else %}{% url 'location:ListLocationsByRegion' location.location.location.parent.parent.slug location.location.location.parent.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.location.parent }}">{{ location.location.location.parent.name|title }}</a>,
+                <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByCountry' location.location.location.parent.parent.slug %}{% else %}{% url 'location:ListLocationsByCountry' location.location.location.parent.parent.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.location.parent.parent.name }}">{{ location.location.location.parent.parent.name|title }}</a>.
+              {% endif %}
+            </span><br>
+            {% if location.getDistanceToPreviousLocation %}
+              <span class="distances">
+                {% translate 'distance to'|capfirst %} {{ location.getPreviousLocation.location.name }}: {{ location.getDistanceToPreviousLocation|default:'-' }}, {{ location.getShortTimeToPreviousLocation|default:'-' }}.
+              </span>
+            {% endif %}
+            <!-- Action List-->
+            <ul class="action list">
+              <li>
+                <!-- Up/Down -->
+                {% if perms.location.edit_list and list.user == user or user.is_superuser %}
+                  {% if forloop.first %}
+                    <svg class="bi" width="18" height="18" fill="#{% if location.media %}fff{% else %}333{% endif %}">
+                      <use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#arrow-up"/>
+                    </svg>
+                  {% else %}
+                    <a href="{% url 'location:ListLocationUp' list.slug location.id location.location.slug %}">
+                      <svg class="bi" width="18" height="18" fill="#{% if location.media %}fff{% else %}333{% endif %}">
+                        <use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#arrow-up"/>
+                      </svg>
+                    </a>
+                  {% endif %}
+                  {% if forloop.last %}
+                    <svg class="bi" width="18" height="18" fill="#{% if location.media %}fff{% else %}ccc{% endif %}">
+                      <use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#arrow-down"/>
+                    </svg>
+                  {% else %}
+                    <a href="{% url 'location:ListLocationDown' list.slug location.id location.location.slug %}">
+                      <svg class="bi" width="18" height="18" fill="#{% if location.media %}fff{% else %}333{% endif %}">
+                        <use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#arrow-down"/>
+                      </svg>
+                    </a>
+                  {% endif %}
+                  </li>
+                  <li>
+                    <!-- Edit -->
+                    <a href="{% url 'location:EditListLocation' list.slug location.id location.location.slug %}">
+                      <svg class="bi" width="18" height="18" fill="#{% if location.media %}ccc{% else %}333{% endif %}">
+                        <use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil"/>
+                      </svg>
+                    </a>
+                  </li>
+                {% endif %}
+            </ul>
+          </header>
+          {% if location.comment %}<p class="comment">{{ location.comment|markdown|safe }}</p>{% endif%}
+        </div>
+      {% endfor %}
+    </div>
+    <div class="spacer"></div>
+  {% endif %}
+</div>
+{% endblock %}

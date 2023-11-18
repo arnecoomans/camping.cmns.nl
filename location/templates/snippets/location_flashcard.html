@@ -16,9 +16,11 @@
       {% translate 'viewable by'|capfirst %} {{ location.get_visibility_display }}
     {% endif %}
   </span>
-  <p>{% translate 'favorite of'|capfirst %}: 
-    {% for favorite_of in location.favorite_of.all %}
-      {% if user == favorite_of.user %}{% translate 'you'|capfirst %}{% else %}{{ favorite_of.user.get_full_name|default:favorite_of.user.username }}{% endif %}{% if not forloop.last %}, {% endif %}
-    {% endfor %}
-  </p>
+  {% if location.favorite_of.all.count > 0 %}
+    <p>{% translate 'favorite of'|capfirst %}: 
+      {% for favorite_of in location.favorite_of.all %}
+        {% if user == favorite_of.user %}{% translate 'you'|capfirst %}{% else %}{{ favorite_of.user.get_full_name|default:favorite_of.user.username }}{% endif %}{% if not forloop.last %}, {% endif %}
+      {% endfor %}
+    </p>
+  {% endif %}
 </div>

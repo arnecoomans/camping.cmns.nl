@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.utils.translation import gettext as _
 from django.urls import reverse_lazy, reverse
 from django.conf import settings
+from django.db.models import Avg
 
 from ..snippets.filter_class import FilterClass
 
@@ -38,7 +39,7 @@ class LocationListMaster(FilterClass):
       ''' Query filters
           are part of the request but not part of the url
       '''
-      for field in ['category', 'tag', 'chain', 'q', 'visibility', ]:
+      for field in ['category', 'tag', 'chain', 'q', 'visibility']:
         if self.request.GET.get(field, False):
           ''' All values in query parameters should be a list.
               Multiple values are seperated by a , resulting in multiple list items
@@ -58,7 +59,9 @@ class LocationListMaster(FilterClass):
             self.active_filters[field] = True
           else:
             self.active_filters[field] = self.request.GET.get(field, '')
-    ''' Return value '''
+    ''' Special filters '''
+    self.active_filters['order'] = self.request.GET.get('order', settings.DEFAULT_ORDER)
+    ''' Return value ''' 
     if query:
       return self.active_filters[query] if query in self.active_filters else None
     return self.active_filters
@@ -81,6 +84,7 @@ class LocationListMaster(FilterClass):
       if hasattr(self.request.user, 'profile'):
         self.available_filters['has_favorites'] = True if self.get_queryset().filter(favorite_of=self.request.user.profile).count() > 1 else False
         self.available_filters['has_visited']   = True if self.get_queryset().filter(visitors__user=self.request.user).count() > 1 else False
+      self.available_filters['order']         = ['distance', 'region']
       return self.available_filters
 
   
@@ -132,6 +136,26 @@ class LocationListMaster(FilterClass):
                    queryset.filter(location__parent__parent__name__icontains=q)
     return queryset
 
+  def order_queryset(self, queryset):
+    ''' Store ordering options '''
+    order = self.get_active_filters('order').lower()
+    ''' Process ordering options '''
+    if order == 'distance':
+      queryset = queryset.annotate(
+          department_average_distance=Avg("location__locations__distance_to_departure_center"),
+          region_average_distance=Avg("location__parent__children__locations__distance_to_departure_center"))
+          # Removed country because it added quite the processing time
+          # country_average_distance=Avg("location__parent__parent__children__children__locations__distance_to_departure_center"),)
+      queryset = queryset.order_by(
+          'location__parent__parent', 'department_average_distance', 'region_average_distance', 'name').distinct()
+    elif order == 'name':
+      queryset = queryset.order_by('name')
+    else:
+      ''' Implicit ordering by region '''
+      queryset = queryset.order_by(
+          'location__parent__parent', 'location__parent', 'location__name', 'name').distinct()
+    return queryset
+
   ''' Get Queryset
       Get Queryset and apply required filters
   '''
@@ -150,7 +174,7 @@ class LocationListMaster(FilterClass):
     ''' Filtering '''
     queryset = self.filter_queryset(queryset)
     ''' Ordering '''
-    queryset = queryset.order_by('location__parent__parent', 'location__parent', 'location__name', 'name').distinct()
+    queryset = self.order_queryset(queryset)
     self.cached_queryset = queryset
     return queryset
 

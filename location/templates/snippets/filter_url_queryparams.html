@@ -14,3 +14,4 @@ category={% for word in active_filters.category %}{% if word != removedword %}{{
 {% if 'tag' in active_filters or 'category' in active_filters or 'favorites' in active_filters %}&{% endif %}
 {% if 'visited' != removedword %}visited{% endif %}
 {% endif %}
+{% if 'order' != removedword and active_filters.order != default_order %}&order={{ active_filters.order }}{% endif %}

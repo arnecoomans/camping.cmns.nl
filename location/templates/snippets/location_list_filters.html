@@ -87,6 +87,24 @@
         {% if available_filters.has_favorites and 'favorites' not in active_filters %}
           <li><a href="?{% include 'snippets/filter_url_queryparams.html' %}&favorites">{% translate 'show only favorites'|capfirst %}</a></li>
         {% endif %}
+      <!-- Ordering -->
+      -- {{ active_filters.order }} | {{ available_filters.order }}--
+      <li>{% translate 'order by'|capfirst %}:
+        {% for option in available_filters.order %}
+          {% if option == active_filters.order %}
+            <span class="active">
+          {% else %}
+            <a href="?{% include 'snippets/filter_url_queryparams.html' with removedword='order' %}&order={{ option }}">
+          {% endif %}
+          {{ option|title }}
+          {% if option == active_filters.order %}
+            </span>
+          {% else %}
+            </a>
+          {% endif %}
+          {% if not forloop.last %} | {% endif %}
+        {% endfor %}
+      </li>
       </ul>
     </div>
   {% endif %}

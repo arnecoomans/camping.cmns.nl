@@ -311,6 +311,7 @@ class Location(BaseModel):
       messages.add_message(request, messages.INFO, message)
     else:
       return message
+    
   ''' Quick access to Country, Region and Department '''
   def country(self):
     if self.location:

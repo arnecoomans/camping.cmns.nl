@@ -128,81 +128,70 @@
 
     <!-- Categorisation and Tags -->
     <div class="more information card">
-      <h2>{% translate 'more information'|capfirst %}:</h2>
-      <dl>
-        <dt>{% translate 'category'|title %}:</dt>
-          <dd><a href="{% url 'location:locations' %}?category={{ location.category.slug }}">{{ location.category.name|title }}</a>{% if location.additional_category.all.count > 0 and user.is_authenticated %}, {% for category in location.additional_category.all %}<a href="{% url 'location:locations' %}?category={{ category.slug }}">{{ category|title }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}</dd>
-        {% if location.chain %}
-          <dt>{% translate 'chain'|title %}:</dt>
-            <dd>{% include 'snippets/chain.html' with chain=location.chain %}</dd>
-        {% endif %}
-        {% if location.tags.all.count > 0 and user.is_authenticated %}
-          <dt>{% translate 'tags'|title %}:</dt>
-            <dd class="tag-list">
-              {% for tag in tags %}
-                {% include 'snippets/tag.html' %}{% if not forloop.last %}, {% endif %}
-              {% endfor %}
-            </dd>
-        {% endif %}
-        {% if location.link.all.count > 0 %}
-          {% for link in location.link.all %}          
-            <dt>{% if forloop.first %}{% if location.link.all.count == 1 %}{% translate 'link' %}{% else %}{% translate 'links' %}{% endif %}:{% endif %}</dt>
-              <dd><a href="{{ link.url }}" target="_blank">{{ link.hostname }}</a></dd>
-          {% endfor %}
-
-        {% endif %}
-        
+      <div class="row">
+        <div class="col-12"><h2>{% translate 'more information'|capfirst %}:</h2></div>
+      </div>
+      <!-- Category -->
+      <div class="row">
+        <div class="col-3 title-col">{% translate 'category'|title %}:</div>
+        <div class="col-9"><a href="{% url 'location:locations' %}?category={{ location.category.slug }}">{{ location.category.name|title }}</a>{% if location.additional_category.all.count > 0 and user.is_authenticated %}, {% for category in location.additional_category.all %}<a href="{% url 'location:locations' %}?category={{ category.slug }}">{{ category|title }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}</div>
+      </div>
+      <!-- Chain -->
+      {% if location.chain %}
+        <div class="row">
+          <div class="col-3 title-col">{% translate 'chain'|title %}:</div>
+          <div class="col-9">{% include 'snippets/chain.html' with chain=location.chain %}</div>
+        </div>
+      {% endif %}
+      <!-- Tags -->
+      {% if location.tags.all.count > 0 and user.is_authenticated %}
+        <div class="row">
+          <div class="col-3 title-col">{% translate 'tags'|title %}:</div>
+          <div class="col-9 tag-list">
+            {% for tag in tags %}
+              {% include 'snippets/tag.html' %}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+      <!-- Links -->
+      {% if location.link.all.count > 0 %}
+        <div class="row">
+          <div class="col-3 title-col">{% if location.link.all.count == 1 %}{% translate 'link' %}{% else %}{% translate 'links' %}{% endif %}:</div>
+          <div class="col-9"><ul>
+            {% for link in location.link.all %}          
+              <li><a href="{{ link.url }}" target="_blank">{{ link.hostname }}</a></li>
+            {% endfor %}
+          </ul></div>
+        </div>
+      {% endif %}
       <!-- Lists -->
       {% if lists.count > 0 %}
-        {% comment %} <dl> {% endcomment %}
-        {% for list in lists %}
-          <dt>{% if forloop.first %}{% translate 'lists'|capfirst %}{% else %}&nbsp;{% endif %}</dt>
-            <dd><a href="{% url 'location:list' list.list.slug %}">{{ list.list.name }}</a> {% translate 'by' %} {{ list.list.user.get_full_name|default:list.list.user.username }}: ({{ list.list.get_visibility_display }}, {{ list.list.locations.all.count }} location(s))</dd>
-        {% endfor %}
+      <div class="row">
+        <div class="col-3 title-col">{% translate 'lists'|capfirst %}</div>
+        <div class="col-9">
+          <ul>
+            {% for list in lists %}
+              <li><a href="{% url 'location:list' list.list.slug %}">{{ list.list.name }}</a> {% translate 'by' %} {{ list.list.user.get_full_name|default:list.list.user.username }}: ({{ list.list.get_visibility_display }}, {{ list.list.locations.all.count }} location(s))</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
       {% endif %}
       {% if not location in user.profile.least_liked.all and perms.location.add_listlocation %}
-        <dt>{% if lists.count == 0 %}{% translate 'lists'|capfirst %}{% else %}&nbsp;{% endif %}<dt>
-          <dd>
-            {%if  available_lists.count == 0 %}
-            <a href="{% url 'location:AddListWithLocation' location.slug %}">{% translate 'create new list with'|capfirst %} {{ location.name|title }}</a>
-            {% else %}
-              <form method="get" action="{% url 'location:LocationAddList' location.slug %}">
-                <select name="list" class="form-control form-control-sm" style="max-width: 40%;">
-                  <option selected>--------</option>
-                  <option value="create_new_list">{% translate 'create new list'|capfirst %}</option>
-                  {% if not has_bucketlist %}
-                    <option value="bucketlist_of_{{ user.username }}">{% translate 'bucketlist'|capfirst %}</option>
-                  {% endif %}
-                  {% for list in available_lists.all %}
-                    {% if list not in lists %}
-                      <option value="{{ list.slug }}">{{ list.name|truncatechars:64|title }}</option>
-                    {% endif %}
-                  {% endfor %}
-                </select>
-              </dd>
-            <dt>&nbsp;</dt>
-              <dd>
-                <input type="submit" role="button" class="btn btn-outline-primary" value="{% translate 'add to list'|capfirst %}" style="max-width: 10%;">
-              </form>
-            {% endif %}
-          </dd>
+        {% include 'snippets/add_list_form.html' %}
       {% endif %}
-    </dl>
-    
-    <!-- Visited In -->
-    {% if visitors.all.count > 0 %}
-      <dl>
-        <dt>{% translate 'your visits'|capfirst %}</dt>
-          <dd>
+      <!-- Visited In -->
+      {% if visitors.all.count > 0 %}
+        <div class="row">
+          <div class="col-3 title-col">{% translate 'your visits'|capfirst %}</div>
+          <div class="col-9">
             {% for visit in visitors.all %}
               {% if visit.location == location %}{{ visit.year }}{% if not forloop.last %}, {% endif %}{% endif %}
             {% endfor %}
-      </dl>
-    {% endif %}
-    {% comment %} <dl>
-      <dt>{% if visitors.all.count == 0 %}{% translate 'add your visit'|capfirst %}{% else %}&nbsp;{% endif %}</dt>
-        <dd><a href="#">{% translate 'add visit'|capfirst %}</a></dd>
-    </dl> {% endcomment %}
+          </div>
+        </div>
+      {% endif %}
     </div>
 
     <!-- Nearby -->

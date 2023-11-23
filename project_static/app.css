@@ -21,7 +21,9 @@ div.card>header>h1,
 div.card>header>span {
   padding: 5px 10px;
 }
-
+div.card > div.row {
+  margin: 10px 0;
+}
 /** Google Maps */
 div#map {
   width: 100%;

@@ -88,30 +88,39 @@
       <div class="spacer"></div>
       
       <!-- Location Address Details -->
-      <dl>
-        <dt>{% translate 'address'|title %}:</dt>
-          <dd>{{ location.address|default:'-' }}</dd>
-        <dt>{% translate 'website'|title %}:</dt>
-          <dd><a href="{{ location.website }}" target="_blank">{{ location.getWebsiteHostname }}</a></dd>
-        {% for link in location.link.all %}
-          <dt>&nbsp;</dt>
-            <dd><a href="{{ link.url }}" target="_blank">{{ link.hostname }}</a></dd>
-        {% endfor %}
-        {% if user.is_authenticated %}
-          {% if  location.owners_names %}
-            <dt>{% translate 'owners names'|title %}:</dt>
-              <dd>{{ location.owners_names }}</dd>
-          {% endif %}
-          {% if location.phone %}
-            <dt>{% translate 'phone'|title %}:</dt>
-              <dd>{{ location.phone|default:'-' }}</dd>
-          {% endif %}
-          {% if location.home_of.all.count > 0 %}
-            <dt>{% translate 'home of'|capfirst %}</dt>
-              <dd>{% for profile in location.home_of.all %}{{ profile.user.get_full_name|default:profile.user.username }}{% if not forloop.last %}, {% endif %}{% endfor %}</dd>
-          {% endif %}
+      <div class="row">
+        <div class="col-3 title-col">{% translate 'address'|title %}:</div>
+        <div class="col-9">{{ location.address|default:'-' }}</div>
+      </div>
+      <div class="row">
+        <div class="col-3 title-col">{% translate 'website'|title %}:</div>
+        <div class="col-9">
+          <a href="{{ location.website }}" target="_blank">{{ location.getWebsiteHostname }}</a>
+          {% for link in location.link.all %}
+            <a href="{{ link.url }}" target="_blank">{{ link.hostname }}</a>
+          {% endfor %}
+        </div>
+      </div>
+      {% if user.is_authenticated %}
+        {% if location.owners_names %}
+          <div class="row">
+            <div class="col-3 title-col">{% translate 'owners names'|title %}:</div>
+            <div class="col-9">{{ location.owners_names }}</div>
+          </div>
         {% endif %}
-      </dl>
+        {% if location.phone %}
+          <div class="row">
+            <div class="col-3 title-col">{% translate 'phone'|title %}:</div>
+            <div class="col-9">{{ location.phone|default:'-' }}</div>
+          </div>
+        {% endif %}
+        {% if location.home_of.all.count > 0 %}
+          <div class="row">
+            <div class="col-3 title-col">{% translate 'home of'|capfirst %}</div>
+            <div class="col-9">{% for profile in location.home_of.all %}{{ profile.user.get_full_name|default:profile.user.username }}{% if not forloop.last %}, {% endif %}{% endfor %}</div>
+          </div>
+        {% endif %}
+      {% endif %}
 
       <!-- map -->
       {% if not location in user.profile.least_liked.all and location.coord_lat %}

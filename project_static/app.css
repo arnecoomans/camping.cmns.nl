@@ -24,6 +24,13 @@ div.card>header>span {
 div.card > div.row {
   margin: 10px 0;
 }
+div.row > div.title-col {
+  font-weight: bold;
+}
+div.row > div > ul {
+  list-style-type: none;
+  padding: 0;
+}
 /** Google Maps */
 div#map {
   width: 100%;

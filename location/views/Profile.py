@@ -18,7 +18,7 @@ from location.models.Profile import Profile, VisitedIn
 from location.models.Location import Location
 
 class ProfileView(UpdateView):
-  fields = ['home', 'hide_least_liked']
+  fields = ['home', 'hide_least_liked', 'order']
 
   def get_object(self):
     if not hasattr(self.request.user, 'profile'):

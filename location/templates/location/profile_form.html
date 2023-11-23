@@ -48,7 +48,17 @@
             </dd>
         </dl>
       {% endif %}
-
+      <div class="spacer"><hr></div>
+      <dl>
+        <dt>{% translate 'order locations by'|capfirst %}</dt>
+        <dd>
+          <select name="order" id="order" class="form-control">
+            {% for key, value in form.fields.order.choices %}
+              <option value="{{ key }}" {% if profile.order == key %}selected{% endif %}>{{ value|title }}</option>
+            {% endfor %}
+          </select>
+        </dd>
+      </dl>
       <div class="spacer"></div>
       <dl>
         <dt></dt>
@@ -67,6 +77,7 @@
           </dd>
         </dl>
       {% endif %}
+      <!-- Dislikes -->
       {% if user.profile.least_liked.all.count > 0 %}
         <dl>
           <dt>{% translate 'least liked'|capfirst %}</dt>

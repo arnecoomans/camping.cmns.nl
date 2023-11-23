@@ -16,6 +16,10 @@ from location.models.Location import Location
     - adds function filter_queryset, that returns the queryset based on the active filters
 '''
 class LocationListMaster(FilterClass):
+  def get_default_order(self):
+    if hasattr(self.request.user, 'profile'):
+      return self.request.user.profile.order
+    return settings.DEFAULT_ORDER
 
   ''' Get Active Filters 
       Process URL and Parameters to build a list of active filters. This is used in the context to
@@ -60,7 +64,7 @@ class LocationListMaster(FilterClass):
           else:
             self.active_filters[field] = self.request.GET.get(field, '')
     ''' Special filters '''
-    self.active_filters['order'] = self.request.GET.get('order', settings.DEFAULT_ORDER)
+    self.active_filters['order'] = self.request.GET.get('order', self.get_default_order())
     ''' Return value ''' 
     if query:
       return self.active_filters[query] if query in self.active_filters else None
@@ -87,7 +91,7 @@ class LocationListMaster(FilterClass):
       self.available_filters['order']         = ['distance', 'region']
       return self.available_filters
 
-  
+
   ''' Filter Queryset 
       Uses get_active_filters to determine filters that need to be processed
   '''
@@ -150,6 +154,10 @@ class LocationListMaster(FilterClass):
           'location__parent__parent', 'department_average_distance', 'region_average_distance', 'name').distinct()
     elif order == 'name':
       queryset = queryset.order_by('name')
+    elif order == 'date_added':
+      queryset = queryset.order_by('-date_added')
+    elif order == 'date_modified':
+      queryset = queryset.order_by('-date_modified')
     else:
       ''' Implicit ordering by region '''
       queryset = queryset.order_by(

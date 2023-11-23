@@ -91,10 +91,11 @@ class LocationView(ListView, FilterClass):
     tags = self.filter_status(tags)
     tags = self.filter_visibility(tags)
     tags = tags.order_by('list_as', 'name').distinct()
+    return tags
+  
   ''' Get Lists 
       Returns a queryset of lists this location is mentioned in
   '''
-
   def get_lists(self):
     lists = ListLocation.objects.filter(
         list__status='p', location=self.get_location())

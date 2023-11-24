@@ -6,37 +6,40 @@
       <h1>Tag</h1>
       <form method="post" action="">
         {% csrf_token %}
-        <dl>
-          <dt><label for="name">{% translate 'name'|capfirst %}</dt>
-          <dd><input class="form-control form-control-lg" name="name" id="name" value="{{ tag.name }}" required></dd>
-        </dl>
-        <dl>
-          <dt><label for="parent">{% translate 'parent'|capfirst %}</dt>
-            <dd>
-              <select name="parent" id="parent" class="form-select" aria-label="{% translate 'select parent'|capfirst %}">
-              <option value="">--------</option>
-              {% for parent in available_parent_tags %}
-                <option value="{{ parent.id }}">{% translate parent.name %}</option>
+        <div class="row">
+          <div class="col-3 title-col"><label for="name">{% translate 'name'|capfirst %}</div>
+          <div class="col-9"><input class="form-control form-control-lg" name="name" id="name" value="{{ tag.name }}" required></div>
+        </div>
+        <div class="row">
+          <div class="col-3 title-col"><label for="parent">{% translate 'parent'|capfirst %}</div>
+          <div class="col-9">
+            <select name="parent" id="parent" class="form-select" aria-label="{% translate 'select parent'|capfirst %}">
+            <option value="">--------</option>
+            {% for parent in available_parent_tags %}
+              <option value="{{ parent.id }}">{% translate parent.name %}</option>
+            {% endfor %}
+          </select>
+          </div>
+        </div>
+        {% if tag %}
+        <div class="row">
+          <div class="col-3 title-col">{% translate 'show as'|capfirst %}</div>
+          <div class="col-9">
+            <select name="list_as" id="list_as" class="form-select" aria-label="{% translate 'select list as'|capfirst %}">
+              <option>--------</option>
+              {% for key, value in form.fields.list_as.choices %}
+                <option value="{{ key }}" {% if key == tag.list_as %}selected{% endif %}>{{ value|title }}</option>
               {% endfor %}
             </select>
-            </dd>
-        </dl>
-        {% if tag %}
-        <dl>
-          <dt>{% translate 'show as'|capfirst %}</dt>
-            <dd>
-              <select name="list_as" id="list_as" class="form-select" aria-label="{% translate 'select list as'|capfirst %}">
-                <option>--------</option>
-                {% for key, value in form.fields.list_as.choices %}
-                  <option value="{{ key }}" {% if key == tag.list_as %}selected{% endif %}>{{ value|title }}</option>
-                {% endfor %}
-              </select>
-            </dd>
-        </d>
+          </div>
+        </div>
         {% endif %}
         <div class="spacer"></div>
-        <input type="submit" value="{% translate 'submit'|capfirst %}" class="btn btn-success btn-lg {% if tag and not user.is_superuser and user != comment.user %}disabled{% endif %}">
-        <a href="{% if tag %}{% url 'location:tag' tag.slug %}{% else %}{% url 'location:tags' %}{% endif %}" class="btn btn-secondary btn-lg" role="button" aria-disabled="true">{% translate 'cancel'|capfirst %}</a>
+        <div class="row">
+          <div class="col-3"></div>
+          <div class="col-6"><input type="submit" value="{% translate 'submit'|capfirst %}" class="btn btn-success btn-lg {% if tag and not user.is_superuser and user != comment.user %}disabled{% endif %}"></div>
+          <div class="col-3"><a href="{% if tag %}{% url 'location:tag' tag.slug %}{% else %}{% url 'location:tags' %}{% endif %}" class="btn btn-secondary btn-lg" role="button" aria-disabled="true">{% translate 'cancel'|capfirst %}</a></div>
+        </div>
 
       </form>
     </div>

@@ -9,113 +9,111 @@
       {% csrf_token %}
       <input type="hidden" name="user" value="{{ user.id }}">
       <h3>{% translate 'your information'|capfirst %}</h3>
-      <dl>
-        <dt><label for="first_name">{% translate 'first name'|capfirst %}</label></dt>
-          <dd><input class="form-control form-control-lg" name="first_name" id="first_name" value="{{ profile.user.first_name }}" required></dd>
-      </dl>
-      <dl>
-        <dt><label for="last_name">{% translate 'last name'|capfirst %}</label></dt>
-          <dd><input class="form-control form-control-lg" name="last_name" id="last_name" value="{{ profile.user.last_name }}"></dd>
-      </dl>
-      <dl>
-        <dt><label for="username">{% translate 'username'|capfirst %}</label></dt>
-          <dd><input class="form-control form-control-lg" name="username" id="username" value="{{ profile.user.username }}" required disabled></dd>
-      </dl>
-      <dl>
-        <dt><label for="email">{% translate 'email'|capfirst %}</label></dt>
-          <dd><input class="form-control form-control-lg" type="email" name="email" id="email" value="{{ profile.user.email }}" disabled></dd>
-      </dl>
+      <div class="row">
+        <div class="col-3 title-col"><label for="first_name">{% translate 'first name'|capfirst %}</label>:</div>
+          <div class="col-9"><input class="form-control form-control-lg" name="first_name" id="first_name" value="{{ profile.user.first_name }}" required></div>
+      </div>
+      <div class="row">
+        <div class="col-3 title-col"><label for="last_name">{% translate 'last name'|capfirst %}</label>:</div>
+          <div class="col-9"><input class="form-control form-control-lg" name="last_name" id="last_name" value="{{ profile.user.last_name }}"></div>
+      </div>
+      <div class="row">
+        <div class="col-3 title-col"><label for="username">{% translate 'username'|capfirst %}</label>:</div>
+          <div class="col-9"><input class="form-control form-control-lg" name="username" id="username" value="{{ profile.user.username }}" required disabled></div>
+      </div>
+      <div class="row">
+        <div class="col-3 title-col"><label for="email">{% translate 'email'|capfirst %}</label>:</div>
+          <div class="col-9"><input class="form-control form-control-lg" type="email" name="email" id="email" value="{{ profile.user.email }}" disabled></div>
+      </div>
 
       <div class="spacer"><hr></div>
-      <dl>
-        <dt><label for="home">{% translate 'home'|capfirst %}</dt>
-          <dd>
+      <div class="row">
+        <div class="col-3 title-col"><label for="home">{% translate 'home'|capfirst %}:</div>
+          <div class="col-9">
             <select class="form-control" name="home" id="home">
               <option value="" {% if not profile.home %}selected{% endif %}>--------</option>
               {% for home in homes.all %}
                   <option value="{{ home.id }}" {% if home == profile.home %}selected{% endif %}>{{ home.name|title }}</option>
               {% endfor %}
             </select>
-          </dd>
-      </dl>
+          </div>
+      </div>
       {% if user.family_of.all.count > 0 %}
-        <dl>
-          <dt>{% translate 'family members'|capfirst %}</dt>
-            <dd>
+        <div class="row">
+          <div class="col-3 title-col">{% translate 'family members'|capfirst %}:</div>
+            <div class="col-9">
               {% for person in user.family_of.all %}
                 {{ person.user.get_full_name|default:person }} {% if person.home %}{% translate 'has home' %} {{ person.home }}{% else %}{% translate 'has no home' %}{% endif %}{% if not forloop.last %}<br>{% endif %}
               {% endfor %}
-            </dd>
-        </dl>
+            </div>
+        </div>
       {% endif %}
       <div class="spacer"><hr></div>
-      <dl>
-        <dt>{% translate 'order locations by'|capfirst %}</dt>
-        <dd>
+      <div class="row">
+        <div class="col-3 title-col">{% translate 'order locations by'|capfirst %}:</div>
+        <div class="col-9">
           <select name="order" id="order" class="form-control">
             {% for key, value in form.fields.order.choices %}
               <option value="{{ key }}" {% if profile.order == key %}selected{% endif %}>{{ value|title }}</option>
             {% endfor %}
           </select>
-        </dd>
-      </dl>
+        </div>
+      </div>
       <div class="spacer"></div>
-      <dl>
-        <dt></dt>
-          <dd><input type="submit" value="{% translate 'save changes'|capfirst %}" class="btn btn-success btn-lg"></dd>
-      </dl>
-      <div class="spacer"></div>
+      <div class="row">
+        <div class="col-3"></div>
+          <div class="col-9"><input type="submit" value="{% translate 'save changes'|capfirst %}" class="btn btn-success btn-lg"></div>
+      </div>
       <div class="spacer"><hr></div>
-      
       {% if profile.favorite.all.count > 0 %}
-      <dl>
-        <dt>{% translate 'favorites'|capfirst %}</dt>
-          <dd>
+      <div class="row">
+        <div class="col-3 title-col">{% translate 'favorites'|capfirst %}:</div>
+          <div class="col-9">
             {% for location in profile.favorite.all %}
               <span class="favorite">{% include 'snippets/location_link.html' %} <a href="{% url 'location:ToggleFavorite' location.slug %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location.name }} {% translate 'from favorites' %}"></a></span>{% if not forloop.last %}, {% endif %}
             {% endfor %}
-          </dd>
-        </dl>
+          </div>
+        </div>
       {% endif %}
       <!-- Dislikes -->
       {% if user.profile.least_liked.all.count > 0 %}
-        <dl>
-          <dt>{% translate 'least liked'|capfirst %}</dt>
-            <dd>
+        <div class="row">
+          <div class="col-3 title-col">{% translate 'least liked'|capfirst %}:</div>
+            <div class="col-9">
               {% for location in profile.least_liked.all %}
                 <span class="favorite">{% include 'snippets/location_link.html' %} <a href="{% url 'location:ToggleLeastLiked' location.slug %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location.name }} {% translate 'from least-liked' %}"></a></span>{% if not forloop.last %}, {% endif %}
               {% endfor %}
-            </dd>
-        </dl>
-        <dl>
-          <dt>&nbsp;</dt>
-            <dd>
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-3"></div>
+            <div class="col-9">
               <form method="post">
                 <div class="form-check form-switch">
                   <input class="form-check-input" type="checkbox" role="switch" name="hide_least_liked" id="hide_least_liked" {% if user.profile.hide_least_liked %}checked{% endif %} onchange="this.form.submit();" >
                   <label class="form-check-label" for="hide_least_liked">{% translate 'hide disliked locations from search results'|capfirst %} </label>
                 </div>
               </form>
-            </dd>
-        </dl>
+            </div>
+        </div>
       {% endif %}
 
       <div class="spacer"><hr></div>
       <!-- Family -->
       {% if profile.family.all.count > 0 %}
-        <dl>
-          <dt><label for="family">{% translate 'family members'|capfirst %}</dt>
-            <dd>
+        <div class="row">
+          <div class="col-3 title-col"><label for="family">{% translate 'family members'|capfirst %}:</div>
+            <div class="col-9">
               {% for member in profile.family.all %}
                 <span class="family member">{{ member.get_full_name|default:member.username }}<a href="{% url 'location:ToggleFamily' member.id %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove family member '|capfirst %} {{ member.get_full_name|default:member.username }}"></a></span>{% if not forloop.last %}, {% endif %}
               {% endfor %}
-            </dd>
-        </dl>
+            </div>
+        </div>
       {% endif %}
       {% if user.family_of.all.count > 0 %}
-      <dl>
-        <dt>{% translate 'you are marked family of'|capfirst %}</dt>
-          <dd>
+      <div class="row">
+        <div class="col-3 title-col">{% translate 'you are marked family of'|capfirst %}:</div>
+          <div class="col-9">
             {% for person in user.family_of.all %}
                <span class="family member">
                 {% if person.user not in user.profile.family.all %}<svg class="bi" width="16" height="16" fill="#333"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#person-plus"/></svg><a href="{% url 'location:ToggleFamily' person.user.id %}">{% endif %}
@@ -124,20 +122,20 @@
               </span>
               {% if not forloop.last %}, {% endif %}
             {% endfor %}
-          </dd>
-      </dl>
+          </div>
+      </div>
       {% endif %}
-      <dl>
-        <dt>{% translate 'add'|capfirst %} {% translate 'family members'|capfirst %}</dt>
-          <dd>
+      <div class="row">
+        <div class="col-3 title-col">{% translate 'add'|capfirst %} {% translate 'family members'|capfirst %}:</div>
+          <div class="col-9">
             {% for member in available_family %}
               {% if member.profile not in user.family_of.all %}
                 <span class="family member"><svg class="bi" width="16" height="16" fill="#333"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#person-plus"/></svg><a href="{% url 'location:ToggleFamily' member.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'add'|capfirst %} {{ member.get_full_name|default:member.username }} {% translate 'to your family' %}">{{ member.get_full_name|default:member.username }}</a></span>{% if not forloop.last %}, {% endif %}
               {% endif %}
             {% endfor %}
             {% if available_family.count == 0 %}<p>{% translate 'no users available to add to your family'|capfirst %}.</p>{% endif %}
-          </dd>
-      </dl>
+          </div>
+      </div>
       
     </form>
   </div>
@@ -145,7 +143,7 @@
   <!-- History -->
   <div class="visits card">
     {% if visits.all.count > 0 %}
-      <h2>{% translate 'visits'|capfirst %}</h2>
+      <h2>{% translate 'visits'|capfirst %}:</h2>
       <p>{% translate 'show all'|capfirst %} <a href="{% url 'location:locations' %}?visited">visited locations</a> {% translate 'or' %} <a href="{% url 'location:activities' %}?visited">visited activities</a>.</p>
 
       <table>

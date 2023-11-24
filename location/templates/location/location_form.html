@@ -14,59 +14,61 @@
             </div>
           {% endfor %}
         {% endfor %}
-        <dl>
-          <dt><label for="name">{% translate 'name'|capfirst %}</dt>
-          <dd><input class="form-control form-control-lg" name="name" id="name" value="{{ location.name }}" required></dd>
-        </dl>
-        <dl>
-          <dt><label for="website">{% translate 'website'|capfirst %}</dt>
-          <dd><input class="form-control" name="website" id="website" value="{{ location.website }}"></dd>
-        </dl>
-        <dl>
-          <dt><label for="description">{% translate 'description'|capfirst %}</dt>
-          <dd><textarea class="form-control" name="description" id="description" rows="8">{{ location.description }}</textarea></dd>
-        </dl>
-        <dl>
-          <dt><label for="category">{% translate 'category'|capfirst %}</dt>
-          <dd>
+        <div class="row">
+          <div class="col-3 title-col"><label for="name">{% translate 'name'|capfirst %}:</div>
+          <div class="col-9"><input class="form-control form-control-lg" name="name" id="name" value="{{ location.name }}" required></div>
+        </div>
+        <div class="row">
+          <div class="col-3 title-col"><label for="website">{% translate 'website'|capfirst %}:</div>
+          <div class="col-9"><input class="form-control" name="website" id="website" value="{{ location.website }}"></div>
+        </div>
+        <div class="row">
+          <div class="col-3 title-col"><label for="description">{% translate 'description'|capfirst %}:</div>
+          <div class="col-9"><textarea class="form-control" name="description" id="description" rows="8">{{ location.description }}</textarea></div>
+        </div>
+        <div class="row">
+          <div class="col-3 title-col"><label for="category">{% translate 'category'|capfirst %}:</div>
+          <div class="col-9">
             <select class="form-control" name="category" id="category">
               {% for category in categories %}
                 <option value="{{ category.id }}"{% if category.slug == location.category.slug %} selected{% endif %}{% if not location and category.slug == "camping" %}selected{% endif %}>{{ category.name }}</option>
               {% endfor %}
             </select>
-          </dd>
-        </dl>
-        <dl>
-          <dt><label for="status">{% translate 'viewable by'|capfirst %}</dt>
-          <dd>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-3 title-col"><label for="status">{% translate 'viewable by'|capfirst %}:</div>
+          <div class="col-9">
             <select class="form-control" name="visibility" id="visibility">
               {% for key, value in form.fields.visibility.choices %}
                 <option value="{{ key }}" {% if location.visibility == key %}selected{% elif not location and key == 'p' %}selected{% endif %}>{{ value|title }}</option>
               {% endfor %}
             </select>
-          </dd>
-        </dl>
-        <dt>&nbsp;</dt>
-          <dd><hr></dd>
+          </div>
+        </div>
+        <div class="col-3 title-col">&nbsp;</div>
+          <div class="col-9"><hr></div>
         {% if location %}
-          <dl>
-            <dt><label for="address">{% translate 'address'|capfirst %}{% if not location.address %} fetch{% endif %}</dt>
-            <dd><input class="form-control" name="address" id="address" value="{{ location.address }}"></dd>
-            <dd>Address can be fetched by google based on name</dd>
-          </dl>
-          <dl>
-            <dt><label for="phone">{% translate 'phone'|capfirst %}</dt>
-            <dd><input class="form-control" name="phone" id="phone" value="{{ location.phone|default:'' }}" type="tel"></dd>
-          </dl>
-          <dl>
-            <dt><label for="owners_names">{% translate 'owners'|capfirst %}</dt>
-            <dd><input class="form-control" name="owners_names" id="owners_names" value="{{ location.owners_names }}"></dd>
-          </dl>
+          <div class="row">
+            <div class="col-3 title-col"><label for="address">{% translate 'address'|capfirst %}{% if not location.address %} fetch{% endif %}:</div>
+            <div class="col-9">
+              <input class="form-control" name="address" id="address" value="{{ location.address }}"><br>
+              {% translate 'address will be fetched by google based on name when empty'|capfirst %}.
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3 title-col"><label for="phone">{% translate 'phone'|capfirst %}:</div>
+            <div class="col-9"><input class="form-control" name="phone" id="phone" value="{{ location.phone|default:'' }}" type="tel"></div>
+          </div>
+          <div class="row">
+            <div class="col-3 title-col"><label for="owners_names">{% translate 'owners'|capfirst %}:</div>
+            <div class="col-9"><input class="form-control" name="owners_names" id="owners_names" value="{{ location.owners_names }}"></div>
+          </div>
 
             {% if user.is_superuser %}
-              <dl>
-                <dt>{% translate 'user'|capfirst %}</dt>
-                  <dd>
+              <div class="row">
+                <div class="col-3 title-col">{% translate 'user'|capfirst %}:</div>
+                  <div class="col-9">
                     <select id="user" name="user" class="form-control">
                       {% for key, value in form.fields.user.choices %}
                         {% if key %}
@@ -74,19 +76,21 @@
                         {% endif %}
                     {% endfor %}
                     </select>
-                  </dd>
+                  </div>
             {% endif %}
           {% endif %}
-          <dt>&nbsp;</dt>
-            <dd>
+          <div class="col-3 title-col">&nbsp;</div>
+            <div class="col-6">
               <input type="submit" class="btn btn-primary" value="{% translate 'save changes'|capfirst %}{% if location %} {% translate 'to' %} {% translate location.name %}{% endif %}">
+            </div>
+            <div class="col-3">
               {% if location %}
                 <a class="btn btn-secondary" href="{% if location.isActivity %}{% url 'location:activity' location.slug %}{% else %}{% url 'location:location' location.slug %}{% endif %}" role="button">{% translate 'cancel'|capfirst %}</a>
               {% else %}
                 <a class="btn btn-secondary" href="{% if location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}" role="button">{% translate 'cancel'|capfirst %}</a>
               {% endif %}
-            </dd>
-        </dl>
+            </div>
+        </div>
       </form>
     </div>
 
@@ -95,16 +99,16 @@
       <div class="relations card">
         <!-- Manage Chain -->
         {% if location.chain %}
-          <dl>
-            <dt>{% translate 'chain'|capfirst %}</dt>
-              <dd>
+          <div class="row">
+            <div class="col-3 title-col">{% translate 'chain'|capfirst %}:</div>
+              <div class="col-9">
                 {{ location.chain }} <a href="{% url 'location:ToggleChain' location.slug location.chain.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove chain' %} {{ category.name|title }} {% translate 'from'|capfirst %} {{ location.name }}"><img src="{% static 'bootstrap-icons/x.svg' %}"></a>
-              </dd>
-          </dl>
+              </div>
+          </div>
         {% else %}
-          <dl>
-            <dt><label for="chain">Chains</label></dt>
-              <dd>
+          <div class="row">
+            <div class="col-3 title-col"><label for="chain">{% translate 'chains'|capfirst %}</label>:</div>
+              <div class="col-9">
                 <form method="post" action="{% url 'location:ToggleChainForm' location.slug %}">
                   <table class="inline-form">
                       <tr>
@@ -124,24 +128,24 @@
                       </tr>
                     </table>
                   </form>
-              </dd>
-          </dl>
+              </div>
+          </div>
         {% endif %}
         <!-- Manage Additional Categories -->
         {% if location.additional_category.all.count > 0 %}
-          <dl> 
-            <dt>{% translate 'Additional categories' %}</dt>
-              <dd> 
+          <div class="row"> 
+            <div class="col-3 title-col">{% translate 'Additional categories' %}:</div>
+              <div class="col-9"> 
                 {% for category in location.additional_category.all %}
                   {{ category }} <a href="{% url 'location:ToggleCategory' location.slug category.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove category' %} {{ category.name|title }} {% translate 'from'|capfirst %} {{ location.name }}"><img src="{% static 'bootstrap-icons/x.svg' %}"></a>{% if not forloop.last %}, {% endif %}
                 {% endfor %}
-              </dd>
-          </dl>
+              </div>
+          </div>
         {% endif %}
         {% if additional_categories.count > 0 %}
-          <dl> 
-            <dt>{% translate 'Add additional category' %}</dt>
-              <dd>
+          <div class="row"> 
+            <div class="col-3 title-col">{% translate 'Add additional category' %}:</div>
+              <div class="col-9">
                 <form method="post" action="{% url 'location:ToggleCategoryForm' location.slug  %}">
                   {% csrf_token %}
                   <table class="inline-form">
@@ -160,23 +164,23 @@
                     <tr>
                   </table>
                 </form>
-              </dd>
-          </dl>
+              </div>
+          </div>
         {% endif %}
         <!-- Manage Tags -->
         {% if tags.all.count > 0 %}
-          <dl>
-            <dt>{% translate 'Tags' %}:</dt>
-              <dd> 
+          <div class="row">
+            <div class="col-3 title-col">{% translate 'Tags' %}:</div>
+              <div class="col-9"> 
                 {% for tag in tags.all %}
                   {{ tag|title }} <a href="{% url 'location:ToggleTag' location.slug tag.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove tag' %} {{ tag.name|title }} {% translate 'from'|capfirst %} {{ location.name }}"><img src="{% static 'bootstrap-icons/x.svg' %}"></a>{% if not forloop.last %}, {% endif %}
                 {% endfor %}
-              </dd>
-          </dl>
+              </div>
+          </div>
         {% endif %}
-        <dl>
-          <dt>{% translate 'Add tag' %}:</dt>
-            <dd>
+        <div class="row">
+          <div class="col-3 title-col">{% translate 'Add tag' %}:</div>
+            <div class="col-9">
               <form method="post" action="{% url 'location:ToggleTagForm' location.slug %}">
                 {% csrf_token %}
                 <table class="inline-form">
@@ -199,7 +203,7 @@
                   <tr>
                 </table>
               </form>      
-          </dl>
+          </div>
       </div>
     {% endif %}
   {% else %}

@@ -4,6 +4,10 @@
 {% block content %}
 <div class="tag detail card">
   <h1>{% if tag.parent %}<a href="{% url 'location:tag' tag.parent.slug %}">{{ tag.parent.name|title }}</a>: {% endif %}{% translate 'tag'|title %}: {{ tag.name|title }}</h1>
+  <p>
+    {% if tag.list_as == 'a' %}{% translate 'seen as'|capfirst %} {% translate 'advantage' %}.{% elif tag.list_as == 'd' %}{% translate 'seen as'|capfirst %} {% translate 'disadvantage' %}.{% endif %}
+    {% if tag.hide_from_filterlist %}{% translate 'hidden from filter options'|capfirst %}.{% endif %}
+  </p>
   {% if perms.location.edit_tag %}
     <ul class="action list">
       <li><a href="{% url 'location:EditTag' tag.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit information of'|capfirst %} {{ tag.name }}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil"/></svg></a></li>

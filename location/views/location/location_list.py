@@ -82,7 +82,7 @@ class LocationListMaster(FilterClass):
       self.available_filters['regions']       = self.get_queryset().values('location__parent__slug', 'location__parent__name').order_by().distinct()
       self.available_filters['departments']   = self.get_queryset().values('location__slug', 'location__name').order_by().distinct()
       ''' Available Tag Filters '''
-      self.available_filters['tags']          = self.get_queryset().values('tags__slug', 'tags__name', 'tags__parent__name').exclude(tags__name=None).order_by('tags__parent__name', 'tags__name').distinct()
+      self.available_filters['tags']          = self.get_queryset().values('tags__slug', 'tags__name', 'tags__parent__name').exclude(tags__name=None).exclude(tags__hide_from_filterlist=True).order_by('tags__parent__name', 'tags__name').distinct()
       self.available_filters['categories']    = self.get_queryset().values('category__slug', 'category__name').order_by().distinct()
       ''' Special Filters '''
       if hasattr(self.request.user, 'profile'):

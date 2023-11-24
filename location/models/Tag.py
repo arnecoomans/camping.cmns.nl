@@ -18,6 +18,7 @@ class Tag(BaseModel):
     ('b', __('Tag is advantage or disadvantage', 'both')),
   )
   list_as             = models.CharField(max_length=1, choices=list_as_choices, default='b')
+  hide_from_filterlist = models.BooleanField(default=False)
 
   class Meta:
     ordering = ['-list_as', 'name']

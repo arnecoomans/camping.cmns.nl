@@ -1,3 +1,5 @@
+from django.forms.models import BaseModelForm
+from django.http import HttpResponse
 from django.views.generic import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
@@ -92,7 +94,7 @@ class AddTag(CreateView):
   
 class EditTag(UpdateView):
   model = Tag
-  fields = ['name', 'parent', 'list_as']
+  fields = ['name', 'parent', 'list_as', 'hide_from_filterlist']
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -106,6 +108,15 @@ class EditTag(UpdateView):
     messages.add_message(self.request, messages.WARNING, f"{ _('Form cannot be saved because of the following error(s)') }: { form.errors }")
     return super().form_invalid(form)
 
+
+  def form_valid(self, form):
+    if len(form.changed_data) > 0:
+      messages.add_message(self.request, messages.SUCCESS, 
+                           f"{ _('changes to tag saved') }.")
+    else:
+      messages.add_message(self.request, messages.INFO,
+                           f"{ _('no changes to tag made') }.")
+    return super().form_valid(form)
 class ToggleDeleteTag(UpdateView):
   model = Tag
   fields = ['status']

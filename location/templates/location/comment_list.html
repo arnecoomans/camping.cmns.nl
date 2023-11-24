@@ -6,10 +6,6 @@
 <div class="comment list card">
   <h1>{% translate 'comments'|title %}</h1>
   {% include 'snippets/list_comments.html' %}
-  {% comment %} {% for comment in comment_list %}
-    {% include 'snippets/comment.html' with location=comment.location%}
-  {% endfor %}
-   {% endcomment %}
 </div>
 
 {% endblock %}

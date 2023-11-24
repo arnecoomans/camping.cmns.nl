@@ -6,35 +6,40 @@
       <h1>List{% if list %}: {{ list.name|title }}{% endif %}</h1>
       <form method="post">
         {% csrf_token %}
-        <dl>
-          <dt><label for="name">{% translate 'name'|capfirst %}</dt>
-            <dd><input class="form-control form-control-lg" name="name" id="name" value="{{ list.name }}" required></dd>
-        </dl>
-        <dl>
-          <dt><label for="description">{% translate 'description'|capfirst %}</dt>
-            <dd><textarea class="form-control" name="description" id="description" rows="8">{{ list.description }}</textarea></dd>
-        </dl>
-        <dl>
-          <dt><label for="visibility">{% translate 'viewable by'|capfirst %}</dt>
-            <dd>
+        <div class="row">
+          <div class="col-3 title-col"><label for="name">{% translate 'name'|capfirst %}</div>
+          <div class="col-9"><input class="form-control form-control-lg" name="name" id="name" value="{{ list.name }}" required></div>
+        </div>
+        <div class="row">
+          <div class="col-3 title-col"><label for="description">{% translate 'description'|capfirst %}</div>
+            <div class="col-9"><textarea class="form-control" name="description" id="description" rows="8">{{ list.description }}</textarea></div>
+        </div>
+        <div class="row">
+          <div class="col-3 title-col"><label for="visibility">{% translate 'viewable by'|capfirst %}</div>
+            <div class="col-9">
               <select class="form-control" name="visibility" id="visibility">
                 {% for key, value in form.fields.visibility.choices %}
                   <option value="{{ key }}" {% if list.visibility == key %}selected{% elif not list and key == 'p' %}selected{% endif %}>{{ value|title }}</option>
                 {% endfor %} 
               </select>
-            </dd>
-        </dl>
-        <dl>
-          <dt><label for="template">{% translate 'template'|capfirst %}</dt>
-            <dd>
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-3 title-col"><label for="template">{% translate 'template'|capfirst %}</div>
+            <div class="col-9">
               <select class="form-control" name="template" id="template">
                 {% for key, value in form.fields.template.choices %}
                   <option value="{{ key }}" {% if list.template == key %}selected{% elif not list and key == 't' %}selected{% endif %}>{{ value|title }}</option>
                 {% endfor %}
               </select>
+            </div>
+          </div>
         <div class="spacer"></div>
-        <input type="submit" value="{% translate 'submit'|capfirst %}" class="btn btn-success btn-lg {% if list and not user.is_superuser and user != list.user %}disabled{% endif %}">
-        <a href="{% url 'location:tags' %}" class="btn btn-secondary btn-lg" role="button" aria-disabled="true">{% translate 'cancel'|capfirst %}</a>
+        <div class="row">
+          <div class="col-3"></div>
+          <div class="col-6"><input type="submit" value="{% translate 'submit'|capfirst %}" class="btn btn-success btn-lg {% if list and not user.is_superuser and user != list.user %}disabled{% endif %}"></div>
+          <div class="col-3"><a href="{% url 'location:tags' %}" class="btn btn-secondary btn-lg" role="button" aria-disabled="true">{% translate 'cancel'|capfirst %}</a></div>
+        </div>
 
       </form>
     </div>

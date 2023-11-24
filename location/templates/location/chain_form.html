@@ -6,24 +6,26 @@
       <h1>{% translate 'chain'|capfirst %}</h1>
       <form method="post" action="">
         {% csrf_token %}
-        <dl>
-          <dt><label for="name">{% translate 'name'|capfirst %}</dt>
-          <dd><input class="form-control form-control-lg" name="name" id="name" value="{{ chain.name }}" required></dd>
-        </dl>
-        <dl>
-          <dt><label for="parent">{% translate 'parent'|capfirst %}</dt>
-            <dd>
-              <select name="parent" id="parent" class="form-select" aria-label="{% translate 'select parent'|capfirst %}">
-              {% for parent in form.parent %}
-                {{ parent }}
-              {% endfor %}
+        <div class="row">
+          <div class="col-3 title-col"><label for="name">{% translate 'name'|capfirst %}:</div>
+          <div class="col-9"><input class="form-control form-control-lg" name="name" id="name" value="{{ chain.name }}" required></div>
+        </div>
+        <div class="row">
+          <div class="col-3 title-col"><label for="parent">{% translate 'parent'|capfirst %}:</div>
+          <div class="col-9">
+            <select name="parent" id="parent" class="form-select" aria-label="{% translate 'select parent'|capfirst %}">
+            {% for parent in form.parent %}
+              {{ parent }}
+            {% endfor %}
             </select>
-            </dd>
-        </dl>
+          </div>
+        </div>
         <div class="spacer"></div>
-          <input type="submit" value="{% translate 'submit'|capfirst %}" class="btn btn-success btn-lg {% if chain and not user.is_superuser and user == chain.user %}disabled{% endif %}">
-        <a href="{% url 'location:locations' %}" class="btn btn-secondary btn-lg" role="button" aria-disabled="true">{% translate 'cancel'|capfirst %}</a>
-
+        <div class="row">
+          <div class="col-3"></div>
+          <div class="col-6"><input type="submit" value="{% translate 'submit'|capfirst %}" class="btn btn-success btn-lg {% if chain and not user.is_superuser and user == chain.user %}disabled{% endif %}"></div>
+          <div class="col-3"><a href="{% url 'location:locations' %}" class="btn btn-secondary btn-lg" role="button" aria-disabled="true">{% translate 'cancel'|capfirst %}</a></div>
+        </div>
       </form>
     </div>
   {% else %}

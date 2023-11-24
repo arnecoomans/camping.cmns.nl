@@ -106,30 +106,24 @@
               </div>
           </div>
         {% else %}
-          <div class="row">
-            <div class="col-3 title-col"><label for="chain">{% translate 'chains'|capfirst %}</label>:</div>
-              <div class="col-9">
-                <form method="post" action="{% url 'location:ToggleChainForm' location.slug %}">
-                  <table class="inline-form">
-                      <tr>
-                        <td>
-                          {% csrf_token %}
-                          <select id="object_slug" name="object_slug" class="form-control">
-                            <option>--------</option>
-                            <option value="create_new">{% translate 'new chain'|capfirst %}</option>
-                            {% for chain in available_chains %}
-                              <option value="{{ chain.slug }}">{{ chain.name|title }}</option>
-                            {% endfor %}
-                          </select>
-                        </td>
-                        <td>
-                          <input type="submit" role="button" class="btn btn-outline-primary" value="{% translate 'add chain'|capfirst %}">
-                        </td>
-                      </tr>
-                    </table>
-                  </form>
+          <form method="post" action="{% url 'location:ToggleChainForm' location.slug %}">
+            <div class="row">
+              <div class="col-3 title-col"><label for="chain">{% translate 'chains'|capfirst %}</label>:</div>
+              <div class="col-6">
+                {% csrf_token %}
+                <select id="object_slug" name="object_slug" class="form-control">
+                  <option>--------</option>
+                  <option value="create_new">{% translate 'new chain'|capfirst %}</option>
+                  {% for chain in available_chains %}
+                    <option value="{{ chain.slug }}">{{ chain.name|title }}</option>
+                  {% endfor %}
+                </select>
               </div>
-          </div>
+              <div class="col-3">
+                <input type="submit" role="button" class="btn btn-outline-primary" value="{% translate 'add chain'|capfirst %}">
+              </div>
+            </div>
+          </form>
         {% endif %}
         <!-- Manage Additional Categories -->
         {% if location.additional_category.all.count > 0 %}
@@ -143,29 +137,23 @@
           </div>
         {% endif %}
         {% if additional_categories.count > 0 %}
-          <div class="row"> 
-            <div class="col-3 title-col">{% translate 'Add additional category' %}:</div>
-              <div class="col-9">
-                <form method="post" action="{% url 'location:ToggleCategoryForm' location.slug  %}">
-                  {% csrf_token %}
-                  <table class="inline-form">
-                    <tr>
-                      <td>
-                        <select class="form-control" name="object_slug" id="object_slug">
-                          <option>--------</option>
-                          {% for category in additional_categories %}
-                            <option value="{{ category.slug }}"{% if category.slug == location.category.slug %} selected{% endif %}>{{ category.name }}</option>
-                          {% endfor %}
-                        </select>
-                      </td>
-                      <td>
-                        <input type="submit" role="button" class="btn btn-outline-primary" value="{% translate 'add category'|capfirst %}">
-                      </td>
-                    <tr>
-                  </table>
-                </form>
+          <form method="post" action="{% url 'location:ToggleCategoryForm' location.slug  %}">
+            <div class="row"> 
+              <div class="col-3 title-col">{% translate 'Add additional category' %}:</div>
+              <div class="col-6">
+                {% csrf_token %}
+                <select class="form-control" name="object_slug" id="object_slug">
+                  <option>--------</option>
+                  {% for category in additional_categories %}
+                    <option value="{{ category.slug }}"{% if category.slug == location.category.slug %} selected{% endif %}>{{ category.name }}</option>
+                  {% endfor %}
+                </select>
               </div>
-          </div>
+              <div class="col-3">
+                <input type="submit" role="button" class="btn btn-outline-primary" value="{% translate 'add category'|capfirst %}">
+              </div>
+            </div>
+          </form>
         {% endif %}
         <!-- Manage Tags -->
         {% if tags.all.count > 0 %}
@@ -178,32 +166,24 @@
               </div>
           </div>
         {% endif %}
-        <div class="row">
-          <div class="col-3 title-col">{% translate 'Add tag' %}:</div>
-            <div class="col-9">
-              <form method="post" action="{% url 'location:ToggleTagForm' location.slug %}">
-                {% csrf_token %}
-                <table class="inline-form">
-                  <tr>
-                    <td>
-                      <select class="form-control" name="object_slug" id="object_slug">
-                        <option>--------</option>
-                        <option value="create_new">{% translate "new tag"|capfirst %}</option>
-                        {% for tag in available_tags %}
-                          <option value="{{ tag.slug }}"{% if tag.slug == location.tag.slug %} selected{% endif %}>{{ tag }}</option>
-                        {% endfor %}
-                      </select>
-                    </td>
-                    <td>
-                      <input type="submit" role="button" class="btn btn-outline-primary" value="{% translate 'add tag'|capfirst %}">
-                    </td>
-                    <td>
-                      <a href="{% url 'location:AddTag' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'create new tag'|capfirst %}"><img src="{% static 'bootstrap-icons/plus.svg' %}"></a>
-                    </td>
-                  <tr>
-                </table>
-              </form>      
+        <form method="post" action="{% url 'location:ToggleTagForm' location.slug %}">
+          <div class="row">
+            <div class="col-3 title-col">{% translate 'Add tag' %}:</div>
+            {% csrf_token %}
+            <div class="col-6">
+              <select class="form-control" name="object_slug" id="object_slug">
+                <option>--------</option>
+                <option value="create_new">{% translate "new tag"|capfirst %}</option>
+                {% for tag in available_tags %}
+                  <option value="{{ tag.slug }}"{% if tag.slug == location.tag.slug %} selected{% endif %}>{{ tag }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-2">
+              <input type="submit" role="button" class="btn btn-outline-primary" value="{% translate 'add tag'|capfirst %}">
+            </div>
           </div>
+        </form>      
       </div>
     {% endif %}
   {% else %}

@@ -21,7 +21,8 @@ div.card>header>h1,
 div.card>header>span {
   padding: 5px 10px;
 }
-div.card > div.row {
+div.card > div.row,
+div.card > form > div.row {
   margin: 10px 0;
 }
 div.row > div.title-col {

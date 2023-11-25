@@ -131,7 +131,10 @@ class Location(BaseModel):
     ordering = ['name']
   
   def get_absolute_url(self):
-    return reverse_lazy('location:location', kwargs={'slug': self.slug })  
+    if self.isActivity():
+      return reverse_lazy('location:activity', kwargs={'slug': self.slug })  
+    else:
+      return reverse_lazy('location:location', kwargs={'slug': self.slug })  
 
   def save(self, *args, **kwargs):
     if self.category == 'home':

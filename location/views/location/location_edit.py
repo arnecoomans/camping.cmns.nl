@@ -220,10 +220,14 @@ class GetDistanceToHome(DetailView):
     except Location.DoesNotExist:
       messages.add_message(self.request, messages.ERROR, f"{ _('location does not exist') }.")
       return redirect('location:locations')
-    distance = ListDistance.objects.get_or_create(origin=self.request.user.profile.home,
-                                                  destination=location,
-                                                  defaults={
-                                                    'user': self.request.user,
-                                                  })
-    distance[0].getData(self.request)
-    return redirect('location:location', location.slug)
+    if hasattr(self.request.user, 'profile'):
+      if location == self.request.user.profile.home:
+        messages.add_message(self.request, messages.WARNING, f"{ _('cannot calculate distance for this location') }: { _('origin and destination are the same') }.")
+      else:
+        distance = ListDistance.objects.get_or_create(origin=self.request.user.profile.home,
+                                                      destination=location,
+                                                      defaults={
+                                                        'user': self.request.user,
+                                                      })
+        distance[0].getData(self.request)
+      return redirect('location:location', location.slug)

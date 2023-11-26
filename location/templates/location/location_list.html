@@ -22,7 +22,7 @@
             <tr class="d-flex">
               <td class="col-12">
                 {% if location.location %}
-                  <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByCountry' location.location.parent.parent.slug %}{% else %}{% url 'location:ListLocationsByCountry' location.location.parent.parent.slug %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{% endif %}{{ location.country|default:'n/a' }}{% if location.location %}</a>
+                  <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByCountry' location.country.slug %}{% else %}{% url 'location:ListLocationsByCountry' location.country.slug %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{% endif %}{{ location.country|default:'n/a' }}{% if location.location %}</a>
                 {% endif %}
               </td>
             </tr>
@@ -33,7 +33,7 @@
                 <td class="col-1"></td>
                 <td class="col-11">
                   {% if location.location %}
-                    <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByRegion' location.location.parent.parent.slug location.location.parent.slug %}{% else %}{% url 'location:ListLocationsByRegion' location.location.parent.parent.slug location.location.parent.slug %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{% endif %}{{ location.region }}{% if location.location %}</a>
+                    <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByRegion' location.country.slug location.region.slug %}{% else %}{% url 'location:ListLocationsByRegion' location.country.slug location.region.slug %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{% endif %}{{ location.region }}{% if location.location %}</a>
                   {% endif %}
                 </td>
               </tr>
@@ -45,7 +45,7 @@
                 <td class="col-2"></td>
                 <td class="col-10">
                   {% if location.location %}
-                    <a href="{% if location.isActivity %}{% url 'location:ListLActivitiesByDepartment' location.location.parent.parent.slug location.location.parent.slug location.location.slug %}{% else %}{% url 'location:ListLocationsByDepartment' location.location.parent.parent.slug location.location.parent.slug location.location.slug %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{% endif %}{{ location.department }}{% if location.location %}</a>
+                    <a href="{% if location.isActivity %}{% url 'location:ListLActivitiesByDepartment' location.country.slug location.region.slug location.department.slug %}{% else %}{% url 'location:ListLocationsByDepartment' location.country.slug location.region.slug location.department.slug %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{% endif %}{{ location.department }}{% if location.location %}</a>
                   {% endif %}
                 </td>
               </tr>

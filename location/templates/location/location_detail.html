@@ -206,11 +206,10 @@
     {% if nearby_locations|length > 1%}
       <div class="nearby card">
         <h2>{% translate 'nearby'|capfirst %}</h2>
-        <ul>
-          {% for location in nearby_locations %}
-            <li>{% include 'snippets/location_link.html' with location=location.0 %} ( {{ location.1|floatformat }} km)</a>
-          {% endfor %}
-        </ul>
+        {% for location in nearby_locations %}
+          {% comment %} <li>{% include 'snippets/location_link.html' with location=location.0 %} ( {{ location.1|floatformat }} km)</a> {% endcomment %}
+          {% include 'snippets/location_flashcard.html' with location=location.0 distance=location.1 %}
+        {% endfor %}
       </div>
     {% endif %}
 
@@ -300,24 +299,4 @@
       });
     }
   </script>
-{% comment %} 
-<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap&v=weekly" defer></script>
-<script>
-  // Initialize and add the map
-  function initMap() {
-    // The location of {{ location.name }}
-    const pin = { lat: {{ location.coord_lat }}, lng: {{ location.coord_lng }} };
-    // The map, centered at {{ location.name }}
-    const map = new google.maps.Map(document.getElementById("map"), {
-      zoom: {% if location.isActivity %}13{% else %}9{% endif %},
-      center: pin,
-    });
-    // The marker, positioned at {{ location.name }}
-    const marker = new google.maps.Marker({
-      position: pin,
-      map: map,
-    });
-  }
-  window.initMap = initMap;
-</script> {% endcomment %}
 {% endblock %}

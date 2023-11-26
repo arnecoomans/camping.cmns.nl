@@ -320,32 +320,32 @@ class Location(BaseModel):
     if self.location:
       if self.location.parent:
         if self.location.parent.parent:
-          return self.location.parent.parent.name
+          return self.location.parent.parent
     return None
-  def countryslug(self):
-    if self.location:
-      if self.location.parent:
-        if self.location.parent.parent:
-          return self.location.parent.parent.slug
-    return None
+  # def countryslug(self):
+  #   if self.location:
+  #     if self.location.parent:
+  #       if self.location.parent.parent:
+  #         return self.location.parent.parent.slug
+  #   return None
   def region(self):
     if self.location:
       if self.location.parent:
-        return self.location.parent.name
+        return self.location.parent
     return None
-  def regionslug(self):
-    if self.location:
-      if self.location.parent:
-        return self.location.parent.slug
-    return None
+  # def regionslug(self):
+  #   if self.location:
+  #     if self.location.parent:
+  #       return self.location.parent.slug
+  #   return None
   def department(self):
     if self.location:
-      return self.location.name
+      return self.location
     return None
-  def departmentslug(self):
-    if self.location:
-      return self.location.slug
-    return None
+  # def departmentslug(self):
+  #   if self.location:
+  #     return self.location.slug
+  #   return None
   
   ''' Activity or Location logic '''
   def isActivity(self):

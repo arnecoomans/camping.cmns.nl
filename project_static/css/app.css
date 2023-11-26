@@ -94,9 +94,23 @@ div.locations.list > div.location > p {
   margin-left: 3em;
 }
 div.location.mini {
-  border-left: 3em solid var(--highlight-color);
-  border-top: 1px solid var(--highlight-color);
+  border-left: 0.25em solid var(--highlight-color);
   padding-left: 1em;
+  padding-bottom: 0;
+  margin-bottom: 1em;
+}
+div.location.mini.activity {
+  border-left-color: #999;
+}
+div.location.mini > h5 {
+  margin-bottom: 0;
+}
+div.location.mini.activity > h5 > a {
+  color: #666;
+}
+div.location.mini > span.locator,
+div.location.mini > p {
+  margin-left: 1em;
 }
 /** Filters */
 ul.filter.list {

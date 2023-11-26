@@ -1,26 +1,26 @@
 {% load i18n %}
-<div class="location mini">
-  <h3>{% include 'snippets/location_link.html' %}</h3>
-  <span class="locator" data-type="{{ location.getCategory }}" data-country="{{ location.location.parent.parent.slug }}" data-region="{{ location.location.parent.slug }}" data-department="{{ location.location.slug }}">
+<div class="location mini {{ location.getCategory }}" data-category="{{ location.getCategory }}" data-country="{{ location.country.slug }}" data-region="{{ location.region.slug }}" data-department="{{ location.department.slug }}">
+  <h5>{% include 'snippets/location_link.html' %}</h5>
+  <span class="locator" data-type="{{ location.getCategory }}" data-country="{{ location.country.slug }}" data-region="{{ location.region.slug }}" data-department="{{ location.department.slug }}">
     {% if location.chain %}
       {% include 'snippets/chain.html' with chain=location.chain %}
     {% endif %}
     <a href="{% if location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}?category={{ location.category.slug }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate location.getPCategory|capfirst %} {% translate 'marked' %} {{ location.category.name|title }}">{{ location.category.name|title }}</a> 
     {% if location.location %}
       in
-      <a href="{% if location.isActivity %}{% url 'location:ListLActivitiesByDepartment' location.location.parent.parent.slug location.location.parent.slug location.location.slug %}{% else %}{% url 'location:ListLocationsByDepartment' location.location.parent.parent.slug location.location.parent.slug location.location.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location }}">{{ location.location.name|title }}</a>,
-      <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByRegion' location.location.parent.parent.slug location.location.parent.slug %}{% else %}{% url 'location:ListLocationsByRegion' location.location.parent.parent.slug location.location.parent.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.parent }}">{{ location.location.parent.name|title }}</a>,
-      <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByCountry' location.location.parent.parent.slug %}{% else %}{% url 'location:ListLocationsByCountry' location.location.parent.parent.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.parent.parent.name }}">{{ location.location.parent.parent.name|title }}</a>.
+      <a href="{% if location.isActivity %}{% url 'location:ListLActivitiesByDepartment' location.country.slug location.region.slug location.department.slug %}{% else %}{% url 'location:ListLocationsByDepartment' location.country.slug location.region.slug location.department.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location }}">{{ location.location.name|title }}</a>,
+      <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByRegion' location.country.slug location.region.slug %}{% else %}{% url 'location:ListLocationsByRegion' location.country.slug location.region.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.parent }}">{{ location.location.parent.name|title }}</a>,
+      <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByCountry' location.country.slug %}{% else %}{% url 'location:ListLocationsByCountry' location.country.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.parent.parent.name }}">{{ location.location.parent.parent.name|title }}</a>.
     {% endif %}
-    {% if user.is_authenticated %}
-      {% translate 'viewable by'|capfirst %} {{ location.get_visibility_display }}
+    {% comment %} {% if user.is_authenticated %}
+      {% translate 'viewable by'|capfirst %} {{ location.get_visibility_display }}.
+    {% endif %} {% endcomment %}
+    {% if distance %}
+      {% if distance > 1.0 %}
+        {% translate 'distance about'|capfirst %} {{ distance|floatformat }} km.
+      {% else %}
+        {% translate 'very close by'|capfirst %}.
+      {% endif %}
     {% endif %}
   </span>
-  {% if location.favorite_of.all.count > 0 %}
-    <p>{% translate 'favorite of'|capfirst %}: 
-      {% for favorite_of in location.favorite_of.all %}
-        {% if user == favorite_of.user %}{% translate 'you'|capfirst %}{% else %}{{ favorite_of.user.get_full_name|default:favorite_of.user.username }}{% endif %}{% if not forloop.last %}, {% endif %}
-      {% endfor %}
-    </p>
-  {% endif %}
 </div>

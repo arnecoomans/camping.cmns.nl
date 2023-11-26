@@ -79,6 +79,10 @@ class LocationAdmin(SlugDefaultAdmin):
   # def get_readonly_fields(self, request, obj=None):
   #   return [f.name for f in obj._meta.fields if not f.editable]
 
+
+class ListLocationAdmin(DefaultAdmin):
+  list_display = ('list', 'location', 'order', 'status')
+
 class ListDistanceAdmin(DefaultAdmin):
   actions = [getData, ]  
 
@@ -93,7 +97,7 @@ admin.site.register(Geo.Region, SlugDefaultAdmin)
 admin.site.register(Tag, SlugDefaultAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(List, SlugDefaultAdmin)
-admin.site.register(ListLocation, DefaultAdmin)
+admin.site.register(ListLocation, ListLocationAdmin)
 admin.site.register(ListDistance, ListDistanceAdmin)
 admin.site.register(Profile)
 admin.site.register(VisitedIn, DefaultAdmin)

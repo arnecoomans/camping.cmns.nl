@@ -112,6 +112,9 @@ class List(BaseModel):
   def get_absolute_url(self):
     return reverse_lazy("location:list", kwargs={"slug": self.slug})
   
+  def getFilteredLocations(self):
+    return ListLocation.objects.filter(list__id=self.id, status='p')
+
   def getDistance(self):
     distance = 0
     for location in self.location.all():
@@ -155,15 +158,15 @@ class ListLocation(BaseModel):
 
   def get_absolute_url(self):
     return reverse_lazy("location:list", kwargs={"slug": self.list.slug})
-  
+
   def getPrevious(self):
-    return ListLocation.objects.filter(list=self.list, order__lte=self.order).exclude(pk=self.pk).last()
+    return ListLocation.objects.filter(list=self.list, order__lte=self.order).exclude(pk=self.pk).filter(status='p').last()
   def getNext(self):
-    return ListLocation.objects.filter(list=self.list, order__gte=self.order).exclude(pk=self.pk).first()
+    return ListLocation.objects.filter(list=self.list, order__gte=self.order).exclude(pk=self.pk).filter(status='p').first()
   def getPreviousLocation(self):
-    return ListLocation.objects.filter(list=self.list, order__lte=self.order).exclude(pk=self.pk).exclude(location__category__parent__slug='activity').last()
+    return ListLocation.objects.filter(list=self.list, order__lte=self.order).exclude(pk=self.pk).filter(status='p').exclude(location__category__parent__slug='activity').last()
   def getNextLocation(self):
-    return ListLocation.objects.filter(list=self.list, order__gte=self.order).exclude(pk=self.pk).exclude(location__category__parent__slug='activity').first()
+    return ListLocation.objects.filter(list=self.list, order__gte=self.order).exclude(pk=self.pk).filter(status='p').exclude(location__category__parent__slug='activity').first()
   
   def getDataToPrevious(self):
     if self.getPrevious():

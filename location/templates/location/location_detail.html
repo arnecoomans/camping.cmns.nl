@@ -96,8 +96,16 @@
       <!-- Location Address Details -->
       <div class="row">
         <div class="col-3 title-col">{% translate 'address'|title %}:</div>
-        <div class="col-9">{{ location.address|default:'-' }}</div>
+        <div class="col-9">
+          {{ location.address|default:'-' }}
+        </div>
       </div>
+      {% if distance_to_home %}
+        <div class="row">
+          <div class="col-3"></div>
+          <div class="col-9">{{ distance_to_home.getDistance }} / {{ distance_to_home.getTime }} from {{ user.profile.home.name }}</div>
+        </div>
+      {% endif %}
       <div class="row">
         <div class="col-3 title-col">{% translate 'website'|title %}:</div>
         <div class="col-9">

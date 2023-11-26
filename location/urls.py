@@ -25,7 +25,7 @@ urlpatterns = [
   path('location/<slug>/toggle/tag/', views.ToggleTag.as_view(), name='ToggleTagForm'),
   path('location/<slug>/toggle/tag/<object_slug>/', views.ToggleTag.as_view(), name='ToggleTag'),
   path('location/<slug>/reset/', views.ResetLocationData.as_view(), name='ResetLocation'),
-  
+  path('location/<slug>/distance_to_home/', views.GetDistanceToHome.as_view(), name='DistanceToHome'),
 
   path('activities/', views.ActivityListView.as_view(), name='activities'),
   path('activities/<country>/', views.ActivityListView.as_view(), name='ListActivitiesByCountry'),

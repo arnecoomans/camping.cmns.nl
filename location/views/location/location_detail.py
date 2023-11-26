@@ -70,8 +70,10 @@ class LocationView(ListView, FilterClass):
         Fetch a queryset of lists where this location is not mentioned in
     '''
     context['available_lists'] = self.get_available_lists()
+    ''' User dependant functions '''
     if self.request.user.is_authenticated:
       context['has_bucketlist'] = True if List.objects.filter(name='Bucketlist', user=self.request.user).count() > 0 else False
+      context['distance_to_home'] = self.get_distance_to_home()
     ''' Visits '''
     if location.visibility == 'f':
       if hasattr(location.user, 'profile'):
@@ -112,6 +114,7 @@ class LocationView(ListView, FilterClass):
     available_lists = available_lists.order_by().distinct()
     return available_lists
 
+  ''' Get Visitors '''
   def get_visitors(self):
     if self.request.user.is_authenticated:
       result = VisitedIn.objects.filter(
@@ -119,6 +122,7 @@ class LocationView(ListView, FilterClass):
       result = self.filter_visibility(result)
       return result
 
+  ''' Get nearby '''
   def get_nearby(self):
     all_locations = Location.objects.exclude(pk=self.get_location().id)
     all_locations = self.filter_status(all_locations)
@@ -133,9 +137,23 @@ class LocationView(ListView, FilterClass):
     nearby_locations.sort(key=lambda x: x[1])
     return nearby_locations
 
+  ''' Get media '''
   def get_media(self):
     media = Media.objects.filter(location=self.get_location())
     media = self.filter_status(media)
     media = self.filter_visibility(media)
     media = order_media(media)
     return media
+
+  ''' Get distance to home '''
+  def get_distance_to_home(self):
+    if self.request.user.is_authenticated:
+      result = False
+      for distance in self.get_location().dest_origin.all():
+        if distance.destination == self.request.user.profile.home:
+          result = distance      
+      for distance in self.get_location().dest_destination.all():
+        if distance.origin == self.request.user.profile.home:
+          result = distance
+      return result
+    return None

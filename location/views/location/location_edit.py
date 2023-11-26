@@ -1,3 +1,4 @@
+from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib import messages
 from django.utils.translation import gettext as _
@@ -11,6 +12,7 @@ from ..snippets.filter_class import FilterClass
 
 from location.models.Location import Location, Category, Chain, Link
 from location.models.Tag import Tag
+from location.models.List import ListDistance
 
 
 ''' MASTER VIEWS '''
@@ -207,5 +209,21 @@ class ResetLocationData(UpdateView):
       self.get_object().getLatLng(request)
       self.get_object().getDistanceFromDepartureCenter(request)
       self.get_object().getRegion(request)
-
     return redirect('location:location', self.get_object().slug)
+
+class GetDistanceToHome(DetailView):
+  model = Location
+
+  def get(self, request, *args, **kwargs):
+    try:
+      location = Location.objects.get(slug=self.kwargs['slug'])
+    except Location.DoesNotExist:
+      messages.add_message(self.request, messages.ERROR, f"{ _('location does not exist') }.")
+      return redirect('location:locations')
+    distance = ListDistance.objects.get_or_create(origin=self.request.user.profile.home,
+                                                  destination=location,
+                                                  defaults={
+                                                    'user': self.request.user,
+                                                  })
+    distance[0].getData(self.request)
+    return redirect('location:location', location.slug)

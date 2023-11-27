@@ -1,5 +1,4 @@
 {% load i18n %}
-
 <form method="get" action="{% url 'location:LocationAddList' location.slug %}">
   <div class="row">
     <div class="col-3 title-col">{% if lists.count == 0 %}{% translate 'lists'|capfirst %}:{% else %}&nbsp;{% endif %}</div>

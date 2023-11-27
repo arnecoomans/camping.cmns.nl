@@ -213,7 +213,7 @@ class UndeleteList(UpdateView):
   
 
 ''' ADD LOCATION TO LIST '''
-class AddLocationToList(UpdateView):
+class AddLocationToList(FilterClass, UpdateView):
   model = ListLocation
   fields = ['locations']
   steps = 10
@@ -247,14 +247,19 @@ class AddLocationToList(UpdateView):
         messages.add_message(self.request, messages.ERROR,
                              f"{ _('selected list does not exist') }: { self.request.GET.get('list', '') }.")
       location = Location.objects.get(slug=self.kwargs['slug'])
-    
     ''' Add as last item on the list, add self.steps to the last order entry '''
-    order = list.locations.last().order + self.steps if list.locations.count() > 0 else self.steps
+    order = list.getFilteredLocations().last().order + self.steps if list.locations.count() > 0 else self.steps
+    ''' If last location is home, move home to last location by setting order one past last '''
+    if hasattr(self.request.user, 'profile') and list.getFilteredLocations().last().location == self.request.user.profile.home:
+      home = ListLocation.objects.get(id=list.getFilteredLocations().last().id)
+      home.order = order + self.steps
+      home.save()
+      messages.add_message(self.request, messages.INFO, f"{ _('add new location before home') }.")
     ''' Only allow action from Comment User or Staff'''
     if list.user == self.request.user or self.request.user.is_superuser:
       ''' Check if location is not most recent location '''
-      if list.locations.all().count() > 0:
-        if location == list.locations.all().last().location:
+      if list.getFilteredLocations().all().count() > 0:
+        if location == list.getFilteredLocations().all().last().location:
           messages.add_message(self.request, messages.ERROR, f"\"{ location.name }\" { _('was not added to list') } { list.name }. { _('This is already the last location on the list') }.")
           return redirect('location:list', list.slug)
       ''' It is safe to store location '''
@@ -326,12 +331,12 @@ class EndListAtHome(UpdateView):
   steps = 10
   def get(self, request, *args, **kwargs):
     list = List.objects.get(slug=self.kwargs['slug'])
-    last = list.locations.last().location
-    order = list.locations.last().order + self.steps if list.locations.count() > 0 else self.steps
+    last = list.getFilteredLocations().last().location
+    order = list.getFilteredLocations().last().order + self.steps if list.locations.count() > 0 else self.steps
     ''' Compare first entry with home of user'''
     ''' Only allow action from List User or Staff'''
     if list.user == self.request.user or self.request.user.is_superuser:
-      if list.locations.count() == 0 or last != self.request.user.profile.home:
+      if list.getFilteredLocations().count() == 0 or last != self.request.user.profile.home:
         ListLocation.objects.create(list=list,
                                     location=self.request.user.profile.home,
                                     order=order,
@@ -352,9 +357,9 @@ class ListLocationUpDown(UpdateView):
 
   def get(self, request, direction, *args, **kwargs):
     list = self.get_object()
-    location = list.locations.get(pk=self.kwargs['id'], location__slug=self.kwargs['location'])
+    location = list.getFilteredLocations().get(pk=self.kwargs['id'], location__slug=self.kwargs['location'])
     ''' Check that location is in list '''
-    if location not in list.locations.all():
+    if location not in list.getFilteredLocations().all():
       messages.add_message(self.request, messages.ERROR, f"{ _('cannot move location') } { location.location.name } { _(direction) }: { _('location is') } { _('not in list') } \"{ list.name }\".")
       return redirect('location:list', self.get_object().slug)
     ''' Get location to change order with '''

@@ -250,11 +250,12 @@ class AddLocationToList(FilterClass, UpdateView):
     ''' Add as last item on the list, add self.steps to the last order entry '''
     order = list.getFilteredLocations().last().order + self.steps if list.locations.count() > 0 else self.steps
     ''' If last location is home, move home to last location by setting order one past last '''
-    if hasattr(self.request.user, 'profile') and list.getFilteredLocations().last().location == self.request.user.profile.home:
-      home = ListLocation.objects.get(id=list.getFilteredLocations().last().id)
-      home.order = order + self.steps
-      home.save()
-      messages.add_message(self.request, messages.INFO, f"{ _('add new location before home') }.")
+    if hasattr(self.request.user, 'profile'):
+      if list.getFilteredLocations().count() > 0 and list.getFilteredLocations().last().location == self.request.user.profile.home:
+        home = ListLocation.objects.get(id=list.getFilteredLocations().last().id)
+        home.order = order + self.steps
+        home.save()
+        messages.add_message(self.request, messages.INFO, f"{ _('add new location before home') }.")
     ''' Only allow action from Comment User or Staff'''
     if list.user == self.request.user or self.request.user.is_superuser:
       ''' Check if location is not most recent location '''

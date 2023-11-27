@@ -1,6 +1,6 @@
 # VKNT Vacation Location and Activity Database
 
-Version 1.0.1.01
+Version 1.0.1.02
 
 VKNT is a database for holiday locations - places to stay - and activities - things to do. By builing a
 private database of possible locations, it is easier to either make holiday plans or share tips with
@@ -11,11 +11,20 @@ VKNT assists in sharing by allowing locations, by managing visibility of the rel
 the visibility, you decide who can see your content.
 - Public: everyone can see your content. Adviced for locations and activities
 - Community: logged in users can see your content. Adviced for comments
-- Family: only users marked as family can see your content. 
+- Family: only users marked as family can see your content.
+For added privacy; someone who has added you as family cannot see content you have marked visible to
+family. Only who you mark as family can see that content. 
 
+
+Add a photo of your favorite holiday location as memory or as promotion. The photo appears in the header 
+and can appear in lists. You decide who can see the photo and stack visibility. So you might upload a photo
+for your family and also one for the community.
 
 Lists are the way to make your plans more manageble. Make a list of locations that interest you. Only you
 or your family can edit your list. Distances to the previous location are automatically calculated. 
+You can decide to show a list as travel plan (trip), where the locations are shown in order and distances
+and travel times are automatically calculated. Or you can show the list as a page, taking more space per 
+location and allowing to write down a story about each step. 
 
 ## More information
 - Check out the GitHub https://github.com/arnecoomans/camping.cmns.nl

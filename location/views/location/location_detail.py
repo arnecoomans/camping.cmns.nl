@@ -107,8 +107,17 @@ class LocationView(ListView, FilterClass):
     return lists
 
   def get_available_lists(self):
-    available_lists = List.objects.exclude(
-        locations__location=self.get_location())
+    ''' Build a list of lists based on ListLocations that the current location is in.
+        This allows to filter out removed listlocations, and keep only lists where the location
+        is mentioned in.
+    '''
+    listlocations = ListLocation.objects.filter(location=self.get_location())
+    listlocations = self.filter(listlocations)
+    listlocations = listlocations.values_list('list__slug', flat=True)
+    ''' Lists the location is mentioned in should be removed from available lists, to avoid
+        double entries.
+    '''
+    available_lists = List.objects.exclude(slug__in=listlocations)
     available_lists = self.filter_status(available_lists)
     available_lists = self.filter_visibility(available_lists)
     available_lists = available_lists.order_by().distinct()

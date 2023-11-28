@@ -48,7 +48,13 @@
             </div>
         </div>
       {% endif %}
+
+      <!-- Configuration of Settings -->
       <div class="spacer"><hr></div>
+      <div class="row">
+        <div class="col-3"></div>
+        <div class="col-9 title-col">{% translate 'settings'|capfirst %}</div>
+      </div>
       <div class="row">
         <div class="col-3 title-col">{% translate 'order locations by'|capfirst %}:</div>
         <div class="col-9">
@@ -59,6 +65,19 @@
           </select>
         </div>
       </div>
+      <div class="row">
+        <div class="col-3 title-col">{% translate 'google maps'|title %}</div>
+        <div class="col-9">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" name="maps_permission" id="maps_permission" {% if user.profile.maps_permission %}checked{% endif %}>
+            <label class="form-check-label" for="maps_permission">{% translate 'on location page, always allow google maps'|capfirst %}.</label>
+            {% if request.session.maps_permission == True %}<br>
+            {% translate 'permission currently granted for this session'|capfirst %}. <a href="{% url 'location:MapsPermissionSession' %}">{% translate 'revoke'|capfirst %}</a>.
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
       <div class="spacer"></div>
       <div class="row">
         <div class="col-3"></div>

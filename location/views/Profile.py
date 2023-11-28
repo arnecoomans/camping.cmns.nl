@@ -1,3 +1,4 @@
+from django.views import View
 from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy, reverse
 from django.contrib import messages
@@ -18,7 +19,7 @@ from location.models.Profile import Profile, VisitedIn
 from location.models.Location import Location
 
 class ProfileView(UpdateView):
-  fields = ['home', 'hide_least_liked', 'order']
+  fields = ['home', 'hide_least_liked', 'order', 'maps_permission']
 
   def get_object(self):
     if not hasattr(self.request.user, 'profile'):
@@ -180,3 +181,47 @@ class SignUpView(CreateView):
       group.user_set.add(user)
     ''' Redirect to login page '''
     return redirect(reverse_lazy('login'))
+  
+class ToggleGoogleMapsSession(View):
+
+  def get(self, *args, **kwargs):
+    if self.request.session.get('maps_permission', False):
+      self.request.session['maps_permission'] = False
+      messages.add_message(self.request, messages.SUCCESS,
+                           f"{ _('revoked allowing google maps for ') } { _('this session') }.")
+    else:
+      self.request.session['maps_permission'] = True
+      messages.add_message(self.request, messages.SUCCESS,
+                           f"{ _('allow google maps for ') } { _('this session') }.")
+    ''' Return to Next '''
+    if self.request.GET.get('next', False):
+      return redirect(self.request.GET.get('next', '/'))
+    return redirect('location:profile')
+
+class ToggleGoogleMapsProfile(UpdateView):
+  model = Profile
+  fields = ['maps_permission']
+  
+  def get_object(self):
+    if not hasattr(self.request.user, 'profile'):
+      profile = Profile.objects.create(user=self.request.user)
+      messages.add_message(self.request, messages.INFO,
+                           f"{ _('created profile for ') } { profile.user.get_full_name() }")
+    return self.request.user.profile
+
+  def get(self, *args, **kwargs):
+    profile = self.get_object()
+    ''' Toggle Permission '''
+    if profile.maps_permission == True:
+      profile.maps_permission = False
+      messages.add_message(self.request, messages.SUCCESS,
+                           f"{ _('do not allow google maps for ') } { profile.user.get_full_name() }")
+    else:
+      profile.maps_permission = True
+      messages.add_message(self.request, messages.SUCCESS,
+                           f"{ _('allow google maps for ') } { profile.user.get_full_name() }")
+    profile.save()
+    ''' Return to Next '''
+    if self.request.GET.get('next', False):
+      return redirect(self.request.GET.get('next', '/'))
+    return redirect('location:profile')

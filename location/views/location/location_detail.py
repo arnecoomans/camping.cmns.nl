@@ -83,6 +83,8 @@ class LocationView(ListView, FilterClass):
     context['visitors'] = self.get_visitors()
     ''' Media '''
     context['media'] = self.get_media()
+    ''' Maps '''
+    context['maps_permission'] = self.get_maps_permission()
     return context
 
   ''' Get Tags
@@ -166,3 +168,18 @@ class LocationView(ListView, FilterClass):
           result = distance
       return result
     return None
+  
+  ''' Maps Permission
+      The Location Detail Page can show a google maps view of the location. However,
+      before sharing information with Google, we need to get the user's consent. 
+      Consent is stored in the profile, or in a session.
+  '''
+  def get_maps_permission(self):
+    ''' Check for ?maps_permission=true in URL '''
+    if self.request.GET.get('maps_permission', False) == 'true':
+      return True
+    ''' Check for maps permission in profile '''
+    if hasattr(self.request.user, 'profile') and self.request.user.profile.maps_permission == True:
+      return True
+    ''' Check for maps permission in session '''
+    return True if self.request.session.get('maps_permission', False) else False

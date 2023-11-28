@@ -1,5 +1,3 @@
-from typing import Any
-from django.db.models.query import QuerySet
 from django.views.generic import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
@@ -7,7 +5,7 @@ from django.contrib import messages
 from django.utils.text import slugify
 from django.utils.translation import gettext as _
 from django.shortcuts import redirect, reverse
-from django.db import IntegrityError, models
+from django.db import IntegrityError
 from django.conf import settings
 from django.http import Http404
 

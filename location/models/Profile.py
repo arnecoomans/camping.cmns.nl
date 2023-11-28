@@ -24,7 +24,9 @@ class Profile(models.Model):
   order               = models.CharField(max_length=16, choices=order_choices, default=settings.DEFAULT_ORDER)
   favorite            = models.ManyToManyField(Location, blank=True, related_name='favorite_of')
   least_liked         = models.ManyToManyField(Location, blank=True, related_name='least_liked_of')
-  hide_least_liked    = models.BooleanField(default=False, help_text=_('It is possible to "unlike" a location. Enable this field to hide the least-liked locations.'))
+  hide_least_liked    = models.BooleanField(default=False, help_text=_('It is possible to "unlike" a location. Enable this field to hide the least-liked locations'))
+
+  maps_permission     = models.BooleanField(default=False, help_text=_('Give permission to load Google Maps map on location detail page'))
 
   def __str__(self) -> str:
     return f'Profile of { self.user.get_full_name() if self.user.get_full_name() else self.user.username }'

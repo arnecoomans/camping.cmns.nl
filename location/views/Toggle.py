@@ -1,24 +1,14 @@
-from django.views.generic import DetailView
-from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import UpdateView
 from django.contrib import messages
 from django.utils.translation import gettext as _
-from django.utils.text import slugify
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.shortcuts import redirect
-from django.db import IntegrityError
-from django.conf import settings
-
-from .func_filter_visibility import filter_visibility
 
 from django.contrib.auth.models import User
 
 from location.models.Location import Location, Category, Chain
 from location.models.Profile import Profile
-from location.models.Comment import Comment
 from location.models.Tag import Tag
-from location.models.List import List, ListLocation
-from location.models.Profile import VisitedIn
 from location.models.Media import Media
 
 ''' TOGGLE View

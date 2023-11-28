@@ -16,6 +16,8 @@ from location.models.Location import Location
     - adds function filter_queryset, that returns the queryset based on the active filters
 '''
 class LocationListMaster(FilterClass):
+  template_name = 'location/location/location_list.html'
+
   def get_default_order(self):
     if hasattr(self.request.user, 'profile'):
       return self.request.user.profile.order

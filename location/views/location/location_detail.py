@@ -26,7 +26,7 @@ class LocationView(ListView, FilterClass):
   '''
   model = Comment
   paginate_by = settings.PAGINATE
-  template_name = 'location/location_detail.html'
+  template_name = 'location/location/location_detail.html'
 
   ''' Get Location
       Use Slug from URL to identify location. If not found, trigger a 404

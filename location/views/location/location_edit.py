@@ -209,6 +209,25 @@ class ResetLocationData(UpdateView):
       self.get_object().getLatLng(request)
       self.get_object().getDistanceFromDepartureCenter(request)
       self.get_object().getRegion(request)
+      ''' If distance to home is calculated, remove distance to home '''
+      if hasattr(self.request.user, 'profile') and self.request.user.profile.home:
+        actions = 0
+        try:
+          distance_to_home = ListDistance.objects.get(origin=self.request.user.profile.home,
+                                                      destination=self.get_object())
+          distance_to_home.delete()
+          actions += 1
+        except:
+          pass
+        try:
+          distance_to_home = ListDistance.objects.get(origin=self.get_object(),
+                                                      destination=self.request.user.profile.home)
+          distance_to_home.delete()
+          actions += 1
+        except:
+          pass
+        if actions > 0:
+          messages.add_message(self.request, messages.INFO, f"{ _('removed distance to home') }.")
     return redirect('location:location', self.get_object().slug)
 
 class GetDistanceToHome(DetailView):

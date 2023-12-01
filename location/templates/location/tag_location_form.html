@@ -1,0 +1,32 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% block content %}
+  {% if user.is_authenticated %}
+    <div class="edit comment card">
+      <h1>Tag</h1>
+      <form method="post" action="">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-3 title-col"><label for="tag">{% translate 'tag'|capfirst %}</label>:</div>
+          <div class="col-9">{% include 'snippets/select_tag_for_location.html' %}</div>
+        </div>
+        <div class="row">
+          <div class="col-3 title-col"><label for="location">{% translate 'location'|capfirst %}</label>:</div>
+          <div class="col-9">
+            <input class="form-control form-control-lg" value="{{ location.name }}" disabled>
+          </div>
+        </div>
+        <div class="spacer"></div>
+        <div class="row">
+          <div class="col-3"></div>
+          <div class="col-3"><input type="submit" value="{% translate 'submit'|capfirst %}" class="btn btn-success btn-lg {% if tag and not user.is_superuser and user != comment.user %}disabled{% endif %}"></div>
+          <div class="col-3"><a href="{% url 'location:EditLocation' location.slug %}#extra" class="btn btn-outline-secondary btn-lg" role="button" aria-disabled="true">{% translate 'edit tags for location'|capfirst %}</a></div>
+          <div class="col-3"><a href="{% url 'location:location' location.slug %}" class="btn btn-secondary btn-lg" role="button" aria-disabled="true">{% translate 'cancel'|capfirst %}</a></div>
+        </div>
+
+      </form>
+    </div>
+  {% else %}
+    {% include 'snippets/login_or_register.html' %}
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,7 @@
+{% load i18n %}<select class="form-control" name="object_slug" id="object_slug">
+  <option>--------</option>
+  <option value="create_new">{% translate "new tag"|capfirst %}</option>
+  {% for tag in available_tags %}
+    <option value="{{ tag.slug }}"{% if tag.slug == location.tag.slug %} selected{% endif %}>{{ tag }}</option>
+  {% endfor %}
+</select>

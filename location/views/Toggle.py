@@ -113,7 +113,7 @@ class ToggleTag(ToggleView):
   fields = ['tags']
 
   def get_success_url(self) -> str:
-    return reverse_lazy('location:EditLocation', kwargs={'slug': self.get_object().slug})
+    return reverse_lazy('location:location', kwargs={'slug': self.get_object().slug})
   
   def handle_exceptions(self, object_slug):
     if object_slug[:8] == '-'*8:

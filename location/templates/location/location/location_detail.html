@@ -157,8 +157,6 @@
             <li><a href="https://www.google.com/maps/dir/{{ user.profile.get_home.address|urlencode }}/{{ location.address|urlencode }}/" rel="nofollow" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'navigate to from home'|capfirst %}"><img src="{% static 'bootstrap-icons/sign-turn-right.svg' %}"> to</a></li>
             <li><a href="https://www.google.com/maps/dir/{{ location.address|urlencode }}/" rel="nofollow" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'navigate from'|capfirst %}"><img src="{% static 'bootstrap-icons/sign-turn-right.svg' %}"> from</a></li>
           </ul>
-        {% else %}
-          <div id=""
         {% endif %}
       {% endif %}
     </div>
@@ -181,13 +179,14 @@
         </div>
       {% endif %}
       <!-- Tags -->
-      {% if location.tags.all.count > 0 and user.is_authenticated %}
+      {% if user.is_authenticated %}
         <div class="row">
           <div class="col-3 title-col">{% translate 'tags'|title %}:</div>
           <div class="col-9 tag-list">
             {% for tag in tags %}
               {% include 'snippets/tag.html' %}{% if not forloop.last %}, {% endif %}
             {% endfor %}
+            <a href="{% url 'location:AddTagToLocation' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'add tag to'|capfirst %} {{ location.name }}">+</a>
           </div>
         </div>
       {% endif %}

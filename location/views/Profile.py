@@ -9,16 +9,14 @@ from django.contrib.auth.password_validation import validate_password
 from django.conf import settings
 from django.shortcuts import redirect
 
-from .func_filter_status import filter_status
-from .func_filter_visibility import filter_visibility
-
+from .snippets.filter_class import FilterClass
 
 from django.utils.translation import gettext as _
 
 from location.models.Profile import Profile, VisitedIn
 from location.models.Location import Location
 
-class ProfileView(UpdateView):
+class ProfileView(FilterClass, UpdateView):
   fields = ['home', 'hide_least_liked', 'order', 'maps_permission']
 
   def get_object(self):
@@ -31,18 +29,15 @@ class ProfileView(UpdateView):
     context = super().get_context_data(**kwargs)
     context['profile'] = self.get_object()
     homes = Location.objects.filter(category__slug='home')
-    homes = filter_status(self.request.user, homes)
-    homes = filter_visibility(self.request.user, homes)
+    homes = self.filter(homes)
     homes = homes.order_by().distinct
     context['homes'] = homes
     context['available_family'] = User.objects.exclude(id__in=self.get_object().family.all()).exclude(id=self.request.user.id)
     context['scope'] = f"{ _('profile') }: { _('edit your profile') }"
-    available_locations = filter_status(self.request.user, Location.objects.all())
-    available_locations = filter_visibility(self.request.user, available_locations)
+    available_locations = self.filter(Location.objects.all())
     context['available_locations'] = available_locations
     visits = VisitedIn.objects.filter(user=self.request.user)
-    visits = filter_status(self.request.user, visits)
-    visits = filter_visibility(self.request.user, visits)
+    visits = self.filter(visits)
     context['visits'] = visits
     return context
   

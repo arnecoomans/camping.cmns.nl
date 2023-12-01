@@ -23,7 +23,7 @@ class AddChain(CreateView):
     name          = self.request.POST.get('name', '')
     parent        = None
     website       = 'https://google.com/?q=' + self.request.POST.get('name', '')
-    description   = 'foo'
+    description   = ''
     user          = self.request.user
     if self.request.POST.get('website', '') != '':
       website = self.request.POST.get('website', '')

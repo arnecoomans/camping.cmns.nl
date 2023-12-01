@@ -140,7 +140,7 @@ class EditList(UpdateView):
     return context
       
   def form_valid(self, form):
-    messages.add_message(self.request, messages.SUCCESS, f"List \"{ form.instance.name }\" has been updated.")
+    messages.add_message(self.request, messages.SUCCESS, f"List \"{ form.cleaned_data['name'] }\" has been updated.")
     return super().form_valid(form)
 
 

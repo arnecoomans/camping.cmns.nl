@@ -65,13 +65,13 @@ class EditLocationMaster(UpdateView, FilterClass):
   
   def form_valid(self, form):
     ''' Force Home to be set to Family '''
-    if str(form.instance.category).lower() == 'home' and form.instance.visibility != 'f':
-      form.instance.visibility = 'f'
+    if str(form.cleaned_data['category']).lower() == 'home' and form.cleaned_data['visibility'] != 'f':
+      form.cleaned_data['visibility'] = 'f'
       messages.add_message(self.request, messages.INFO, f"{ _('visibility of your home is set to family') }.") 
     ''' Ensure URL is stored for this location '''
-    if not form.instance.website:
-      form.instance.website = f'https://google.com/search?q={ form.instance.name }'
-    elif 'google' not in form.instance.website:
+    if not form.cleaned_data['website']:
+      form.cleaned_data['website'] = f"https://google.com/search?q={ form.cleaned_data['name'] }"
+    elif 'google' not in form.cleaned_data['website']:
       link = Link.objects.get_or_create(url=f'https://google.com/search?q={ form.cleaned_data["name"] }', defaults={'user': self.request.user})
       form.instance.link.add(link[0].id)
     ''' Only allow user change by superuser '''
@@ -86,11 +86,11 @@ class EditLocationMaster(UpdateView, FilterClass):
       form.instance.user = self.request.user
     if len(form.changed_data) > 0:
       ''' Only if data has changed, save the Object '''
-      messages.add_message(self.request, messages.SUCCESS, f"{ _('changed information of location') } \"{form.instance.name }\".")
+      messages.add_message(self.request, messages.SUCCESS, f"{ _('changed information of location') } \"{form.cleaned_data['name'] }\".")
       form.save()
     else:
       ''' No changes are detected, redirect to image without saving. '''
-      messages.add_message(self.request, messages.WARNING, f"{ _('no changed made to') } \"{ form.instance.name }\".")
+      messages.add_message(self.request, messages.WARNING, f"{ _('no changed made to') } \"{ form.cleaned_data['name'] }\".")
       return redirect(reverse_lazy('location:location', kwargs={'slug': self.object.slug}))
     return super().form_valid(form)
   
@@ -137,29 +137,29 @@ class AddLocation(CreateView):
 
   def form_valid(self, form):
     ''' Force Home to be set to Family '''
-    if str(form.instance.category).lower() == 'home' and form.instance.visibility != 'f':
-      form.instance.visibility = 'f'
+    if str(form.cleaned_data['category']).lower() == 'home' and form.cleaned_data['visibility'] != 'f':
+      form.cleaned_data['visibility'] = 'f'
       messages.add_message(self.request, messages.INFO, f"{ _('visibility of your home is set to family') }.") 
-    if not form.instance.website:
+    if not form.cleaned_data['website']:
       ''' If no website is submitted, store a Google Search for this location name'''
-      form.instance.website = f'https://google.com/search?q={ form.instance.name }'
+      form.cleaned_data['website'] = f"https://google.com/search?q={ form.cleaned_data['name'] }"
     # elif 'google' not in form.instance.website:
     #   link = Link.objects.get_or_create(url=f'https://google.com/search?q={ form.cleaned_data["name"] }', defaults={'user': self.request.user})
     #   form.instance.link.add(link[0].id)
     try:
       location = Location.objects.create(
-        slug = slugify(form.instance.name),
-        name = form.instance.name,
-        website = form.instance.website,
-        description = form.instance.description,
-        category = form.instance.category,
-        visibility= form.instance.visibility,
-        status = form.instance.status,
+        slug = slugify(form.cleaned_data['name']),
+        name = form.cleaned_data['name'],
+        website = form.cleaned_data['website'],
+        description = form.cleaned_data['description'],
+        category = form.cleaned_data['category'],
+        visibility= form.cleaned_data['visibility'],
+        status = form.cleaned_data['status'],
         user=self.request.user,
       )
     except IntegrityError as e:
-      suggested_location = Location.objects.get(name__iexact=form.instance.name)
-      messages.add_message(self.request, messages.ERROR, f"{ _('failed to add new location') }: \"{ form.instance.name }\". { _('A location with this name already exists:') } <a href=\"{ reverse('location:location', kwargs={'slug': suggested_location.slug}) }\">{ suggested_location.name }</a>")
+      suggested_location = Location.objects.get(name__iexact=form.cleaned_data['name'])
+      messages.add_message(self.request, messages.ERROR, f"{ _('failed to add new location') }: \"{ form.cleaned_data['name'] }\". { _('A location with this name already exists:') } <a href=\"{ reverse('location:location', kwargs={'slug': suggested_location.slug}) }\">{ suggested_location.name }</a>")
       return redirect('location:AddLocation')
     messages.add_message(self.request, messages.SUCCESS, f"{ _('added new location') }: \"{ location.name }\"")
     ''' Since the object has been added, now we can automate fetch additional data '''

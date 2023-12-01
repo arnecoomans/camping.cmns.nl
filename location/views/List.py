@@ -10,7 +10,6 @@ from django.conf import settings
 from django.http import Http404
 
 from .snippets.filter_class import FilterClass
-from .func_filter_visibility import filter_visibility
 
 from location.models.List import List, ListLocation, ListDistance
 from location.models.Location import Location
@@ -41,7 +40,7 @@ def calculateDistances(request, list):
       return True
     
 
-class ListListView(ListView):
+class ListListView(FilterClass, ListView):
   model = List
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -50,7 +49,7 @@ class ListListView(ListView):
   
   def get_queryset(self):
     queryset = List.objects.filter(status='p')
-    queryset = filter_visibility(self.request.user, queryset)
+    queryset = self.filter_visibility(queryset)
     if self.request.GET.get('order_by', '').lower() == 'author':
       queryset = queryset.order_by('user', 'name').distinct()
     elif self.request.GET.get('order_by', '').lower() == 'visibility':
@@ -140,7 +139,7 @@ class EditList(UpdateView):
     return context
       
   def form_valid(self, form):
-    messages.add_message(self.request, messages.SUCCESS, f"List \"{ form.instance.name }\" has been updated.")
+    messages.add_message(self.request, messages.SUCCESS, f"List \"{ form.cleaned_data['name'] }\" has been updated.")
     return super().form_valid(form)
 
 

@@ -121,6 +121,7 @@ def CreateCategories(request):
 ''' CREATE VIEWS '''
 class AddLocation(CreateView):
   model = Location
+  template_name = 'location/location/location_form.html'
   fields = ['name', 'website', 'description', 'category', 'visibility']
   
   def get_context_data(self, **kwargs):

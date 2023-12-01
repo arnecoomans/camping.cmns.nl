@@ -7,8 +7,6 @@ from django.utils.translation import gettext as _
 from django.shortcuts import redirect, reverse
 from django.db import IntegrityError
 
-from .func_filter_status import filter_status
-from .func_filter_visibility import filter_visibility
 from .snippets.filter_class import FilterClass
 
 from django.db.models import Count
@@ -16,7 +14,7 @@ from django.db.models import Count
 from location.models.Tag import Tag
 from location.models.Location import Location
 
-class TagListView(ListView):
+class TagListView(FilterClass, ListView):
   model = Tag
 
   def get_context_data(self, **kwargs):
@@ -26,19 +24,18 @@ class TagListView(ListView):
 
   def get_queryset(self):
     queryset = Tag.objects.all().annotate(childcount=Count('children'))
-    queryset = filter_status(self.request.user, queryset)
-    queryset = filter_visibility(self.request.user, queryset).order_by('parent')
+    queryset = self.filter(queryset)
+    queryset = queryset.order_by('parent')
     return queryset
 
-class TagView(DetailView):
+class TagView(FilterClass, DetailView):
   model = Tag
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context['scope'] = f"{ _('tag') }: { self.object.name }"
     children = Tag.objects.filter(parent__slug=self.get_object().slug)
-    children = filter_status(self.request.user, children)
-    children = filter_visibility(self.request.user, children)
+    children = self.filter(children)
     context['children'] = children
     return context
 
@@ -154,8 +151,7 @@ class AddTagToLocation(FilterClass, UpdateView):
     ''' Available parent tags used in form
         is filtered to avoid multi-level tags and recursion '''
     available_tags = Tag.objects.exclude(locations=self.object).exclude(children__gt=1)
-    available_tags = self.filter_status(available_tags)
-    available_tags = self.filter_visibility(available_tags)
+    available_tags = self.filter(available_tags)
     available_tags = available_tags.order_by('parent__name', 'name')
     context['available_tags'] = available_tags
     return context

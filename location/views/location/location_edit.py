@@ -152,10 +152,10 @@ class AddLocation(CreateView):
         slug = slugify(form.cleaned_data['name']),
         name = form.cleaned_data['name'],
         website = form.cleaned_data['website'],
-        description = form.cleaned_data['description'],
-        category = form.cleaned_data['category'],
-        visibility= form.cleaned_data['visibility'],
-        status = form.cleaned_data['status'],
+        description = form.cleaned_data['description'] if 'description' in form.cleaned_data else '',
+        category = form.cleaned_data['category'] if 'category' in form.cleaned_data else 'camping',
+        visibility= form.cleaned_data['visibility'] if 'visibility' in form.cleaned_data else 'c',
+        status = form.cleaned_data['status'] if 'status' in form.cleaned_data else 'p',
         user=self.request.user,
       )
     except IntegrityError as e:

@@ -9,11 +9,12 @@ from django.db import IntegrityError
 
 from .func_filter_status import filter_status
 from .func_filter_visibility import filter_visibility
+from .snippets.filter_class import FilterClass
 
 from django.db.models import Count
 
-
 from location.models.Tag import Tag
+from location.models.Location import Location
 
 class TagListView(ListView):
   model = Tag
@@ -115,6 +116,7 @@ class EditTag(UpdateView):
       messages.add_message(self.request, messages.INFO,
                            f"{ _('no changes to tag made') }.")
     return super().form_valid(form)
+  
 class ToggleDeleteTag(UpdateView):
   model = Tag
   fields = ['status']
@@ -140,3 +142,24 @@ class ToggleDeleteTag(UpdateView):
       redirect('location:tag', self.get_object().slug)
     else:
       redirect('location:tags')
+
+class AddTagToLocation(FilterClass, UpdateView):
+  model = Location
+  template_name = 'location/tag_location_form.html'
+  fields = ['tags']
+  
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['scope'] = f"{ _('tags') }: { _('add tag to') } { self.get_object().name }"
+    ''' Available parent tags used in form
+        is filtered to avoid multi-level tags and recursion '''
+    available_tags = Tag.objects.exclude(locations=self.object).exclude(children__gt=1)
+    available_tags = self.filter_status(available_tags)
+    available_tags = self.filter_visibility(available_tags)
+    available_tags = available_tags.order_by('parent__name', 'name')
+    context['available_tags'] = available_tags
+    return context
+
+  def post(self, request, *args, **kwargs):
+    return redirect('location:ToggleTag', self.get_object().slug, self.request.POST.get('object_slug', ''))
+    

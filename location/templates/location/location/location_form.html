@@ -96,6 +96,7 @@
 
     {% if location %}
       <!-- Location Relations-->
+      <a class="anchor" name="extra"></a>
       <div class="relations card">
         <!-- Manage Chain -->
         {% if location.chain %}
@@ -171,13 +172,7 @@
             <div class="col-3 title-col">{% translate 'Add tag' %}:</div>
             {% csrf_token %}
             <div class="col-6">
-              <select class="form-control" name="object_slug" id="object_slug">
-                <option>--------</option>
-                <option value="create_new">{% translate "new tag"|capfirst %}</option>
-                {% for tag in available_tags %}
-                  <option value="{{ tag.slug }}"{% if tag.slug == location.tag.slug %} selected{% endif %}>{{ tag }}</option>
-                {% endfor %}
-              </select>
+              {% include 'snippets/select_tag_for_location.html' %}
             </div>
             <div class="col-2">
               <input type="submit" role="button" class="btn btn-outline-primary" value="{% translate 'add tag'|capfirst %}">

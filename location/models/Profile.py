@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 from .base_model import BaseModel
 from .Location import Location
+from .Tag import Tag
 
 class Profile(models.Model):
   user                = models.OneToOneField(User, on_delete=models.DO_NOTHING, related_name='profile', unique=True)
@@ -24,8 +25,9 @@ class Profile(models.Model):
   order               = models.CharField(max_length=16, choices=order_choices, default=settings.DEFAULT_ORDER)
   favorite            = models.ManyToManyField(Location, blank=True, related_name='favorite_of')
   least_liked         = models.ManyToManyField(Location, blank=True, related_name='least_liked_of')
+  ignored_tags        = models.ManyToManyField(Tag, blank=True, related_name='ignored_by')
+  
   hide_least_liked    = models.BooleanField(default=False, help_text=_('It is possible to "unlike" a location. Enable this field to hide the least-liked locations'))
-
   maps_permission     = models.BooleanField(default=False, help_text=_('Give permission to load Google Maps map on location detail page'))
 
   def __str__(self) -> str:

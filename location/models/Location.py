@@ -15,7 +15,7 @@ from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
-
+from html import escape
 from geopy import distance, exc
 from geopy.geocoders import GoogleV3
 
@@ -171,6 +171,8 @@ class Location(BaseModel):
       Returns a textual result of the query.
   '''
   def getAddress(self, request=None):
+    if len(self.address) > 0:
+      return self.address
     ''' Fetch Google Geolocation data '''
     try:
       geolocator = GoogleV3(api_key=settings.GOOGLE_API_KEY)  
@@ -181,14 +183,15 @@ class Location(BaseModel):
         messages.add_message(request, messages.ERROR, mark_safe(message))
       return message
     ''' Store address from geolocation '''
-    if hasattr(location, 'address'):
+    if hasattr(location, 'address') and location != None:
       self.addToChangelog(f"Changed address from { self.address } to { location.address }")
       self.address = location.address
+      ''' Report progess '''
+      message = f"Stored address { self.address } of { self.name }."
     else:
-      self.addToChangelog(f"Could not fetch address of { self.name }")
+      message = f"Could not fetch address of { self.name }"
     self.save()
-    ''' Report progess '''
-    message = f"Stored address { self.address } of { self.name }."
+    
     if request:
       messages.add_message(request, messages.INFO, message)
     else:
@@ -267,6 +270,7 @@ class Location(BaseModel):
       All three are walked through and created in the Region model if not exists yet. 
   '''
   def getRegion(self, request=None):
+    message = None
     ''' Set user '''
     user = request.user if request else self.user
     ''' Ensure address is filled, if not, fetch address based on name '''
@@ -282,34 +286,40 @@ class Location(BaseModel):
         messages.add_message(request, messages.ERROR, mark_safe(message))
       return message
     ''' Identify Region, department and country '''
-    for field in location.raw['address_components']:
-      if 'country' in field['types']:
-        country = field['long_name']
-        country_slug = field['short_name']
-      elif 'administrative_area_level_1' in field['types']:
-        region = field['long_name']
-        region_slug = field['short_name']
-      elif 'administrative_area_level_2' in field['types']:
-        department = field['long_name']
-        department_slug = field['short_name']
-    ''' Check if Country, Region and Department exists '''
-    countryObject, created = Region.objects.get_or_create(
-        slug=slugify(country_slug),
-        defaults={'name': country, 'slug': slugify(country_slug), 'user': user}
+    if location:
+      for field in location.raw['address_components']:
+        if 'country' in field['types']:
+          country = field['long_name']
+          country_slug = field['short_name']
+        elif 'administrative_area_level_1' in field['types']:
+          region = field['long_name']
+          region_slug = field['short_name']
+        elif 'administrative_area_level_2' in field['types']:
+          department = field['long_name']
+          department_slug = field['short_name']
+      ''' Check if Country, Region and Department exists '''
+      countryObject, created = Region.objects.get_or_create(
+          slug=slugify(country_slug),
+          defaults={'name': country, 'slug': slugify(country_slug), 'user': user}
+        )
+      regionObject, created = Region.objects.get_or_create(
+          slug=slugify(region_slug),
+          defaults={'name': region, 'slug': slugify(region_slug), 'parent': countryObject, 'user': user}
+        )
+      departmentObject, created = Region.objects.get_or_create(
+        slug=slugify(department_slug),
+        defaults={'name': department, 'slug': slugify(department_slug), 'parent': regionObject, 'user': user}
       )
-    regionObject, created = Region.objects.get_or_create(
-        slug=slugify(region_slug),
-        defaults={'name': region, 'slug': slugify(region_slug), 'parent': countryObject, 'user': user}
-      )
-    departmentObject, created = Region.objects.get_or_create(
-      slug=slugify(department_slug),
-      defaults={'name': department, 'slug': slugify(department_slug), 'parent': regionObject, 'user': user}
-    )
-    ''' Store Region '''
-    self.location = departmentObject
-    self.save()
-    ''' Report progress '''
-    message = f"Stored region { regionObject.name } for { self.name }"
+      ''' Store Region '''
+      self.location = departmentObject
+      self.save()
+      ''' Report progress '''
+      message = f"Stored region { regionObject.name } for { self.name }"
+    else:
+      ''' If address is not found, display a warning '''
+      if request:
+        messages.add_message(request, messages.WARNING,
+                             f"{ _('did not detect address of') } { self.name } { _('so cannot detect region') }")
     if request:
       messages.add_message(request, messages.INFO, message)
     else:

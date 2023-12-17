@@ -15,9 +15,10 @@ from django.utils.translation import gettext as _
 
 from location.models.Profile import Profile, VisitedIn
 from location.models.Location import Location
+from location.models.Tag import Tag
 
 class ProfileView(FilterClass, UpdateView):
-  fields = ['home', 'hide_least_liked', 'order', 'maps_permission']
+  fields = ['home', 'hide_least_liked', 'order', 'maps_permission', 'ignored_tags']
 
   def get_object(self):
     if not hasattr(self.request.user, 'profile'):
@@ -36,6 +37,7 @@ class ProfileView(FilterClass, UpdateView):
     context['scope'] = f"{ _('profile') }: { _('edit your profile') }"
     available_locations = self.filter(Location.objects.all())
     context['available_locations'] = available_locations
+    context['ignorable_tags'] = self.filter_status(Tag.objects.all())
     visits = VisitedIn.objects.filter(user=self.request.user)
     visits = self.filter(visits)
     context['visits'] = visits

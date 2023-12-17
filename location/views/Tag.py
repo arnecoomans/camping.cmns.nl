@@ -152,6 +152,9 @@ class AddTagToLocation(FilterClass, UpdateView):
         is filtered to avoid multi-level tags and recursion '''
     available_tags = Tag.objects.exclude(locations=self.object).exclude(children__gt=1)
     available_tags = self.filter(available_tags)
+    if hasattr(self.request.user, 'profile'):
+      ''' Add ignored tags to available tags, to be able to ignore a location based on tags '''
+      available_tags = available_tags | self.request.user.profile.ignored_tags.all()
     available_tags = available_tags.order_by('parent__name', 'name')
     context['available_tags'] = available_tags
     return context

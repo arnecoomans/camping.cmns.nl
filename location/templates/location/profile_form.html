@@ -65,6 +65,18 @@
           </select>
         </div>
       </div>
+      <!-- Ignored Tags -->
+      <div class="row">
+        <div class="col-3 title-col">{% translate 'ignored tags'|capfirst %}:</div>
+        <div class="col-9">
+          <select name="ignored_tags" id="id_ignored_tags" class="form-control" multiple>
+            {% for tag in ignorable_tags %}
+              <option value="{{ tag.id }}" {% if tag in profile.ignored_tags.all %}selected{% endif %}>{{ tag.name|title }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <!-- Google Maps Permission -->
       <div class="row">
         <div class="col-3 title-col">{% translate 'google maps'|title %}</div>
         <div class="col-9">
@@ -116,7 +128,7 @@
             </div>
         </div>
       {% endif %}
-
+      
       <div class="spacer"><hr></div>
       <!-- Family -->
       {% if profile.family.all.count > 0 %}

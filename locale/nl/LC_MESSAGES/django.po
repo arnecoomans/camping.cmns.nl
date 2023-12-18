@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-11-18 15:23+0100\n"
-"PO-Revision-Date: 2023-11-18 15:29+0100\n"
+"PO-Revision-Date: 2023-12-18 10:04+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -52,7 +52,7 @@ msgstr "lijst"
 
 #: location/models/List.py:101
 msgid "trip"
-msgstr ""
+msgstr "reis"
 
 #: location/models/List.py:107 location/templates/location/list_list.html:7
 #: location/templates/location/location_detail.html:160
@@ -86,6 +86,8 @@ msgid ""
 "Full street address of location, including as much information as possible, "
 "such as city, region, country"
 msgstr ""
+"Volledig adres van de locatie, met zo veel mogelijk informatie zoals stad, "
+"regio, land"
 
 #: location/models/Location.py:101
 msgid "Name of owner(s), if known"
@@ -101,7 +103,7 @@ msgstr ""
 
 #: location/models/Location.py:114
 msgid "Meta description taken from website, if available"
-msgstr ""
+msgstr "meta-omschrijving van website, indien aanwezig"
 
 #: location/models/Profile.py:15
 #: location/templates/location/profile_form.html:43
@@ -200,7 +202,7 @@ msgstr "publiek"
 
 #: location/models/base_model.py:13
 msgid "commmunity"
-msgstr ""
+msgstr "community"
 
 #: location/models/base_model.py:14
 #: location/templates/location/comment_add.html:14
@@ -242,7 +244,7 @@ msgstr "naam"
 #: location/templates/location/chain_form.html:14
 #: location/templates/location/tag_form.html:14
 msgid "parent"
-msgstr ""
+msgstr "hoofdgroep"
 
 #: location/templates/location/chain_form.html:16
 #: location/templates/location/tag_form.html:16
@@ -407,7 +409,7 @@ msgstr "gezien door"
 
 #: location/templates/location/list_list.html:14
 msgid "items"
-msgstr ""
+msgstr "onderdelen"
 
 #: location/templates/location/list_list.html:21
 msgid "automatic"
@@ -570,6 +572,8 @@ msgid ""
 "to add a location or activity to this list, visit the location or activity "
 "and select \"add to list\""
 msgstr ""
+"om een locatie toe te voegen aan de lijst, bezoek de locatie en kies “voeg "
+"toe aan lijst”"
 
 #: location/templates/location/list_trip_detail.html:60
 #: location/templates/location/location_detail.html:230
@@ -880,7 +884,7 @@ msgstr "media van"
 #: location/templates/location/media_list.html:28
 #: location/templates/location/media_list.html:31
 msgid "refresh"
-msgstr ""
+msgstr "ververs"
 
 #: location/templates/location/media_list.html:28
 #: location/templates/location/media_list.html:29
@@ -1040,7 +1044,7 @@ msgstr "februari"
 
 #: location/templates/location/visitedin_form.html:33
 msgid "juli"
-msgstr ""
+msgstr "juli"
 
 #: location/templates/snippets/comment.html:5
 msgctxt "how long ago"
@@ -1058,7 +1062,7 @@ msgstr "heeft gereageerd"
 #: location/templates/snippets/comment.html:8
 msgctxt "who is object directed at"
 msgid "to"
-msgstr ""
+msgstr "aan"
 
 #: location/templates/snippets/comment.html:8
 msgid "comment can be viewed by"
@@ -1140,7 +1144,7 @@ msgstr "bezocht"
 
 #: location/templates/snippets/location_list_filters.html:40
 msgid "in"
-msgstr ""
+msgstr "in"
 
 #: location/templates/snippets/location_list_filters.html:40
 msgid "all visited locations"
@@ -1165,12 +1169,16 @@ msgstr "is alleen beschikbaar voor ingelogde gebruikers"
 #: location/templates/snippets/login_or_register.html:5
 msgid "some features are only available for registerd users"
 msgstr ""
+"sommige functionaliteiten zijn alleen beschikbaar voor geregistreerde "
+"gebruikers"
 
 #: location/templates/snippets/login_or_register.html:6
 msgid ""
 "register to be able to add your own favorite locations, leave comments and "
 "manage your own lists"
 msgstr ""
+"registreer zodat je je eigen favoriete locaties kan toevoegen, opmerkingen "
+"achterlaten en je eigen lijsten bij kan houden"
 
 #: location/templates/snippets/tag.html:1
 msgid "see details of tag"
@@ -1178,13 +1186,15 @@ msgstr "zie details van tag"
 
 #: location/views/List.py:87
 msgid "No list found with the name"
-msgstr "geen lijst gevonden met de naam"
+msgstr "Geen lijst gevonden met de naam"
 
 #: location/views/Profile.py:176
 msgid ""
 "Succesfully registered your account. Please log in with your username and "
 "chosen password."
 msgstr ""
+"Jouw account is aangemaakt. Log in met je gebruikersnaam en zelfgekozen "
+"wachtwoord."
 
 #: templates/navigation.html:22
 msgid "locations"

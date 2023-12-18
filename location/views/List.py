@@ -81,7 +81,7 @@ class ListDetailView(FilterClass, DetailView):
       messages.add_message(self.request, messages.ERROR,
                            f"{ _('selected list does not exist') }: { self.kwargs['slug'] }.")
       raise Http404(
-            _("No list found with the name")
+            _("no list found with the name")
         )
     return list
   

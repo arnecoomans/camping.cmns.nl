@@ -1,6 +1,6 @@
 # VKNT Vacation Location and Activity Database
 
-Version 1.0.1.02
+Version 1.0.1.03
 
 VKNT is a database for holiday locations - places to stay - and activities - things to do. By builing a
 private database of possible locations, it is easier to either make holiday plans or share tips with

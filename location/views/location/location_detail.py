@@ -156,7 +156,13 @@ class LocationView(ListView, FilterClass):
     media = order_media(media)
     return media
 
-  ''' Get distance to home '''
+  ''' Get distance to home 
+      Check if the distance from or to home is stored, and if so 
+      return the value.
+      This means that if a distance was stored in creating a list, of 
+      by another user, the same distance is used. 
+      If no distance is known, return Null
+  '''
   def get_distance_to_home(self):
     if self.request.user.is_authenticated:
       result = False

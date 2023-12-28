@@ -7,6 +7,8 @@ from django.db.models import Avg
 
 from ..snippets.filter_class import FilterClass
 
+from math import floor, ceil
+
 from location.models.Location import Location
 
 ''' MASTER VIEWS '''
@@ -67,6 +69,8 @@ class LocationListMaster(FilterClass):
             self.active_filters[field] = self.request.GET.get(field, '')
     ''' Special filters '''
     self.active_filters['order'] = self.request.GET.get('order', self.get_default_order())
+    self.active_filters['dist_min'] = self.request.GET.get('min', None)
+    self.active_filters['dist_max'] = self.request.GET.get('max', None)
     ''' Return value ''' 
     if query:
       return self.active_filters[query] if query in self.active_filters else None
@@ -140,6 +144,11 @@ class LocationListMaster(FilterClass):
                    queryset.filter(location__name__icontains=q) |\
                    queryset.filter(location__parent__name__icontains=q) |\
                    queryset.filter(location__parent__parent__name__icontains=q)
+    ''' Min and Max Distance '''
+    if self.get_active_filters('dist_min'):
+      queryset = queryset.filter(distance_to_departure_center__gt=self.get_active_filters('dist_min'))
+    if self.get_active_filters('dist_max'):
+      queryset = queryset.filter(distance_to_departure_center__lt=self.get_active_filters('dist_max'))
     return queryset
 
   def order_queryset(self, queryset):
@@ -194,6 +203,8 @@ class LocationListMaster(FilterClass):
     ''' Fetch Active Filters '''
     context['active_filters']   = self.get_active_filters()
     context['available_filters']= self.get_available_filters()
+    context['min_min_distance'] = floor(self.get_queryset().order_by('distance_to_departure_center').first().distance_to_departure_center / 100) * 100
+    context['max_max_distance'] = ceil(self.get_queryset().order_by('distance_to_departure_center').last().distance_to_departure_center / 100) * 100
     return context
   
 

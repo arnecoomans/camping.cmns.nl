@@ -146,7 +146,6 @@ class LocationListMaster(FilterClass):
                    queryset.filter(location__parent__parent__name__icontains=q)
     ''' Min and Max Distance '''
     if self.get_active_filters('dist_min'):
-      messages.add_message(self.request, messages.INFO, 'min')
       queryset = queryset.filter(distance_to_departure_center__gt=self.get_active_filters('dist_min'))
     if self.get_active_filters('dist_max'):
       queryset = queryset.filter(distance_to_departure_center__lt=self.get_active_filters('dist_max'))
@@ -206,9 +205,6 @@ class LocationListMaster(FilterClass):
     context['available_filters']= self.get_available_filters()
     context['min_min_distance'] = floor(self.get_queryset().order_by('distance_to_departure_center').first().distance_to_departure_center / 100) * 100
     context['max_max_distance'] = ceil(self.get_queryset().order_by('distance_to_departure_center').last().distance_to_departure_center / 100) * 100
-    
-    messages.add_message(self.request, messages.INFO, context['min_min_distance'])
-    messages.add_message(self.request, messages.INFO, context['max_max_distance'])
     return context
   
 

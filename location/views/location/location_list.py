@@ -227,3 +227,42 @@ class AllSearchView(LocationListMaster, ListView):
 
   def get_scope(self):
     return 'all'
+  
+class LocationMapView(LocationListMaster, ListView):
+  model = Location
+  template_name = 'location/location/location_list_map.html'
+  
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['maps_permission'] = self.get_maps_permission()
+    context['map_center'] = self.get_center()
+    return context
+  def get_scope(self):
+    return 'all'
+  
+  ''' Get Center '''
+  def get_center(self):
+    lat_total = 0.0
+    lng_total = 0.0
+    count = 0
+    for location in self.get_queryset():
+      if location.coord_lat and location.coord_lng:
+        lat_total += float(location.coord_lat)
+        lng_total += float(location.coord_lng)
+        count +=1
+    return { 'lat': str(lat_total/count).replace(',','.')[:9], 'lng': str(lng_total/count).replace(',','.')[:9] }
+
+  ''' Maps Permission
+      The Location Detail Page can show a google maps view of the location. However,
+      before sharing information with Google, we need to get the user's consent. 
+      Consent is stored in the profile, or in a session.
+  '''
+  def get_maps_permission(self):
+    ''' Check for ?maps_permission=true in URL '''
+    if self.request.GET.get('maps_permission', False) == 'true':
+      return True
+    ''' Check for maps permission in profile '''
+    if hasattr(self.request.user, 'profile') and self.request.user.profile.maps_permission == True:
+      return True
+    ''' Check for maps permission in session '''
+    return True if self.request.session.get('maps_permission', False) else False

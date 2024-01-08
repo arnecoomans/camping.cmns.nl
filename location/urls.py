@@ -13,6 +13,11 @@ urlpatterns = [
   path('locations/<country>/<region>/', views.LocationListView.as_view(), name='ListLocationsByRegion'),
   path('locations/<country>/<region>/<department>/', views.LocationListView.as_view(), name='ListLocationsByDepartment'),
 
+  path('map/', views.LocationMapView.as_view(), name='locationsMap'),
+  path('map/<country>/', views.LocationMapView.as_view(), name='ListLocationsByCountryMap'),
+  path('map/<country>/<region>/', views.LocationMapView.as_view(), name='ListLocationsByRegionMap'),
+  path('map/<country>/<region>/<department>/', views.LocationMapView.as_view(), name='ListLocationsByDepartmentMap'),
+
   path('location/add/', views.AddLocation.as_view(), name='AddLocation'),
   path('location/<slug>/', views.LocationView.as_view(), name='location'),
   path('location/<slug>/edit/', views.EditLocation.as_view(), name='EditLocation'),

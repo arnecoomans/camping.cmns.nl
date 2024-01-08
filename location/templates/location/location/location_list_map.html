@@ -1,0 +1,94 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% load static %}
+{% block content %}
+  {% comment %} {% include 'snippets/location_list_filters.html' %} {% endcomment %}
+  <div class="location map card">
+    <!-- map -->
+    {% if user.is_authenticated %}
+      <h3>{{ location.name }} {% translate 'on the map'|title %}:</h3>
+      <div id="map" class="large-map">
+        {% if not maps_permission %}
+          <p>
+            {% translate 'this site uses google maps to show the location of this object on a map'|capfirst %}.<br>
+            {% translate 'this means your data will be shared with google when the request loads'|capfirst %}.
+          </p>
+          <p>
+            <a href="{{ location.get_absolute_url }}?maps_permission=true">{% translate 'allow once'|capfirst %}</a>{% if user.is_authenticated and not user.profile.maps_permission %},{% else %} or{% endif %}
+            <a href="{% url 'location:MapsPermissionSession' %}?next={{ location.get_absolute_url }}">{% translate 'allow for this session' %}</a>
+            or <a href="{% url 'location:MapsPermissionProfile' %}?next={{ location.get_absolute_url }}">{% translate 'always allow' %}.            </p>
+        {% endif %}
+      </div>
+      {% if maps_permission %}
+        <ul class="action list">
+          <li><a href="https://maps.google.com/maps?q={{ location.name|urlencode }}+{{ location.address|urlencode }}" rel="nofollow" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ location }} {% translate 'on google maps' %}"><img src="{% static 'bootstrap-icons/globe.svg' %}"></a></li>
+          <li><a href="https://www.google.com/maps/dir/{{ user.profile.get_home.address|urlencode }}/{{ location.address|urlencode }}/" rel="nofollow" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'navigate to from home'|capfirst %}"><img src="{% static 'bootstrap-icons/sign-turn-right.svg' %}"> to</a></li>
+          <li><a href="https://www.google.com/maps/dir/{{ location.address|urlencode }}/" rel="nofollow" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'navigate from'|capfirst %}"><img src="{% static 'bootstrap-icons/sign-turn-right.svg' %}"> from</a></li>
+        </ul>
+      {% endif %}
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block scriptheader %}
+  {% if maps_permission %}
+    <!-- Marker Symbol Documentation:
+        https://developers.google.com/maps/documentation/javascript/examples/marker-symbol-custom
+    -->
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap&v=weekly" defer></script>
+    <script>
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: {
+            lat: {{ map_center.lat }},
+            lng: {{ map_center.lng }} 
+          },
+          zoom: 6
+        });
+
+        // Define marker icons for main and secondary points
+        var mainMarkerIcon = "{% static 'bootstrap-icons/geo-fill-main.png' %}";
+        var locationMarkerIcon = "{% static 'bootstrap-icons/geo-fill-green.png' %}";
+        var activityMarkerIcon = "{% static 'bootstrap-icons/geo-fill-secondary.png' %}";
+
+        // Add markers to the map
+        var markers = [
+        {% for location in location_list %}
+          {% if location.coord_lat and location.coord_lng %}
+            {
+              lat: {{ location.coord_lat }},
+              lng: {{ location.coord_lng}},
+              title: '{{ location.slug }}',
+              icon: {% if location.isActivity %}activityMarkerIcon{% else %}locationMarkerIcon{% endif %},
+              content: '<a href="{{ location.get_absolute_url }}">{{ location.name }}</a>',
+            },
+          {% endif %}
+        {% endfor %}
+        ];
+
+        // Loop through markers and add them to the map
+        markers.forEach(function (marker, index) {
+          var markerInstance = new google.maps.Marker({
+            position: {
+              lat: marker.lat,
+              lng: marker.lng
+            },
+            map: map,
+            title: marker.title,
+            icon: marker.icon
+          });
+
+          // Create an InfoWindow for each marker
+          var infoWindow = new google.maps.InfoWindow({
+            content: marker.content
+          });
+
+          // Add a click event to show the InfoWindow when the marker is clicked
+          markerInstance.addListener('click', function () {
+            infoWindow.open(map, markerInstance);
+          });
+        });
+      }
+    </script>
+  {% endif %}
+{% endblock %}

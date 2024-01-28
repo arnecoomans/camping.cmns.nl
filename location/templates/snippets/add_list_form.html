@@ -14,7 +14,7 @@
           {% endif %}
           {% for list in available_lists.all %}
             {% if list not in lists %}
-              <option value="{{ list.slug }}">{{ list.name|truncatechars:64|title }}</option>
+              <option value="{{ list.slug }}">{{ list.name|truncatechars:64|title }}{% if not list.user == user %} {% translate 'by' %} {{ list.user.get_full_name|default:list.user.username }}{% endif %}</option>
             {% endif %}
           {% endfor %}
         </select>

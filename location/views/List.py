@@ -245,7 +245,7 @@ class AddLocationToList(FilterClass, UpdateView):
                              f"{ _('selected list does not exist') }: { self.request.GET.get('list', '') }.")
       location = Location.objects.get(slug=self.kwargs['slug'])
     ''' Add as last item on the list, add self.steps to the last order entry '''
-    order = list.getFilteredLocations().last().order + self.steps if list.locations.count() > 0 else self.steps
+    order = list.getFilteredLocations().last().order + self.steps if list.getFilteredLocations().count() > 0 else self.steps
     ''' If last location is home, move home to last location by setting order one past last '''
     if hasattr(self.request.user, 'profile'):
       if list.getFilteredLocations().count() > 0 and list.getFilteredLocations().last().location == self.request.user.profile.home:
@@ -253,8 +253,21 @@ class AddLocationToList(FilterClass, UpdateView):
         home.order = order + self.steps
         home.save()
         messages.add_message(self.request, messages.INFO, f"{ _('add new location before home') }.")
-    ''' Only allow action from Comment User or Staff'''
-    if list.user == self.request.user or self.request.user.is_superuser:
+    ''' Only allow action from Comment User or Staff
+        First, list reasons to authenticate
+    '''
+    authenticated = False
+    if list.user == self.request.user:
+      # User is list owner
+      authenticated = True
+    elif list.visibility == 'f' and self.request.user in list.user.profile.family.all():
+      # User is list owner family
+      authenticated = True
+    elif self.request.user.is_superuser:
+      # User is superuser
+      authenticated = True
+    ''' If authentication is overridden to be True '''
+    if authenticated == True:
       ''' Check if location is not most recent location '''
       if list.getFilteredLocations().all().count() > 0:
         if location == list.getFilteredLocations().all().last().location:

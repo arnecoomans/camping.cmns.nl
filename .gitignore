@@ -10,6 +10,8 @@
 *.bak
 __pycache__
 
+# Venv
+/.venv
 # Keep database outside repo
 *.sqlite3
 

@@ -8,6 +8,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 from django.conf import settings
 from django.shortcuts import redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .snippets.filter_class import FilterClass
 
@@ -17,14 +18,18 @@ from location.models.Profile import Profile, VisitedIn
 from location.models.Location import Location
 from location.models.Tag import Tag
 
-class ProfileView(FilterClass, UpdateView):
-  fields = ['home', 'hide_least_liked', 'order', 'maps_permission', 'ignored_tags']
 
+class ProfileView(LoginRequiredMixin, FilterClass, UpdateView):
+  login_url = "/login/"
+  redirect_field_name = "redirect_to"
+
+  fields = ['home', 'hide_least_liked', 'order', 'maps_permission', 'ignored_tags']
+  
   def get_object(self):
     if not hasattr(self.request.user, 'profile'):
       profile = Profile.objects.create(user=self.request.user)
       messages.add_message(self.request, messages.INFO, f"{ _('created profile for ') } { profile.user.get_full_name() }")
-    return self.request.user.profile 
+    return self.request.user.profile
   
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)

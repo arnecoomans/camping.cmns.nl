@@ -21,7 +21,7 @@ from location.models.Tag import Tag
 
 class ProfileView(LoginRequiredMixin, FilterClass, UpdateView):
   login_url = "/login/"
-  redirect_field_name = "redirect_to"
+  redirect_field_name = "next"
 
   fields = ['home', 'hide_least_liked', 'order', 'maps_permission', 'ignored_tags']
   

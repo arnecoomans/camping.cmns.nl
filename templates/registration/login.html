@@ -4,7 +4,7 @@
   <div class="login card">
     {% if user.is_authenticated %}
       <div class="alert alert-danger" role="alert">
-        {% translate 'you are already logged in'|capfirst %}.
+        {% translate 'you are already logged in'|capfirst %}. {% if request.GET.next %}<a href="{{ request.GET.next }}">{% translate 'click here'|capfirst %}</a> {% translate 'to open the page you were looking at' %}{% endif %}
       </div>
     {% else %}
       {% include 'registration/snippet_login.html' %}

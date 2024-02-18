@@ -203,8 +203,9 @@ class LocationListMaster(FilterClass):
     ''' Fetch Active Filters '''
     context['active_filters']   = self.get_active_filters()
     context['available_filters']= self.get_available_filters()
-    context['min_min_distance'] = floor(self.get_queryset().order_by('distance_to_departure_center').first().distance_to_departure_center / 100) * 100
-    context['max_max_distance'] = ceil(self.get_queryset().order_by('distance_to_departure_center').last().distance_to_departure_center / 100) * 100
+    if self.get_queryset().count() > 0:
+      context['min_min_distance'] = floor(self.get_queryset().order_by('distance_to_departure_center').first().distance_to_departure_center / 100) * 100
+      context['max_max_distance'] = ceil(self.get_queryset().order_by('distance_to_departure_center').last().distance_to_departure_center / 100) * 100
     return context
   
 

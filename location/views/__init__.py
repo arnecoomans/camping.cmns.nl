@@ -4,6 +4,7 @@ from .location.location_list import *
 from .location.location_edit import *
 from .Dashboard import *
 from .Comment import *
+from .aComment import *
 from .Tag import *
 from .List import *
 from .Profile import *

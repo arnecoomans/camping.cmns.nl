@@ -73,7 +73,6 @@
         </ul>
       {% endif %}
     </header>
-
     <!-- Verify User Permissions -->
     {% if location.visibility == 'q' and location.user != user %}
       {% include 'snippets/private.html' %}
@@ -241,9 +240,10 @@
       </div>
     {% endif %}
 
-    <!-- Comments card -->
+
+    <!-- async comments -->
     <div class="comments card">
-      <h2>{% translate 'comments'|capfirst %} ({{ comment_list.all.count }})</h2>
+      <h2>{% translate 'comments'|capfirst %} <span id="comment counter"></span></h2>
       {% if perms.location.add_comment %}
         {% include 'location/comment_add.html' %}
       {% else %}
@@ -251,13 +251,15 @@
           <p><a href="{% url 'login' %}?next={{ request.get_full_path }}">{% translate 'sign in'|capfirst %}</a> {% translate 'or' %} <a href="#">{% translate 'register' %}</a> {% translate 'to comment' %}{% if could_have_comments %} {% translate 'or see comments shared with the community' %}{% endif %}.</p>
         </div>
       {% endif %}
-      {% include 'snippets/list_comments.html' %}
-
+      <div id="comments"><!-- Comments to be placed here async --></div>    
+    </div>
+      
+    
     {% endif %}
   </div>
 {% endblock %}
 
-{% block scriptheader %}
+{% block scriptheader %}  
   {% if maps_permission %}
     <!-- Marker Symbol Documentation:
         https://developers.google.com/maps/documentation/javascript/examples/marker-symbol-custom
@@ -328,5 +330,18 @@
         });
       }
     </script>
+  {% endif %}
+{% endblock %}
+
+{% block scriptfooter %}
+  {% if perms.location.view_comment %}
+    <script>
+      var baseUrl = '{% url 'location:aListCommentsFor' location.slug %}';
+      var csrf_token = '{{ csrf_token }}';
+      var currUser = {{ user.id }};
+      var currAuth = '{{ user.is_staff|default:"False" }}';
+    </script>
+    <script src="{% static 'js/async.js' %}" defer></script>
+    <script src="{% static 'js/comments.js' %}" defer></script>
   {% endif %}
 {% endblock %}

@@ -52,6 +52,9 @@ urlpatterns = [
   path('comment/<pk>/edit/', views.EditComment.as_view(), name='EditComment'),
   path('comments/', views.CommentListView.as_view(), name='comments'),
   path('comments/by:<username>/', views.CommentByUserListView.as_view(), name='CommentsByUser'),
+  path('a/comments/', views.aListComments.as_view(), name='aListComments'),
+  path('a/<location>/comments/', views.aListComments.as_view(), name='aListCommentsFor'),
+  path('a/<location>/comment/', views.aAddComment.as_view(), name='aAddComment'),
 
   path('tags/', views.TagListView.as_view(), name='tags'),
   path('tags/add/to:<slug>/', views.AddTagToLocation.as_view(), name='AddTagToLocation'),

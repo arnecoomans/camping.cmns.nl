@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}" />
     <link rel="stylesheet" href="{% static 'css/app.css' %}" />
     <script src="{% static 'bootstrap/polyfill.min.js' %}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
     {% block scriptheader %}{% endblock %}
     
     <title>{% if scope %}{{ scope|title }} - {% endif %}{{ app_title }}</title>
@@ -34,5 +35,6 @@
 <!-- end of Content -->
 
 {% include 'footer.html' %}
+{% block scriptfooter %}{% endblock %}
   </body>
 </html>

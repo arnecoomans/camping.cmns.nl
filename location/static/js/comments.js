@@ -1,14 +1,11 @@
-$(document).ready(function() {
-  // Fetch new comments
-  console.log('Fetching comments from ' + baseUrl)
+function getAllComments(url, callback) {
   $.ajax({
-    url: baseUrl,
+    url: url,
     headers: {'X-CSRFToken': csrf_token},
     dataType: 'json',
     success: function(data){
       // Based on the status of the response, take the correct action
       // Ranging from bad to good; error, warning, success
-      console.log(data)
       if (data.status.code == 0) {
         $('#messages').append('<div class="alert alert-danger" role="alert">' + data.status.name + ': ' + data.status.message + '</div>');
         return false;
@@ -40,5 +37,12 @@ $(document).ready(function() {
         });
       } 
     }
+  });
+}
+
+$(document).ready(function() {
+  // Fetch new comments on page load
+  getAllComments(baseUrl, function(data){
+    // take no action, the comments are already added to the DOM
   });
 });

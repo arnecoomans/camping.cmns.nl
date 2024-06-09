@@ -14,9 +14,10 @@ $(document).ready(function() {
         return false;
       } else {
         $.each(data['data']['comments'], function(index, comment){
+          var dt = DateTime.fromISO(comment.date_added);
           var display = '<div class="comment card" data-id="comment-' + comment.id + '">' +
                         '  <div class="header">' +
-                        '    <span data-bs-toggle="tooltip" data-bs-placement="top" title="' + comment.date_added + '">' + comment.date_added +  '</span>' +
+                        '    <span data-bs-toggle="tooltip" data-bs-placement="top" title="' + dt.toFormat("dd LLLL y HH:MM") + '">' + dt.toRelative() +  '</span>' +
                         '    <a href="/comments/by:' + comment.user.username + '/">' + comment.user.displayname + '</a>' +
                         '    @ <a href="/location/' + comment.location.slug + '/">' + comment.location.name + '</a>' +
                         '   (' + comment.visibility + ')' +

@@ -7,6 +7,7 @@ from django.utils.translation import gettext as _
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.http import JsonResponse
+from django.utils.html import strip_tags
 import markdown
 
 from .snippets.a_helper import aHelper
@@ -47,7 +48,7 @@ class aListComments(aHelper, FilterClass, ListView):
           'name': comment.location.name,
           'id': comment.location.id,
         },
-        'content': md.convert(comment.content),
+        'content': md.convert(strip_tags(comment.content)),
         'user': { 
           'id': comment.user.id,
           'username': comment.user.username,

@@ -7,6 +7,7 @@ from django.utils.translation import gettext as _
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.http import JsonResponse
+import markdown
 
 from .snippets.a_helper import aHelper
 from .snippets.filter_class import FilterClass
@@ -37,6 +38,7 @@ class aListComments(aHelper, FilterClass, ListView):
     ''' Filter comments by status and visibility '''
     comments = self.filter(comments).order_by('-date_modified').distinct()
     ''' Add comments to response '''
+    md = markdown.Markdown(extensions=["fenced_code"])
     for comment in comments:
       response['data']['comments'].append({
         'id': comment.id,
@@ -45,7 +47,7 @@ class aListComments(aHelper, FilterClass, ListView):
           'name': comment.location.name,
           'id': comment.location.id,
         },
-        'content': comment.content,
+        'content': md.convert(comment.content),
         'user': { 
           'id': comment.user.id,
           'username': comment.user.username,

@@ -251,6 +251,7 @@
           <p><a href="{% url 'login' %}?next={{ request.get_full_path }}">{% translate 'sign in'|capfirst %}</a> {% translate 'or' %} <a href="#">{% translate 'register' %}</a> {% translate 'to comment' %}{% if could_have_comments %} {% translate 'or see comments shared with the community' %}{% endif %}.</p>
         </div>
       {% endif %}
+      <div id="comment-messages"><!-- Comment messages to be placed here --></div>
       <div id="comments"><!-- Comments to be placed here async --></div>    
     </div>
       
@@ -336,7 +337,8 @@
 {% block scriptfooter %}
   {% if perms.location.view_comment %}
     <script>
-      var baseUrl = '{% url 'location:aListCommentsFor' location.slug %}';
+      var fetchCommentUrl = '{% url 'location:aListCommentsFor' location.slug %}';
+      
       var csrf_token = '{{ csrf_token }}';
       var currUser = {{ user.id }};
       var currAuth = '{{ user.is_staff|default:"False" }}';

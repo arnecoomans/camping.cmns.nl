@@ -40,7 +40,9 @@ class aHelper:
     response['status']['message'] = 'Location not found'
     return JsonResponse(response)
 
-  def getInputError(self, field):
+  def getInputError(self, field, message=None):
     response = self.getDefaultData(0)
     response['status']['message'] = f'No {field} provided or supplied input is invalid'
+    if message:
+      response['status']['message'] = f"{ response['status']['message'] }: { message }"
     return JsonResponse(response)

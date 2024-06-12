@@ -276,81 +276,54 @@
       let map;
 
       async function initMap() {
-        const { Map } = await google.maps.importLibrary("maps");
+        const { Map, InfoWindow } = await google.maps.importLibrary("maps");
+        const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
+        const infoWindow = new InfoWindow();
 
         map = new Map(document.getElementById("map"), {
           center: { lat: {{ location.coord_lat}}, lng: {{ location.coord_lng }} },
           zoom: {% if location.isActivity %}13{% else %}8{% endif %},
+          mapId: '{{ location.slug }}',
         });
-      }
-      initMap();
-    </script>
-    
-    {% comment %} <script>
-      function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: {
-            lat: {{ location.coord_lat}},
-            lng: {{ location.coord_lng }}
-          },
-          zoom: {% if location.isActivity %}13{% else %}9{% endif %}
+        
+        // Define marker icons for main point
+        const locationTag = document.createElement("div");
+        locationTag.className = "location-tag primary";
+        locationTag.textContent = "{{ location.name }}";
+        {% comment %} locationTag.innerHTML = "<a href='{{ location.get_absolute_url }}'>{{ location.name }}</a>"; {% endcomment %}
+
+        const marker = new AdvancedMarkerElement({
+          map,
+          position: { lat: {{ location.coord_lat }}, lng: {{ location.coord_lng }} },
+          title: "{{ location.name }}",
+          collisionBehavior: 'REQUIRED_AND_HIDES_OPTIONAL',
+          zIndex:99999999,
         });
-
-        // Define marker icons for main and secondary points
-        var mainMarkerIcon = "{% static 'bootstrap-icons/geo-fill-main.png' %}";
-        var locationMarkerIcon = "{% static 'bootstrap-icons/geo-fill-green.png' %}";
-        var activityMarkerIcon = "{% static 'bootstrap-icons/geo-fill-secondary.png' %}";
-
-        // Add markers to the map
-        var markers = [{
-          lat: {{ location.coord_lat }},
-          lng: {{ location.coord_lng }},
-          title: '{{ location.slug }}',
-          icon: mainMarkerIcon,
-          content: '{{ location.name }}'
-        },
+        
+        // List secondary locations
         {% if user.is_authenticated %}
           {% for location in nearby_locations %}
-            {
-              lat: {{ location.0.coord_lat }},
-              lng: {{ location.0.coord_lng}},
-              title: '{{ location.0.slug }}',
-              icon: {% if location.0.isActivity %}activityMarkerIcon{% else %}locationMarkerIcon{% endif %},
-              content: '<a href="{{ location.0.get_absolute_url }}">{{ location.0.name }}</a>'
-            },
+            const pin{{ location.0.id }} = new PinElement({
+              scale: 0.{% if location.0.isActivity %}7{% else %}8{% endif %},
+              background: "#{% if location.0.isActivity %}666{% else %}0000ff{% endif %}",
+              borderColor: "#{% if location.0.isActivity %}333{% else %}000033{% endif %}",
+              glyphColor: "white",
+
+            });
+            secondarymarker = new AdvancedMarkerElement({
+              map,
+              position: { lat: {{ location.0.coord_lat }}, lng: {{ location.0.coord_lng }} },
+              title: "{{ location.0.name }}",
+              content: pin{{ location.0.id }}.element,
+              {% comment %} gmpClickable: true, {% endcomment %}
+              collisionBehavior: 'REQUIRED',
+            });
           {% endfor %}
         {% endif %}
-          // Add more markers as needed
-        ];
-
-        // Loop through markers and add them to the map
-        markers.forEach(function (marker, index) {
-          var markerInstance = new google.maps.Marker({
-            position: {
-              lat: marker.lat,
-              lng: marker.lng
-            },
-            map: map,
-            title: marker.title,
-            icon: marker.icon
-          });
-
-          // Create an InfoWindow for each marker
-          var infoWindow = new google.maps.InfoWindow({
-            content: marker.content
-          });
-
-          // Add a click event to show the InfoWindow when the marker is clicked
-          markerInstance.addListener('click', function () {
-            infoWindow.open(map, markerInstance);
-          });
-          // Open the InfoWindow for the first marker by default
-          if (index === 0) {
-              infoWindow.open(map, markerInstance);
-          }
-        });
       }
-    </script> {% endcomment %}
+
+      initMap();
+    </script>
   {% endif %}
 {% endblock %}
 

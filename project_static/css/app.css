@@ -42,6 +42,32 @@ div#map {
 div#map > p:first-child {
   margin-top: 140px;
 }
+/* HTML marker styles */
+.location-tag {
+  background-color: #4285F4;
+  border-radius: 8px;
+  padding: 10px 15px;
+  position: relative;
+}
+.location-tag, .location-tag a {
+  color: #FFFFFF;
+}
+
+.location-tag.primary {
+  font-size: 110%;
+}
+.location-tag::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translate(-50%, 0);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid #4285F4;
+}
 
 /** Action list */
 ul.action.list {

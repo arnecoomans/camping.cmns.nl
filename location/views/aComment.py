@@ -15,6 +15,7 @@ from .snippets.filter_class import FilterClass
 
 from location.models.Comment import Comment
 
+md = markdown.Markdown(extensions=["fenced_code"])
 
 class aListComments(aHelper, FilterClass, ListView):
   model = Comment
@@ -39,7 +40,6 @@ class aListComments(aHelper, FilterClass, ListView):
     ''' Filter comments by status and visibility '''
     comments = self.filter(comments).order_by('-date_modified').distinct()
     ''' Add comments to response '''
-    md = markdown.Markdown(extensions=["fenced_code"])
     for comment in comments:
       response['data']['comments'].append({
         'id': comment.id,
@@ -52,7 +52,7 @@ class aListComments(aHelper, FilterClass, ListView):
         'user': { 
           'id': comment.user.id,
           'username': comment.user.username,
-          'displayname': comment.user.get_full_name(),
+          'displayname': comment.user.get_full_name() if comment.user.get_full_name() else comment.user.username,
         },
         'date_added': comment.date_added,
         'visibility': comment.get_visibility_display(),
@@ -71,23 +71,39 @@ class aAddComment(aHelper, CreateView):
     location = self.getLocation()
     if not location:
       return self.getLocationError()
-    ''' Validate comment '''
-    comment = self.request.GET.get('comment', False)
-    if not comment:
+    ''' Validate comment 
+        Comment should be provided in POST, but GET is also allowed for testing purposes
+    '''
+    content = self.request.POST.get('content', False) if self.request.POST else self.request.GET.get('content', False)
+    if not content:
       return self.getInputError('comment')
+    ''' Remove HTML tags from comment '''
+    content = strip_tags(content)
+    ''' Comment should be at least 3 characters long '''
+    if len(content) < 3:
+      return self.getInputError('comment', 'Comment should be at least 3 characters long')
     ''' Validate visibility '''
     visibility = self.request.GET.get('visibility', 'c')
     if visibility not in ['p', 'c', 'f', 'q']:
       return self.getInputError('visibility')
     ''' Proceed processing request '''
     response = self.getDefaultData()
-    result = Comment.objects.create(location=location, user=self.request.user, content=comment, visibility=visibility)
+    comment = Comment.objects.create(location=location, user=self.request.user, content=content, visibility=visibility)
     response['data']['comment'] = {
-      'id': result.id,
-      'content': result.content,
-      'user': result.user.username,
-      'date_added': result.date_added,
-      'visibility': result.visibility,
+      'id': comment.id,
+        'location': { 
+          'slug': comment.location.slug,
+          'name': comment.location.name,
+          'id': comment.location.id,
+        },
+        'content': md.convert(strip_tags(comment.content)),
+        'user': { 
+          'id': comment.user.id,
+          'username': comment.user.username,
+          'displayname': comment.user.get_full_name(),
+        },
+        'date_added': comment.date_added,
+        'visibility': comment.get_visibility_display(),
     }
     return JsonResponse(response)
   

@@ -317,6 +317,7 @@
               content: pin{{ location.0.id }}.element,
               {% comment %} gmpClickable: true, {% endcomment %}
               collisionBehavior: 'REQUIRED',
+              zIndex: {% if location.isActivity %}0{% else %}1{% endif %},
             });
           {% endfor %}
         {% endif %}

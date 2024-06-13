@@ -12,6 +12,7 @@ from django.utils.html import strip_tags
 from .snippets.a_helper import aHelper
 from .snippets.filter_class import FilterClass
 
+from location.models.Location import Location
 from location.models.Tag import Tag
 
 
@@ -40,4 +41,40 @@ class aListTags(aHelper, FilterClass, ListView):
         'url': tag.get_absolute_url(),
         'locations': tag.locations.count(),
       })
+    return JsonResponse(response)
+
+class aAddTag(aHelper, UpdateView):
+  model = Location
+  
+  def get(self, request, *args, **kwargs):
+    ''' Validate location '''
+    location = self.getLocation()
+    if not location:
+      return self.getLocationError()
+    ''' Validate Tag '''
+    tag = self.request.POST.get('tag', False) or self.request.GET.get('tag', False)
+    try:
+      tag = int(tag) if tag else False
+    except:
+      tag = False
+    if not tag:
+      return self.getInputError('tag', 'No tag provided or tag is invalid.')
+    ''' Proceed processing request '''
+    response = self.getDefaultData()
+    ''' Togggle Tag '''
+    if tag in location.tags.all().values_list('id', flat=True):
+      ''' Remove Tag '''
+      location.tags.remove(tag)
+      response['data']['tag'] = {
+        'name': tag,
+        'action': 'removed',
+      }
+    else:
+      ''' Add Tag '''
+      location.tags.add(tag)
+      response['data']['tag'] = {
+        'name': tag,
+        'action': 'added',
+        'tags': list(location.tags.all().values_list('id', flat=True)),
+      }
     return JsonResponse(response)

@@ -14,6 +14,7 @@ function getTagDisplay(tag) {
 }
 
 function getAllTags(url, callback) {
+  $('#tags').empty();
   $.ajax({
     url: url,
     headers: {'X-CSRFToken': csrf_token},
@@ -22,7 +23,7 @@ function getAllTags(url, callback) {
       // Based on the status of the response, take the correct action
       // Ranging from bad to good; error, warning, success
       if (data.status.code == 0) {
-        $('#comment-messages').append('<div class="alert alert-danger" role="alert">' + data.status.name + ' when loading comments: ' + data.status.message + '</div>');
+        $('#tag-messages').append('<div class="alert alert-danger" role="alert">' + data.status.name + ' when loading tags: ' + data.status.message + '</div>');
         return false;
       } else {
         if (data['data']['tags'].length > 0) {
@@ -36,43 +37,54 @@ function getAllTags(url, callback) {
           }
           $('#tags').append(getTagDisplay(tag) + seperator);
         });
+        $('#tags').append(' &nbsp;&nbsp;<button class="btn btn-outline-secondary" id="addtag">+</a>');
       } 
     }
   });
 }
 
 $(document).ready(function() {
+  $('.row.addtag').hide();
   // Fetch new comments on page load
   getAllTags(fetchTagUrl, function(data){
     // take no action, the comments are already added to the DOM
   });
 
-  // Handle Add Comment
-  $('#add-comment').click(function(){
-    // Fetch required fields
-    var url = $(this).data('url');
-    var content = $('textarea[name="content"]').val();
-    var visibility = $('select[name="visibility"]').val();
-    /// Submit the data to the server
+  // Show Add Tag Form
+  $('#tags').on('click', '#addtag', function(){
+    $('.row.addtag').show();
+    $(this).hide();
+  });
+
+  // Handle Add Tag
+  $('#addtagbutton').click(function(){
+    tag = $('select[name="addtag"]').val();
+    if (tag == '-') {
+      $('#tagmessages').append('<div class="alert alert-danger" role="alert">No tag selected</div>');
+      return false;
+    }
+    url = $('select[name="addtag"]').data('url');
     $.ajax({
       url: url,
       headers: {'X-CSRFToken': csrf_token},
       data: {
-        'content': content,
-        'visibility': visibility,
+        'tag': tag,
       },
       dataType: 'json',
       success: function(data){
         if (data.status.code == 0) {
-          $('#comment-messages').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">' + data.status.name + ': ' + data.status.message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+          $('#tagmessages').append('<div class="alert alert-danger" role="alert">' + data.status.name + ': ' + data.status.message + '</div>');
           return false;
         } else {
-          $('#comment-messages').append('<div class="alert alert-success alert-dismissible fade show" role="alert">Comment added succesfully!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
-          $('#comments').prepend(getCommentDisplay(data.data.comment));
-          $('textarea[name="content"]').val('');
+          getAllTags(fetchTagUrl, function(data){
+            // take no action, the comments are already added to the DOM
+          });
+          $('select[name="addtag"]').prop('selectedIndex', 0);
+          $('select[name="addtag"] option[value="' + tag + '"]').remove();
+          $('.row.addtag').hide();
+          $('#addtag').show();
         }
       }
     });
   });
-
 });

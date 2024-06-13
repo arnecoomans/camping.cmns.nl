@@ -186,8 +186,24 @@
 
             {% comment %} {% for tag in tags %}
               {% include 'snippets/tag.html' %}{% if not forloop.last %}, {% endif %}
-            {% endfor %} {% endcomment %}
+            {% endfor %} 
             <a href="{% url 'location:AddTagToLocation' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'add tag to'|capfirst %} {{ location.name }}">+</a>
+            {% endcomment %}
+          </div>
+        </div>
+        <div class="row addtag">
+          <div class="col-3 title-col"></div>
+          <div class="col-6 tag" id="addtag">
+            <select class="form-control" id="addtag" name="addtag" data-url="{% url 'location:aAddTag' location.slug %}">
+              <option value="-">-----</option>
+              {% for tag in available_tags %}
+                <option value="{{ tag.id }}">{% if tag.parent %}{{ tag.parent|capfirst }}: {% endif %}{{ tag.name }}</option>
+              {% endfor %}
+            </select>
+            <div id="tagmessages"></div>
+          </div>
+          <div class="col-3">
+            <button class="btn btn-primary" id="addtagbutton">{% translate 'add'|capfirst %}</button>
           </div>
         </div>
       {% endif %}

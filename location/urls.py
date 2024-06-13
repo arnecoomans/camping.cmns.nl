@@ -64,6 +64,7 @@ urlpatterns = [
   path('tag/<slug>/edit/', views.EditTag.as_view(), name='EditTag'),
   path('tag/<slug>/delete/', views.ToggleDeleteTag.as_view(), name='ToggleDeleteTag'),
   path('a/<location>/tags/', views.aListTags.as_view(), name='aListTagsFor'),
+  path('a/<location>/tag/', views.aAddTag.as_view(), name='aAddTag'),
   
 
   path('lists/', views.ListListView.as_view(), name='lists'),

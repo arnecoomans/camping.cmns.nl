@@ -70,6 +70,8 @@ class LocationView(ListView, FilterClass):
         Fetch a queryset of lists where this location is not mentioned in
     '''
     context['available_lists'] = self.get_available_lists()
+    ''' Available tags '''
+    context['available_tags'] = self.get_available_tags()
     ''' User dependant functions '''
     if self.request.user.is_authenticated:
       context['has_bucketlist'] = True if List.objects.filter(name='Bucketlist', user=self.request.user).count() > 0 else False
@@ -125,6 +127,12 @@ class LocationView(ListView, FilterClass):
     available_lists = self.filter_visibility(available_lists)
     available_lists = available_lists.order_by().distinct()
     return available_lists
+
+  ''' Availbable Tags '''
+  def get_available_tags(self):
+    tags = Tag.objects.exclude(locations=self.get_location()).exclude(children__gt=1)
+    tags = self.filter(tags).order_by('parent__name', 'name').distinct()
+    return tags
 
   ''' Get Visitors '''
   def get_visitors(self):

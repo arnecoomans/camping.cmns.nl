@@ -329,7 +329,7 @@
 {% endblock %}
 
 {% block scriptfooter %}
-  {% if request.user.is_authenticatd and perms.location.view_comment or allow_unauthenticated_read_comments %}
+  {% if request.user.is_authenticated and perms.location.view_comments or allow_unauthenticated_read_comments%}
     <script>
       var fetchCommentUrl = '{% url 'location:aListCommentsFor' location.slug %}';
       

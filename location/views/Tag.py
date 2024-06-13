@@ -50,7 +50,6 @@ class AddTag(CreateView):
         is filtered to avoid multi-level tags and recursion '''
     context['available_parent_tags'] = Tag.objects.filter(status='p', parent=None)
     return context
-
   
   def post(self, request, *args, **kwargs):
     ''' Build fields '''

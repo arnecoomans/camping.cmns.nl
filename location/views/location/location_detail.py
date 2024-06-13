@@ -70,6 +70,8 @@ class LocationView(ListView, FilterClass):
         Fetch a queryset of lists where this location is not mentioned in
     '''
     context['available_lists'] = self.get_available_lists()
+    ''' Available tags '''
+    context['available_tags'] = self.get_available_tags()
     ''' User dependant functions '''
     if self.request.user.is_authenticated:
       context['has_bucketlist'] = True if List.objects.filter(name='Bucketlist', user=self.request.user).count() > 0 else False
@@ -79,7 +81,8 @@ class LocationView(ListView, FilterClass):
       if hasattr(location.user, 'profile'):
         context['family'] = location.user.profile.family.all()
     ''' Nearby '''
-    context['nearby_locations'] = self.get_nearby()
+    context['nearby_locations'] = self.get_nearby(settings.NEARBY_RANGE)
+    context['map_locations'] = self.get_nearby(settings.MAP_RANGE)
     context['visitors'] = self.get_visitors()
     ''' Media '''
     context['media'] = self.get_media()
@@ -125,6 +128,12 @@ class LocationView(ListView, FilterClass):
     available_lists = available_lists.order_by().distinct()
     return available_lists
 
+  ''' Availbable Tags '''
+  def get_available_tags(self):
+    tags = Tag.objects.exclude(locations=self.get_location()).exclude(children__gt=1)
+    tags = self.filter(tags).order_by('parent__name', 'name').distinct()
+    return tags
+
   ''' Get Visitors '''
   def get_visitors(self):
     if self.request.user.is_authenticated:
@@ -134,7 +143,7 @@ class LocationView(ListView, FilterClass):
       return result
 
   ''' Get nearby '''
-  def get_nearby(self):
+  def get_nearby(self, range=settings.NEARBY_RANGE):
     all_locations = Location.objects.exclude(pk=self.get_location().id)
     all_locations = self.filter_status(all_locations)
     all_locations = self.filter_visibility(all_locations)
@@ -143,7 +152,7 @@ class LocationView(ListView, FilterClass):
     for location in all_locations:
       distance = geodesic((self.get_location().coord_lat, self.get_location(
       ).coord_lng), (location.coord_lat, location.coord_lng)).kilometers
-      if distance <= settings.NEARBY_RANGE:
+      if distance <= range:
         nearby_locations.append((location, distance))
     nearby_locations.sort(key=lambda x: x[1])
     return nearby_locations

@@ -33,7 +33,7 @@ function getAllComments(url, callback) {
       // Based on the status of the response, take the correct action
       // Ranging from bad to good; error, warning, success
       if (data.status.code == 0) {
-        $('#messages').append('<div class="alert alert-danger" role="alert">' + data.status.name + ': ' + data.status.message + '</div>');
+        $('#comment-messages').append('<div class="alert alert-danger" role="alert">' + data.status.name + ' when loading comments: ' + data.status.message + '</div>');
         return false;
       } else {
         $.each(data['data']['comments'], function(index, comment){

@@ -10,7 +10,7 @@
           <option value="q">{% translate 'private'|capfirst %}</option>
           <option value="f">{% translate 'family'|capfirst %}</option>
           <option value="c" selected>{% translate 'community'|capfirst %}</option>
-          <option value="p">{% translate 'public'|capfirst %}</option>
+          {% if allow_unauthenticated_read_comments %}<option value="p">{% translate 'public'|capfirst %}</option>{% endif %}
         </select>
         <label for="comment-visibility">{% translate 'select comment visibility'|capfirst %}</label>
         <input class="btn btn-primary" type="submit" value="{% translate 'share comment'|title %}" id="add-comment" data-url="{% url 'location:aAddComment' location.slug %}">

@@ -22,7 +22,7 @@ class aListComments(aHelper, FilterClass, ListView):
 
   def get(self, request, *args, **kwargs):
     ''' Validate that user is logged in '''
-    if self.verifyUserAuthenticated() is not True:
+    if self.verifyUserAuthenticated() is not True and not settings.ALLOW_UNAUTHENTICATED_READ_COMMENTS:
       return self.verifyUserAuthenticated()
     ''' Validate location '''
     location = self.getLocation()

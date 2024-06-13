@@ -282,7 +282,7 @@
 
         map = new Map(document.getElementById("map"), {
           center: { lat: {{ location.coord_lat}}, lng: {{ location.coord_lng }} },
-          zoom: {% if location.isActivity %}13{% else %}8{% endif %},
+          zoom: {% if location.isActivity %}13{% else %}9{% endif %},
           mapId: '{{ location.slug }}',
         });
         

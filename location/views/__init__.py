@@ -6,6 +6,7 @@ from .Dashboard import *
 from .Comment import *
 from .aComment import *
 from .Tag import *
+from .aTag import *
 from .List import *
 from .Profile import *
 from .Chain import *

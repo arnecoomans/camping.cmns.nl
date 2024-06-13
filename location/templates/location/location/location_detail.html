@@ -180,11 +180,13 @@
       <!-- Tags -->
       {% if user.is_authenticated %}
         <div class="row">
-          <div class="col-3 title-col">{% translate 'tags'|title %}:</div>
-          <div class="col-9 tag-list">
-            {% for tag in tags %}
+          <div class="col-3 title-col">{% translate 'tags'|title %}<span id="tagcounter"></span>:</div>
+          <div class="col-9 tag-list" id="tags">
+            <!-- aSync tags -->
+
+            {% comment %} {% for tag in tags %}
               {% include 'snippets/tag.html' %}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
+            {% endfor %} {% endcomment %}
             <a href="{% url 'location:AddTagToLocation' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'add tag to'|capfirst %} {{ location.name }}">+</a>
           </div>
         </div>
@@ -302,7 +304,7 @@
         
         // List secondary locations
         {% if user.is_authenticated %}
-          {% for location in nearby_locations %}
+          {% for location in map_locations %}
             const pin{{ location.0.id }} = new PinElement({
               scale: 0.{% if location.0.isActivity %}7{% else %}8{% endif %},
               background: "#{% if location.0.isActivity %}666{% else %}0000ff{% endif %}",
@@ -332,12 +334,14 @@
   {% if request.user.is_authenticated and perms.location.view_comments or allow_unauthenticated_read_comments%}
     <script>
       var fetchCommentUrl = '{% url 'location:aListCommentsFor' location.slug %}';
-      
+      var fetchTagUrl = '{% url 'location:aListTagsFor' location.slug %}';
+
       var csrf_token = '{{ csrf_token }}';
       var currUser = {{ user.id }};
       var currAuth = '{{ user.is_staff|default:"False" }}';
     </script>
     <script src="{% static 'js/async.js' %}" defer></script>
     <script src="{% static 'js/comments.js' %}" defer></script>
+    <script src="{% static 'js/tags.js' %}" defer></script>
   {% endif %}
 {% endblock %}

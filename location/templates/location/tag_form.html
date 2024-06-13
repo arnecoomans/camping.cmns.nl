@@ -2,7 +2,7 @@
 {% load i18n %}
 {% block content %}
   {% if user.is_authenticated %}
-    <div class="edit comment card">
+    <div class="edit tag card">
       <h1>Tag</h1>
       <form method="post" action="">
         {% csrf_token %}

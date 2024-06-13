@@ -63,6 +63,7 @@ urlpatterns = [
   path('tag/<slug>/', views.TagView.as_view(), name='tag'),
   path('tag/<slug>/edit/', views.EditTag.as_view(), name='EditTag'),
   path('tag/<slug>/delete/', views.ToggleDeleteTag.as_view(), name='ToggleDeleteTag'),
+  path('a/<location>/tags/', views.aListTags.as_view(), name='aListTagsFor'),
   
 
   path('lists/', views.ListListView.as_view(), name='lists'),

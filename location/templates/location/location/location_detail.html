@@ -182,25 +182,13 @@
         <div class="row">
           <div class="col-3 title-col">{% translate 'tags'|title %}<span id="tagcounter"></span>:</div>
           <div class="col-9 tag-list" id="tags">
-            <!-- aSync tags -->
-
-            {% comment %} {% for tag in tags %}
-              {% include 'snippets/tag.html' %}{% if not forloop.last %}, {% endif %}
-            {% endfor %} 
-            <a href="{% url 'location:AddTagToLocation' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'add tag to'|capfirst %} {{ location.name }}">+</a>
-            {% endcomment %}
           </div>
         </div>
         <div class="row addtag">
           <div class="col-3 title-col"></div>
           <div class="col-6 tag" id="addtag">
-            <select class="form-control" id="addtag" name="addtag" data-url="{% url 'location:aAddTag' location.slug %}">
-              <option value="-">-----</option>
-              {% for tag in available_tags %}
-                <option value="{{ tag.id }}">{% if tag.parent %}{{ tag.parent|capfirst }}: {% endif %}{{ tag.name }}</option>
-              {% endfor %}
-            </select>
-            <div id="tagmessages"></div>
+            <!-- Use Bootstrap Tag Suggestions for autocomplete, allow new tags and parents to be created-->
+            <input id="autocomplete" type="text" class="form-control" placeholder="{% translate 'start typing'|capfirst %}..." name="addtag" data-url="{% url 'location:aAddTag' location.slug %}">
           </div>
           <div class="col-3">
             <button class="btn btn-primary" id="addtagbutton">{% translate 'add'|capfirst %}</button>
@@ -278,7 +266,7 @@
   </div>
 {% endblock %}
 
-{% block scriptheader %}  
+{% block scriptheader %}
   {% if maps_permission %}
     <!-- Marker Symbol Documentation:
         https://developers.google.com/maps/documentation/javascript/examples/marker-symbol-custom
@@ -347,11 +335,12 @@
 {% endblock %}
 
 {% block scriptfooter %}
+
   {% if request.user.is_authenticated and perms.location.view_comments or allow_unauthenticated_read_comments%}
     <script>
       var fetchCommentUrl = '{% url 'location:aListCommentsFor' location.slug %}';
       var fetchTagUrl = '{% url 'location:aListTagsFor' location.slug %}';
-
+      var fetchTagSuggestions = '{% url 'location:aListTagSuggestionsFor' location.slug %}';
       var csrf_token = '{{ csrf_token }}';
       var currUser = {{ user.id }};
       var currAuth = '{{ user.is_staff|default:"False" }}';

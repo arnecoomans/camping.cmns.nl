@@ -5,7 +5,7 @@ function getTagDisplay(tag) {
   } else if (tag.list_as == 'd') {
     display = display + '<img src="/static/bootstrap-icons/hand-thumbs-down-fill.svg">'
   }
-  display = display + tag.name
+  display = display + tag.parent + tag.name
   if (tag.locations > 1) {
     display = display + ' <sup>' + tag.locations + '</sup>'
   }
@@ -56,14 +56,31 @@ $(document).ready(function() {
     $(this).hide();
   });
 
+  $('#autocomplete').autocomplete({
+    source: function(request, response) {
+        $.ajax({
+            url: fetchTagSuggestions, // Update with your API endpoint
+            data: {
+                query: request.term // The current input string
+            },
+            success: function(data) {
+                response(data); // Assuming your API returns a JSON array of suggestions
+            }
+        });
+    },
+    minLength: 2 // Only start suggesting after 2 characters have been typed
+});
+
   // Handle Add Tag
   $('#addtagbutton').click(function(){
-    tag = $('select[name="addtag"]').val();
-    if (tag == '-') {
-      $('#tagmessages').append('<div class="alert alert-danger" role="alert">No tag selected</div>');
+    tag = $('input[name="addtag"]').val();
+    console.log(tag);
+    if (tag == undefined) {
+      $('#tagmessages').append('<div class="alert alert-danger" role="alert">No tag entered</div>');
       return false;
     }
-    url = $('select[name="addtag"]').data('url');
+    url = $('input[name="addtag"]').data('url');
+    console.log(url);
     $.ajax({
       url: url,
       headers: {'X-CSRFToken': csrf_token},
@@ -72,6 +89,7 @@ $(document).ready(function() {
       },
       dataType: 'json',
       success: function(data){
+        console.log(data)
         if (data.status.code == 0) {
           $('#tagmessages').append('<div class="alert alert-danger" role="alert">' + data.status.name + ': ' + data.status.message + '</div>');
           return false;
@@ -79,12 +97,29 @@ $(document).ready(function() {
           getAllTags(fetchTagUrl, function(data){
             // take no action, the comments are already added to the DOM
           });
-          $('select[name="addtag"]').prop('selectedIndex', 0);
-          $('select[name="addtag"] option[value="' + tag + '"]').remove();
+          $('input[name="addtag"]').val('');
           $('.row.addtag').hide();
           $('#addtag').show();
         }
       }
     });
+  });
+
+  // Capitalize input
+  $('input[name="addtag"]').on('input', function() {
+    var inputVal = $(this).val();
+    var capitalizedVal = inputVal.replace(/\b\w/g, function(char) {
+        return char.toUpperCase();
+    });
+    $(this).val(capitalizedVal);
+});
+  
+  // Accept enter to submit tag
+  $('input[name="addtag"]').keypress(function(event) {
+    // Check if the key pressed is Enter (key code 13)
+    if (event.which === 13) {
+        event.preventDefault(); // Prevent the default action if needed
+        $('#addtagbutton').click(); // Trigger the button click
+    }
   });
 });

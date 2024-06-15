@@ -64,8 +64,8 @@ urlpatterns = [
   path('tag/<slug>/edit/', views.EditTag.as_view(), name='EditTag'),
   path('tag/<slug>/delete/', views.ToggleDeleteTag.as_view(), name='ToggleDeleteTag'),
   path('a/tags/suggest/', views.aSuggestTags.as_view(), name='aListTagSuggestions'),
-  path('a/<location>/tags/suggest/', views.aSuggestTags.as_view(), name='aListTagSuggestionsFor'),
-  path('a/<location>/tags/', views.aListTags.as_view(), name='aListTagsFor'),
+  path('a/<location>/tag/suggest/', views.aSuggestTags.as_view(), name='aListTagSuggestionsFor'),
+  path('a/<location>/tag/list/', views.aListTags.as_view(), name='aListTagsFor'),
   path('a/<location>/tag/', views.aAddTag.as_view(), name='aAddTag'),
   
 
@@ -98,6 +98,13 @@ urlpatterns = [
 
   path('chain/add/', views.AddChain.as_view(), name='AddChainTo'),
   path('chain/add/<slug>/', views.AddChain.as_view(), name='AddChainTo'),
+  path('a/chains/suggest/', views.aSuggestChain.as_view(), name='aListChainSuggestions'),
+  path('a/<location>/chains/', views.aListChains.as_view(), name='aListChainsFor'),
+  path('a/<location>/chains/suggest/', views.aSuggestChain.as_view(), name='aListChainSuggestionsFor'),
+
+  path('a/<location>/category/list/', views.aListCategories.as_view(), name='aListCategoriesFor'),
+  path('a/<location>/category/suggest/', views.aSuggestCategories.as_view(), name='aListCategorySuggestionsFor'),
+  path('a/<location>/category/', views.aAddCategory.as_view(), name='aAddCategory'),
 
   path('media/add/<slug>/', views.AddMediaToLocation.as_view(), name='AddMediaToLocation'),
   path('media/stack/<slug>/', views.StackView.as_view(), name='MediaStack'),

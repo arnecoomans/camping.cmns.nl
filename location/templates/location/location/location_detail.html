@@ -168,7 +168,9 @@
       <!-- Category -->
       <div class="row">
         <div class="col-3 title-col">{% translate 'category'|title %}:</div>
-        <div class="col-9"><a href="{% url 'location:locations' %}?category={{ location.category.slug }}">{{ location.category.name|title }}</a>{% if location.additional_category.all.count > 0 and user.is_authenticated %}, {% for category in location.additional_category.all %}<a href="{% url 'location:locations' %}?category={{ category.slug }}">{{ category|title }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}</div>
+        <div class="col-9" id="categories">
+          <a href="{% url 'location:locations' %}?category={{ location.category.slug }}">{{ location.category.name|title }}</a>{% if location.additional_category.all.count > 0 and user.is_authenticated %}, {% for category in location.additional_category.all %}<a href="{% url 'location:locations' %}?category={{ category.slug }}">{{ category|title }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}
+        </div>
       </div>
       <!-- Chain -->
       {% if location.chain %}
@@ -179,19 +181,18 @@
       {% endif %}
       <!-- Tags -->
       {% if user.is_authenticated %}
-        <div class="row">
-          <div class="col-3 title-col">{% translate 'tags'|title %}<span id="tagcounter"></span>:</div>
-          <div class="col-9 tag-list" id="tags">
-          </div>
+        <div class="row autoload" data-url="{% url 'location:aListTagsFor' location.slug %}" data-type="tag">
+          <div class="col-3 title-col">{% translate 'tags'|title %}<span class="valuecounter"></span>:</div>
+          <div class="col-8 list-col" id="tags"></div>
+          <div class="col-1 button-col"><button type="button" class="btn btn-outline-secondary show-edit">+</button></div>
         </div>
-        <div class="row addtag">
+        <div class="row add_autosuggest">
           <div class="col-3 title-col"></div>
           <div class="col-6 tag" id="addtag">
-            <!-- Use Bootstrap Tag Suggestions for autocomplete, allow new tags and parents to be created-->
-            <input id="autocomplete" type="text" class="form-control" placeholder="{% translate 'start typing'|capfirst %}..." name="addtag" data-url="{% url 'location:aAddTag' location.slug %}">
+            <input type="text" class="autocomplete autocapitalize form-control" placeholder="{% translate 'start typing'|capfirst %}..." name="addtag" data-suggestions="{% url 'location:aListTagSuggestionsFor' location.slug %}" data-url="{% url 'location:aAddTag' location.slug %}">
           </div>
           <div class="col-3">
-            <button class="btn btn-primary" id="addtagbutton">{% translate 'add'|capfirst %}</button>
+            <button class="btn btn-primary submit-value">{% translate 'add'|capfirst %}</button>
           </div>
         </div>
       {% endif %}
@@ -338,15 +339,19 @@
 
   {% if request.user.is_authenticated and perms.location.view_comments or allow_unauthenticated_read_comments%}
     <script>
+      var tagBaseUrl = '/a/{{ location.slug }}/tag/';
       var fetchCommentUrl = '{% url 'location:aListCommentsFor' location.slug %}';
-      var fetchTagUrl = '{% url 'location:aListTagsFor' location.slug %}';
-      var fetchTagSuggestions = '{% url 'location:aListTagSuggestionsFor' location.slug %}';
+      
       var csrf_token = '{{ csrf_token }}';
       var currUser = {{ user.id }};
       var currAuth = '{{ user.is_staff|default:"False" }}';
+      var tagAllowRemove = 0;
     </script>
     <script src="{% static 'js/async.js' %}" defer></script>
+    <script src="{% static 'js/autosuggest.js' %}" defer></script>
+    <script src="{% static 'js/autoloadvalues.js' %}" defer></script>
     <script src="{% static 'js/comments.js' %}" defer></script>
-    <script src="{% static 'js/tags.js' %}" defer></script>
+    
+    {% comment %} <script src="{% static 'js/categories.js' %}" defer></script> {% endcomment %}
   {% endif %}
 {% endblock %}

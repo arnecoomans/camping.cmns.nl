@@ -1,10 +1,7 @@
 
 from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, UpdateView
-from django.shortcuts import redirect, reverse
-from django.contrib import messages
+from django.views.generic.edit import  UpdateView
 from django.utils.translation import gettext as _
-from django.contrib.auth.models import User
 from django.conf import settings
 from django.http import JsonResponse
 from django.utils.html import strip_tags
@@ -52,14 +49,15 @@ class aListTags(aHelper, FilterClass, ListView):
     ''' Process Filters '''
     if location:
       tags = tags.filter(locations=location)
-    response['data']['tags'] = []
+    response['data']['values'] = []
     ''' Filter tags by status and visibility '''
-    tags = self.filter(tags).order_by('name').distinct()
+    tags = self.filter(tags).order_by('parent__name', 'name').distinct()
     ''' Add tags to response '''
     for tag in tags:
-      response['data']['tags'].append({
+      response['data']['values'].append({
         'id': tag.id,
-        'parent': f"{ tag.parent.name }: " if tag.parent else '',
+        'slug': tag.slug,
+        'parent': f"{ tag.parent.name }" if tag.parent else '',
         'name': tag.name,
         'url': tag.get_absolute_url(),
         'locations': tag.locations.count(),
@@ -75,10 +73,10 @@ class aAddTag(aHelper, UpdateView):
     if not location:
       return self.getLocationError()
     ''' Validate Tag '''
-    query = self.request.GET.get('tag', False)
+    query = self.request.GET.get('value', False)
     ''' Remove HTML tags from tags and remove whitespace '''
     query = strip_tags(query).strip()
-    parent = False
+    parent = None
     if ':' in query:
       parent = query.split(':')[0].strip()
       query = query.split(':')[-1].strip()

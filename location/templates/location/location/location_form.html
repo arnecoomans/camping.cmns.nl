@@ -99,33 +99,20 @@
       <a class="anchor" name="extra"></a>
       <div class="relations card">
         <!-- Manage Chain -->
-        {% if location.chain %}
-          <div class="row">
-            <div class="col-3 title-col">{% translate 'chain'|capfirst %}:</div>
-              <div class="col-9">
-                {{ location.chain }} <a href="{% url 'location:ToggleChain' location.slug location.chain.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove chain' %} {{ category.name|title }} {% translate 'from'|capfirst %} {{ location.name }}"><img src="{% static 'bootstrap-icons/x.svg' %}"></a>
-              </div>
+        <div class="row autoload" data-url="{% url 'location:aListChainsFor' location.slug %}" data-type="tag">
+          <div class="col-3 title-col">{% translate 'chains'|title %}<span class="valuecounter"></span>:</div>
+          <div class="col-8 list-col" id="tags"></div>
+          <div class="col-1 button-col"><button type="button" class="btn btn-outline-secondary show-edit">+</button></div>
+        </div>
+        <div class="row add_autosuggest">
+          <div class="col-3 title-col"></div>
+          <div class="col-6 tag" id="addtag">
+            <input type="text" class="autocomplete autocapitalize form-control" placeholder="{% translate 'start typing'|capfirst %}..." data-suggestions="{% url 'location:aListChainSuggestionsFor' location.slug %}" data-url="{% url 'location:aAddChain' location.slug %}">
           </div>
-        {% else %}
-          <form method="post" action="{% url 'location:ToggleChainForm' location.slug %}">
-            <div class="row">
-              <div class="col-3 title-col"><label for="chain">{% translate 'chains'|capfirst %}</label>:</div>
-              <div class="col-6">
-                {% csrf_token %}
-                <select id="object_slug" name="object_slug" class="form-control">
-                  <option>--------</option>
-                  <option value="create_new">{% translate 'new chain'|capfirst %}</option>
-                  {% for chain in available_chains %}
-                    <option value="{{ chain.slug }}">{{ chain.name|title }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <div class="col-3">
-                <input type="submit" role="button" class="btn btn-outline-primary" value="{% translate 'add chain'|capfirst %}">
-              </div>
-            </div>
-          </form>
-        {% endif %}
+          <div class="col-3">
+            <button class="btn btn-primary submit-value">{% translate 'add'|capfirst %}</button>
+          </div>
+        </div>
         <!-- Manage Additional Categories -->
         <div class="row autoload" data-url="{% url 'location:aListCategoriesFor' location.slug %}" data-type="category" data-toggle-url="{% url 'location:aAddCategory' location.slug %}">
           <div class="col-3 title-col">{% translate 'categories'|title %}<span class="valuecounter"></span>:</div>
@@ -175,6 +162,8 @@
       var currAuth = '{{ user.is_staff|default:"False" }}';
       var tagAllowRemove = 1;
       var allowDelete = 1;
+      var debug = 1;
+
     </script>
     <script src="{% static 'js/async.js' %}" defer></script>
     <script src="{% static 'js/autosuggest.js' %}" defer></script>

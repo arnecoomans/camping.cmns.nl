@@ -99,8 +99,9 @@ urlpatterns = [
   path('chain/add/', views.AddChain.as_view(), name='AddChainTo'),
   path('chain/add/<slug>/', views.AddChain.as_view(), name='AddChainTo'),
   path('a/chains/suggest/', views.aSuggestChain.as_view(), name='aListChainSuggestions'),
-  path('a/<location>/chains/', views.aListChains.as_view(), name='aListChainsFor'),
-  path('a/<location>/chains/suggest/', views.aSuggestChain.as_view(), name='aListChainSuggestionsFor'),
+  path('a/<location>/chain/list/', views.aListChains.as_view(), name='aListChainsFor'),
+  path('a/<location>/chain/suggest/', views.aSuggestChain.as_view(), name='aListChainSuggestionsFor'),
+  path('a/<location>/chain/', views.aAddChain.as_view(), name='aAddChain'),
 
   path('a/<location>/category/list/', views.aListCategories.as_view(), name='aListCategoriesFor'),
   path('a/<location>/category/suggest/', views.aSuggestCategories.as_view(), name='aListCategorySuggestionsFor'),

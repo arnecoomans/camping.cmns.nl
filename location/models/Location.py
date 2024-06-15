@@ -109,7 +109,7 @@ class Location(BaseModel):
   description         = models.TextField(blank=True, help_text=_('Markdown is supported'))
 
   link                = models.ManyToManyField(Link, blank=True, help_text=_('Add links to related websites, such as blogs refering to this location or review websites'))
-  chain               = models.ForeignKey(Chain, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='locations')
+  chain               = models.ManyToManyField(Chain, blank=True, related_name='locations')
 
   ''' Categorisation '''
   category            = models.ForeignKey(Category, blank=True, null=True, on_delete=models.DO_NOTHING, related_name='locations')

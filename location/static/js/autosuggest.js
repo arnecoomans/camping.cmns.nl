@@ -1,4 +1,7 @@
 function toggleValue(element, url, value) {
+  if (typeof debug != 'undefined' && debug == 1) {
+    console.log('toggeling value of ' + value + ' on ' + url);
+  }
   // Only proceed if the value is not empty or too short
   if (value.length < 2) {
     $(element).parent().append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Value is too short or invalid  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
@@ -12,6 +15,7 @@ function toggleValue(element, url, value) {
     },
     dataType: 'json',
     success: function(data){
+      if (typeof debug != 'undefined' && debug == 1) { console.log(data); }
       // If the server returns an error, show the error message
       if (data.status.code == 0) {
         $(element).parent().append('<div class="alert alert-danger alert-dismissible fade show" role="alert">' + data.status.name + ': ' + data.status.message + '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');

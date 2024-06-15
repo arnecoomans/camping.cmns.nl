@@ -75,7 +75,7 @@ class aAddCategory(aHelper, UpdateView):
     query = self.request.GET.get('value', False)
     ''' Remove HTML Categorys from Categorys and remove whitespace '''
     query = strip_tags(query).strip()
-    parent = False
+    parent = None
     if ':' in query:
       parent = query.split(':')[0].strip()
       query = query.split(':')[-1].strip()
@@ -84,8 +84,8 @@ class aAddCategory(aHelper, UpdateView):
       return self.getInputError('Category', 'No Category provided or Category too short')
     ''' Select Category or create Category based on query input '''
     if parent:
-      parent = Category.objects.get_or_create(name__iexact=parent, defaults={'name': parent, 'slug': slugify(parent), 'user':self.request.user, 'status':'p', 'visibility':'c'})[0]
-    category = Category.objects.get_or_create(name__iexact=query, defaults={'name': query, 'slug': slugify(query), 'user':self.request.user, 'status':'p', 'visibility':'c', 'parent': parent})
+      parent = Category.objects.get_or_create(name__iexact=parent, defaults={'name': parent, 'slug': slugify(parent), 'user':self.request.user})[0]
+    category = Category.objects.get_or_create(name__iexact=query, defaults={'name': query, 'slug': slugify(query), 'user':self.request.user, 'parent': parent})
     ''' Store if Category is created or used '''
     response['data']['message'] = _('Category created and applied') if category[1] else _('Category applied')
     ''' Add Category to response '''

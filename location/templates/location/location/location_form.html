@@ -29,7 +29,7 @@
         <div class="row">
           <div class="col-3 title-col"><label for="category">{% translate 'category'|capfirst %}:</div>
           <div class="col-9">
-            <select class="form-control" name="category" id="category">
+            <select class="form-control" name="category" id="categories">
               {% for category in categories %}
                 <option value="{{ category.id }}"{% if category.slug == location.category.slug %} selected{% endif %}{% if not location and category.slug == "camping" %}selected{% endif %}>{{ category.name }}</option>
               {% endfor %}
@@ -127,61 +127,59 @@
           </form>
         {% endif %}
         <!-- Manage Additional Categories -->
-        {% if location.additional_category.all.count > 0 %}
-          <div class="row"> 
-            <div class="col-3 title-col">{% translate 'Additional categories' %}:</div>
-              <div class="col-9"> 
-                {% for category in location.additional_category.all %}
-                  {{ category }} <a href="{% url 'location:ToggleCategory' location.slug category.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove category' %} {{ category.name|title }} {% translate 'from'|capfirst %} {{ location.name }}"><img src="{% static 'bootstrap-icons/x.svg' %}"></a>{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-              </div>
+        <div class="row autoload" data-url="{% url 'location:aListCategoriesFor' location.slug %}" data-type="category" data-toggle-url="{% url 'location:aAddCategory' location.slug %}">
+          <div class="col-3 title-col">{% translate 'categories'|title %}<span class="valuecounter"></span>:</div>
+          <div class="col-8 list-col" id="tags"></div>
+          <div class="col-1 button-col"><button type="button" class="btn btn-outline-secondary show-edit">+</button></div>
+        </div>
+        <div class="row add_autosuggest"> 
+          <div class="col-3 title-col"></div>
+          <div class="col-6" id="additional_categories"> 
+            <input type="text" class="autocomplete autocapitalize form-control" placeholder="{% translate 'start typing'|capfirst %}..." name="addcategory" data-suggestions="{% url 'location:aListCategorySuggestionsFor' location.slug %}" data-url="{% url 'location:aAddCategory' location.slug %}">
           </div>
-        {% endif %}
-        {% if additional_categories.count > 0 %}
-          <form method="post" action="{% url 'location:ToggleCategoryForm' location.slug  %}">
-            <div class="row"> 
-              <div class="col-3 title-col">{% translate 'Add additional category' %}:</div>
-              <div class="col-6">
-                {% csrf_token %}
-                <select class="form-control" name="object_slug" id="object_slug">
-                  <option>--------</option>
-                  {% for category in additional_categories %}
-                    <option value="{{ category.slug }}"{% if category.slug == location.category.slug %} selected{% endif %}>{{ category.name }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <div class="col-3">
-                <input type="submit" role="button" class="btn btn-outline-primary" value="{% translate 'add category'|capfirst %}">
-              </div>
-            </div>
-          </form>
-        {% endif %}
+          <div class="col-3">
+            <button class="btn btn-primary submit-value">{% translate 'add'|capfirst %}</button>
+          </div>
+        </div>
         <!-- Manage Tags -->
-        {% if tags.all.count > 0 %}
-          <div class="row">
-            <div class="col-3 title-col">{% translate 'Tags' %}:</div>
-              <div class="col-9"> 
-                {% for tag in tags.all %}
-                  {{ tag|title }} <a href="{% url 'location:ToggleTag' location.slug tag.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove tag' %} {{ tag.name|title }} {% translate 'from'|capfirst %} {{ location.name }}"><img src="{% static 'bootstrap-icons/x.svg' %}"></a>{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-              </div>
+        <div class="row autoload" data-url="{% url 'location:aListTagsFor' location.slug %}" data-type="tag">
+          <div class="col-3 title-col">{% translate 'tags'|title %}<span class="valuecounter"></span>:</div>
+          <div class="col-8 list-col" id="tags"></div>
+          <div class="col-1 button-col"><button type="button" class="btn btn-outline-secondary show-edit">+</button></div>
+        </div>
+        <div class="row add_autosuggest">
+          <div class="col-3 title-col"></div>
+          <div class="col-6 tag" id="addtag">
+            <input type="text" class="autocomplete autocapitalize form-control" placeholder="{% translate 'start typing'|capfirst %}..." name="addtag" data-suggestions="{% url 'location:aListTagSuggestionsFor' location.slug %}" data-url="{% url 'location:aAddTag' location.slug %}">
           </div>
-        {% endif %}
-        <form method="post" action="{% url 'location:ToggleTagForm' location.slug %}">
-          <div class="row">
-            <div class="col-3 title-col">{% translate 'Add tag' %}:</div>
-            {% csrf_token %}
-            <div class="col-6">
-              {% include 'snippets/select_tag_for_location.html' %}
-            </div>
-            <div class="col-2">
-              <input type="submit" role="button" class="btn btn-outline-primary" value="{% translate 'add tag'|capfirst %}">
-            </div>
+          <div class="col-3">
+            <button class="btn btn-primary submit-value">{% translate 'add'|capfirst %}</button>
           </div>
-        </form>      
+        </div>
       </div>
     {% endif %}
   {% else %}
     {% include 'snippets/login_or_register.html' %}
+  {% endif %}
+{% endblock %}
+
+{% block scriptfooter %}
+
+  {% if request.user.is_authenticated and perms.location.view_comments or allow_unauthenticated_read_comments%}
+    <script>
+      var tagBaseUrl = '/a/{{ location.slug }}/tag/';
+      var categoryBaseUrl = '/a/{{ location.slug }}/category/';
+
+      var csrf_token = '{{ csrf_token }}';
+      var currUser = {{ user.id }};
+      var currAuth = '{{ user.is_staff|default:"False" }}';
+      var tagAllowRemove = 1;
+      var allowDelete = 1;
+    </script>
+    <script src="{% static 'js/async.js' %}" defer></script>
+    <script src="{% static 'js/autosuggest.js' %}" defer></script>
+    <script src="{% static 'js/autoloadvalues.js' %}" defer></script>
+    {% comment %} <script src="{% static 'js/comments.js' %}" defer></script> {% endcomment %}
+    {% comment %} <script src="{% static 'js/chains.js' %}" defer></script>  {% endcomment %}
   {% endif %}
 {% endblock %}

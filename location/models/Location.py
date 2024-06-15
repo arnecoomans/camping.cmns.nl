@@ -48,6 +48,9 @@ class Chain(models.Model):
     if self.parent:
       return f"{ self.name } ({ self.parent })"
     return self.name
+
+  def get_absolute_url(self):
+    return reverse_lazy('location:locations') + f"?chain={ self.slug }"
   
 ''' Links model
     Any location may have multiple links related to the location, such as several review websites
@@ -85,6 +88,9 @@ class Category(models.Model):
     if self.parent:
       return f"{ self.parent.name }: { self.name }"
     return self.name
+  
+  def get_absolute_url(self):
+    return reverse_lazy('location:locations') + f"?category={ self.slug }"
 
 
 ''' Location model
@@ -106,7 +112,7 @@ class Location(BaseModel):
   chain               = models.ForeignKey(Chain, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='locations')
 
   ''' Categorisation '''
-  category            = models.ForeignKey(Category, blank=True, null=True, on_delete=models.DO_NOTHING)
+  category            = models.ForeignKey(Category, blank=True, null=True, on_delete=models.DO_NOTHING, related_name='locations')
   additional_category = models.ManyToManyField(Category, blank=True, related_name='secondary_for')
   tags                = models.ManyToManyField(Tag, blank=True, related_name='locations')
 

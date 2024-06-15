@@ -7,8 +7,10 @@ from .Comment import *
 from .aComment import *
 from .Tag import *
 from .aTag import *
+from .aCategory import *
 from .List import *
 from .Profile import *
 from .Chain import *
+from .aChain import *
 from .Media import *
 from .Toggle import *

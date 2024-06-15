@@ -167,18 +167,17 @@
       </div>
       <!-- Category -->
       <div class="row">
-        <div class="col-3 title-col">{% translate 'category'|title %}:</div>
+        <div class="col-3 title-col">{% translate 'category'|title %} ({{ location.additional_category.all.count|add:1 }}):</div>
         <div class="col-9" id="categories">
-          <a href="{% url 'location:locations' %}?category={{ location.category.slug }}">{{ location.category.name|title }}</a>{% if location.additional_category.all.count > 0 and user.is_authenticated %}, {% for category in location.additional_category.all %}<a href="{% url 'location:locations' %}?category={{ category.slug }}">{{ category|title }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}
+          <a href="{% url 'location:locations' %}?category={{ location.category.slug }}">{{ location.category.name|title }}{% with counter=location.category.locations.all.count|add:location.category.secondary_for.all.count %}{% if counter > 1 %} <sup>{{ counter }}</sup>{% endif %}{% endwith %}</a>{% if location.additional_category.all.count > 0 and user.is_authenticated %}, {% for category in location.additional_category.all %}<a href="{% url 'location:locations' %}?category={{ category.slug }}">{{ category|title }}{% with counter=category.locations.all.count|add:category.secondary_for.all.count %}{% if counter > 1 %} <sup>{{ counter }}</sup>{% endif %}{% endwith %}</a>{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}
         </div>
       </div>
       <!-- Chain -->
-      {% if location.chain %}
-        <div class="row">
-          <div class="col-3 title-col">{% translate 'chain'|title %}:</div>
-          <div class="col-9">{% include 'snippets/chain.html' with chain=location.chain %}</div>
-        </div>
-      {% endif %}
+      <div class="row autoload" data-url="{% url 'location:aListChainsFor' location.slug %}" data-type="tag">
+        <div class="col-3 title-col">{% translate 'chain'|title %}<span class="valuecounter"></span>:</div>
+        <div class="col-8 list-col" id="tags"></div>
+        <div class="col-1 button-col"></div>
+      </div>
       <!-- Tags -->
       {% if user.is_authenticated %}
         <div class="row autoload" data-url="{% url 'location:aListTagsFor' location.slug %}" data-type="tag">

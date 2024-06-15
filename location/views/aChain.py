@@ -50,16 +50,59 @@ class aListChains(aHelper, FilterClass, ListView):
     ''' Process Filters '''
     if location:
       chains = chains.filter(locations=location)
-    response['data']['chains'] = []
+    response['data']['values'] = []
     ''' Filter tags by status and visibility '''
     chains = chains.order_by('name').distinct()
     ''' Add tags to response '''
     for chain in chains:
-      response['data']['chains'].append({
+      response['data']['values'].append({
         'id': chain.id,
-        'parent': f"{ chain.parent.name }: " if chain.parent else '',
+        'parent': f"{ chain.parent.name }" if chain.parent else '',
         'name': chain.name,
         'url': chain.get_absolute_url(),
         'locations': chain.locations.count(),
       })
+    return JsonResponse(response)
+  
+class aAddChain(aHelper, UpdateView):
+  model = Location
+  fields = ['chain']
+
+  def get(self, request, *args, **kwargs):
+    ''' Validate location '''
+    location = self.getLocation()
+    if not location:
+      return self.getLocationError()
+    ''' Validate Chain '''
+    query = self.request.GET.get('value', False)
+    ''' Remove HTML tags from tags and remove whitespace '''
+    query = strip_tags(query).strip()
+    parent = None
+    if ':' in query:
+      parent = query.split(':')[0].strip()
+      query = query.split(':')[-1].strip()
+    response = self.getDefaultData()
+    if not query or len(query) <  3:
+      return self.getInputError('tag', 'No tag provided or tag too short')
+    ''' Select tag or create tag based on query input '''
+    if parent:
+      parent = Chain.objects.get_or_create(name__iexact=parent, defaults={'name': parent, 'slug': slugify(parent), 'user':self.request.user})[0]
+    chain = Chain.objects.get_or_create(name__iexact=query, defaults={'name': query, 'slug': slugify(query), 'user':self.request.user, 'parent': parent})
+    ''' Store if chain is created or used '''
+    response['data']['message'] = _('Chain created and applied') if chain[1] else _('Chain applied')
+    ''' Add chain to response '''
+    chain = chain[0]
+    response['data']['value'] = {
+      'id': chain.id,
+      'name': chain.name,
+      'url': chain.get_absolute_url(),
+      'locations': chain.locations.count(),
+    }
+    ''' Add tag to location if not already present, remove if present '''
+    if chain in location.chain.all():
+      location.chain.remove(chain)
+      response['data']['status'] = f"{ chain.name } { _('removed from location') }"
+    else:
+      location.chain.add(chain)
+      response['data']['status'] = f"{ chain.name } { _('added to location') }"
     return JsonResponse(response)

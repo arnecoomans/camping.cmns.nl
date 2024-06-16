@@ -36,7 +36,7 @@
           {% endif %}
           {% if not location in user.profile.least_liked.all %}
             <!-- Favorite -->
-            <li><a href="{% url 'location:ToggleFavorite' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if location in user.profile.favorite.all %}{% translate 'you like'|capfirst %}{% else %}{% translate 'like'|capfirst %}{% endif %} {% translate 'this location' %}"><svg class="bi" width="32" height="32" fill="#c00"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#balloon-heart{% if location in user.profile.favorite.all %}-fill{% endif %}"/></svg></a></li>
+            <li><a href="{% url 'location:ToggleFavorite' location.slug %}" id="like" data-url="{% url 'location:aToggleFavorite' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if location in user.profile.favorite.all %}{% translate 'you like'|capfirst %}{% else %}{% translate 'like'|capfirst %}{% endif %} {% translate 'this location' %}"><svg class="bi" width="32" height="32" fill="#c00"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#balloon-heart{% if location in user.profile.favorite.all %}-fill{% endif %}"/></svg></a></li>
           {% endif %}
           {% if not location in user.profile.favorite.all %}<!-- Favorite -->
             <!-- Least liked -->
@@ -350,7 +350,7 @@
     <script src="{% static 'js/autosuggest.js' %}" defer></script>
     <script src="{% static 'js/autoloadvalues.js' %}" defer></script>
     <script src="{% static 'js/comments.js' %}" defer></script>
-    
+    <script src="{% static 'js/locationmeta.js' %}" defer></script>
     {% comment %} <script src="{% static 'js/categories.js' %}" defer></script> {% endcomment %}
   {% endif %}
 {% endblock %}

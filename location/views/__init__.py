@@ -10,6 +10,7 @@ from .aTag import *
 from .aCategory import *
 from .List import *
 from .Profile import *
+from .aActionList import *
 from .Chain import *
 from .aChain import *
 from .Media import *

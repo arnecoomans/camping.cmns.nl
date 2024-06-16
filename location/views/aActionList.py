@@ -25,8 +25,13 @@ class aToggleFavorite(aHelper, UpdateView):
       return self.verifyUserAuthenticated()
     ''' Proceed processing request '''
     response = self.getDefaultData()
-    ''' Get user profile '''
-    if location in self.request.user.profile.favorite.all():
+    ''' Verify that the user has a profile. If not, create a profile '''
+    if hasattr(self.request.user, 'profile'):
+      profile = self.request.user.profile
+    else:
+      profile = Profile.objects.create(user=self.request.user)
+      #messages.add_message(self.request, messages.INFO, f"Created profile for { self.request.user.get_full_name() }")
+    if location in profile.favorite.all():
       self.request.user.profile.favorite.remove(location)
       response['data']['favorite'] = False
       response['data']['message'] = _('Location removed from your likes.')

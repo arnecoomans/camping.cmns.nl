@@ -302,6 +302,7 @@
           map,
           position: { lat: {{ location.coord_lat }}, lng: {{ location.coord_lng }} },
           title: "{{ location.name }}",
+          gmpClickable: true,
           collisionBehavior: 'REQUIRED_AND_HIDES_OPTIONAL',
           zIndex:99999999,
         });
@@ -316,16 +317,36 @@
               glyphColor: "white",
 
             });
-            secondarymarker = new AdvancedMarkerElement({
+            marker{{ location.0.id }} = new AdvancedMarkerElement({
               map,
               position: { lat: {{ location.0.coord_lat }}, lng: {{ location.0.coord_lng }} },
               title: "{{ location.0.name }}",
               content: pin{{ location.0.id }}.element,
-              {% comment %} gmpClickable: true, {% endcomment %}
+              gmpClickable: true,
               collisionBehavior: 'REQUIRED',
               zIndex: {% if location.isActivity %}0{% else %}1{% endif %},
             });
+            marker{{ location.0.id }}.addListener("click", ({ domEvent, latLng }) => {
+              const { target } = domEvent;
+              console.log("FOO");
+              infoWindow.close();
+              infoWindow.setContent('<b><a href="{{ location.0.get_absolute_url }}">{{ location.0.name }}</a></b>' +
+              '{% if location.0 in user.profile.favorite.all %}<svg class="bi" width="12" height="12" fill="#c00"><use xlink:href="{% static "bootstrap-icons/bootstrap-icons.svg" %}#balloon-heart-fill"/></svg>{% endif %}<br>' + 
+                                    '{{ location.0.category.name|capfirst }} in {{ location.0.location.name|default:"" }}, {{ location.0.location.parent.name|default:"" }}, {{ location.0.location.parent.parent.name|default:"" }}<br>' +
+                                    '');
+              infoWindow.open(marker{{ location.0.id }}.map, marker{{ location.0.id }});
+            });
           {% endfor %}
+          // InfoWindows
+          marker.addListener("click", ({ domEvent, latLng }) => {
+            const { target } = domEvent;
+            infoWindow.close();
+            infoWindow.setContent('<b><a href="{{ location.get_absolute_url }}">{{ location.name }}</a></b>' +
+            '{% if location in user.profile.favorite.all %}<svg class="bi" width="12" height="12" fill="#c00"><use xlink:href="{% static "bootstrap-icons/bootstrap-icons.svg" %}#balloon-heart-fill"/></svg>{% endif %}<br>' + 
+                                  '{{ location.category.name|capfirst }} in {{ location.location.name|default:"" }}, {{ location.location.parent.name|default:"" }}, {{ location.location.parent.parent.name|default:"" }}<br>' +
+                                  '');
+            infoWindow.open(marker.map, marker);
+          });
         {% endif %}
       }
 

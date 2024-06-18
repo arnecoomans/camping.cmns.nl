@@ -7,8 +7,8 @@
       <!-- Header Line -->
       <h1>{{ location.name }}</h1> 
       <span class="locator">
-        {% if location.chain %}
-          {% include 'snippets/chain.html' with chain=location.chain %}
+        {% if location.chain.all.count > 0 %}
+          {% include 'snippets/chain.html' with chains=location.chain.all %}
         {% endif %}
         <a href="{% if location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}?category={{ location.category.slug }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate location.getPCategory|capfirst %} {% translate 'marked' %} {{ location.category.name|title }}">{{ location.category.name|title }}</a> 
         {% if location.location %}

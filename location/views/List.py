@@ -50,12 +50,19 @@ class ListListView(FilterClass, ListView):
   def get_queryset(self):
     queryset = List.objects.filter(status='p')
     queryset = self.filter_visibility(queryset)
+    ''' Process Order by query parameter '''
     if self.request.GET.get('order_by', '').lower() == 'author':
       queryset = queryset.order_by('user', 'name').distinct()
     elif self.request.GET.get('order_by', '').lower() == 'visibility':
       queryset = queryset.order_by('visibility', 'name').distinct()
     else:
+      ''' Default ordering '''
       queryset = queryset.order_by('name').distinct()
+    ''' Filter locations within list based on visibilty by adding a 
+          list of filtered locations to the list object '''
+    for list in queryset:
+      list.filtered_locations = self.filter(list.locations.all())
+    ''' Return queryset '''
     return queryset
   
 

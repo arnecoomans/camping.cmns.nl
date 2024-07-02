@@ -28,7 +28,7 @@
           <td><a href="{% url 'location:list' list.slug %}" {% if list.name|length >= 48 %}title="{{ list.name }}"{% endif %}>{{ list.name|truncatechars:48|title }}</a></td>
           <td>{{ list.user.get_full_name|default:list.user.username }}</td>
           <td>{% translate list.get_visibility_display|capfirst %}</td>
-          <td>{{ list.locations.all.count }}</td>
+          <td>{{ list.filtered_locations.all.count }}</td>
         </tr>
       {% empty %}
           <tr>

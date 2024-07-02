@@ -147,7 +147,7 @@
             <p>
               <a href="{{ location.get_absolute_url }}?maps_permission=true">{% translate 'allow once'|capfirst %}</a>{% if user.is_authenticated and not user.profile.maps_permission %},{% else %} or{% endif %}
               <a href="{% url 'location:MapsPermissionSession' %}?next={{ location.get_absolute_url }}">{% translate 'allow for this session' %}</a>
-              or <a href="{% url 'location:MapsPermissionProfile' %}?next={{ location.get_absolute_url }}">{% translate 'always allow' %}.            </p>
+              {% if user.is_authenticated %} or <a href="{% url 'location:MapsPermissionProfile' %}?next={{ location.get_absolute_url }}">{% translate 'always allow' %}</a>{% endif %}. </p>
           {% endif %}
         </div>
         {% if maps_permission %}

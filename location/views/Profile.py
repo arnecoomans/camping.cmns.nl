@@ -183,7 +183,9 @@ class SignUpView(CreateView):
       group.user_set.add(user)
     ''' Redirect to login page '''
     return redirect(reverse_lazy('login'))
-  
+
+
+''' Toggle Google Maps '''
 class ToggleGoogleMapsSession(View):
 
   def get(self, *args, **kwargs):
@@ -205,6 +207,8 @@ class ToggleGoogleMapsProfile(UpdateView):
   fields = ['maps_permission']
   
   def get_object(self):
+    if not self.request.user.is_authenticated:
+      return None
     if not hasattr(self.request.user, 'profile'):
       profile = Profile.objects.create(user=self.request.user)
       messages.add_message(self.request, messages.INFO,
@@ -213,6 +217,11 @@ class ToggleGoogleMapsProfile(UpdateView):
 
   def get(self, *args, **kwargs):
     profile = self.get_object()
+    if not profile:
+      messages.add_message(self.request, messages.ERROR, f"{ _('You are not logged in') }.")
+      if self.request.GET.get('next', False):
+        return redirect(self.request.GET.get('next', '/'))
+      return redirect('location:profile')
     ''' Toggle Permission '''
     if profile.maps_permission == True:
       profile.maps_permission = False

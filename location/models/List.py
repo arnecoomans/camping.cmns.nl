@@ -144,7 +144,7 @@ class ListLocation(BaseModel):
   nights              = models.IntegerField(default=0)
   price               = models.IntegerField(default=0)
 
-  media               = models.ForeignKey(Media, on_delete=models.DO_NOTHING, null=True)
+  media               = models.ForeignKey(Media, on_delete=models.DO_NOTHING, blank=True, null=True)
 
   class Meta:
     verbose_name = _("list-location")

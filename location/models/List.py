@@ -102,6 +102,9 @@ class List(BaseModel):
   )
   template            = models.CharField(max_length=1, choices=template_choices, default='t')
     
+  ''' Map option '''
+  map                 = models.BooleanField(default=False, help_text=_('Show map on list page'))
+
   class Meta:
     verbose_name = _("list")
     verbose_name_plural = _("lists")

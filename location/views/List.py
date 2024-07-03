@@ -8,6 +8,8 @@ from django.shortcuts import redirect, reverse
 from django.db import IntegrityError
 from django.conf import settings
 from django.http import Http404
+from django.utils.http import urlencode
+
 
 from .snippets.filter_class import FilterClass
 
@@ -78,7 +80,22 @@ class ListDetailView(FilterClass, DetailView):
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context['scope'] = f"{ _('list') }: { self.object.name } { _('by') } { self.object.user }"
-    context['locations'] = self.filter(ListLocation.objects.filter(list=self.get_object()))
+    locations = self.filter(ListLocation.objects.filter(list=self.get_object()))
+    context['locations'] = locations
+    context['map_params'] = ''
+    if self.get_object().map:
+      context['map_params'] = '&origin=' + locations.first().location.address + \
+                              '&destination=' + locations.last().location.address + \
+                              '&mode=driving'
+      if locations.count() > 2:
+        waypoints = []
+        for location in locations[1:len(locations)-1]:
+          if not location.location.isActivity():
+            waypoints.append(location.location.address)
+        if len(waypoints) > 0:
+          context['map_params'] = context['map_params'] + \
+                                  '&waypoints=' + '|'.join(waypoints[:20])
+      #context['map_params'] = urlencode(context['map_params'])
     return context
   
   def get_object(self):
@@ -138,7 +155,7 @@ class AddList(CreateView):
   
 class EditList(UpdateView):
   model = List
-  fields = ['name', 'description', 'visibility', 'template']
+  fields = ['name', 'description', 'visibility', 'template', 'map']
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)

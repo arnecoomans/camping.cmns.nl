@@ -32,6 +32,18 @@
         {% if list.locations.last.location != user.profile.home %}<li><a href="{% url 'location:EndListAtHome' list.slug %}">{% translate 'end at home' %}</a></li>{% endif %}
       {% endif %}
     </ul>
+    {% if list.map and locations.count > 1 %}
+         <div class="map card">
+          <iframe
+            width="100%"
+            height="450"
+            frameborder="0" style="border:0"
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps/embed/v1/directions?key={{ google_maps_api_key }}{{ map_params }}"
+            allowfullscreen>
+          </iframe>
+         </div>
+      {% endif %}
     <table class="location list">
       <thead>
         <tr> 

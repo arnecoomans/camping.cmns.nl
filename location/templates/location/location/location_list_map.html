@@ -32,6 +32,76 @@
 
 {% block scriptheader %}
   {% if maps_permission %}
+    <!-- Marker Symbol Documentation:
+        https://developers.google.com/maps/documentation/javascript/examples/marker-symbol-custom
+    -->
+    <!-- script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap&v=weekly" defer></script -->
+    <script>
+      (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+        key: "{{ google_maps_api_key }}",
+        v: "weekly",
+        // Use the 'v' parameter to indicate the version to use (weekly, beta, alpha, etc.).
+        // Add other bootstrap parameters as needed, using camel case.
+      });
+      let map;
+
+      async function initMap() {
+        const { Map, InfoWindow } = await google.maps.importLibrary("maps");
+        const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
+        const infoWindow = new InfoWindow();
+
+        map = new Map(document.getElementById("map"), {
+          center: { lat: {{ map_center.lat }}, lng: {{ map_center.lng }} },
+          zoom: 5,
+          mapId: 'largemap',
+        });
+        
+        // Define marker icons for main point
+        const locationTag = document.createElement("div");
+        locationTag.className = "location-tag primary";
+        locationTag.textContent = "{{ location.name }}";
+        {% comment %} locationTag.innerHTML = "<a href='{{ location.get_absolute_url }}'>{{ location.name }}</a>"; {% endcomment %}
+        
+        // List secondary locations
+        {% if user.is_authenticated %}
+          {% for location in location_list %}
+            {% if location.coord_lat and location.coord_lng %}
+              const pin{{ location.id }} = new PinElement({
+                scale: 0.{% if location.isActivity %}7{% else %}8{% endif %},
+                background: "#{% if location.isActivity %}666{% else %}0000ff{% endif %}",
+                borderColor: "#{% if location.isActivity %}333{% else %}000033{% endif %}",
+                glyphColor: "white",
+
+              });
+              marker{{ location.id }} = new AdvancedMarkerElement({
+                map,
+                position: { lat: {{ location.coord_lat }}, lng: {{ location.coord_lng }} }, // {{ location}}
+                title: "{{ location.name }}",
+                content: pin{{ location.id }}.element,
+                gmpClickable: true,
+                collisionBehavior: 'REQUIRED',
+                zIndex: {% if location.isActivity %}0{% else %}1{% endif %},
+              });
+              marker{{ location.id }}.addListener("click", ({ domEvent, latLng }) => {
+                const { target } = domEvent;
+                infoWindow.close();
+                infoWindow.setContent('<b><a href="{{ location.get_absolute_url }}">{{ location.name }}</a></b>' +
+                '{% if location in user.profile.favorite.all %}<svg class="bi" width="12" height="12" fill="#c00"><use xlink:href="{% static "bootstrap-icons/bootstrap-icons.svg" %}#balloon-heart-fill"/></svg>{% endif %}<br>' + 
+                                      '{{ location.category.name|capfirst }} in {{ location.location.name|default:"" }}, {{ location.location.parent.name|default:"" }}, {{ location.location.parent.parent.name|default:"" }}<br>' +
+                                      '');
+                infoWindow.open(marker{{ location.id }}.map, marker{{ location.id }});
+              });
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      }
+
+      initMap();
+    </script>
+  {% endif %}
+{% endblock %}
+
+  {% comment %} {% if maps_permission %}
   <script>
     (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
       key: "{{ google_maps_api_key }}",
@@ -67,7 +137,7 @@
               title: "{{ location.name }}",
               content: pin{{ location.id }}.element,
               {% comment %} gmpClickable: true, {% endcomment %}
-              collisionBehavior: 'REQUIRED',
+              {% comment %} collisionBehavior: 'REQUIRED',
               zIndex: {% if location.isActivity %}0{% else %}1{% endif %},
             });
           {% endif %}
@@ -76,7 +146,7 @@
     }
 
     initMap();
-  </script>
+  </script> {% endcomment %}
     {% comment %} <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap&v=weekly" defer></script> {% endcomment %}
     {% comment %} <script>
       function initMap() {
@@ -132,5 +202,4 @@
         });
       }
     </script> {% endcomment %}
-  {% endif %}
-{% endblock %}
+  {% comment %} {% endif %} {% endcomment %}

@@ -78,7 +78,8 @@ $(document).ready(function() {
         }
       });
     },
-    minLength: 2 // Only start suggesting after 2 characters have been typed
+    minLength: 0 // Only start suggesting after 2 characters have been typed
+                 // Issue #248 experiment with autosuggest tags: show from 0 characters
   });
 
   // When the "Add" button is clicked, submit the form

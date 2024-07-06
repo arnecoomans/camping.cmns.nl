@@ -54,6 +54,11 @@
               </td>
             </tr>
             <tr>
+              <td><label for="show_on_route">{% translate 'show on route on map'|capfirst %}</td>
+              <td colspan="2" class="form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" name="show_on_route" id="show_on_route" {% if listlocation.show_on_route %}checked{% endif %}>
+              </td>
+            <tr>
               <td><label for="visibility">{% translate 'viewable by'|capfirst %}</td>
               <td colspan="2">
                 <select class="form-control" name="visibility" id="visibility">

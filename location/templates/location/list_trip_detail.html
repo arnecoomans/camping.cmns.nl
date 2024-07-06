@@ -32,7 +32,7 @@
         {% if list.locations.last.location != user.profile.home %}<li><a href="{% url 'location:EndListAtHome' list.slug %}">{% translate 'end at home' %}</a></li>{% endif %}
       {% endif %}
     </ul>
-    {% if list.map and locations.count > 1 %}
+    {% if list.map and map_params %}
          <div class="map card">
           <iframe
             width="100%"

@@ -2,6 +2,7 @@
 <div class="filter card">
   <div class="results">
     <strong>{% translate 'showing'|capfirst %} {{ location_list.all.count }} {% translate scope %}:</strong>
+    (<a href="/map/{% if active_filters.country %}{{ active_filters.country }}/{% endif %}{% if active_filters.region %}{{ active_filters.region }}/{% endif %}{% if active_filters.department %}{{ active_filters.department }}/{% endif %}?{% if active_filters.category %}category={{ active_filters.category|join:"," }}&{% endif %}{% if active_filters.tag %}tag={{ active_filters.tag|join:"," }}&{% endif %}{% if active_filters.favorites %}favorites&{% endif %}">{% translate 'show on map'|capfirst %}</a>)
   </div>
   <!-- Active Filters -->
   {% if active_filters|length > 0 %}

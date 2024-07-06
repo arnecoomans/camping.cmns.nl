@@ -9,6 +9,7 @@ from django.db import IntegrityError
 from django.conf import settings
 from django.http import Http404
 from django.utils.http import urlencode
+from django.utils.html import escape
 
 
 from .snippets.filter_class import FilterClass
@@ -82,19 +83,20 @@ class ListDetailView(FilterClass, DetailView):
     context['scope'] = f"{ _('list') }: { self.object.name } { _('by') } { self.object.user }"
     locations = self.filter(ListLocation.objects.filter(list=self.get_object()))
     context['locations'] = locations
-    context['map_params'] = ''
+    context['map_params'] = False
     if self.get_object().map:
-      context['map_params'] = '&origin=' + locations.first().location.address + \
-                              '&destination=' + locations.last().location.address + \
-                              '&mode=driving'
-      if locations.count() > 2:
-        waypoints = []
-        for location in locations[1:len(locations)-1]:
-          if not location.location.isActivity():
+      locations = self.filter(locations).filter(show_on_route=True)
+      if locations.count() > 1:
+        context['map_params'] = '&origin=' + locations.first().location.address + \
+                                '&destination=' + locations.last().location.address + \
+                                '&mode=driving'
+        if locations.count() > 2:
+          waypoints = []
+          for location in locations[1:len(locations)-1]:
             waypoints.append(location.location.address)
-        if len(waypoints) > 0:
-          context['map_params'] = context['map_params'] + \
-                                  '&waypoints=' + '|'.join(waypoints[:20])
+          if len(waypoints) > 0:
+            context['map_params'] = context['map_params'] + \
+                                    '&waypoints=' + '|'.join(waypoints[:20])
       #context['map_params'] = urlencode(context['map_params'])
     return context
   
@@ -170,7 +172,7 @@ class EditList(UpdateView):
 ''' Edit ListLocation '''
 class EditListLocation(FilterClass, UpdateView):
   model = ListLocation
-  fields = ['comment', 'visibility', 'nights', 'price', 'media']
+  fields = ['comment', 'visibility', 'nights', 'price', 'media', 'show_on_route']
   
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -298,9 +300,11 @@ class AddLocationToList(FilterClass, UpdateView):
           messages.add_message(self.request, messages.ERROR, f"\"{ location.name }\" { _('was not added to list') } { list.name }. { _('This is already the last location on the list') }.")
           return redirect('location:list', list.slug)
       ''' It is safe to store location '''
+      messages.add_message(self.request, messages.SUCCESS, f"{ escape(location.isActivity()) }")
       listlocation = ListLocation.objects.create(list=list, 
                                                   location=location, 
                                                   order=order,
+                                                  show_on_route=False if location.isActivity() else True,
                                                   user=self.request.user)
       messages.add_message(self.request, messages.SUCCESS, f"{ _('Added') } \"{ location.name }\"  { _('to list')} \"{ list.name }\".")
       calculateDistances(self.request, list)

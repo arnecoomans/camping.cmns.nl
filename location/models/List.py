@@ -149,6 +149,10 @@ class ListLocation(BaseModel):
 
   media               = models.ForeignKey(Media, on_delete=models.DO_NOTHING, blank=True, null=True)
 
+  ''' When List has Map set to True, show this location in the route '''
+  show_on_route       = models.BooleanField(default=True) 
+  
+
   class Meta:
     verbose_name = _("list-location")
     verbose_name_plural = _("list-locations")

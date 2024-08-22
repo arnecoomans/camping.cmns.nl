@@ -74,7 +74,7 @@
                 <li><hr class="dropdown-divider"></li>
               {% endif %}
               <li><a class="dropdown-item" href="{% url 'location:profile' %}">{% translate 'my profile'|title %}</a></li>
-              <li><a class="dropdown-item" href="/logout/">{% translate 'log out'|title %}</a></li>
+              <li><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="dropdown-item">{% translate 'log out'|title %}</button></form></li>
             </ul>
           </li>
         {% else %}

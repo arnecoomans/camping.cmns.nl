@@ -87,7 +87,7 @@
         {% endif %}
       </ul>
       <form class="d-flex" action="{% url 'location:search' %}" method="get">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q" {% if q %}value="{{ q }}"{% endif %}>
+        <input class="site_seach form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q" {% if q %}value="{{ q }}"{% endif %} data-suggestions="{% url 'location:aListLocationSuggestions' %}">
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
     </div>

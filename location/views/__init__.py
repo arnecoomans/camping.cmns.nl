@@ -2,6 +2,7 @@
 from .location.location_detail import *
 from .location.location_list import *
 from .location.location_edit import *
+from .location.aLocation import *
 from .Dashboard import *
 from .Comment import *
 from .aComment import *

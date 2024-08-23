@@ -12,6 +12,7 @@ urlpatterns = [
   path('locations/<country>/', views.LocationListView.as_view(), name='ListLocationsByCountry'),
   path('locations/<country>/<region>/', views.LocationListView.as_view(), name='ListLocationsByRegion'),
   path('locations/<country>/<region>/<department>/', views.LocationListView.as_view(), name='ListLocationsByDepartment'),
+  path('locations/a/suggest', views.aSuggestLocations.as_view(), name='aListLocationSuggestions'),
 
   path('map/', views.LocationMapView.as_view(), name='locationsMap'),
   path('map/<country>/', views.LocationMapView.as_view(), name='ListLocationsByCountryMap'),

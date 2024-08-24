@@ -10,15 +10,15 @@
         {% if location.chain.all.count > 0 %}
           {% include 'snippets/chain.html' with chains=location.chain.all %}
         {% endif %}
-        <a href="{% if location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}?category={{ location.category.slug }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate location.getPCategory|capfirst %} {% translate 'marked' %} {{ location.category.name|title }}">{{ location.category.name|title }}</a> 
+        <a href="{% if location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}?category={{ location.category.slug }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate location.getPCategory|capfirst %} {% translate 'marked' %} {{ location.category.name|title }}">{% translate location.category.name|title %}</a> 
         {% if location.location %}
           in
-          <a href="{% if location.isActivity %}{% url 'location:ListLActivitiesByDepartment' location.location.parent.parent.slug location.location.parent.slug location.location.slug %}{% else %}{% url 'location:ListLocationsByDepartment' location.location.parent.parent.slug location.location.parent.slug location.location.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location }}">{{ location.location.name|title }}</a>,
-          <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByRegion' location.location.parent.parent.slug location.location.parent.slug %}{% else %}{% url 'location:ListLocationsByRegion' location.location.parent.parent.slug location.location.parent.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.parent }}">{{ location.location.parent.name|title }}</a>,
-          <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByCountry' location.location.parent.parent.slug %}{% else %}{% url 'location:ListLocationsByCountry' location.location.parent.parent.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.parent.parent.name }}">{{ location.location.parent.parent.name|title }}</a>.
+          <a href="{% if location.isActivity %}{% url 'location:ListLActivitiesByDepartment' location.location.parent.parent.slug location.location.parent.slug location.location.slug %}{% else %}{% url 'location:ListLocationsByDepartment' location.location.parent.parent.slug location.location.parent.slug location.location.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location }}">{% translate location.location.name|title %}</a>,
+          <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByRegion' location.location.parent.parent.slug location.location.parent.slug %}{% else %}{% url 'location:ListLocationsByRegion' location.location.parent.parent.slug location.location.parent.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.parent }}">{% translate location.location.parent.name|title %}</a>,
+          <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByCountry' location.location.parent.parent.slug %}{% else %}{% url 'location:ListLocationsByCountry' location.location.parent.parent.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.parent.parent.name }}">{% translate location.location.parent.parent.name|title %}</a>.
         {% endif %}
         {% if user.is_authenticated %}
-          {% translate 'viewable by'|capfirst %} {{ location.get_visibility_display }}.
+          {% translate 'viewable by'|capfirst %} {% translate location.get_visibility_display %}.
         {% endif %}
       </span>
       <!-- Action List-->

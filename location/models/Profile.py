@@ -30,6 +30,8 @@ class Profile(models.Model):
   hide_least_liked    = models.BooleanField(default=False, help_text=_('It is possible to "unlike" a location. Enable this field to hide the least-liked locations'))
   maps_permission     = models.BooleanField(default=False, help_text=_('Give permission to load Google Maps map on location detail page'))
 
+  show_category_label = models.BooleanField(default=True, help_text=_('Show category label on location list page'))
+
   def __str__(self) -> str:
     return f'Profile of { self.user.get_full_name() if self.user.get_full_name() else self.user.username }'
   

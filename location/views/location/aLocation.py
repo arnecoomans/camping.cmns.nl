@@ -17,6 +17,17 @@ from location.models.Tag import Tag
 class aSuggestLocations(aHelper, FilterClass, ListView):
   model = Location
 
+  ''' Suggest Locations, Categories, Regions, Chains and Tags 
+      based on query string.
+      Do not return the matching location, category, region, chain or tag, but auto-complete 
+      the queried word.
+      The code:
+        for word in query.name.split():
+      takes the search result, matches the searched word in the search result and
+      only adds the complete word as search suggestion. This maintains the functionality
+      of search suggestions and does not make the search suggestions list a search result list.
+  '''
+      
   def get(self, request, *args, **kwargs):
     ''' Fetch query from URL ?query= parameter '''
     query = self.request.GET.get('q', False)
@@ -56,4 +67,19 @@ class aSuggestLocations(aHelper, FilterClass, ListView):
       for tag in tags:  
         if tag.name not in suggestions:
           suggestions.append(tag.name)
+    ''' Case insensitive suggestions '''
+    lower_suggestions = []
+    for suggestion in suggestions:
+      ''' If suggestion is already in caps-insensitive list, remove it '''
+      if suggestion.lower() in lower_suggestions:
+        suggestions.remove(suggestion)
+      else:
+        ''' If suggestion is not in caps-insensitive list, add it '''
+        if suggestion != suggestion.capitalize():
+          ''' If suggestion is not capitalized, add capitalized version'''
+          suggestions.remove(suggestion)
+          suggestions.append(suggestion.capitalize())
+        ''' Add lowercase version to list '''
+        lower_suggestions.append(suggestion.lower())
+    ''' Return suggestions '''  
     return JsonResponse(suggestions, safe=False)

@@ -16,6 +16,7 @@ from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
 from html import escape
+from urllib.parse import urlparse
 from geopy import distance, exc
 from geopy.geocoders import GoogleV3
 
@@ -56,17 +57,52 @@ class Chain(models.Model):
     Any location may have multiple links related to the location, such as several review websites
 '''
 class Link(BaseModel):
+  title               = models.CharField(max_length=255, blank=True, help_text=_('Title of link, optional'))
   url                 = models.CharField(max_length=512, unique=True, help_text=_('full url of link'))
+  primary             = models.BooleanField(default=False, help_text=_('primary link for location'))  
 
   def __str__(self) -> str:
     return self.url
   
+  def get_title(self):
+    if not self.title:
+      hostname = self.hostname()
+      if 'google' in hostname:
+        ''' Google Maps results 
+            Return the search query as title
+            Search query is the string after /maps/search/
+        '''
+        if 'maps/' in self.url:
+          query = self.url.split('/')
+          counter = 0
+          for q in query:
+            if 'search' in q:
+              query = query[counter+1].replace('+', ' ').capitalize()
+              break
+            counter += 1
+          return f"{ query } on { hostname.capitalize() } Maps"
+        ''' Google search results 
+            Return the search query as title
+            Search query is the string after ?q=    
+        '''
+        query = urlparse(self.url).query
+        query = query.split('&')
+        for q in query:
+          if 'q=' in q:
+            query = q.replace('q=', '')
+            break
+        return f"{ query } on { hostname.capitalize() }"
+      return hostname
+    return self.title
+    
   def hostname(self):
-    # Remove http:// and https:// and split content by /
-    url = self.url.replace('http://','').replace('https://','').split('/')
-    # The first part should be the hostname
-    hostname = url[0].replace('www.', '')
-    return hostname
+    # # Remove http:// and https:// and split content by /
+    # url = self.url.replace('http://','').replace('https://','').split('/')
+    # # The first part should be the hostname
+    # hostname = url[0].replace('www.', '')
+    return urlparse(self.url).hostname.replace('www.', '')
+  class Meta:
+        ordering = ['-primary', 'url']
 
 ''' Category model
 '''
@@ -149,16 +185,16 @@ class Location(BaseModel):
 
 
   ''' Data Access Functions '''
-  def getWebsiteHostname(self):
-    if self.website:
-      # Remove http:// and https:// and split content by /
-      url = self.website.replace('http://','').replace('https://','').split('/')
-      # The first part should be the hostname
-      hostname = url[0].replace('www.', '').lower()
-      ''' Special hostnames '''
-      if 'google' in hostname or 'zoover' in hostname or 'booking.com' in hostname:
-        hostname = f"{ self.name } on { hostname }"
-      return hostname
+  # def getWebsiteHostname(self):
+  #   if self.website:
+  #     # Remove http:// and https:// and split content by /
+  #     url = self.website.replace('http://','').replace('https://','').split('/')
+  #     # The first part should be the hostname
+  #     hostname = url[0].replace('www.', '').lower()
+  #     ''' Special hostnames '''
+  #     if 'google' in hostname or 'zoover' in hostname or 'booking.com' in hostname:
+  #       hostname = f"{ self.name } on { hostname }"
+  #     return hostname
   
   def addToChangelog(self, message):
     changelog = self.automated_changelog.split("\n")
@@ -338,30 +374,15 @@ class Location(BaseModel):
         if self.location.parent.parent:
           return self.location.parent.parent
     return None
-  # def countryslug(self):
-  #   if self.location:
-  #     if self.location.parent:
-  #       if self.location.parent.parent:
-  #         return self.location.parent.parent.slug
-  #   return None
   def region(self):
     if self.location:
       if self.location.parent:
         return self.location.parent
     return None
-  # def regionslug(self):
-  #   if self.location:
-  #     if self.location.parent:
-  #       return self.location.parent.slug
-  #   return None
   def department(self):
     if self.location:
       return self.location
     return None
-  # def departmentslug(self):
-  #   if self.location:
-  #     return self.location.slug
-  #   return None
   
   ''' Activity or Location logic '''
   def isActivity(self):

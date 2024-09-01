@@ -37,6 +37,8 @@ class EditLocationMaster(UpdateView, FilterClass):
       context['categories'] = Category.objects.exclude(slug=settings.ACTIVITY_SLUG).exclude(parent__slug=settings.ACTIVITY_SLUG).order_by('name')
     else:  
       context['categories'] = Category.objects.filter(parent__slug=settings.ACTIVITY_SLUG).order_by('name')
+    ''' Links '''
+    context['links'] = self.get_links()
     ''' Tags '''
     tags = Tag.objects.filter(locations__slug=self.object.slug)
     tags = self.filter_status(tags)
@@ -51,6 +53,15 @@ class EditLocationMaster(UpdateView, FilterClass):
     ''' Chains '''
     context['available_chains'] = Chain.objects.filter(children=None).exclude(locations=self.object)
     return context
+
+  ''' Get Links
+  '''
+  def get_links(self):
+    links = self.object.link.all()
+    links = self.filter_status(links)
+    links = self.filter_visibility(links)
+    links = links.order_by('-primary').distinct()
+    return links
 
   def get_form(self):
     ''' Add User field for staff '''

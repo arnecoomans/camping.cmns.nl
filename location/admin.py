@@ -51,7 +51,6 @@ def getDistanceFromDepartureCenter(modeladmin, request, queryset):
 def getRegion(modeladmin, request, queryset):
   for location in queryset:
     location.getRegion(request)
-
 @admin.action(description='clear cachable data')
 def clearCachableData(modeladmin, request, queryset):
   for location in queryset:
@@ -61,20 +60,24 @@ def clearCachableData(modeladmin, request, queryset):
     location.distance_to_departure_center = None
     location.save()
     messages.add_message(request, messages.INFO, 'Reset cachable fields for location')
-
 @admin.action(description='generate thumbnail')
 def GenerateThumbnail(modeladmin, request, queryset):
   for image in queryset:
     image.GenerateThumbnail(request)
-
 @admin.action(description='Get API Data')
 def getData(modeladmin, request, queryset):
   for record in queryset:
     record.getData(request)
+@admin.action(description='Migrate website to link')
+def migrateWebsiteToLink(modeladmin, request, queryset):
+  for record in queryset:
+    link = Link.objects.get_or_create(url=record.website, defaults={'primary':True, 'user':request.user, 'visibility':'p'})[0]
+    record.link.add(link)
+    messages.add_message(request, messages.INFO, f"Migrated website { record.website } to link { link.id } for { record.name }")
 
 ''' Custom Model Admin Classes '''
 class LocationAdmin(SlugDefaultAdmin):
-  actions = [getAddress, getLatLng, getDistanceFromDepartureCenter, getRegion, clearCachableData]
+  actions = [getAddress, getLatLng, getDistanceFromDepartureCenter, getRegion, clearCachableData, migrateWebsiteToLink]
   list_display = ['name', 'location']
   # def get_readonly_fields(self, request, obj=None):
   #   return [f.name for f in obj._meta.fields if not f.editable]

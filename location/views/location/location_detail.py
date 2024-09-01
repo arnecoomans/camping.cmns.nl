@@ -58,6 +58,8 @@ class LocationView(ListView, FilterClass):
     context['location'] = location
     ''' Scope '''
     context['scope'] = f"{ _(location.getCategory()) }: { location.name }"
+    ''' Links '''
+    context['links'] = self.get_links()
     ''' Tags 
         Fetch tags in seperate query to be able to filter the tags for status and visibility
     '''
@@ -90,9 +92,17 @@ class LocationView(ListView, FilterClass):
     context['maps_permission'] = self.get_maps_permission()
     return context
 
+
+  ''' Get Links
+  '''
+  def get_links(self):
+    links = Link.objects.filter(location__slug=self.get_location().slug)
+    links = self.filter_status(links)
+    links = self.filter_visibility(links)
+    links = links.order_by('-primary').distinct()
+    return links
   ''' Get Tags
   '''
-
   def get_tags(self):
     tags = Tag.objects.filter(locations__slug=self.get_location().slug)
     tags = self.filter_status(tags)

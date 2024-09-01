@@ -105,15 +105,17 @@
           <div class="col-9">{{ distance_to_home.getDistance }} / {{ distance_to_home.getTime }} from {{ user.profile.home.name }}</div>
         </div>
       {% endif %}
-      <div class="row">
-        <div class="col-3 title-col">{% translate 'website'|title %}:</div>
-        <div class="col-9">
-          <a href="{{ location.website }}" target="_blank">{{ location.getWebsiteHostname }}</a>
-          {% for link in location.link.all %}
-            <a href="{{ link.url }}" target="_blank">{{ link.hostname }}</a>
-          {% endfor %}
+      {% if links|length > 0%}
+        <div class="row">
+          <div class="col-3 title-col">{% translate 'website'|title %}:</div>
+          <div class="col-9">
+            {% comment %} <a href="{{ location.website }}" target="_blank">{{ location.getWebsiteHostname }}</a> {% endcomment %}
+            {% for link in links %}
+              <a href="{{ link.url }}" target="_blank">{{ link.get_title }}</a>{% ifchanged link.primary %}<br>{% else %}{% if not forloop.last %}, {% endif %}{% endifchanged %}
+            {% endfor %}
+          </div>
         </div>
-      </div>
+      {% endif %}
       {% if user.is_authenticated %}
         {% if location.owners_names %}
           <div class="row">

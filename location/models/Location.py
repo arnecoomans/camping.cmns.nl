@@ -3,6 +3,7 @@
 '''
 
 from datetime import datetime
+from typing import Iterable
 
 from django.db import models
 from django.contrib import messages
@@ -63,6 +64,14 @@ class Link(BaseModel):
 
   def __str__(self) -> str:
     return self.url
+
+  def save(self, *args, **kwargs):
+    ''' Ensure url starts with http(s):// '''
+    # if not self.url.lower().startswith('http://') and not self.url.lower().startswith('https://'):
+    #   self.url = f"https://{ self.url }"
+    
+    return super().save(*args, **kwargs)
+
   
   def get_title(self):
     if not self.title:
@@ -137,7 +146,7 @@ class Location(BaseModel):
 
   ''' Location information '''
   name                = models.CharField(max_length=255, help_text=_('Name of location as it is identified by'))
-  website             = models.CharField(max_length=512, blank=True, unique=True, help_text=_('Full website address of location'))
+  website             = models.CharField(max_length=512, blank=True, help_text=_('Full website address of location'))
   address             = models.CharField(max_length=512, blank=True, help_text=_('Full street address of location, including as much information as possible, such as city, region, country'))
   phone               = models.CharField(max_length=32, null=True, blank=True)
   owners_names        = models.CharField(max_length=255, blank=True, help_text=_('Name of owner(s), if known'))

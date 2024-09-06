@@ -1,0 +1,30 @@
+{% extends 'index.html' %}
+{% load i18n %}{% load static %}
+{% block content %}
+  {% if user.is_authenticated %}
+    <div class="link card">
+      <h1>{% translate 'edit link'|capfirst %} {{ link.get_title }} </h1>
+      <form method="post" action="{% url 'location:EditLinkAtLocation' location.slug link.id %}">
+          {% csrf_token %}
+          <input class="form-control" type="text" name="title" placeholder="{% translate 'link title'|capfirst %} ({% translate 'keep empty to generate automatically' %})" value="{{ link.title }}">
+          <input class="form-control" type="url" name="url" id="url" placeholder="{% translate 'https://example.com/' %}" value="{{ link.url }}">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" name="primary" id="primary" {% if link.primary %}checked{% endif %}>
+            <label class="form-check-label" for="primary">{% translate 'is primary link for location'|capfirst %}.</label>
+          </div>
+          <select class="form-control" name="visibility" id="visibility">
+            {% for key, value in form.fields.visibility.choices %}
+              <option value="{{ key }}" {% if key == link.visibility %}selected{% endif %}>{{ value|title }}</option>
+            {% endfor %}
+          </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <input type="submit" class="btn btn-primary" value="{% translate 'save changes'|capfirst %}">
+      </div>
+    </form>
+    </div>
+  {% else %}
+    {% include 'snippets/login_or_register.html' %}
+  {% endif %}
+{% endblock %}

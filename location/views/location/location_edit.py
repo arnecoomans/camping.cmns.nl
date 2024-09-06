@@ -1,3 +1,5 @@
+from django.db.models.base import Model as Model
+from django.db.models.query import QuerySet
 from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib import messages
@@ -79,12 +81,12 @@ class EditLocationMaster(UpdateView, FilterClass):
     if str(form.cleaned_data['category']).lower() == 'home' and form.cleaned_data['visibility'] != 'f':
       form.cleaned_data['visibility'] = 'f'
       messages.add_message(self.request, messages.INFO, f"{ _('visibility of your home is set to family') }.") 
-    ''' Ensure URL is stored for this location '''
-    if not form.cleaned_data['website']:
-      form.cleaned_data['website'] = f"https://google.com/search?q={ form.cleaned_data['name'] }"
-    elif 'google' not in form.cleaned_data['website']:
-      link = Link.objects.get_or_create(url=f'https://google.com/search?q={ form.cleaned_data["name"] }', defaults={'user': self.request.user})
-      form.instance.link.add(link[0].id)
+    # ''' Ensure URL is stored for this location '''
+    # if not form.cleaned_data['website']:
+    #   form.cleaned_data['website'] = f"https://google.com/search?q={ form.cleaned_data['name'] }"
+    # elif 'google' not in form.cleaned_data['website']:
+    #   link = Link.objects.get_or_create(url=f'https://google.com/search?q={ form.cleaned_data["name"] }', defaults={'user': self.request.user})
+    #   form.instance.link.add(link[0].id)
     ''' Only allow user change by superuser '''
     if not self.request.user.is_superuser and 'user' in form.changed_data: 
       ''' User change is initiated by non_superuser. 
@@ -133,7 +135,7 @@ def CreateCategories(request):
 class AddLocation(CreateView):
   model = Location
   template_name = 'location/location/location_form.html'
-  fields = ['name', 'website', 'description', 'category', 'visibility']
+  fields = ['name', 'description', 'category', 'visibility']
   
   def get_context_data(self, **kwargs):
     if Category.objects.all().count() == 0:
@@ -152,9 +154,9 @@ class AddLocation(CreateView):
     if str(form.cleaned_data['category']).lower() == 'home' and form.cleaned_data['visibility'] != 'f':
       form.cleaned_data['visibility'] = 'f'
       messages.add_message(self.request, messages.INFO, f"{ _('visibility of your home is set to family') }.") 
-    if not form.cleaned_data['website']:
-      ''' If no website is submitted, store a Google Search for this location name'''
-      form.cleaned_data['website'] = f"https://google.com/search?q={ form.cleaned_data['name'] }"
+    # if not form.cleaned_data['website']:
+    #   ''' If no website is submitted, store a Google Search for this location name'''
+    #   form.cleaned_data['website'] = f"https://google.com/search?q={ form.cleaned_data['name'] }"
     # elif 'google' not in form.instance.website:
     #   link = Link.objects.get_or_create(url=f'https://google.com/search?q={ form.cleaned_data["name"] }', defaults={'user': self.request.user})
     #   form.instance.link.add(link[0].id)
@@ -162,23 +164,33 @@ class AddLocation(CreateView):
       location = Location.objects.create(
         slug = slugify(form.cleaned_data['name']),
         name = form.cleaned_data['name'],
-        website = form.cleaned_data['website'],
         description = form.cleaned_data['description'] if 'description' in form.cleaned_data else '',
         category = form.cleaned_data['category'] if 'category' in form.cleaned_data else 'camping',
         visibility= form.cleaned_data['visibility'] if 'visibility' in form.cleaned_data else 'c',
         status = form.cleaned_data['status'] if 'status' in form.cleaned_data else 'p',
         user=self.request.user,
       )
+      messages.add_message(self.request, messages.SUCCESS, f"{ _('added new location') }: \"{ location.name }\"")
+      ''' Add link to Location '''
+      if self.request.POST.get('link', False):
+        link = Link.objects.get_or_create(url=self.request.POST.get('link', ''), defaults={
+          'user': self.request.user,
+          'title': self.request.POST.get('link-title', None)
+          })
+      else:
+        link = Link.objects.get_or_create(url=f"https://google.com/search?q={ form.cleaned_data['name'] }", defaults={
+          'user': self.request.user
+          })  
+      location.link.add(link[0])
+      messages.add_message(self.request, messages.INFO, f"{ _('added link') }: \"{ link[0].get_title() }\" { _('to') } { location.name }.")
     except IntegrityError as e:
       suggested_location = Location.objects.get(name__iexact=form.cleaned_data['name'])
       messages.add_message(self.request, messages.ERROR, f"{ _('failed to add new location') }: \"{ form.cleaned_data['name'] }\". { _('A location with this name already exists:') } <a href=\"{ reverse('location:location', kwargs={'slug': suggested_location.slug}) }\">{ suggested_location.name }</a>")
       return redirect('location:AddLocation')
-    messages.add_message(self.request, messages.SUCCESS, f"{ _('added new location') }: \"{ location.name }\"")
     ''' Since the object has been added, now we can automate fetch additional data '''
     location.getLatLng(self.request)
     location.getDistanceFromDepartureCenter(self.request)
     location.getRegion(self.request)
-    
     return redirect('location:location', location.slug)
 
 
@@ -262,3 +274,75 @@ class GetDistanceToHome(DetailView):
                                                       })
         distance[0].getData(self.request)
       return redirect('location:location', location.slug)
+
+
+class addLinkToLocation(UpdateView):
+  model = Location
+  fields = ['link']
+
+  def post(self, request, *args, **kwargs):
+    location = self.get_object()
+    url = request.POST.get('url', '')
+    ''' Ensure url starts with http(s):// '''
+    if not url.lower().startswith('http://') and not url.lower().startswith('https://'):
+      url = f"https://{ url }"
+    ''' Check if user is authorized to add link '''
+    if request.user == object or request.user.is_staff or request.user.is_superuser and len(url) > 3:
+      ''' See if link already exists '''
+      links = Link.objects.filter(url__iexact=url)
+      if len(links) > 0:
+        ''' Link already exists, add it to location 
+            It is safe to assume that the first link is the one we want to add
+        '''
+        self.get_object().link.add(links[0])
+        ''' Check if fields need to be updated and save the data'''
+        if request.POST.get('link-title', None):
+          links[0].title = request.POST.get('link-title', None)
+        links[0].visibility = request.POST.get('visibility', 'c')
+        links[0].primary = True if request.POST.get('primary', False) else False
+        links[0].save()  
+        messages.add_message(self.request, messages.INFO, f"{ _('updated link') }: \"{ links[0].get_title() }\".")
+      else:
+        ''' Link does not exist, create it '''
+        link = Link.objects.create(
+          url=url,
+          user=request.user,
+          title=request.POST.get('link-title', None),
+          visibility=request.POST.get('visibility', 'c'),
+          primary=True if request.POST.get('primary', False) else False,
+        )
+        location.link.add(link)
+        messages.add_message(self.request, messages.INFO, f"{ _('created and') } { _('added link') }: \"{ link.get_title() }\" to { location.name }.")
+    return redirect('location:EditLocation', self.get_object().slug)
+    
+class deleteLinkFromLocation(UpdateView):
+  model = Location
+  fields = ['link']
+
+  def get(self, request, *args, **kwargs):
+    if request.user == self.get_object().user or request.user.is_staff or request.user.is_superuser:
+      link = Link.objects.get(id=self.kwargs['linkid'])
+      self.get_object().link.remove(link)
+      messages.add_message(self.request, messages.INFO, f"{ _('removed link') }: \"{ link.get_title() }\".")
+    return redirect('location:EditLocation', self.get_object().slug)
+  
+class editLinkAtLocation(UpdateView):
+  model = Link
+  fields = ['url', 'title', 'visibility', 'primary']
+  template_name = 'location/location/link_form.html'
+  
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['location'] = Location.objects.get(slug=self.kwargs['location_slug'])
+    return context
+
+  def get_success_url(self) -> str:
+    return reverse('location:EditLocation', kwargs={'slug': self.kwargs['location_slug']})
+
+  def get(self, request, *args, **kwargs):
+    if request.user == self.get_object().user or request.user.is_staff or request.user.is_superuser:
+      messages.add_message(self.request, messages.INFO, f"{ _('editing link') }: \"{ self.get_object().get_title() }\".")
+      return super().get(request, *args, **kwargs)
+    else:
+      messages.add_message(self.request, messages.ERROR, f"{ _('you are not authorized to edit this link') }.")
+      return redirect('location:EditLocation', self.kwargs['location_slug'])

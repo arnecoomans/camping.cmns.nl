@@ -283,11 +283,11 @@ class addLinkToLocation(UpdateView):
   def post(self, request, *args, **kwargs):
     location = self.get_object()
     url = request.POST.get('url', '')
-    ''' Ensure url starts with http(s):// '''
-    if not url.lower().startswith('http://') and not url.lower().startswith('https://'):
-      url = f"https://{ url }"
-    ''' Check if user is authorized to add link '''
-    if request.user == object or request.user.is_staff or request.user.is_superuser and len(url) > 3:
+    ''' Check if url is supplied '''
+    if len(url) > 3:
+      ''' Ensure url starts with http(s):// '''
+      if not url.lower().startswith('http://') and not url.lower().startswith('https://'):
+        url = f"https://{ url }"
       ''' See if link already exists '''
       links = Link.objects.filter(url__iexact=url)
       if len(links) > 0:
@@ -313,6 +313,8 @@ class addLinkToLocation(UpdateView):
         )
         location.link.add(link)
         messages.add_message(self.request, messages.INFO, f"{ _('created and') } { _('added link') }: \"{ link.get_title() }\" to { location.name }.")
+    else:
+      messages.add_message(self.request, messages.ERROR, f"{ _('you did not supply a valid URL') }.")
     return redirect('location:EditLocation', self.get_object().slug)
     
 class deleteLinkFromLocation(UpdateView):

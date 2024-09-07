@@ -68,33 +68,32 @@
             <div class="col-3 title-col"><label for="owners_names">{% translate 'owners'|capfirst %}:</div>
             <div class="col-9"><input class="form-control" name="owners_names" id="owners_names" value="{{ location.owners_names }}"></div>
           </div>
-
-            {% if user.is_superuser %}
-              <div class="row">
-                <div class="col-3 title-col">{% translate 'user'|capfirst %}:</div>
-                  <div class="col-9">
-                    <select id="user" name="user" class="form-control">
-                      {% for key, value in form.fields.user.choices %}
-                        {% if key %}
-                          <option value="{{ key }}" {% if location.user.id == key %}selected{% endif %}>{{ value }}</option>
-                        {% endif %}
-                    {% endfor %}
-                    </select>
-                  </div>
-            {% endif %}
+          {% if user.is_superuser %}
+            <div class="row">
+              <div class="col-3 title-col">{% translate 'user'|capfirst %}:</div>
+              <div class="col-9">
+                <select id="user" name="user" class="form-control">
+                  {% for key, value in form.fields.user.choices %}
+                    {% if key %}
+                      <option value="{{ key }}" {% if location.user.id == key %}selected{% endif %}>{{ value }}</option>
+                    {% endif %}
+                {% endfor %}
+                </select>
+              </div>
+            </div>
           {% endif %}
+        {% endif %}
         <div class="row">
           <div class="col-3 title-col">&nbsp;</div>
-            <div class="col-3">
-              <input type="submit" class="btn btn-primary" value="{% translate 'save changes'|capfirst %}{% if location %}{% endif %}">
-            </div>
-            <div class="col-6">
-              {% if location %}
-                <a class="" href="{% if location.isActivity %}{% url 'location:activity' location.slug %}{% else %}{% url 'location:location' location.slug %}{% endif %}" >{% translate 'terug naar'|capfirst %} {{ location.name }}</a>
-              {% else %}
-                <a class="" href="{% if location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}" >{% translate 'terug naar'|capfirst %} {{ location.name }}</a>
-              {% endif %}
-            </div>
+          <div class="col-3">
+            <input type="submit" class="btn btn-primary" value="{% translate 'save changes'|capfirst %}{% if location %}{% endif %}">
+          </div>
+          <div class="col-6">
+            {% if location %}
+              <a class="" href="{% if location.isActivity %}{% url 'location:activity' location.slug %}{% else %}{% url 'location:location' location.slug %}{% endif %}" >{% translate 'terug naar'|capfirst %} {{ location.name }}</a>
+            {% else %}
+              <a class="" href="{% if location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}" >{% translate 'terug naar'|capfirst %} {{ location.name }}</a>
+            {% endif %}
           </div>
         </div>
       </form>
@@ -127,7 +126,7 @@
               {% csrf_token %}
               <input type="hidden" name="location" value="{{ location.id }}">
               <input class="form-control" type="text" name="link-title" placeholder="{% translate 'link title'|capfirst %} ({% translate 'keep empty to generate automatically' %})">
-              <input class="form-control" name="url" id="url" placeholder="{% translate 'https://example.com/'|capfirst %}">
+              <input class="form-control" name="url" id="url" placeholder="{% translate 'https://example.com/'|capfirst %}" required>
               <div class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" role="switch" name="primary" id="primary" {% if link.length > 1 %}checked{% endif %}>
                 <label class="form-check-label" for="primary">{% translate 'is primary link for location'|capfirst %}.</label>

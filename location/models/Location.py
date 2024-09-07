@@ -146,7 +146,7 @@ class Location(BaseModel):
 
   ''' Location information '''
   name                = models.CharField(max_length=255, help_text=_('Name of location as it is identified by'))
-  website             = models.CharField(max_length=512, blank=True, help_text=_('Full website address of location'))
+  # website             = models.CharField(max_length=512, blank=True, help_text=_('Full website address of location'))
   address             = models.CharField(max_length=512, blank=True, help_text=_('Full street address of location, including as much information as possible, such as city, region, country'))
   phone               = models.CharField(max_length=32, null=True, blank=True)
   owners_names        = models.CharField(max_length=255, blank=True, help_text=_('Name of owner(s), if known'))

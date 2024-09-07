@@ -28,7 +28,7 @@ from location.models.List import ListDistance
 '''
 class EditLocationMaster(UpdateView, FilterClass):
   model = Location
-  fields = ['name', 'website', 'link', 'description', 'category', 'additional_category', 'visibility', 'address', 'phone', 'owners_names', 'chain']
+  fields = ['name', 'link', 'description', 'category', 'additional_category', 'visibility', 'address', 'phone', 'owners_names', 'chain']
   template_name = 'location/location/location_form.html'
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)

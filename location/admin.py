@@ -79,9 +79,9 @@ def migrateWebsiteToLink(modeladmin, request, queryset):
 class LocationAdmin(SlugDefaultAdmin):
   actions = [getAddress, getLatLng, getDistanceFromDepartureCenter, getRegion, clearCachableData, migrateWebsiteToLink]
   list_display = ['name', 'location']
-  # def get_readonly_fields(self, request, obj=None):
-  #   return [f.name for f in obj._meta.fields if not f.editable]
 
+class LinkAdmin(DefaultAdmin):
+  list_display = ['get_title', 'url', 'visibility', 'user']
 
 class ListLocationAdmin(DefaultAdmin):
   list_display = ('list', 'location', 'order', 'status')
@@ -95,7 +95,7 @@ class CommentAdmin(DefaultAdmin):
 admin.site.register(Category, SlugDefaultAdmin)
 admin.site.register(Location, LocationAdmin)
 admin.site.register(Chain, SlugDefaultAdmin)
-admin.site.register(Link, DefaultAdmin)
+admin.site.register(Link, LinkAdmin)
 admin.site.register(Geo.Region, SlugDefaultAdmin)
 admin.site.register(Tag, SlugDefaultAdmin)
 admin.site.register(Comment, CommentAdmin)

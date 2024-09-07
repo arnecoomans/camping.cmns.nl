@@ -81,12 +81,6 @@ class EditLocationMaster(UpdateView, FilterClass):
     if str(form.cleaned_data['category']).lower() == 'home' and form.cleaned_data['visibility'] != 'f':
       form.cleaned_data['visibility'] = 'f'
       messages.add_message(self.request, messages.INFO, f"{ _('visibility of your home is set to family') }.") 
-    # ''' Ensure URL is stored for this location '''
-    # if not form.cleaned_data['website']:
-    #   form.cleaned_data['website'] = f"https://google.com/search?q={ form.cleaned_data['name'] }"
-    # elif 'google' not in form.cleaned_data['website']:
-    #   link = Link.objects.get_or_create(url=f'https://google.com/search?q={ form.cleaned_data["name"] }', defaults={'user': self.request.user})
-    #   form.instance.link.add(link[0].id)
     ''' Only allow user change by superuser '''
     if not self.request.user.is_superuser and 'user' in form.changed_data: 
       ''' User change is initiated by non_superuser. 

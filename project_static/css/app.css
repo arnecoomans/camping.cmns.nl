@@ -167,7 +167,11 @@ table.location.list > tbody > tr.activity {
 span.category {
   font-size: 70%;
   font-weight: bold;
-  color: #999;
+  color: #888;
   border: 1px dashed #ccc;
   padding: 4px;
+}
+span.category.secondary {
+  color: #999;
+  font-weight: normal;
 }

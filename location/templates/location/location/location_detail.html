@@ -3,267 +3,278 @@
 {% load static %}
 {% block content %}
   <div class="{{ location.getCategory }} card">
-    <header {% if media|length > 0 %}class="withmedia" style="background-image: url('/media/{{ media.0.source }}');"{% endif %}>
-      <!-- Header Line -->
-      <h1>{{ location.name }}</h1> 
-      <span class="locator">
-        {% if location.chain.all.count > 0 %}
-          {% include 'snippets/chain.html' with chains=location.chain.all %}
+    {% if location.status != 'p' and not request.user.is_superuser %}
+    <!-- Show warning that location is not published for users, do not show location details -->
+    <div class="alert alert-danger" role="alert">
+      {% translate 'This location is not visible'|capfirst %}. {% translate 'status'|capfirst %}: {% translate  location.get_status_display %}.
+    </div>
+    {% else %}
+      {% if location.status != 'p' %}
+        <!-- Show warning that location is not published for superuser but show location details -->
+        <div class="alert alert-danger" role="alert">
+          {% translate 'This location is not visible'|capfirst %}. {% translate 'status'|capfirst %}: {% translate  location.get_status_display %}.
+        </div>
+      {% endif %}
+      <header {% if media|length > 0 %}class="withmedia" style="background-image: url('/media/{{ media.0.source }}');"{% endif %}>
+        <!-- Header Line -->
+        <h1>{{ location.name }}</h1> 
+        <span class="locator">
+          {% if location.chain.all.count > 0 %}
+            {% include 'snippets/chain.html' with chains=location.chain.all %}
+          {% endif %}
+          <a href="{% if location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}?category={{ location.category.slug }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate location.getPCategory|capfirst %} {% translate 'marked' %} {{ location.category.name|title }}">{% translate location.category.name|title %}</a> 
+          {% if location.location %}
+            in
+            <a href="{% if location.isActivity %}{% url 'location:ListLActivitiesByDepartment' location.location.parent.parent.slug location.location.parent.slug location.location.slug %}{% else %}{% url 'location:ListLocationsByDepartment' location.location.parent.parent.slug location.location.parent.slug location.location.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location }}">{% translate location.location.name|title %}</a>,
+            <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByRegion' location.location.parent.parent.slug location.location.parent.slug %}{% else %}{% url 'location:ListLocationsByRegion' location.location.parent.parent.slug location.location.parent.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.parent }}">{% translate location.location.parent.name|title %}</a>,
+            <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByCountry' location.location.parent.parent.slug %}{% else %}{% url 'location:ListLocationsByCountry' location.location.parent.parent.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.parent.parent.name }}">{% translate location.location.parent.parent.name|title %}</a>.
+          {% endif %}
+          {% if user.is_authenticated %}
+            {% translate 'viewable by'|capfirst %} {% translate location.get_visibility_display %}.
+          {% endif %}
+        </span>
+        <!-- Action List-->
+        {% if user.is_authenticated %}
+          <ul class="action list">
+            <!-- Home -->
+            {% if location == user.profile.home %}
+              <li><a href="{% url 'location:profile' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'this is marked as your home'|capfirst %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#house"/></svg></a></li>
+            {% endif %}
+            <!-- Visibility -->
+            {% if location.visibility in 'f,q' %}
+              <li><a href="{% if location.isActivity %}{% url 'location:EditActivity' location.slug %}{% else %}{% url 'location:EditLocation' location.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'viewable by'|capfirst %} {{ location.get_visibility_display }}">
+                <svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}" ><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#{% if location.visibility == 'q' %}person{% else %}people{% endif %}"/></svg>
+              </a></li>
+            {% endif %}
+            {% if not location in user.profile.least_liked.all %}
+              <!-- Favorite -->
+              <li><a href="{% url 'location:ToggleFavorite' location.slug %}" id="like" data-url="{% url 'location:aToggleFavorite' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if location in user.profile.favorite.all %}{% translate 'you like'|capfirst %}{% else %}{% translate 'like'|capfirst %}{% endif %} {% translate 'this location' %}"><svg class="bi" width="32" height="32" fill="#c00"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#balloon-heart{% if location in user.profile.favorite.all %}-fill{% endif %}"/></svg></a></li>
+            {% endif %}
+            {% if not location in user.profile.favorite.all %}<!-- Favorite -->
+              <!-- Least liked -->
+              <li><a href="{% url 'location:ToggleLeastLiked' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if location in user.profile.least_liked.all %}{% translate "you don't like"|capfirst %}{% else %}{% translate 'dislike'|capfirst %}{% endif %} {% translate 'this location' %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}#666{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#heartbreak{% if location in user.profile.least_liked.all %}-fill{% endif %}"/></svg></a></li>
+            {% endif %}
+            <!-- Add media -->
+            {% if perms.location.add_media %}
+              <li><a href="{% url 'location:AddMediaToLocation' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'add media to'|capfirst %} {% translate location.getCategory %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#camera"/></svg></a>
+            {% endif %}
+            {% if media|length > 0 %}
+                <li data-bs-toggle="tooltip" data-bs-placement="top" title="&quot;{{ media.0.title }}&quot; by {{ media.0.user.get_full_name }} ({{ media.0.get_visibility_display }} visible)">
+                  {% if user.is_staff %}<a href="{% url 'location:MediaStack' location.slug %}">{% endif %}
+                  <svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#image"/></svg>
+                  {% if user.is_staff %}</a>{% endif %}
+                </li>
+            {% endif %}
+            <!-- Edit -->
+            {% if perms.location.edit_location and location.user == user or location.visibility == 'p' or location.visibility == 'c' %}
+              <li><a href="{% if location.isActivity %}{% url 'location:EditActivity' location.slug %}{% else %}{% url 'location:EditLocation' location.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit information of'|capfirst %} {{ location.name }}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil"/></svg></a></li>
+            {% endif %}
+            {% if user.is_superuser %}
+              <li><a href="/admin/location/location/{{ location.id }}/change/" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit information of'|capfirst %} {{ location.name }} {% translate 'in admin' %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil-square"/></svg></a></li>
+            {% endif %}
+            <!-- Distance to home -->
+            {% if distance_to_home %}
+              <li data-bs-toggle="tooltip" data-bs-placement="top" title="{{ distance_to_home.getDistance }}, {{ distance_to_home.getTime }} {% translate 'from' %} {{ user.profile.home.name }}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#house-fill"/></svg></a></li>  
+            {% elif user.profile.home %}
+              <li><a href="{% url 'location:DistanceToHome' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'calculate distance from home to'|capfirst %} {{ location.name }}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#house"/></svg></a></li>  
+            {% endif %}
+            <!-- Reset data-->
+            {% if user.is_staff %}
+              <li><a href="{% url 'location:ResetLocation' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'reset location data and fetch again'|capfirst %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#arrow-clockwise{% if location in user.profile.least_liked.all %}-fill{% endif %}"/></svg></a></li>
+            {% endif %}
+          </ul>
         {% endif %}
-        <a href="{% if location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}?category={{ location.category.slug }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate location.getPCategory|capfirst %} {% translate 'marked' %} {{ location.category.name|title }}">{% translate location.category.name|title %}</a> 
-        {% if location.location %}
-          in
-          <a href="{% if location.isActivity %}{% url 'location:ListLActivitiesByDepartment' location.location.parent.parent.slug location.location.parent.slug location.location.slug %}{% else %}{% url 'location:ListLocationsByDepartment' location.location.parent.parent.slug location.location.parent.slug location.location.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location }}">{% translate location.location.name|title %}</a>,
-          <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByRegion' location.location.parent.parent.slug location.location.parent.slug %}{% else %}{% url 'location:ListLocationsByRegion' location.location.parent.parent.slug location.location.parent.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.parent }}">{% translate location.location.parent.name|title %}</a>,
-          <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByCountry' location.location.parent.parent.slug %}{% else %}{% url 'location:ListLocationsByCountry' location.location.parent.parent.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.parent.parent.name }}">{% translate location.location.parent.parent.name|title %}</a>.
+      </header>
+      <!-- Verify User Permissions -->
+      {% if location.visibility == 'q' and location.user != user %}
+        {% include 'snippets/private.html' %}
+        {% include 'snippets/click_here_to_register_login.html' %}
+      {% elif location.visibility == 'f' and location.user != user and user not in location.user.profile.family.all %}
+        {% include 'snippets/family.html' %}
+        {% include 'snippets/click_here_to_register_login.html' %}
+      {% elif location.visibility == 'c' and not user.is_authenticated %}
+        {% include 'snippets/community.html' %}
+        {% include 'snippets/click_here_to_register_login.html' %}
+      {% else %}
+
+      {% if location.description %}
+          <div class="spacer"></div>
+          <div class="object description">{{ location.description|markdown|safe }}</div>  
+        {% endif %}
+
+        <div class="spacer"></div>
+        
+        <!-- Location Address Details -->
+        <div class="row">
+          <div class="col-3 title-col">{% translate 'address'|title %}:</div>
+          <div class="col-9">
+            {{ location.address|default:'-' }}
+          </div>
+        </div>
+        {% if distance_to_home %}
+          <div class="row">
+            <div class="col-3"></div>
+            <div class="col-9">{{ distance_to_home.getDistance }} / {{ distance_to_home.getTime }} from {{ user.profile.home.name }}</div>
+          </div>
+        {% endif %}
+        {% if links|length > 0%}
+          <div class="row">
+            <div class="col-3 title-col">{% translate 'website'|title %}:</div>
+            <div class="col-9">
+              {% comment %} <a href="{{ location.website }}" target="_blank">{{ location.getWebsiteHostname }}</a> {% endcomment %}
+              {% for link in links %}
+                <a href="{{ link.url }}" target="_blank">{{ link.get_title }}</a>{% ifchanged link.primary %}<br>{% else %}{% if not forloop.last %}, {% endif %}{% endifchanged %}
+              {% endfor %}
+            </div>
+          </div>
         {% endif %}
         {% if user.is_authenticated %}
-          {% translate 'viewable by'|capfirst %} {% translate location.get_visibility_display %}.
+          {% if location.owners_names %}
+            <div class="row">
+              <div class="col-3 title-col">{% translate 'owners names'|title %}:</div>
+              <div class="col-9">{{ location.owners_names }}</div>
+            </div>
+          {% endif %}
+          {% if location.phone %}
+            <div class="row">
+              <div class="col-3 title-col">{% translate 'phone'|title %}:</div>
+              <div class="col-9">{{ location.phone|default:'-' }}</div>
+            </div>
+          {% endif %}
+          {% if location.home_of.all.count > 0 %}
+            <div class="row">
+              <div class="col-3 title-col">{% translate 'home of'|capfirst %}</div>
+              <div class="col-9">{% for profile in location.home_of.all %}{{ profile.user.get_full_name|default:profile.user.username }}{% if not forloop.last %}, {% endif %}{% endfor %}</div>
+            </div>
+          {% endif %}
         {% endif %}
-      </span>
-      <!-- Action List-->
-      {% if user.is_authenticated %}
-        <ul class="action list">
-          <!-- Home -->
-          {% if location == user.profile.home %}
-            <li><a href="{% url 'location:profile' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'this is marked as your home'|capfirst %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#house"/></svg></a></li>
-          {% endif %}
-          <!-- Visibility -->
-          {% if location.visibility in 'f,q' %}
-            <li><a href="{% if location.isActivity %}{% url 'location:EditActivity' location.slug %}{% else %}{% url 'location:EditLocation' location.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'viewable by'|capfirst %} {{ location.get_visibility_display }}">
-              <svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}" ><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#{% if location.visibility == 'q' %}person{% else %}people{% endif %}"/></svg>
-            </a></li>
-          {% endif %}
-          {% if not location in user.profile.least_liked.all %}
-            <!-- Favorite -->
-            <li><a href="{% url 'location:ToggleFavorite' location.slug %}" id="like" data-url="{% url 'location:aToggleFavorite' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if location in user.profile.favorite.all %}{% translate 'you like'|capfirst %}{% else %}{% translate 'like'|capfirst %}{% endif %} {% translate 'this location' %}"><svg class="bi" width="32" height="32" fill="#c00"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#balloon-heart{% if location in user.profile.favorite.all %}-fill{% endif %}"/></svg></a></li>
-          {% endif %}
-          {% if not location in user.profile.favorite.all %}<!-- Favorite -->
-            <!-- Least liked -->
-            <li><a href="{% url 'location:ToggleLeastLiked' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if location in user.profile.least_liked.all %}{% translate "you don't like"|capfirst %}{% else %}{% translate 'dislike'|capfirst %}{% endif %} {% translate 'this location' %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}#666{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#heartbreak{% if location in user.profile.least_liked.all %}-fill{% endif %}"/></svg></a></li>
-          {% endif %}
-          <!-- Add media -->
-          {% if perms.location.add_media %}
-            <li><a href="{% url 'location:AddMediaToLocation' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'add media to'|capfirst %} {% translate location.getCategory %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#camera"/></svg></a>
-          {% endif %}
-          {% if media|length > 0 %}
-              <li data-bs-toggle="tooltip" data-bs-placement="top" title="&quot;{{ media.0.title }}&quot; by {{ media.0.user.get_full_name }} ({{ media.0.get_visibility_display }} visible)">
-                {% if user.is_staff %}<a href="{% url 'location:MediaStack' location.slug %}">{% endif %}
-                <svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#image"/></svg>
-                {% if user.is_staff %}</a>{% endif %}
-              </li>
-          {% endif %}
-          <!-- Edit -->
-          {% if perms.location.edit_location and location.user == user or location.visibility == 'p' or location.visibility == 'c' %}
-            <li><a href="{% if location.isActivity %}{% url 'location:EditActivity' location.slug %}{% else %}{% url 'location:EditLocation' location.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit information of'|capfirst %} {{ location.name }}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil"/></svg></a></li>
-          {% endif %}
-          {% if user.is_superuser %}
-            <li><a href="/admin/location/location/{{ location.id }}/change/" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit information of'|capfirst %} {{ location.name }} {% translate 'in admin' %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil-square"/></svg></a></li>
-          {% endif %}
-          <!-- Distance to home -->
-          {% if distance_to_home %}
-            <li data-bs-toggle="tooltip" data-bs-placement="top" title="{{ distance_to_home.getDistance }}, {{ distance_to_home.getTime }} {% translate 'from' %} {{ user.profile.home.name }}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#house-fill"/></svg></a></li>  
-          {% elif user.profile.home %}
-            <li><a href="{% url 'location:DistanceToHome' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'calculate distance from home to'|capfirst %} {{ location.name }}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#house"/></svg></a></li>  
-          {% endif %}
-          <!-- Reset data-->
-          {% if user.is_staff %}
-            <li><a href="{% url 'location:ResetLocation' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'reset location data and fetch again'|capfirst %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#arrow-clockwise{% if location in user.profile.least_liked.all %}-fill{% endif %}"/></svg></a></li>
-          {% endif %}
-        </ul>
-      {% endif %}
-    </header>
-    <!-- Verify User Permissions -->
-    {% if location.visibility == 'q' and location.user != user %}
-      {% include 'snippets/private.html' %}
-      {% include 'snippets/click_here_to_register_login.html' %}
-    {% elif location.visibility == 'f' and location.user != user and user not in location.user.profile.family.all %}
-      {% include 'snippets/family.html' %}
-      {% include 'snippets/click_here_to_register_login.html' %}
-    {% elif location.visibility == 'c' and not user.is_authenticated %}
-      {% include 'snippets/community.html' %}
-      {% include 'snippets/click_here_to_register_login.html' %}
-    {% else %}
 
-    {% if location.description %}
-        <div class="spacer"></div>
-        <div class="object description">{{ location.description|markdown|safe }}</div>  
-      {% endif %}
-
-      <div class="spacer"></div>
-      
-      <!-- Location Address Details -->
-      <div class="row">
-        <div class="col-3 title-col">{% translate 'address'|title %}:</div>
-        <div class="col-9">
-          {{ location.address|default:'-' }}
-        </div>
+        <!-- map -->
+        {% if not location in user.profile.least_liked.all and location.coord_lat %}
+          <h3>{{ location.name }} {% translate 'on the map'|title %}:</h3>
+          <div id="map">
+            {% if not maps_permission %}
+              <p>
+                {% translate 'this site uses google maps to show the location of this object on a map'|capfirst %}.<br>
+                {% translate 'this means your data will be shared with google when the request loads'|capfirst %}.
+              </p>
+              <p>
+                <a href="{{ location.get_absolute_url }}?maps_permission=true">{% translate 'allow once'|capfirst %}</a>{% if user.is_authenticated and not user.profile.maps_permission %},{% else %} or{% endif %}
+                <a href="{% url 'location:MapsPermissionSession' %}?next={{ location.get_absolute_url }}">{% translate 'allow for this session' %}</a>
+                {% if user.is_authenticated %} or <a href="{% url 'location:MapsPermissionProfile' %}?next={{ location.get_absolute_url }}">{% translate 'always allow' %}</a>{% endif %}. </p>
+            {% endif %}
+          </div>
+          {% if maps_permission %}
+            <ul class="action list">
+              <li><a href="https://maps.google.com/maps?q={{ location.name|urlencode }}+{{ location.address|urlencode }}" rel="nofollow" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ location }} {% translate 'on google maps' %}"><img src="{% static 'bootstrap-icons/globe.svg' %}"></a></li>
+              <li><a href="https://www.google.com/maps/dir/{{ user.profile.get_home.address|urlencode }}/{{ location.address|urlencode }}/" rel="nofollow" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'navigate to from home'|capfirst %}"><img src="{% static 'bootstrap-icons/sign-turn-right.svg' %}"> to</a></li>
+              <li><a href="https://www.google.com/maps/dir/{{ location.address|urlencode }}/" rel="nofollow" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'navigate from'|capfirst %}"><img src="{% static 'bootstrap-icons/sign-turn-right.svg' %}"> from</a></li>
+            </ul>
+          {% endif %}
+        {% endif %}
       </div>
-      {% if distance_to_home %}
+
+      <!-- Categorisation and Tags -->
+      <div class="more information card">
         <div class="row">
-          <div class="col-3"></div>
-          <div class="col-9">{{ distance_to_home.getDistance }} / {{ distance_to_home.getTime }} from {{ user.profile.home.name }}</div>
+          <div class="col-12"><h2>{% translate 'more information'|capfirst %}:</h2></div>
         </div>
-      {% endif %}
-      {% if links|length > 0%}
+        <!-- Category -->
         <div class="row">
-          <div class="col-3 title-col">{% translate 'website'|title %}:</div>
-          <div class="col-9">
-            {% comment %} <a href="{{ location.website }}" target="_blank">{{ location.getWebsiteHostname }}</a> {% endcomment %}
-            {% for link in links %}
-              <a href="{{ link.url }}" target="_blank">{{ link.get_title }}</a>{% ifchanged link.primary %}<br>{% else %}{% if not forloop.last %}, {% endif %}{% endifchanged %}
-            {% endfor %}
+          <div class="col-3 title-col">{% translate 'category'|title %} ({{ location.additional_category.all.count|add:1 }}):</div>
+          <div class="col-9" id="categories">
+            <a href="{% url 'location:locations' %}?category={{ location.category.slug }}">{{ location.category.name|title }}{% with counter=location.category.locations.all.count|add:location.category.secondary_for.all.count %}{% if counter > 1 %} <sup>{{ counter }}</sup>{% endif %}{% endwith %}</a>{% if location.additional_category.all.count > 0 and user.is_authenticated %}, {% for category in location.additional_category.all %}<a href="{% url 'location:locations' %}?category={{ category.slug }}">{{ category|title }}{% with counter=category.locations.all.count|add:category.secondary_for.all.count %}{% if counter > 1 %} <sup>{{ counter }}</sup>{% endif %}{% endwith %}</a>{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}
           </div>
         </div>
-      {% endif %}
-      {% if user.is_authenticated %}
-        {% if location.owners_names %}
-          <div class="row">
-            <div class="col-3 title-col">{% translate 'owners names'|title %}:</div>
-            <div class="col-9">{{ location.owners_names }}</div>
-          </div>
-        {% endif %}
-        {% if location.phone %}
-          <div class="row">
-            <div class="col-3 title-col">{% translate 'phone'|title %}:</div>
-            <div class="col-9">{{ location.phone|default:'-' }}</div>
-          </div>
-        {% endif %}
-        {% if location.home_of.all.count > 0 %}
-          <div class="row">
-            <div class="col-3 title-col">{% translate 'home of'|capfirst %}</div>
-            <div class="col-9">{% for profile in location.home_of.all %}{{ profile.user.get_full_name|default:profile.user.username }}{% if not forloop.last %}, {% endif %}{% endfor %}</div>
-          </div>
-        {% endif %}
-      {% endif %}
-
-      <!-- map -->
-      {% if not location in user.profile.least_liked.all and location.coord_lat %}
-        <h3>{{ location.name }} {% translate 'on the map'|title %}:</h3>
-        <div id="map">
-          {% if not maps_permission %}
-            <p>
-              {% translate 'this site uses google maps to show the location of this object on a map'|capfirst %}.<br>
-              {% translate 'this means your data will be shared with google when the request loads'|capfirst %}.
-            </p>
-            <p>
-              <a href="{{ location.get_absolute_url }}?maps_permission=true">{% translate 'allow once'|capfirst %}</a>{% if user.is_authenticated and not user.profile.maps_permission %},{% else %} or{% endif %}
-              <a href="{% url 'location:MapsPermissionSession' %}?next={{ location.get_absolute_url }}">{% translate 'allow for this session' %}</a>
-              {% if user.is_authenticated %} or <a href="{% url 'location:MapsPermissionProfile' %}?next={{ location.get_absolute_url }}">{% translate 'always allow' %}</a>{% endif %}. </p>
-          {% endif %}
-        </div>
-        {% if maps_permission %}
-          <ul class="action list">
-            <li><a href="https://maps.google.com/maps?q={{ location.name|urlencode }}+{{ location.address|urlencode }}" rel="nofollow" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ location }} {% translate 'on google maps' %}"><img src="{% static 'bootstrap-icons/globe.svg' %}"></a></li>
-            <li><a href="https://www.google.com/maps/dir/{{ user.profile.get_home.address|urlencode }}/{{ location.address|urlencode }}/" rel="nofollow" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'navigate to from home'|capfirst %}"><img src="{% static 'bootstrap-icons/sign-turn-right.svg' %}"> to</a></li>
-            <li><a href="https://www.google.com/maps/dir/{{ location.address|urlencode }}/" rel="nofollow" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'navigate from'|capfirst %}"><img src="{% static 'bootstrap-icons/sign-turn-right.svg' %}"> from</a></li>
-          </ul>
-        {% endif %}
-      {% endif %}
-    </div>
-
-    <!-- Categorisation and Tags -->
-    <div class="more information card">
-      <div class="row">
-        <div class="col-12"><h2>{% translate 'more information'|capfirst %}:</h2></div>
-      </div>
-      <!-- Category -->
-      <div class="row">
-        <div class="col-3 title-col">{% translate 'category'|title %} ({{ location.additional_category.all.count|add:1 }}):</div>
-        <div class="col-9" id="categories">
-          <a href="{% url 'location:locations' %}?category={{ location.category.slug }}">{{ location.category.name|title }}{% with counter=location.category.locations.all.count|add:location.category.secondary_for.all.count %}{% if counter > 1 %} <sup>{{ counter }}</sup>{% endif %}{% endwith %}</a>{% if location.additional_category.all.count > 0 and user.is_authenticated %}, {% for category in location.additional_category.all %}<a href="{% url 'location:locations' %}?category={{ category.slug }}">{{ category|title }}{% with counter=category.locations.all.count|add:category.secondary_for.all.count %}{% if counter > 1 %} <sup>{{ counter }}</sup>{% endif %}{% endwith %}</a>{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}
-        </div>
-      </div>
-      <!-- Chain -->
-      <div class="row autoload" data-url="{% url 'location:aListChainsFor' location.slug %}" data-type="tag">
-        <div class="col-3 title-col">{% translate 'chain'|title %}<span class="valuecounter"></span>:</div>
-        <div class="col-8 list-col" id="tags"></div>
-        <div class="col-1 button-col"></div>
-      </div>
-      <!-- Tags -->
-      {% if user.is_authenticated %}
-        <div class="row autoload" data-url="{% url 'location:aListTagsFor' location.slug %}" data-type="tag">
-          <div class="col-3 title-col">{% translate 'tags'|title %}<span class="valuecounter"></span>:</div>
+        <!-- Chain -->
+        <div class="row autoload" data-url="{% url 'location:aListChainsFor' location.slug %}" data-type="tag">
+          <div class="col-3 title-col">{% translate 'chain'|title %}<span class="valuecounter"></span>:</div>
           <div class="col-8 list-col" id="tags"></div>
-          <div class="col-1 button-col"><button type="button" class="btn btn-outline-secondary show-edit">+</button></div>
+          <div class="col-1 button-col"></div>
         </div>
-        <div class="row add_autosuggest">
-          <div class="col-3 title-col"></div>
-          <div class="col-6 tag" id="addtag">
-            <input type="text" class="autocomplete autocapitalize form-control" placeholder="{% translate 'start typing'|capfirst %}..." name="addtag" data-suggestions="{% url 'location:aListTagSuggestionsFor' location.slug %}" data-url="{% url 'location:aAddTag' location.slug %}">
+        <!-- Tags -->
+        {% if user.is_authenticated %}
+          <div class="row autoload" data-url="{% url 'location:aListTagsFor' location.slug %}" data-type="tag">
+            <div class="col-3 title-col">{% translate 'tags'|title %}<span class="valuecounter"></span>:</div>
+            <div class="col-8 list-col" id="tags"></div>
+            <div class="col-1 button-col"><button type="button" class="btn btn-outline-secondary show-edit">+</button></div>
           </div>
-          <div class="col-3">
-            <button class="btn btn-primary submit-value">{% translate 'add'|capfirst %}</button>
+          <div class="row add_autosuggest">
+            <div class="col-3 title-col"></div>
+            <div class="col-6 tag" id="addtag">
+              <input type="text" class="autocomplete autocapitalize form-control" placeholder="{% translate 'start typing'|capfirst %}..." name="addtag" data-suggestions="{% url 'location:aListTagSuggestionsFor' location.slug %}" data-url="{% url 'location:aAddTag' location.slug %}">
+            </div>
+            <div class="col-3">
+              <button class="btn btn-primary submit-value">{% translate 'add'|capfirst %}</button>
+            </div>
           </div>
-        </div>
-      {% endif %}
-      <!-- Links -->
-      {% if location.link.all.count > 0 %}
+        {% endif %}
+        <!-- Links -->
+        {% if location.link.all.count > 0 %}
+          <div class="row">
+            <div class="col-3 title-col">{% if location.link.all.count == 1 %}{% translate 'link' %}{% else %}{% translate 'links' %}{% endif %}:</div>
+            <div class="col-9"><ul>
+              {% for link in location.link.all %}          
+                <li><a href="{{ link.url }}" target="_blank">{{ link.hostname }}</a></li>
+              {% endfor %}
+            </ul></div>
+          </div>
+        {% endif %}
+        <!-- Lists -->
+        {% if lists.count > 0 %}
         <div class="row">
-          <div class="col-3 title-col">{% if location.link.all.count == 1 %}{% translate 'link' %}{% else %}{% translate 'links' %}{% endif %}:</div>
-          <div class="col-9"><ul>
-            {% for link in location.link.all %}          
-              <li><a href="{{ link.url }}" target="_blank">{{ link.hostname }}</a></li>
-            {% endfor %}
-          </ul></div>
-        </div>
-      {% endif %}
-      <!-- Lists -->
-      {% if lists.count > 0 %}
-      <div class="row">
-        <div class="col-3 title-col">{% translate 'lists'|capfirst %}</div>
-        <div class="col-9">
-          <ul>
-            {% for list in lists %}
-              <li><a href="{% url 'location:list' list.list.slug %}">{{ list.list.name }}</a> {% translate 'by' %} {{ list.list.user.get_full_name|default:list.list.user.username }}: ({{ list.list.get_visibility_display }}, {{ list.list.locations.all.count }} location(s))</li>
-            {% endfor %}
-          </ul>
-        </div>
-      </div>
-      {% endif %}
-      {% if not location in user.profile.least_liked.all and perms.location.add_listlocation %}
-        {% include 'snippets/add_list_form.html' %}
-      {% endif %}
-      <!-- Visited In -->
-      {% if visitors.all.count > 0 %}
-        <div class="row">
-          <div class="col-3 title-col">{% translate 'your visits'|capfirst %}</div>
+          <div class="col-3 title-col">{% translate 'lists'|capfirst %}</div>
           <div class="col-9">
-            {% for visit in visitors.all %}
-              {% if visit.location == location %}{{ visit.year }}{% if not forloop.last %}, {% endif %}{% endif %}
-            {% endfor %}
+            <ul>
+              {% for list in lists %}
+                <li><a href="{% url 'location:list' list.list.slug %}">{{ list.list.name }}</a> {% translate 'by' %} {{ list.list.user.get_full_name|default:list.list.user.username }}: ({{ list.list.get_visibility_display }}, {{ list.list.locations.all.count }} location(s))</li>
+              {% endfor %}
+            </ul>
           </div>
         </div>
-      {% endif %}
-    </div>
-
-    <!-- Nearby -->
-    {% if nearby_locations|length > 1%}
-      <div class="nearby card">
-        <h2>{% translate 'nearby'|capfirst %}</h2>
-        {% for location in nearby_locations %}
-          {% comment %} <li>{% include 'snippets/location_link.html' with location=location.0 %} ( {{ location.1|floatformat }} km)</a> {% endcomment %}
-          {% include 'snippets/location_flashcard.html' with location=location.0 distance=location.1 %}
-        {% endfor %}
+        {% endif %}
+        {% if not location in user.profile.least_liked.all and perms.location.add_listlocation %}
+          {% include 'snippets/add_list_form.html' %}
+        {% endif %}
+        <!-- Visited In -->
+        {% if visitors.all.count > 0 %}
+          <div class="row">
+            <div class="col-3 title-col">{% translate 'your visits'|capfirst %}</div>
+            <div class="col-9">
+              {% for visit in visitors.all %}
+                {% if visit.location == location %}{{ visit.year }}{% if not forloop.last %}, {% endif %}{% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
       </div>
-    {% endif %}
 
-
-    <!-- async comments -->
-    <div class="comments card">
-      <h2>{% translate 'comments'|capfirst %} <span id="comment counter"></span></h2>
-      {% if perms.location.add_comment %}
-        {% include 'location/comment_add.html' %}
-      {% else %}
-        <div class="register promo">
-          <p><a href="{% url 'login' %}?next={{ request.get_full_path }}">{% translate 'sign in'|capfirst %}</a> {% translate 'or' %} <a href="#">{% translate 'register' %}</a> {% translate 'to comment' %}{% if could_have_comments %} {% translate 'or see comments shared with the community' %}{% endif %}.</p>
+      <!-- Nearby -->
+      {% if nearby_locations|length > 1%}
+        <div class="nearby card">
+          <h2>{% translate 'nearby'|capfirst %}</h2>
+          {% for location in nearby_locations %}
+            {% comment %} <li>{% include 'snippets/location_link.html' with location=location.0 %} ( {{ location.1|floatformat }} km)</a> {% endcomment %}
+            {% include 'snippets/location_flashcard.html' with location=location.0 distance=location.1 %}
+          {% endfor %}
         </div>
       {% endif %}
-      <div id="comment-messages"><!-- Comment messages to be placed here --></div>
-      <div id="comments"><!-- Comments to be placed here async --></div>    
-    </div>
-      
-    
+
+
+      <!-- async comments -->
+      <div class="comments card">
+        <h2>{% translate 'comments'|capfirst %} <span id="comment counter"></span></h2>
+        {% if perms.location.add_comment %}
+          {% include 'location/comment_add.html' %}
+        {% else %}
+          <div class="register promo">
+            <p><a href="{% url 'login' %}?next={{ request.get_full_path }}">{% translate 'sign in'|capfirst %}</a> {% translate 'or' %} <a href="#">{% translate 'register' %}</a> {% translate 'to comment' %}{% if could_have_comments %} {% translate 'or see comments shared with the community' %}{% endif %}.</p>
+          </div>
+        {% endif %}
+        <div id="comment-messages"><!-- Comment messages to be placed here --></div>
+        <div id="comments"><!-- Comments to be placed here async --></div>    
+      </div>
+      {% endif %}
     {% endif %}
   </div>
 {% endblock %}

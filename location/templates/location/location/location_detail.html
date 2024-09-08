@@ -87,7 +87,7 @@
 
     {% if location.description %}
         <div class="spacer"></div>
-        <div class="object description">{{ location.description|safe }}</div>  
+        <div class="object description">{{ location.description|markdown|safe }}</div>  
       {% endif %}
 
       <div class="spacer"></div>

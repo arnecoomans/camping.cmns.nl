@@ -81,6 +81,14 @@
                 </select>
               </div>
             </div>
+            <div class="row">
+              <div class="col-3 title-col">{% translate 'status'|capfirst %}:</div>
+              <div class="col-9">
+                <select id="status" name="status" class="form-control">
+                  {% for key, value in form.fields.status.choices %}
+                    <option value="{{ key }}" {% if location.status == key %}selected{% endif %}>{{ value }}</option>
+                  {% endfor %}
+                </select>
           {% endif %}
         {% endif %}
         <div class="row">

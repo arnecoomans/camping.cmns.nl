@@ -31,7 +31,8 @@ class Profile(models.Model):
   maps_permission     = models.BooleanField(default=False, help_text=_('Give permission to load Google Maps map on location detail page'))
 
   show_category_label = models.BooleanField(default=True, help_text=_('Show category label on location list page'))
-
+  filter_by_distance  = models.BooleanField(default=False, help_text=_('Allow to filter locations by distance'))
+  
   def __str__(self) -> str:
     return f'Profile of { self.user.get_full_name() if self.user.get_full_name() else self.user.username }'
   

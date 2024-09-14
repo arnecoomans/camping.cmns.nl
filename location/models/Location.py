@@ -3,7 +3,6 @@
 '''
 
 from datetime import datetime
-from typing import Iterable
 
 from django.db import models
 from django.contrib import messages

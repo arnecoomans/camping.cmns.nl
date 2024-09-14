@@ -73,11 +73,15 @@
               <li><a href="/admin/location/location/{{ location.id }}/change/" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit information of'|capfirst %} {{ location.name }} {% translate 'in admin' %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil-square"/></svg></a></li>
             {% endif %}
             <!-- Distance to home -->
-            {% if distance_to_home %}
+            {% if not location.category.name == 'Home' and distance_to_home %}
               <li data-bs-toggle="tooltip" data-bs-placement="top" title="{{ distance_to_home.getDistance }}, {{ distance_to_home.getTime }} {% translate 'from' %} {{ user.profile.home.name }}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#house-fill"/></svg></a></li>  
-            {% elif user.profile.home %}
+            {% elif not location.category.name == 'Home' and user.profile.home %}
               <li><a href="{% url 'location:DistanceToHome' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'calculate distance from home to'|capfirst %} {{ location.name }}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#house"/></svg></a></li>  
             {% endif %}
+            <!-- Distance to center -->
+             {% if request.user.is_staff %}
+              <li><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#geo" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'geographical distance to centre'|capfirst %}: {{ location.distance_to_departure_center }} {% translate 'km' %} ({% translate 'straight line' %})"></svg></li>
+             {% endif %}
             <!-- Reset data-->
             {% if user.is_staff %}
               <li><a href="{% url 'location:ResetLocation' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'reset location data and fetch again'|capfirst %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#arrow-clockwise{% if location in user.profile.least_liked.all %}-fill{% endif %}"/></svg></a></li>

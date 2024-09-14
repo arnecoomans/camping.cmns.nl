@@ -96,7 +96,26 @@ class LocationListMaster(FilterClass):
         self.available_filters['has_visited']   = True if self.get_queryset().filter(visitors__user=self.request.user).count() > 1 else False
       self.available_filters['order']         = ['distance', 'region']
       return self.available_filters
-
+  
+  ''' Range '''
+  def get_range(self):
+    location_list = self.get_queryset().exclude(category__name__iexact='home').exclude(distance_to_departure_center=None).order_by('distance_to_departure_center')
+    min = location_list.first().distance_to_departure_center
+    max = location_list.last().distance_to_departure_center
+    min = floor(min/100)*100
+    max = ceil(max/100)*100
+    count_steps = ceil(max/100) - floor(min/100)
+    steps = [min]
+    i = 1
+    while i < count_steps:
+      steps.append(min + i*100)
+      i += 1
+    steps.append(max)
+    return {
+      'min': min,
+      'max': max,
+      'steps': steps
+    }
 
   ''' Filter Queryset 
       Uses get_active_filters to determine filters that need to be processed
@@ -206,6 +225,7 @@ class LocationListMaster(FilterClass):
     if self.get_queryset().count() > 0:
       context['min_min_distance'] = floor(self.get_queryset().order_by('distance_to_departure_center').exclude(distance_to_departure_center=None).first().distance_to_departure_center / 100) * 100
       context['max_max_distance'] = ceil(self.get_queryset().order_by('distance_to_departure_center').exclude(distance_to_departure_center=None).last().distance_to_departure_center / 100) * 100
+      context['range'] = self.get_range()
     return context
   
 

@@ -1,25 +1,34 @@
 {% load i18n %}{% load static %}
 <div class="filter card">
+  <!-- Show result counter -->
   <div class="results">
-    <strong>{% translate 'showing'|capfirst %} {{ location_list.all.count }} {% translate scope %}:</strong>
-    (<a href="/map/{% if active_filters.country %}{{ active_filters.country }}/{% endif %}{% if active_filters.region %}{{ active_filters.region }}/{% endif %}{% if active_filters.department %}{{ active_filters.department }}/{% endif %}?{% if active_filters.category %}category={{ active_filters.category|join:"," }}&{% endif %}{% if active_filters.tag %}tag={{ active_filters.tag|join:"," }}&{% endif %}{% if active_filters.favorites %}favorites&{% endif %}">{% translate 'show on map'|capfirst %}</a>)
+    <strong>{% translate 'showing'|capfirst %} {{ location_list.all.count }} {% translate scope %}, {% translate 'sorted on' %} {{ active_filters.order }}:</strong><br>
+    <!-- Quick filters and actions -->
+    |
+    {% if active_filters|length > 3 %}<a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}" title="{% translate 'reset all active filters'|capfirst %}">{% translate 'show all'|capfirst %}</a> |{% endif %}
+    <a href="/map/{% if active_filters.country %}{{ active_filters.country }}/{% endif %}{% if active_filters.region %}{{ active_filters.region }}/{% endif %}{% if active_filters.department %}{{ active_filters.department }}/{% endif %}?{% if active_filters.category %}category={{ active_filters.category|join:"," }}&{% endif %}{% if active_filters.tag %}tag={{ active_filters.tag|join:"," }}&{% endif %}{% if active_filters.favorites %}favorites&{% endif %}">{% translate 'on map'|capfirst %}</a> |
+    <!-- Special status -->
+    {% if available_filters.has_favorites and 'favorites' not in active_filters %}<a href="{% include 'snippets/filter_url_queryparams.html' %}&favorites">{% translate 'only favorites'|capfirst %}</a> | {% endif %}
+    <!-- Ordering -->
+    {% translate 'order by'|capfirst %}: {% for option in available_filters.order %}{% if option != active_filters.order %}<a href="?{% include 'snippets/filter_url_queryparams.html' with removedword='order' %}&order={{ option }}">{{ option|title }}</a>{% endif %}{% endfor %} |
   </div>
+  <br>
   <!-- Active Filters -->
-  {% if active_filters|length > 0 %}
-    <div class="active filters">
+  <div class="active filters">
+    {% if active_filters|length > 3 %}
       {% translate 'filtered on'|capfirst %}:
       <ul class="filter list">
         <!-- Location filter -->
         {% if 'country' in active_filters or 'region' in active_filters or department in active_filters %}
           <li> 
             {% if 'country' in active_filters %}
-              <a href="{% url 'location:locations' %}?{% include 'snippets/filter_url_queryparams.html' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location_list.first.country|default:active_filters.country|title }} {% translate 'from filter' %}">{% translate location_list.first.country.name|default:active_filters.country|title %}</a>
+              <a href="{% url 'location:locations' %}{% include 'snippets/filter_url_queryparams.html' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location_list.first.country|default:active_filters.country|title }} {% translate 'from filter' %}">{% translate location_list.first.country.name|default:active_filters.country|title %}</a>
             {% endif %}
             {% if 'region' in active_filters %}
-              &gt; <a href="{% url 'location:ListLocationsByCountry' active_filters.country %}?{% include 'snippets/filter_url_queryparams.html' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location_list.first.region|default:active_filters.region|title }} {% translate 'from filter' %}">{% translate location_list.first.region.name|default:active_filters.region|title %}</a>
+              &gt; <a href="{% url 'location:ListLocationsByCountry' active_filters.country %}{% include 'snippets/filter_url_queryparams.html' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location_list.first.region|default:active_filters.region|title }} {% translate 'from filter' %}">{% translate location_list.first.region.name|default:active_filters.region|title %}</a>
             {% endif %}
             {% if 'department' in active_filters %}
-              &gt; <a href="{% url 'location:ListLocationsByRegion' active_filters.country active_filters.region %}?{% include 'snippets/filter_url_queryparams.html' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location_list.first.department|default:active_filters.department|title }} {% translate 'from filter' %}">{% translate location_list.first.department.name|default:active_filters.department|title %}</a>
+              &gt; <a href="{% url 'location:ListLocationsByRegion' active_filters.country active_filters.region %}{% include 'snippets/filter_url_queryparams.html' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location_list.first.department|default:active_filters.department|title }} {% translate 'from filter' %}">{% translate location_list.first.department.name|default:active_filters.department|title %}</a>
             {% endif %}
           </li>
         {% endif %}
@@ -41,8 +50,8 @@
           <li><a href="{% include 'snippets/filter_url_queryparams.html' with removedword='visited' %}">{% translate 'visited'|capfirst %}: {% if active_filters.visited == 'True' %}{% translate 'in' %} {{ active_filters.visited }}{% else %}{% translate 'all visited locations'|capfirst %}{% endif %} <svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#x"/></svg></a></li>
         {% endif %}
       </ul>
-    </div>
-  {% endif %}
+    {% endif %}
+  </div>
 
   <!-- Available Filters -->
   {% if available_filters %}
@@ -51,24 +60,24 @@
       <ul class="filter list">
       <!-- Offer filter by Location -->
         {% if available_filters.countries.all.count > 1 or available_filters.regions.all.count > 1 or available_filters.departments.all.count > 1%}
-          <li>{% translate 'list locations in'|capfirst %}: 
+          <li><strong>{% translate 'list locations in'|capfirst %}:</strong> 
         {% endif %}
         {% if available_filters.countries.all.count > 1 %}
-          {% for country in available_filters.countries.all %}
+          {% for country in available_filters.countries.all  %}
             {% if country.location__parent__parent__name %}
-              <a href="{% if scope == 'locations' %}{% url 'location:ListLocationsByCountry' country.location__parent__parent__slug %}{% elif scope == 'activities' %}{% url 'location:ListActivitiesByCountry' country.location__parent__parent__slug %}{% else %}{% url 'location:SearchByCountry' country.location__parent__parent__slug %}{% endif %}?{% include 'snippets/filter_url_queryparams.html' %}">{% translate country.location__parent__parent__name|title %}</a>{% if not forloop.last %}, {% endif %} 
+              <a href="{% if scope == 'locations' %}{% url 'location:ListLocationsByCountry' country.location__parent__parent__slug %}{% elif scope == 'activities' %}{% url 'location:ListActivitiesByCountry' country.location__parent__parent__slug %}{% else %}{% url 'location:SearchByCountry' country.location__parent__parent__slug %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{% translate country.location__parent__parent__name|title %}</a>{% if not forloop.last %}, {% endif %} 
             {% endif %}
           {% endfor %}
         {% elif available_filters.regions.all.count > 1 %}
           {% for region in available_filters.regions.all %}
             {% if region.location__parent__name %}
-              <a href="{% if scope == 'locations' %}{% url 'location:ListLocationsByRegion' available_filters.countries.first.location__parent__parent__slug region.location__parent__slug %}{% elif scope == 'activities' %}{% url 'location:ListActivitiesByRegion' available_filters.countries.first.location__parent__parent__slug region.location__parent__slug %}{% else %}{% url 'location:SearchByRegion' available_filters.countries.first.location__parent__parent__slug region.location__parent__slug %}{% endif %}?{% include 'snippets/filter_url_queryparams.html' %}">{% translate region.location__parent__name|title %}</a>{% if not forloop.last %}, {% endif %} 
+              <a href="{% if scope == 'locations' %}{% url 'location:ListLocationsByRegion' available_filters.countries.first.location__parent__parent__slug region.location__parent__slug %}{% elif scope == 'activities' %}{% url 'location:ListActivitiesByRegion' available_filters.countries.first.location__parent__parent__slug region.location__parent__slug %}{% else %}{% url 'location:SearchByRegion' available_filters.countries.first.location__parent__parent__slug region.location__parent__slug %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{% translate region.location__parent__name|title %}</a>{% if not forloop.last %}, {% endif %} 
             {% endif %}
           {% endfor %}
         {% elif available_filters.departments.all.count > 1%}
           {% for department in available_filters.departments.all %}
             {% if department.location__name %}
-              <a href="{% if scope == 'locations' %}{% url 'location:ListLocationsByDepartment' available_filters.countries.first.location__parent__parent__slug available_filters.regions.first.location__parent__slug department.location__slug%}{% elif scope == 'activities' %}{% url 'location:ListLActivitiesByDepartment' available_filters.countries.first.location__parent__parent__slug available_filters.regions.first.location__parent__slug department.location__slug %}{% else %}{% url 'location:SearchByDepartment' available_filters.countries.first.location__parent__parent__slug available_filters.regions.first.location__parent__slug department.location__slug %}{% endif %}?{% include 'snippets/filter_url_queryparams.html' %}">{% translate department.location__name|title %}</a>{% if not forloop.last %}, {% endif %} 
+              <a href="{% if scope == 'locations' %}{% url 'location:ListLocationsByDepartment' available_filters.countries.first.location__parent__parent__slug available_filters.regions.first.location__parent__slug department.location__slug%}{% elif scope == 'activities' %}{% url 'location:ListLActivitiesByDepartment' available_filters.countries.first.location__parent__parent__slug available_filters.regions.first.location__parent__slug department.location__slug %}{% else %}{% url 'location:SearchByDepartment' available_filters.countries.first.location__parent__parent__slug available_filters.regions.first.location__parent__slug department.location__slug %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{% translate department.location__name|title %}</a>{% if not forloop.last %}, {% endif %} 
             {% endif %}
           {% endfor %}
         {% endif %}
@@ -77,40 +86,44 @@
         {% endif %}  
       <!-- Category -->
         {% if available_filters.categories.all.count > 1 and 'category' not in active_filters %}
-          <li>{% translate 'category'|capfirst %}:
+          <li><strong>{% translate 'category'|capfirst %}</strong>:
           {% for category in available_filters.categories.all %}
-              <a href="?{% include 'snippets/filter_url_queryparams.html' %}&category={{ category.category__slug}}">{% translate category.category__name|title %}</a>{% if not forloop.last %}, {% else %}{% if available_filters.tag|length > 1 %},{% endif %}{% endif %}
+              <a href="{% include 'snippets/filter_url_queryparams.html' %}&category={{ category.category__slug}}">{% translate category.category__name|title %}</a>{% if not forloop.last %}, {% else %}{% if available_filters.tag|length > 1 %},{% endif %}{% endif %}
           {% endfor %}
           </li>
         {% endif %}
       <!-- Tags -->
         {% if available_filters.tags.all.count > 1 and 'tag' not in active_filters %}
-          <li>{% translate 'tag'|capfirst %}:
+          <li><strong>{% translate 'tag'|capfirst %}:</strong>
           {% for tag in available_filters.tags.all %}
-            <a href="?{% include 'snippets/filter_url_queryparams.html' %}&tag={{ tag.tags__slug }}">{% translate tag.tags__name|title %}</a>{% if not forloop.last %}, {% endif %}
+            <a href="{% include 'snippets/filter_url_queryparams.html' %}&tag={{ tag.tags__slug }}">{% translate tag.tags__name|title %}</a>{% if not forloop.last %}, {% endif %}
           {% endfor %}
         {% endif %}
-      <!-- Special status -->
-        {% if available_filters.has_favorites and 'favorites' not in active_filters %}
-          <li><a href="?{% include 'snippets/filter_url_queryparams.html' %}&favorites">{% translate 'show only favorites'|capfirst %}</a></li>
+      <!-- Distance -->
+       {% if range and request.user.profile.filter_by_distance %}
+          <li>
+            <form method="get">
+              <div class="input-group mb-3">
+                <span class="input-group-text">{% translate 'distance between'|capfirst %}<sup title="{% translate 'in a straight line from central location'|capfirst %}">(i)</sup>:</span>
+                <select class="form-select" name="min">
+                  {% for step in range.steps %}
+                    {% if not forloop.last %}
+                      <option value="{{ step }}" {% if step == range.min %}selected{% endif %}>{{ step }} km</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+                <select class="form-select" name="max">
+                  {% for step in range.steps %}
+                    {% if not forloop.first %}
+                      <option value="{{ step }}" {% if step == range.max %}selected{% endif %}>{{ step }} km</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+                <input type="submit" value="{% translate 'filter'|capfirst %}" class="btn btn-primary">
+              </div>
+            </form>
+          </li>
         {% endif %}
-      <!-- Ordering -->
-      <li>{% translate 'order by'|capfirst %}:
-        {% for option in available_filters.order %}
-          {% if option == active_filters.order %}
-            <span class="active">
-          {% else %}
-            <a href="?{% include 'snippets/filter_url_queryparams.html' with removedword='order' %}&order={{ option }}">
-          {% endif %}
-          {{ option|title }}
-          {% if option == active_filters.order %}
-            </span>
-          {% else %}
-            </a>
-          {% endif %}
-          {% if not forloop.last %} | {% endif %}
-        {% endfor %}
-      </li>
       </ul>
     </div>
   {% endif %}

@@ -99,6 +99,16 @@
           </div>
         </div>
       </div>
+      <!-- Allow filtering on location distance -->
+      <div class="row">
+        <div class="col-3 title-col">{% translate 'filter on distance'|capfirst %}</div>
+        <div class="col-9">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" name="filter_by_distance" id="filter_by_distance" {% if user.profile.filter_by_distance %}checked{% endif %}>
+            <label class="form-check-label" for="filter_by_distance">{% translate 'allow filtering on distance'|capfirst %}.</label>
+          </div>
+        </div>
+      </div>
 
       <div class="spacer"></div>
       <div class="row">

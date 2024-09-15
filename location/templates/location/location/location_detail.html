@@ -75,12 +75,12 @@
             <!-- Distance to home -->
             {% if not location.category.name == 'Home' and distance_to_home %}
               <li data-bs-toggle="tooltip" data-bs-placement="top" title="{{ distance_to_home.getDistance }}, {{ distance_to_home.getTime }} {% translate 'from' %} {{ user.profile.home.name }}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#house-fill"/></svg></a></li>  
-            {% elif not location.category.name == 'Home' and user.profile.home %}
+            {% elif not location.category.name == 'Home' and user.profile.home and location.coord_lat and location.coord_lng %}
               <li><a href="{% url 'location:DistanceToHome' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'calculate distance from home to'|capfirst %} {{ location.name }}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#house"/></svg></a></li>  
             {% endif %}
             <!-- Distance to center -->
-             {% if request.user.is_staff %}
-              <li><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#geo" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'geographical distance to centre'|capfirst %}: {{ location.distance_to_departure_center }} {% translate 'km' %} ({% translate 'straight line' %})"></svg></li>
+             {% if request.user.is_staff and location.distance_to_departure_center %}
+              <li><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#geo" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'geographical distance from'|capfirst %} {{ departure_center }} {% translate 'to this location' %}: {{ location.distance_to_departure_center }} {% translate 'km' %} ({% translate 'straight line' %})"></svg></li>
              {% endif %}
             <!-- Reset data-->
             {% if user.is_staff %}

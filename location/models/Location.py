@@ -267,6 +267,9 @@ class Location(BaseModel):
     ''' Ensure lat and lng are stored of the current location '''
     if not self.coord_lat or not self.coord_lng:
       self.getLatLng(request=request)
+      if not self.coord_lat or not self.coord_lng:
+        self.distance_to_departure_center = None
+        return None
     ''' Fetch Google Geolocation data for departure '''
     try:
       geolocator = GoogleV3(api_key=settings.GOOGLE_API_KEY)

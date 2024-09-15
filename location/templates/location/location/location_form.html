@@ -162,7 +162,7 @@
         <div class="row add_autosuggest">
           <div class="col-3 title-col"></div>
           <div class="col-6 tag" id="addtag">
-            <input type="text" class="autocomplete autocapitalize form-control" placeholder="{% translate 'start typing'|capfirst %}..." data-suggestions="{% url 'location:aListChainSuggestionsFor' location.slug %}" data-url="{% url 'location:aAddChain' location.slug %}">
+            <input type="text" class="autocomplete autocapitalize form-control submit-value" placeholder="{% translate 'start typing'|capfirst %}..." data-suggestions="{% url 'location:aListChainSuggestionsFor' location.slug %}" data-url="{% url 'location:aAddChain' location.slug %}">
           </div>
           <div class="col-3">
             <button class="btn btn-primary submit-value">{% translate 'add'|capfirst %}</button>
@@ -177,7 +177,7 @@
         <div class="row add_autosuggest"> 
           <div class="col-3 title-col"></div>
           <div class="col-6" id="additional_categories"> 
-            <input type="text" class="autocomplete autocapitalize form-control" placeholder="{% translate 'start typing'|capfirst %}..." name="addcategory" data-suggestions="{% url 'location:aListCategorySuggestionsFor' location.slug %}" data-url="{% url 'location:aAddCategory' location.slug %}">
+            <input type="text" class="autocomplete autocapitalize form-control submit-value" placeholder="{% translate 'start typing'|capfirst %}..." name="addcategory" data-suggestions="{% url 'location:aListCategorySuggestionsFor' location.slug %}" data-url="{% url 'location:aAddCategory' location.slug %}">
           </div>
           <div class="col-3">
             <button class="btn btn-primary submit-value">{% translate 'add'|capfirst %}</button>
@@ -192,7 +192,7 @@
         <div class="row add_autosuggest">
           <div class="col-3 title-col"></div>
           <div class="col-6 tag" id="addtag">
-            <input type="text" class="autocomplete autocapitalize form-control" placeholder="{% translate 'start typing'|capfirst %}..." name="addtag" data-suggestions="{% url 'location:aListTagSuggestionsFor' location.slug %}" data-url="{% url 'location:aAddTag' location.slug %}">
+            <input type="text" class="autocomplete autocapitalize form-control submit-value" placeholder="{% translate 'start typing'|capfirst %}..." name="addtag" data-suggestions="{% url 'location:aListTagSuggestionsFor' location.slug %}" data-url="{% url 'location:aAddTag' location.slug %}">
           </div>
           <div class="col-3">
             <button class="btn btn-primary submit-value">{% translate 'add'|capfirst %}</button>

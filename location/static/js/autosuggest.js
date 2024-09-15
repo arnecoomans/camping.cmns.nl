@@ -93,7 +93,20 @@ $(document).ready(function() {
     var value = element.val();
     var url = element.data('url');
     toggleValue(element, url, value);
+    event.stopPropagation(); // Prevent the event from bubbling up the DOM tree
+    event.preventDefault(); // Prevent the default action if needed
   });
+  $('.row').on('keypress', '.submit-value', function(e) {
+    if(e.which === 13){
+      // Fetch element and element data
+      var element = $(this);
+      var value = element.val();
+      var url = element.data('url');
+      toggleValue(element, url, value);
+      event.stopPropagation(); // Prevent the event from bubbling up the DOM tree
+      event.preventDefault(); // Prevent the default action if needed
+    }
+    });
 
   // When the "x" button is clicked, remove the value from the list
   $('div').on('click', '.remove-value', function(event){

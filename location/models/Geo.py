@@ -13,6 +13,8 @@ class Region(models.Model):
   name                = models.CharField(max_length=255)
   parent              = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='children')
   
+  order               = models.PositiveIntegerField(default=0, help_text=f"{ _('add order to countries for sorting in distance sorted overview') }. { _('only works for countries') }")
+
   # Meta-information
   date_added          = models.DateTimeField(editable=False, auto_now_add=True)
   date_modified       = models.DateTimeField(editable=False, auto_now=True)

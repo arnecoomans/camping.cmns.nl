@@ -177,11 +177,13 @@ class LocationListMaster(FilterClass):
     if order == 'distance':
       queryset = queryset.annotate(
           department_average_distance=Avg("location__locations__distance_to_departure_center"),
-          region_average_distance=Avg("location__parent__children__locations__distance_to_departure_center"))
+          region_average_distance=Avg("location__parent__children__locations__distance_to_departure_center"),
           # Removed country because it added quite the processing time
-          # country_average_distance=Avg("location__parent__parent__children__children__locations__distance_to_departure_center"),)
+          #country_average_distance=Avg("location__parent__parent__children__children__locations__distance_to_departure_center"),
+      )
       queryset = queryset.order_by(
-          'location__parent__parent', 'department_average_distance', 'region_average_distance', 'name').distinct()
+          'location__parent__parent__order', 'location__parent__parent', 'department_average_distance', 'region_average_distance', 'name').distinct()
+          # 'location__parent__parent', 'department_average_distance', 'region_average_distance', 'name').distinct()
     elif order == 'name':
       queryset = queryset.order_by('name')
     elif order == 'date_added':

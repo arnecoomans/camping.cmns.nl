@@ -47,7 +47,7 @@ class LocationListMaster(FilterClass):
       ''' Query filters
           are part of the request but not part of the url
       '''
-      for field in ['category', 'tag', 'chain', 'q', 'visibility', 'only']:
+      for field in ['category', 'tag', 'chain', 'q', 'visibility', 'only', ]:
         if self.request.GET.get(field, False):
           ''' All values in query parameters should be a list.
               Multiple values are seperated by a , resulting in multiple list items

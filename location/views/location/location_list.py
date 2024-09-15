@@ -182,8 +182,8 @@ class LocationListMaster(FilterClass):
           #country_average_distance=Avg("location__parent__parent__children__children__locations__distance_to_departure_center"),
       )
       queryset = queryset.order_by(
-          'location__parent__parent__order', 'location__parent__parent', 'department_average_distance', 'region_average_distance', 'name').distinct()
-          # 'location__parent__parent', 'department_average_distance', 'region_average_distance', 'name').distinct()
+          'location__parent__parent__order', 'region_average_distance', 'department_average_distance', 'name'
+      ).distinct()
     elif order == 'name':
       queryset = queryset.order_by('name')
     elif order == 'date_added':
@@ -193,7 +193,7 @@ class LocationListMaster(FilterClass):
     else:
       ''' Implicit ordering by region '''
       queryset = queryset.order_by(
-          'location__parent__parent', 'location__parent', 'location__name', 'name').distinct()
+          'location__parent__parent__order', 'location__parent', 'location__name', 'name').distinct()
     return queryset
 
   ''' Get Queryset

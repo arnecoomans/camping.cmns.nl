@@ -4,6 +4,8 @@ from django.utils.translation import gettext as _
 from django.urls import reverse_lazy, reverse
 from django.conf import settings
 from django.db.models import Avg
+from django.shortcuts import redirect
+from django.utils.html import escape
 
 from ..snippets.filter_class import FilterClass
 
@@ -229,6 +231,13 @@ class LocationListMaster(FilterClass):
       context['max_max_distance'] = ceil(self.get_queryset().order_by('distance_to_departure_center').exclude(distance_to_departure_center=None).last().distance_to_departure_center / 100) * 100
       context['range'] = self.get_range()
     return context
+  
+  def get(self, request, *args, **kwargs):
+    ''' Check for maps permission '''
+    if self.get_queryset().count() == 1 and self.request.GET.get('q', False):
+      messages.add_message(request, messages.INFO, f"{ _('Single search result found for') } { escape(self.request.GET.get('q', '')) }. { _('Redirecting to location') }.")
+      return redirect(self.get_queryset().first().get_absolute_url())
+    return super().get(request, *args, **kwargs)
   
 
 class LocationListView(LocationListMaster, ListView):

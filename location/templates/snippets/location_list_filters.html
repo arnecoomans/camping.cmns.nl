@@ -100,7 +100,7 @@
           {% endfor %}
         {% endif %}
       <!-- Distance -->
-       {% if range and request.user.profile.filter_by_distance %}
+       {% if range and range.steps|length > 3 and request.user.profile.filter_by_distance %}
           <li>
             <form method="get">
               <div class="input-group mb-3">

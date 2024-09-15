@@ -15,7 +15,7 @@
   <br>
   <!-- Active Filters -->
   <div class="active filters">
-    {% if active_filters|length > 3 %}
+    {% if active_filters|length > 3 or active_filters.dist_min != None or active_filters.dist_max != None %}
       {% translate 'filtered on'|capfirst %}:
       <ul class="filter list">
         <!-- Location filter -->
@@ -48,6 +48,12 @@
         {% endif %}
         {% if 'visited' in active_filters %}
           <li><a href="{% include 'snippets/filter_url_queryparams.html' with removedword='visited' %}">{% translate 'visited'|capfirst %}: {% if active_filters.visited == 'True' %}{% translate 'in' %} {{ active_filters.visited }}{% else %}{% translate 'all visited locations'|capfirst %}{% endif %} <svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#x"/></svg></a></li>
+        {% endif %}
+        <!-- Distance -->
+        {% if active_filters.dist_min != None or active_filters.dist_max != None %}
+          <li><strong>{% translate 'distance between'|capfirst %}</strong>:
+            {{ active_filters.dist_min|default:'0' }} km - {{ active_filters.dist_max|default:'&#8734;' }} km <a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}"> <svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#x"/></svg></a>
+          </li>
         {% endif %}
       </ul>
     {% endif %}

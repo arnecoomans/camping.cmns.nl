@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-14 11:45+0200\n"
+"POT-Creation-Date: 2024-09-15 15:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -827,7 +827,7 @@ msgstr ""
 
 #: location/templates/location/location/location_detail.html:189
 #: location/templates/location/location/location_form.html:36
-#: location/templates/snippets/location_list_filters.html:89
+#: location/templates/snippets/location_list_filters.html:95
 msgid "category"
 msgstr ""
 
@@ -1121,7 +1121,7 @@ msgstr ""
 #: location/templates/location/tag_detail.html:6
 #: location/templates/location/tag_list.html:11
 #: location/templates/location/tag_location_form.html:10
-#: location/templates/snippets/location_list_filters.html:97
+#: location/templates/snippets/location_list_filters.html:103
 msgid "tag"
 msgstr ""
 
@@ -1336,23 +1336,24 @@ msgstr ""
 msgid "all visited locations"
 msgstr ""
 
-#: location/templates/snippets/location_list_filters.html:59
-msgid "filter by"
-msgstr ""
-
-#: location/templates/snippets/location_list_filters.html:63
-msgid "list locations in"
-msgstr ""
-
-#: location/templates/snippets/location_list_filters.html:107
+#: location/templates/snippets/location_list_filters.html:54
+#: location/templates/snippets/location_list_filters.html:113
 msgid "distance between"
 msgstr ""
 
-#: location/templates/snippets/location_list_filters.html:107
+#: location/templates/snippets/location_list_filters.html:65
+msgid "filter by"
+msgstr ""
+
+#: location/templates/snippets/location_list_filters.html:69
+msgid "list locations in"
+msgstr ""
+
+#: location/templates/snippets/location_list_filters.html:113
 msgid "in a straight line from central location"
 msgstr ""
 
-#: location/templates/snippets/location_list_filters.html:122
+#: location/templates/snippets/location_list_filters.html:128
 msgid "filter"
 msgstr ""
 
@@ -1422,6 +1423,34 @@ msgstr ""
 
 #: location/views/aTag.py:91
 msgid "Tag applied"
+msgstr ""
+
+#: location/views/translations.py:11
+msgid "Netherlands"
+msgstr ""
+
+#: location/views/translations.py:12
+msgid "Belgium"
+msgstr ""
+
+#: location/views/translations.py:13
+msgid "Germany"
+msgstr ""
+
+#: location/views/translations.py:14
+msgid "France"
+msgstr ""
+
+#: location/views/translations.py:15
+msgid "Spain"
+msgstr ""
+
+#: location/views/translations.py:16
+msgid "Italy"
+msgstr ""
+
+#: location/views/translations.py:18
+msgid "Vosges"
 msgstr ""
 
 #: templates/navigation.html:22

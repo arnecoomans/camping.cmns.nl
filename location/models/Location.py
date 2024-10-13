@@ -355,22 +355,35 @@ class Location(BaseModel):
       return message
     
   ''' Quick access to Country, Region and Department '''
-  def country(self):
+  def __get_region_info(self):
+    data = {
+      'country': None,
+      'region': None,
+      'department': None
+    }
+    ''' If location has no parent, location is country '''
     if self.location:
+      if not self.location.parent:
+        data['country'] = self.location
       if self.location.parent:
+        if not self.location.parent.parent:
+          data['country'] = self.location.parent
+          data['region'] = self.location
         if self.location.parent.parent:
-          return self.location.parent.parent
-    return None
+          data['country'] = self.location.parent.parent
+          data['region'] = self.location.parent
+          data['department'] = self.location
+    return data
+
+  def country(self):
+    return self.__get_region_info()['country']
+    
   def region(self):
-    if self.location:
-      if self.location.parent:
-        return self.location.parent
-    return None
-  def department(self):
-    if self.location:
-      return self.location
-    return None
+    return self.__get_region_info()['region']
   
+  def department(self):
+    return self.__get_region_info()['department']
+    
   ''' Activity or Location logic '''
   def isActivity(self):
     if not self.category:

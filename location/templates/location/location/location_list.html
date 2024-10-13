@@ -21,8 +21,8 @@
           {% ifchanged location.country %}
             <tr class="d-flex">
               <td class="col-12">
-                {% if location.location %}
-                  <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByCountry' location.country.slug %}{% else %}{% url 'location:ListLocationsByCountry' location.country.slug %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{% endif %}{% translate location.country.name|default:'n/a' %}{% if location.location %}</a>
+                {% if location.department %}
+                  <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByCountry' location.country.slug %}{% else %}{% url 'location:ListLocationsByCountry' location.country.slug %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{% endif %}{% translate location.country.name|default:'n/a' %}{% if location.department %}</a>
                 {% endif %}
               </td>
             </tr>

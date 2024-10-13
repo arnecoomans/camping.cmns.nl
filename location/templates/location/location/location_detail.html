@@ -359,7 +359,7 @@
             infoWindow.close();
             infoWindow.setContent('<b><a href="{{ location.get_absolute_url }}">{{ location.name }}</a></b>' +
             '{% if location in user.profile.favorite.all %}<svg class="bi" width="12" height="12" fill="#c00"><use xlink:href="{% static "bootstrap-icons/bootstrap-icons.svg" %}#balloon-heart-fill"/></svg>{% endif %}<br>' + 
-                                  '{{ location.category.name|capfirst }} in {{ location.location.name|default:"" }}, {{ location.location.parent.name|default:"" }}, {{ location.location.parent.parent.name|default:"" }}<br>' +
+                                  '{{ location.category.name|capfirst }} in {{ location.department.name|default:"" }}, {{ location.region.name|default:"" }}, {{ location.country.name|default:"" }}<br>' +
                                   '');
             infoWindow.open(marker.map, marker);
           });

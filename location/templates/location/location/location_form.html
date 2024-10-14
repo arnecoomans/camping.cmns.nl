@@ -37,7 +37,9 @@
           <div class="col-9">
             <select class="form-control" name="category" id="categories">
               {% for category in categories %}
+                {% ifchanged category.parent %}{% if not forloop.first %}</optgroup>{% endif %}<optgroup label="{{ category.parent.name|default:"Location" }}">{% endifchanged %}
                 <option value="{{ category.id }}"{% if category.slug == location.category.slug %} selected{% endif %}{% if not location and category.slug == "camping" %}selected{% endif %}>{{ category.name }}</option>
+                {% if forloop.last %}</optgroup>{% endif %}
               {% endfor %}
             </select>
           </div>

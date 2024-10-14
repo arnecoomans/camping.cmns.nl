@@ -206,7 +206,6 @@
 {% endblock %}
 
 {% block scriptfooter %}
-
   {% if request.user.is_authenticated %}
     {% if perms.location.view_comments or allow_unauthenticated_read_comments%}
       <script>
@@ -227,8 +226,35 @@
       {% comment %} <script src="{% static 'js/comments.js' %}" defer></script> {% endcomment %}
       {% comment %} <script src="{% static 'js/chains.js' %}" defer></script>  {% endcomment %}
     {% endif %}
-    {% if perms.location.view_links and perms.location.modify_links %}
-      
-    {% endif %}
+
+    <!-- automatically select category -->
+    <script>
+      $(document).ready(function() {
+        $('#name').on('input', function() {
+          var inputValue = $(this).val().toLowerCase();  // Get the input value
+          var inputWords = inputValue.split(' ');  // Split into words
+  
+          // Loop over the typed words first
+          for (let i = 0; i < inputWords.length; i++) {
+            var currentWord = inputWords[i];
+    
+            // Then loop over the dropdown options to find a match
+            $('#categories option').each(function() {
+              var optionText = $(this).text().toLowerCase();
+              if (optionText === currentWord) {
+                $(this).prop('selected', true);  // Select the option
+                console.log('Setting category to ' + currentWord);
+                return false;  // Exit the inner loop after the first match
+              }
+            });
+
+            // If a match was found, break out of the outer loop as well
+            if ($('#categoryDropdown').val()) {
+              break;
+            }
+          }
+        });
+      });
+    </script>
   {% endif %}
 {% endblock %}

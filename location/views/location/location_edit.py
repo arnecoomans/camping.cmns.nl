@@ -168,8 +168,8 @@ class AddLocation(CreateView):
       )
       messages.add_message(self.request, messages.SUCCESS, f"{ _('added new location') }: \"{ location.name }\"")
       ''' Add link to Location '''
-      if self.request.POST.get('link', False):
-        link = Link.objects.get_or_create(url=self.request.POST.get('link', ''), defaults={
+      if self.request.POST.get('url', False):
+        link = Link.objects.get_or_create(url=self.request.POST.get('url', ''), defaults={
           'user': self.request.user,
           'title': self.request.POST.get('link-title', None)
           })

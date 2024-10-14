@@ -16,7 +16,7 @@
         {% endfor %}
         <div class="row">
           <div class="col-3 title-col"><label for="name">{% translate 'name'|capfirst %}:</div>
-          <div class="col-9"><input class="form-control form-control-lg" name="name" id="name" value="{{ location.name }}" required></div>
+          <div class="col-9"><input class="form-control form-control-lg" name="name" id="name" value="{{ location.name }}" required {% if not location %}autofocus{% endif %}></div>
         </div>
         <div class="row">
           <div class="col-3 title-col"><label for="description">{% translate 'description'|capfirst %}:</div>
@@ -244,6 +244,7 @@
               if (optionText === currentWord) {
                 $(this).prop('selected', true);  // Select the option
                 console.log('Setting category to ' + currentWord);
+                $('#categories').trigger('change');
                 return false;  // Exit the inner loop after the first match
               }
             });
@@ -255,6 +256,12 @@
           }
         });
       });
+
+      $('#categories').on('change', function() {
+        $(this)
+          .css('background-color', '#FFFF00')  // Set the initial background color
+          .animate({ backgroundColor: '#FFFFFF' }, 1000);  // Animate it back to the original color
+    });
     </script>
   {% endif %}
 {% endblock %}

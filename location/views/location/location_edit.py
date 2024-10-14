@@ -1,5 +1,4 @@
 from django.db.models.base import Model as Model
-from django.db.models.query import QuerySet
 from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib import messages
@@ -137,12 +136,6 @@ class AddLocation(CreateView):
     context = super().get_context_data(**kwargs)
     context['scope'] = _('location or activity')
     context['categories'] = Category.objects.exclude(children__gt=1).order_by('parent', 'name')
-    # if self.request.resolver_match.view_name == 'location:AddActivity':
-    #   context['scope'] = 'activity'
-    #   context['categories'] = Category.objects.filter(parent__slug=settings.ACTIVITY_SLUG).order_by('name')
-    # else:
-    #   context['scope'] = 'location'
-    #   context['categories'] = Category.objects.exclude(slug=settings.ACTIVITY_SLUG).exclude(parent__slug=settings.ACTIVITY_SLUG).order_by('name')
     return context
 
   def form_valid(self, form):
@@ -150,12 +143,6 @@ class AddLocation(CreateView):
     if str(form.cleaned_data['category']).lower() == 'home' and form.cleaned_data['visibility'] != 'f':
       form.cleaned_data['visibility'] = 'f'
       messages.add_message(self.request, messages.INFO, f"{ _('visibility of your home is set to family') }.") 
-    # if not form.cleaned_data['website']:
-    #   ''' If no website is submitted, store a Google Search for this location name'''
-    #   form.cleaned_data['website'] = f"https://google.com/search?q={ form.cleaned_data['name'] }"
-    # elif 'google' not in form.instance.website:
-    #   link = Link.objects.get_or_create(url=f'https://google.com/search?q={ form.cleaned_data["name"] }', defaults={'user': self.request.user})
-    #   form.instance.link.add(link[0].id)
     try:
       location = Location.objects.create(
         slug = slugify(form.cleaned_data['name']),

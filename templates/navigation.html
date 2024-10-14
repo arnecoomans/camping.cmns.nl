@@ -50,8 +50,8 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <!-- Add content -->
-              <li><a class="dropdown-item" href="{% url 'location:AddLocation' %}">{% translate 'add location'|title %}</a></li>
-              <li><a class="dropdown-item" href="{% url 'location:AddActivity' %}">{% translate 'add activity'|title %}</a></li>
+              <li><a class="dropdown-item" href="{% url 'location:AddLocation' %}">{% translate 'add location or activity'|title %}</a></li>
+              {% comment %} <li><a class="dropdown-item" href="{% url 'location:AddActivity' %}">{% translate 'add activity'|title %}</a></li> {% endcomment %}
               <li><a class="dropdown-item" href="{% url 'location:AddTag' %}">{% translate 'add tag'|title %}</a></li>
               <li><a class="dropdown-item" href="{% url 'location:AddList' %}">{% translate 'add list'|title %}</a></li>
               <li><hr class="dropdown-divider"></li>

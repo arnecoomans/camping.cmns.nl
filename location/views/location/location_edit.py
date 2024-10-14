@@ -135,12 +135,14 @@ class AddLocation(CreateView):
     if Category.objects.all().count() == 0:
       CreateCategories(self.request)
     context = super().get_context_data(**kwargs)
-    if self.request.resolver_match.view_name == 'location:AddActivity':
-      context['scope'] = 'activity'
-      context['categories'] = Category.objects.filter(parent__slug=settings.ACTIVITY_SLUG).order_by('name')
-    else:
-      context['scope'] = 'location'
-      context['categories'] = Category.objects.exclude(slug=settings.ACTIVITY_SLUG).exclude(parent__slug=settings.ACTIVITY_SLUG).order_by('name')
+    context['scope'] = _('location or activity')
+    context['categories'] = Category.objects.exclude(children__gt=1).order_by('parent', 'name')
+    # if self.request.resolver_match.view_name == 'location:AddActivity':
+    #   context['scope'] = 'activity'
+    #   context['categories'] = Category.objects.filter(parent__slug=settings.ACTIVITY_SLUG).order_by('name')
+    # else:
+    #   context['scope'] = 'location'
+    #   context['categories'] = Category.objects.exclude(slug=settings.ACTIVITY_SLUG).exclude(parent__slug=settings.ACTIVITY_SLUG).order_by('name')
     return context
 
   def form_valid(self, form):

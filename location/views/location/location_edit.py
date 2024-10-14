@@ -131,8 +131,10 @@ class AddLocation(CreateView):
   fields = ['name', 'description', 'category', 'visibility']
   
   def get_context_data(self, **kwargs):
+    ''' If there are no categories, create them '''
     if Category.objects.all().count() == 0:
       CreateCategories(self.request)
+    ''' Set context data '''
     context = super().get_context_data(**kwargs)
     context['scope'] = _('location or activity')
     context['categories'] = Category.objects.exclude(children__gt=1).order_by('parent', 'name')
@@ -144,6 +146,7 @@ class AddLocation(CreateView):
       form.cleaned_data['visibility'] = 'f'
       messages.add_message(self.request, messages.INFO, f"{ _('visibility of your home is set to family') }.") 
     try:
+      ''' Add location '''
       location = Location.objects.create(
         slug = slugify(form.cleaned_data['name']),
         name = form.cleaned_data['name'],
@@ -154,16 +157,15 @@ class AddLocation(CreateView):
         user=self.request.user,
       )
       messages.add_message(self.request, messages.SUCCESS, f"{ _('added new location') }: \"{ location.name }\"")
-      ''' Add link to Location '''
-      if self.request.POST.get('url', False):
-        link = Link.objects.get_or_create(url=self.request.POST.get('url', ''), defaults={
-          'user': self.request.user,
-          'title': self.request.POST.get('link-title', None)
-          })
-      else:
-        link = Link.objects.get_or_create(url=f"https://google.com/search?q={ form.cleaned_data['name'] }", defaults={
-          'user': self.request.user
-          })  
+      ''' Add link to Location 
+          Link is a separate object, so we need to create it first
+          Object has title, url, user and visibility
+      '''
+      url = self.request.POST.get('url', '') if self.request.POST.get('url', False) else f"https://google.com/search?q={ form.cleaned_data['name'] }"
+      link = Link.objects.get_or_create(url=url, defaults={
+        'user': self.request.user,
+        'title': self.request.POST.get('link-title', None)
+      })
       location.link.add(link[0])
       messages.add_message(self.request, messages.INFO, f"{ _('added link') }: \"{ link[0].get_title() }\" { _('to') } { location.name }.")
     except IntegrityError as e:

@@ -143,6 +143,11 @@ div.location.mini > span.locator,
 div.location.mini > p {
   margin-left: 1em;
 }
+div.location > div.description {
+  padding: 5px;
+  border: 1px solid #eee;
+}
+
 /** Filters */
 ul.filter.list {
   list-style-type: none;
@@ -174,4 +179,11 @@ span.category {
 span.category.secondary {
   color: #999;
   font-weight: normal;
+}
+
+/** Meta */
+div.meta {
+  font-size: 70%;
+  color: #888;
+  text-align: right;
 }

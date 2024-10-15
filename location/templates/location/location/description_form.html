@@ -1,0 +1,57 @@
+{% extends 'index.html' %}
+{% load i18n %}{% load static %}
+{% block content %}
+  {% if user.is_authenticated %}
+    <div class="description card">
+      <h1>{% translate 'edit description'|capfirst %}</h1>
+      {% if description.locations.all.count > 0 %}
+        <p>{% translate 'This description is linked to the following locations:'|capfirst %}</p>
+        <ul>
+          {% for location in description.locations.all %}
+            <li>
+              <a href="{% url 'location:location' location.slug %}">{{ location.name }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+        {% if available_locations.all.count > 0 %}
+            <form method="post" action="{% url 'location:AddLocationToDescription' description.id %}">
+              {% csrf_token %}
+              <div class="input-group">
+                <span class="input-group-text" id="basic-addon1">{% translate 'add description to location'|capfirst %}</span>
+                <select class="form-control" name="location" id="location">
+                  <option value="" selected>---</option>
+                  {% for location in available_locations.all %}
+                    {% ifchanged location.category.parent.name %}{% if not forloop.first %}
+                      <optgroup label="{{ location.category.parent.name }}">
+                    {% endif %}{% endifchanged %}
+                    <option value="{{ location.id }}">{{ location.name }}</option>
+                    {% if forloop.last %}
+                      </optgroup>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+                <input type="submit" class="btn btn-primary" value="{% translate 'add'|capfirst %}">
+              </div> 
+            </form>
+            <div class="spacer"></div>
+          {% endif %}
+      {% endif %}
+      <form method="post" action="{% url 'location:EditDescription' description.id %}">
+        {% csrf_token %}
+        <textarea class="form-control" name="description" id="description" rows="8" placeholder="{% translate 'description'|capfirst %}" required>{{ description.description }}</textarea>
+        <select class="form-control" name="visibility" id="visibility">
+          {% for key, value in available_visibilities %}
+            <option value="{{ key }}" {% if key == description.visibility %}selected{% elif key == 'c' %}selected{% endif %}>{{ value|title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <input type="submit" class="btn btn-primary" value="{% translate 'save changes'|capfirst %}">
+      </div>
+    </form>
+    </div>
+  {% else %}
+    {% include 'snippets/login_or_register.html' %}
+  {% endif %}
+{% endblock %}

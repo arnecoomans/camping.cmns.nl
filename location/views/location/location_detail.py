@@ -7,7 +7,7 @@ from django.conf import settings
 from ..snippets.filter_class import FilterClass
 from ..snippets.order_media import order_media
 
-from location.models.Location import Location, Category, Chain, Link
+from location.models.Location import Location, Category, Chain, Link, Description
 from location.models.Comment import Comment
 from location.models.Tag import Tag
 from location.models.List import List, ListLocation
@@ -56,6 +56,8 @@ class LocationView(ListView, FilterClass):
     ''' Location: use self.get_location() to return the location '''
     location = self.get_location()
     context['location'] = location
+    ''' Descriptions '''
+    context['descriptions'] = self.get_descriptions()
     ''' Scope '''
     context['scope'] = f"{ _(location.getCategory()) }: { location.name }"
     ''' Links '''
@@ -92,7 +94,14 @@ class LocationView(ListView, FilterClass):
     context['maps_permission'] = self.get_maps_permission()
     return context
 
-
+  ''' Get Descriptions 
+  '''
+  def get_descriptions(self):
+    descriptions = Description.objects.filter(locations__id=self.get_location().id)
+    descriptions = self.filter_status(descriptions)
+    descriptions = self.filter_visibility(descriptions)
+    descriptions = descriptions.order_by('-date_added').distinct()
+    return descriptions
   ''' Get Links
   '''
   def get_links(self):

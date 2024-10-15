@@ -125,6 +125,14 @@ class Category(models.Model):
     return reverse_lazy('location:locations') + f"?category={ self.slug }"
 
 
+''' Description Model '''
+class Description(BaseModel):
+  description         = models.TextField(blank=True, help_text=_('Markdown is supported'))
+
+  def __str__(self) -> str:
+    return self.description
+
+  
 ''' Location model
 '''
 class Location(BaseModel):
@@ -138,7 +146,8 @@ class Location(BaseModel):
   owners_names        = models.CharField(max_length=255, blank=True, help_text=_('Name of owner(s), if known'))
 
   description         = models.TextField(blank=True, help_text=_('Markdown is supported'))
-
+  descriptions        = models.ManyToManyField(Description, blank=True, related_name='locations')
+  
   link                = models.ManyToManyField(Link, blank=True, help_text=_('Add links to related websites, such as blogs refering to this location or review websites'))
   chain               = models.ManyToManyField(Chain, blank=True, related_name='locations')
 

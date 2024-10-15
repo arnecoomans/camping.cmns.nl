@@ -11,7 +11,7 @@ from django.conf import settings
 
 from ..snippets.filter_class import FilterClass
 
-from location.models.Location import Location, Category, Chain, Link
+from location.models.Location import Location, Category, Chain, Link, Description
 from location.models.Tag import Tag
 from location.models.List import ListDistance
 
@@ -27,7 +27,7 @@ from location.models.List import ListDistance
 '''
 class EditLocationMaster(UpdateView, FilterClass):
   model = Location
-  fields = ['name', 'link', 'description', 'category', 'additional_category', 'visibility', 'status', 'address', 'phone', 'owners_names', 'chain']
+  fields = ['name', 'link', 'category', 'additional_category', 'visibility', 'status', 'address', 'phone', 'owners_names', 'chain']
   template_name = 'location/location/location_form.html'
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -38,6 +38,9 @@ class EditLocationMaster(UpdateView, FilterClass):
       context['categories'] = Category.objects.exclude(slug=settings.ACTIVITY_SLUG).exclude(parent__slug=settings.ACTIVITY_SLUG).order_by('name')
     else:  
       context['categories'] = Category.objects.filter(parent__slug=settings.ACTIVITY_SLUG).order_by('name')
+    ''' Descriptions '''
+    context['descriptions'] = self.get_descriptions()
+    context['description_visibilities'] = self.get_description_visibilities()
     ''' Links '''
     context['links'] = self.get_links()
     ''' Tags '''
@@ -54,6 +57,21 @@ class EditLocationMaster(UpdateView, FilterClass):
     ''' Chains '''
     context['available_chains'] = Chain.objects.filter(children=None).exclude(locations=self.object)
     return context
+
+  ''' Get Descriptions 
+  '''
+  def get_descriptions(self):
+    descriptions = self.object.descriptions.all()
+    descriptions = self.filter_status(descriptions)
+    descriptions = self.filter_visibility(descriptions)
+    descriptions = descriptions.order_by('-date_added').distinct()
+    return descriptions
+  def get_description_visibilities(self):
+    all_visibilities = Description.visibility_choices
+    used_visibilities = self.object.descriptions.values_list('visibility', flat=True).distinct()
+    for visibility in used_visibilities:
+      all_visibilities = [x for x in all_visibilities if x[0] != visibility]
+    return all_visibilities
 
   ''' Get Links
   '''
@@ -128,7 +146,7 @@ def CreateCategories(request):
 class AddLocation(CreateView):
   model = Location
   template_name = 'location/location/location_form.html'
-  fields = ['name', 'description', 'category', 'visibility']
+  fields = ['name', 'category', 'visibility']
   
   def get_context_data(self, **kwargs):
     ''' If there are no categories, create them '''
@@ -150,13 +168,21 @@ class AddLocation(CreateView):
       location = Location.objects.create(
         slug = slugify(form.cleaned_data['name']),
         name = form.cleaned_data['name'],
-        description = form.cleaned_data['description'] if 'description' in form.cleaned_data else '',
+        # description = form.cleaned_data['description'] if 'description' in form.cleaned_data else '',
         category = form.cleaned_data['category'] if 'category' in form.cleaned_data else 'camping',
         visibility= form.cleaned_data['visibility'] if 'visibility' in form.cleaned_data else 'c',
         status = form.cleaned_data['status'] if 'status' in form.cleaned_data else 'p',
         user=self.request.user,
       )
       messages.add_message(self.request, messages.SUCCESS, f"{ _('added new location') }: \"{ location.name }\"")
+      ''' Add description to location '''
+      description = self.request.POST.get('description', False)
+      if description:
+        object = Description.objects.get_or_create(description=description, defaults={
+                                              'user': self.request.user, 
+                                              'visibility': form.cleaned_data['visibility'] if 'visibility' in form.cleaned_data else 'c',
+                                            })
+        location.descriptions.add(object[0])
       ''' Add link to Location 
           Link is a separate object, so we need to create it first
           Object has title, url, user and visibility
@@ -260,6 +286,97 @@ class GetDistanceToHome(DetailView):
         distance[0].getData(self.request)
       return redirect('location:location', location.slug)
 
+class AddDescriptionToLocation(UpdateView):
+  model = Location
+  fields = ['description']
+
+  def post(self, request, *args, **kwargs):
+    location = self.get_object()
+    description = self.request.POST.get('description', '')
+    visibility = self.request.POST.get('visibility', 'c')
+    if len(description) > 0:
+      object = Description.objects.get_or_create(description=description, 
+                                                 visibility=visibility,
+                                                 defaults={
+                                            'user': request.user, 
+                                          })
+      location.descriptions.add(object[0])
+      if object[1]:
+        messages.add_message(self.request, messages.INFO, f"{ _('created and') } { _('added description') }: \"{ description }\" { _('to') } { location.name }.")
+      else:
+        messages.add_message(self.request, messages.INFO, f"{ _('added description') }: \"{ description }\" { _('to') } { location.name }. { object }")
+    else:
+      messages.add_message(self.request, messages.ERROR, f"{ _('you did not supply a description') }.")
+    return redirect('location:EditLocation', location.slug)
+
+class editDescription(UpdateView, FilterClass):
+  model = Description
+  fields = ['description', 'visibility']
+  template_name = 'location/location/description_form.html'
+
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['locations'] = Location.objects.filter(descriptions=self.get_object().id)
+    context['available_locations'] = self.get_available_locations()
+    context['available_visibilities'] = self.get_available_visibilities()
+    return context
+  
+  def get_success_url(self) -> str:
+    return reverse('location:EditLocation', kwargs={'slug': self.kwargs['location_slug']})
+
+  def get_available_locations(self):
+    locations = Location.objects.exclude(descriptions=self.get_object())
+    locations = self.filter(locations)
+    locations = locations.exclude(category__parent__slug=settings.ACTIVITY_SLUG).order_by('name') |\
+                locations.filter(category__parent__slug=settings.ACTIVITY_SLUG).order_by('name')
+    locations = locations.order_by('category__parent__name',)
+    return locations
+  
+  def get_available_visibilities(self):
+    all_visibilities = Description.visibility_choices
+    used_visibilities = self.get_object().locations.exclude(id=self.object.id).values_list('visibility', flat=True).distinct()
+    for visibility in used_visibilities:
+      all_visibilities = [x for x in all_visibilities if x[0] != visibility]
+    return all_visibilities
+  
+  # def get(self, request, *args, **kwargs):
+  #   if request.user == self.get_object().user or request.user.is_staff or request.user.is_superuser:
+  #     messages.add_message(self.request, messages.INFO, f"{ _('editing description') }: \"{ self.get_object().description }\".")
+  #     return super().get(request, *args, **kwargs)
+  #   else:
+  #     messages.add_message(self.request, messages.ERROR, f"{ _('you are not authorized to edit this description') }.")
+  #     return redirect('location:EditLocation', self.kwargs['location_slug'])
+    
+class deleteDescriptionFromLocation(UpdateView):
+  model = Location
+  fields = ['description']
+
+  def get(self, request, *args, **kwargs):
+    if request.user == self.get_object().user or request.user.is_staff or request.user.is_superuser:
+      description = Description.objects.get(id=self.kwargs['descriptionid'])
+      if description in self.get_object().descriptions.all():
+        self.get_object().descriptions.remove(description)
+        message = f"{ _('removed') } { _(description.get_visibility_display()) } { _('description') }"
+      else:
+        self.get_object().descriptions.add(description)
+        message = f"{ _('added') } { _(description.get_visibility_display()) } { _('description') }"
+      messages.add_message(self.request, messages.INFO, f"{ message }: \"{ description.description }\". (<a href=\"{ reverse_lazy('location:deleteDescriptionFromLocation', kwargs={'slug': self.get_object().slug, 'descriptionid': description.id}) }\">{ _('undo') }</a>)")
+    return redirect('location:EditLocation', self.get_object().slug)
+  
+class AddLocationToDescription(UpdateView):
+  model = Description
+  fields = ['locations']
+
+  def post(self, request, *args, **kwargs):
+    location = Location.objects.get(id=self.request.POST.get('location', False))
+    description = self.get_object()
+    if location in description.locations.all():
+      description.locations.remove(location)
+      messages.add_message(self.request, messages.INFO, f"{ _('removed location') }: \"{ location.name }\".")
+    else:
+      description.locations.add(location)
+      messages.add_message(self.request, messages.INFO, f"{ _('added location') }: \"{ location.name }\".")
+    return redirect('location:EditDescription', description.id)
 
 class addLinkToLocation(UpdateView):
   model = Location
@@ -309,8 +426,12 @@ class deleteLinkFromLocation(UpdateView):
   def get(self, request, *args, **kwargs):
     if request.user == self.get_object().user or request.user.is_staff or request.user.is_superuser:
       link = Link.objects.get(id=self.kwargs['linkid'])
-      self.get_object().link.remove(link)
-      messages.add_message(self.request, messages.INFO, f"{ _('removed link') }: \"{ link.get_title() }\".")
+      if link in self.get_object().link.all():
+        self.get_object().link.remove(link)
+        messages.add_message(self.request, messages.INFO, f"{ _('removed link') }: \"{ link.get_title() }\". (<a href=\"{ reverse_lazy('location:DeleteLinkFromLocation', kwargs={'slug': self.get_object().slug, 'linkid': link.id}) }\">{ _('undo') }</a>)")
+      else:
+        self.get_object().link.add(link)
+        messages.add_message(self.request, messages.INFO, f"{ _('added link') }: \"{ link.get_title() }\". (<a href=\"{ reverse_lazy('location:DeleteLinkFromLocation', kwargs={'slug': self.get_object().slug, 'linkid': link.id}) }\">{ _('undo') }</a>)")
     return redirect('location:EditLocation', self.get_object().slug)
   
 class editLinkAtLocation(UpdateView):

@@ -18,10 +18,13 @@
           <div class="col-3 title-col"><label for="name">{% translate 'name'|capfirst %}:</div>
           <div class="col-9"><input class="form-control form-control-lg" name="name" id="name" value="{{ location.name }}" required {% if not location %}autofocus{% endif %}></div>
         </div>
-        <div class="row">
-          <div class="col-3 title-col"><label for="description">{% translate 'description'|capfirst %}:</div>
-          <div class="col-9"><textarea class="form-control" name="description" id="description" rows="8">{{ location.description }}</textarea></div>
-        </div>
+        {% if not location %}
+          <!-- Description -->
+          <div class="row">
+            <div class="col-3 title-col"><label for="description">{% translate 'description'|capfirst %}:</div>
+            <div class="col-9"><textarea class="form-control" name="description" id="description" rows="8">{{ location.description }}</textarea></div>
+          </div>
+        {% endif %}
         <!-- Link when creating a location -->
         {% if not location %}
           <div class="row">
@@ -110,6 +113,45 @@
     </div>
 
     {% if location %}
+      <div class="spacer">&nbsp;</div>
+      <!-- Descriptions -->
+      <div class="descriptions card">
+        <h2>{% translate 'descriptions'|title %}</h2>
+        {% for description in descriptions %}
+          <div class="row">
+            <div class="col-3 title-col"></div>
+            <div class="col-7">
+              {{ description.description|markdown|safe }}<br />
+              <div class="meta">{% translate 'description added by'|capfirst %} {{ description.user.get_full_name|default:description.user.username }} {% translate 'for' %} {% translate description.get_visibility_display %}</div>
+            </div>
+            <div class="col-2">
+              <a href="{% url 'location:EditDescription' description.id %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil"/></svg></a>
+              <a href="{% url 'location:deleteDescriptionFromLocation' location.slug description.id %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#trash"/></svg></a>
+            </div>
+          </div>
+        {% endfor %}
+        {% if description_visibilities|length > 0 %}
+          <div class="row">
+            <div class="col-3 title-col">{% translate 'add'|capfirst %}</div>
+            <div class="col-7">
+              <form method="post" action="{% url 'location:AddDescriptionToLocation' location.slug %}">
+                {% csrf_token %}
+                <input type="hidden" name="location" value="{{ location.id }}">
+                <textarea class="form-control" name="description" id="description" rows="8" placeholder="{% translate 'description'|capfirst %}" required></textarea>
+                <select class="form-control" name="visibility" id="visibility">
+                  {% for key, value in description_visibilities %}
+                    <option value="{{ key }}" {% if key == 'c' %}selected{% endif %}>{{ value|title }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-2">
+                <button class="btn btn-outline-success">+</button>
+              </div>
+            </div>
+          </form>
+        {% endif %}
+      </div>
+      <div class="spacer"></div>
       <!-- Links -->
       <div class="links card">
         <h2>{% translate 'links'|title %}</h2>

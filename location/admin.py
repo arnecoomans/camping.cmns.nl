@@ -74,10 +74,17 @@ def migrateWebsiteToLink(modeladmin, request, queryset):
     link = Link.objects.get_or_create(url=record.website, defaults={'primary':True, 'user':request.user, 'visibility':'p'})[0]
     record.link.add(link)
     messages.add_message(request, messages.INFO, f"Migrated website { record.website } to link { link.id } for { record.name }")
+@admin.action(description='Copy Description to Descriotions')
+def copyDescriptionToDescriptions(modeladmin, request, queryset):
+  for location in queryset:
+    if len(location.description.strip()) > 0:
+      object = Description.objects.create(description=location.description, user=request.user)
+      location.descriptions.add(object)
+      messages.add_message(request, messages.INFO, f"Description copied to Descriptions for { location.name }")
 
 ''' Custom Model Admin Classes '''
 class LocationAdmin(SlugDefaultAdmin):
-  actions = [getAddress, getLatLng, getDistanceFromDepartureCenter, getRegion, clearCachableData, migrateWebsiteToLink]
+  actions = [getAddress, getLatLng, getDistanceFromDepartureCenter, getRegion, clearCachableData, copyDescriptionToDescriptions]
   list_display = ['name', 'location']
 
 class LinkAdmin(DefaultAdmin):
@@ -90,6 +97,9 @@ class ListDistanceAdmin(DefaultAdmin):
   actions = [getData, ]  
 
 class CommentAdmin(DefaultAdmin):
+  pass
+
+class DescriptionAdmin(DefaultAdmin):
   pass
 
 admin.site.register(Category, SlugDefaultAdmin)
@@ -105,3 +115,4 @@ admin.site.register(ListDistance, ListDistanceAdmin)
 admin.site.register(Profile)
 admin.site.register(VisitedIn, DefaultAdmin)
 admin.site.register(Media, DefaultAdmin)
+admin.site.register(Description, DescriptionAdmin)

@@ -168,7 +168,6 @@ class AddLocation(CreateView):
       location = Location.objects.create(
         slug = slugify(form.cleaned_data['name']),
         name = form.cleaned_data['name'],
-        # description = form.cleaned_data['description'] if 'description' in form.cleaned_data else '',
         category = form.cleaned_data['category'] if 'category' in form.cleaned_data else 'camping',
         visibility= form.cleaned_data['visibility'] if 'visibility' in form.cleaned_data else 'c',
         status = form.cleaned_data['status'] if 'status' in form.cleaned_data else 'p',
@@ -338,14 +337,6 @@ class editDescription(UpdateView, FilterClass):
     for visibility in used_visibilities:
       all_visibilities = [x for x in all_visibilities if x[0] != visibility]
     return all_visibilities
-  
-  # def get(self, request, *args, **kwargs):
-  #   if request.user == self.get_object().user or request.user.is_staff or request.user.is_superuser:
-  #     messages.add_message(self.request, messages.INFO, f"{ _('editing description') }: \"{ self.get_object().description }\".")
-  #     return super().get(request, *args, **kwargs)
-  #   else:
-  #     messages.add_message(self.request, messages.ERROR, f"{ _('you are not authorized to edit this description') }.")
-  #     return redirect('location:EditLocation', self.kwargs['location_slug'])
     
 class deleteDescriptionFromLocation(UpdateView):
   model = Location

@@ -1,4 +1,6 @@
 from django.db.models.base import Model as Model
+from django.forms import BaseModelForm
+from django.http import HttpResponse
 from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib import messages
@@ -328,12 +330,25 @@ class editDescription(UpdateView, FilterClass):
     locations = self.filter(locations)
     locations = locations.exclude(category__parent__slug=settings.ACTIVITY_SLUG).order_by('name') |\
                 locations.filter(category__parent__slug=settings.ACTIVITY_SLUG).order_by('name')
-    locations = locations.order_by('category__parent__name',)
+    locations = locations.order_by('category__parent__name', 'name')
     return locations
   
   def get_available_visibilities(self):
     all_visibilities = Description.visibility_choices
     return all_visibilities
+  
+  def form_valid(self, form):
+    if len(form.changed_data) > 0:
+      message = f"{ _('changed description') } "
+      if 'description' in form.changed_data:
+        message += f"text "
+      if 'visibility' in form.changed_data:
+        if 'description' in form.changed_data:
+          message += f"and "
+        message += f"visibility"
+      message += '.'
+      messages.add_message(self.request, messages.SUCCESS, message)
+    return super().form_valid(form)
     
 class deleteDescriptionFromLocation(UpdateView):
   model = Location

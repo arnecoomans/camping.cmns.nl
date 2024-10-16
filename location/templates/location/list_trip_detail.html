@@ -87,7 +87,7 @@
               {% include 'snippets/location_link.html' with location=location.location %}
               {% if location.comment %}<p class="comment">{{ location.comment }}</p>{% endif %}
             </td>
-            <td class="align-top">{% if location.location.location %}<a href="{% if location.location.isActivity %}{% url 'location:ListLActivitiesByDepartment' location.location.location.parent.parent.slug location.location.location.parent.slug location.location.location.slug %}{% else %}{% url 'location:ListLocationsByDepartment' location.location.location.parent.parent.slug location.location.location.parent.slug location.location.location.slug %}{% endif %}">{{ location.location.location.name|title }}</a>{% endif %}</td>
+            <td class="align-top">{% if location.location.department %}<a href="{% if location.location.isActivity %}{% url 'location:ListLActivitiesByDepartment' location.location.country.slug location.location.region.slug location.location.department.slug %}{% else %}{% url 'location:ListLocationsByDepartment' location.location.location.parent.parent.slug location.location.location.parent.slug location.location.location.slug %}{% endif %}">{{ location.location.location.name|title }}</a>{% endif %}</td>
             <td class="align-right align-top">{% if location.nights > 0 %}{{ location.nights }}{% endif %}</td>
             <td class="align-right align-top">{% if location.price > 0 %}&euro; {{ location.price }}{% endif %}</td>
             <td class="nowrap align-top">

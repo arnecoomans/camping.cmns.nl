@@ -8,16 +8,12 @@ from django.shortcuts import redirect, reverse
 from django.db import IntegrityError
 from django.conf import settings
 from django.http import Http404
-from django.utils.http import urlencode
-from django.utils.html import escape
-
 
 from .snippets.filter_class import FilterClass
 
 from location.models.List import List, ListLocation, ListDistance
 from location.models.Location import Location
 from location.models.Profile import Profile
-
 
 def addDistance(origin, destination, request):
   distance = ListDistance.objects.get_or_create(origin=origin,
@@ -300,14 +296,16 @@ class AddLocationToList(FilterClass, UpdateView):
           messages.add_message(self.request, messages.ERROR, f"\"{ location.name }\" { _('was not added to list') } { list.name }. { _('This is already the last location on the list') }.")
           return redirect('location:list', list.slug)
       ''' It is safe to store location '''
-      messages.add_message(self.request, messages.SUCCESS, f"{ escape(location.isActivity()) }")
       listlocation = ListLocation.objects.create(list=list, 
                                                   location=location, 
                                                   order=order,
                                                   show_on_route=False if location.isActivity() else True,
                                                   user=self.request.user)
       messages.add_message(self.request, messages.SUCCESS, f"{ _('Added') } \"{ location.name }\"  { _('to list')} \"{ list.name }\".")
-      calculateDistances(self.request, list)
+      try:
+        calculateDistances(self.request, list)
+      except Exception as e:
+        messages.add_message(self.request, messages.ERROR, f"{ _('Could not calculate distances for') } { location.name }: { e }")
     else:
       ''' Share errormessage that the list cannot be modified '''
       messages.add_message(self.request, messages.ERROR, f"{ _('List') } \"{ list }\" { _('cannot be modified')}. { _('This is not your list') }.")

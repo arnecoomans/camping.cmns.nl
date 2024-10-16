@@ -5,7 +5,8 @@
     <div class="description card">
       <h1>{% translate 'edit description'|capfirst %}</h1>
       {% if description.locations.all.count > 0 %}
-        <p>{% translate 'This description is linked to the following locations:'|capfirst %}</p>
+        <p>{% translate 'this description is visible to'|capfirst %}: {% translate description.get_visibility_display %}.</p>
+          {% translate 'this description is linked to the following locations:'|capfirst %}</p>
         <ul>
           {% for location in description.locations.all %}
             <li>
@@ -41,7 +42,7 @@
         <textarea class="form-control" name="description" id="description" rows="8" placeholder="{% translate 'description'|capfirst %}" required>{{ description.description }}</textarea>
         <select class="form-control" name="visibility" id="visibility">
           {% for key, value in available_visibilities %}
-            <option value="{{ key }}" {% if key == description.visibility %}selected{% elif key == 'c' %}selected{% endif %}>{{ value|title }}</option>
+            <option value="{{ key }}" {% if key == description.visibility %}selected{% endif %}>{{ value|title }}</option>
           {% endfor %}
         </select>
       </div>

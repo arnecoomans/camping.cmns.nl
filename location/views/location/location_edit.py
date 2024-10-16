@@ -321,7 +321,7 @@ class editDescription(UpdateView, FilterClass):
     return context
   
   def get_success_url(self) -> str:
-    return reverse('location:EditLocation', kwargs={'slug': self.kwargs['location_slug']})
+    return reverse('location:EditDescription', kwargs={'pk': self.get_object().id})
 
   def get_available_locations(self):
     locations = Location.objects.exclude(descriptions=self.get_object())
@@ -333,9 +333,6 @@ class editDescription(UpdateView, FilterClass):
   
   def get_available_visibilities(self):
     all_visibilities = Description.visibility_choices
-    used_visibilities = self.get_object().locations.exclude(id=self.object.id).values_list('visibility', flat=True).distinct()
-    for visibility in used_visibilities:
-      all_visibilities = [x for x in all_visibilities if x[0] != visibility]
     return all_visibilities
     
 class deleteDescriptionFromLocation(UpdateView):

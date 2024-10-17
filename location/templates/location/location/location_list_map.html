@@ -5,7 +5,7 @@
   {% comment %} {% include 'snippets/location_list_filters.html' %} {% endcomment %}
   <div class="location map card">
     <!-- map -->
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated or allow_unauthenticated_see_overview_map %}
       <h3>{{ location.name }} {% translate 'on the map'|title %}:</h3>
       <div id="map" class="large-map">
         {% if not maps_permission %}
@@ -63,7 +63,7 @@
         {% comment %} locationTag.innerHTML = "<a href='{{ location.get_absolute_url }}'>{{ location.name }}</a>"; {% endcomment %}
         
         // List secondary locations
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated or allow_unauthenticated_see_overview_map %}
           {% for location in location_list %}
             {% if location.coord_lat and location.coord_lng %}
               const pin{{ location.id }} = new PinElement({

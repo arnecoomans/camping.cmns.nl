@@ -6,7 +6,7 @@
     <!-- Quick filters and actions -->
     |
     {% if active_filters|length > 3 %}<a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}" title="{% translate 'reset all active filters'|capfirst %}">{% translate 'show all'|capfirst %}</a> |{% endif %}
-    <a href="/map/{% if active_filters.country %}{{ active_filters.country }}/{% endif %}{% if active_filters.region %}{{ active_filters.region }}/{% endif %}{% if active_filters.department %}{{ active_filters.department }}/{% endif %}?{% if active_filters.category %}category={{ active_filters.category|join:"," }}&{% endif %}{% if active_filters.tag %}tag={{ active_filters.tag|join:"," }}&{% endif %}{% if active_filters.favorites %}favorites&{% endif %}">{% translate 'on map'|capfirst %}</a> |
+    {% if user.is_authenticated or allow_unauthenticated_see_overview_map %}<a href="/map/{% if active_filters.country %}{{ active_filters.country }}/{% endif %}{% if active_filters.region %}{{ active_filters.region }}/{% endif %}{% if active_filters.department %}{{ active_filters.department }}/{% endif %}?{% if active_filters.category %}category={{ active_filters.category|join:"," }}&{% endif %}{% if active_filters.tag %}tag={{ active_filters.tag|join:"," }}&{% endif %}{% if active_filters.favorites %}favorites&{% endif %}">{% translate 'on map'|capfirst %}</a> |{% endif %}
     <!-- Special status -->
     {% if available_filters.has_favorites and 'favorites' not in active_filters %}<a href="{% include 'snippets/filter_url_queryparams.html' %}&favorites">{% translate 'only favorites'|capfirst %}</a> | {% endif %}
     <!-- Ordering -->

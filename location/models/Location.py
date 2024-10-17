@@ -80,6 +80,7 @@ class Link(BaseModel):
               query = query[counter+1].replace('+', ' ').capitalize()
               break
             counter += 1
+          query = query if len(query) > 0 else _('search')
           return f"{ query } on { hostname.capitalize() } Maps"
         ''' Google search results 
             Return the search query as title
@@ -91,6 +92,7 @@ class Link(BaseModel):
           if 'q=' in q:
             query = q.replace('q=', '')
             break
+        query = query if str(query) != "['']" else _('search').capitalize()
         return f"{ query } on { hostname.capitalize() }"
       return hostname
     return self.title
@@ -147,7 +149,7 @@ class Location(BaseModel):
 
   description         = models.TextField(blank=True, help_text=_('Markdown is supported'))
   descriptions        = models.ManyToManyField(Description, blank=True, related_name='locations')
-  
+
   link                = models.ManyToManyField(Link, blank=True, help_text=_('Add links to related websites, such as blogs refering to this location or review websites'))
   chain               = models.ManyToManyField(Chain, blank=True, related_name='locations')
 

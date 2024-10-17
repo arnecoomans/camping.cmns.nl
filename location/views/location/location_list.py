@@ -49,7 +49,7 @@ class LocationListMaster(FilterClass):
       ''' Query filters
           are part of the request but not part of the url
       '''
-      for field in ['category', 'tag', 'chain', 'q', 'visibility', 'only', ]:
+      for field in ['category', 'tag', 'chain', 'q', 'only', ]:
         if self.request.GET.get(field, False):
           ''' All values in query parameters should be a list.
               Multiple values are seperated by a , resulting in multiple list items
@@ -69,10 +69,14 @@ class LocationListMaster(FilterClass):
             self.active_filters[field] = True
           else:
             self.active_filters[field] = self.request.GET.get(field, '')
-    ''' Special filters '''
+    ''' Special filters  are only set if they are not the default value '''
     self.active_filters['order'] = self.request.GET.get('order', self.get_default_order())
-    self.active_filters['dist_min'] = self.request.GET.get('min', None)
-    self.active_filters['dist_max'] = self.request.GET.get('max', None)
+    if not self.request.GET.get('min', None) == None:
+      self.active_filters['dist_min'] = self.request.GET.get('min', None)
+    if not self.request.GET.get('max', None) == None:
+      self.active_filters['dist_max'] = self.request.GET.get('max', None)
+    if self.get_active_visibility():
+      self.active_filters['visibility'] = self.get_active_visibility()
     ''' Return value ''' 
     if query:
       return self.active_filters[query] if query in self.active_filters else None
@@ -97,13 +101,39 @@ class LocationListMaster(FilterClass):
         self.available_filters['has_favorites'] = True if self.get_queryset().filter(favorite_of=self.request.user.profile).count() > 1 else False
         self.available_filters['has_visited']   = True if self.get_queryset().filter(visitors__user=self.request.user).count() > 1 else False
       self.available_filters['order']         = ['distance', 'region']
+      self.available_filters['visibility']    = self.get_available_visibilities()
       return self.available_filters
   
+
+  ''' Active Visibility 
+      Returns a list of the active visibility as well as its display value
+  '''
+  def get_active_visibility(self):
+    visibility = None
+    if self.request.GET.get('visibility', False):
+      display = None
+      for key, value in Location.visibility_choices:
+        if key == self.request.GET.get('visibility', False):
+          display = value
+      visibility = (self.request.GET.get('visibility', False), display)
+    return visibility
+  ''' Available Visibilities 
+      Returns a list of available visibilities based on the visibilities used in the queryset
+  '''
+  def get_available_visibilities(self):
+    available_visibilities = Location.visibility_choices
+    used_visibilities = self.get_queryset().values_list('visibility', flat=True).order_by().distinct()
+    available_visibilities = [visibility for visibility in available_visibilities if visibility[0] in used_visibilities]
+    return available_visibilities
   ''' Range '''
   def get_range(self):
     location_list = self.get_queryset().exclude(category__name__iexact='home').exclude(distance_to_departure_center=None).order_by('distance_to_departure_center')
-    min = location_list.first().distance_to_departure_center
-    max = location_list.last().distance_to_departure_center
+    try:
+      min = location_list.first().distance_to_departure_center
+      max = location_list.last().distance_to_departure_center
+    except AttributeError:
+      min = 0
+      max = 0
     min = floor(min/100)*100
     max = ceil(max/100)*100
     count_steps = ceil(max/100) - floor(min/100)

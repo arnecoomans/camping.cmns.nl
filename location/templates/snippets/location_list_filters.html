@@ -1,4 +1,4 @@
-{% load i18n %}{% load static %}
+{% load i18n %}{% load static %}{% load query_filters %}
 <div class="filter card">
   <!-- Show result counter -->
   <div class="results">
@@ -14,9 +14,10 @@
   </div>
   <br>
   <!-- Active Filters -->
+  
   <div class="active filters">
-    {% if active_filters|length > 3 or active_filters.dist_min != None or active_filters.dist_max != None %}
-      {% translate 'filtered on'|capfirst %}:
+    {% if active_filters|length > 1 %}
+      {% translate 'filtered on'|capfirst %}: 
       <ul class="filter list">
         <!-- Location filter -->
         {% if 'country' in active_filters or 'region' in active_filters or department in active_filters %}
@@ -48,6 +49,10 @@
         {% endif %}
         {% if 'visited' in active_filters %}
           <li><a href="{% include 'snippets/filter_url_queryparams.html' with removedword='visited' %}">{% translate 'visited'|capfirst %}: {% if active_filters.visited == 'True' %}{% translate 'in' %} {{ active_filters.visited }}{% else %}{% translate 'all visited locations'|capfirst %}{% endif %} <svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#x"/></svg></a></li>
+        {% endif %}
+        <!-- Visibility -->
+        {% if 'visibility' in active_filters %}
+          <li><a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}">{% translate active_filters.visibility.1|capfirst %}</a></li>
         {% endif %}
         <!-- Distance -->
         {% if active_filters.dist_min != None or active_filters.dist_max != None %}
@@ -102,9 +107,17 @@
         {% if available_filters.tags.all.count > 1 and 'tag' not in active_filters %}
           <li><strong>{% translate 'tag'|capfirst %}:</strong>
           {% for tag in available_filters.tags.all %}
-            <a href="{% include 'snippets/filter_url_queryparams.html' %}&tag={{ tag.tags__slug }}">{% translate tag.tags__name|title %}</a>{% if not forloop.last %}, {% endif %}
+            <a href="?{% include 'snippets/filter_url_queryparams.html' %}&tag={{ tag.tags__slug }}">{% translate tag.tags__name|title %}</a>{% if not forloop.last %}, {% endif %}
           {% endfor %}
         {% endif %}
+      <!-- Visibility -->
+        {% if available_filters.visibility|length > 1 %}
+          <li><strong>{% translate 'visibility'|capfirst %}:</strong>
+            {% for key, value in available_filters.visibility  %}
+            <a href="?{% include 'snippets/filter_url_queryparams.html' %}&visibility={{ key }}">{% translate value|capfirst %}</a>{% if not forloop.last %}, {% endif %}
+          {% endfor %}</li>
+        {% endif %}
+    
       <!-- Distance -->
        {% if range and range.steps|length > 3 and request.user.profile.filter_by_distance %}
           <li>

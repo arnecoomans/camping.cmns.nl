@@ -69,6 +69,7 @@ TEMPLATES = [
             'builtins': [
                 'templatetags.markdown_extras', # Added for application
                 'templatetags.replace', # Added for application
+                'templatetags.query_filters', #Added for application
             ]
         },
     },
@@ -157,9 +158,17 @@ PAGINATE = 12
 ACTIVITY_SLUG = 'activity'
 NEW_USER_DEFAULT_GROUP = 'communityuser'
 
+ALLOW_UNAUTHENTICATED_READ_COMMENTS = True # Allow unauthenticated users to read comments and allow authenticated users 
+                                           # to write comments with visibility 'public'
+ALLOW_UNAUTHENTICATED_SEE_OVERVIEW_MAP = True # Allow unauthenticated users to see the overview map
+
+
 GOOGLE_API_KEY = '[ADD YOUR GOOGLE API KEY FOR GEOLOCATION HERE]'
 GOOGLE_MAPS_API_KEY = '[ADD YOUR GOOGLE MAPS API KEY HERE]'
 NOMINATIM_USER_AGENT = 'vknt.cmns.nl v0.0.Dev'
 DEPARTURE_CENTER = 'Domkerk, Achter de Dom 1, 3512 JN Utrecht, Netherlands'
 MAX_LIST_DISTANCE_QUERIES = 10
-NEARBY_RANGE = 100
+MAX_LIST_DISTANCE_QUERIES = 10
+NEARBY_RANGE = 75
+MAP_RANGE = 200
+DEFAULT_ORDER = 'distance'

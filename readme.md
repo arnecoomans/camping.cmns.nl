@@ -1,6 +1,6 @@
 # VKNT Vacation Location and Activity Database
 
-Version 1.0.1.03
+Version 1.0.1.04
 
 VKNT is a database for holiday locations - places to stay - and activities - things to do. By builing a
 private database of possible locations, it is easier to either make holiday plans or share tips with
@@ -29,8 +29,6 @@ location and allowing to write down a story about each step.
 ## More information
 - Check out the GitHub https://github.com/arnecoomans/camping.cmns.nl
 - Log your issues and/or feature requests in github issues
-- Contact me at https://bsky.app/profile/arnecoomans.bsky.social
-
 
 ## Installation tips
 Install the application in your desired location:
@@ -72,6 +70,14 @@ Test the setup with the development server. This should run without issues. If a
 Stop the development server and set up a proper hosting environment. I reccomend using gunicorn with supervisord and nginx.
 - https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-22-04#testing-gunicorn-s-ability-to-serve-the-project
 
+
+## Configuration
+### ALLOW_UNAUTHENTICATED_READ_COMMENTS
+Set to True to allow unauthenticated users to see public comments
+### ALLOW_UNAUTHENTICATED_SEE_OVERVIEW_MAP
+Set to True to allow unauthenticated users to the the map view of search results
+### DEPARTURE_CENTER
+Locations are sorted by straight-line distance to a single location. Select a ideal starting point for your use-case.
 
 ## About the Application
 

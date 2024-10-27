@@ -257,6 +257,25 @@
         {% endif %}
       </div>
 
+      <!-- async comments -->
+      <div class="comments card">
+        <h2>{% translate 'comments'|capfirst %} <span id="comment counter"></span></h2>
+        <div id="comment-messages"><!-- Comment messages to be placed here --></div>
+        <div id="comments"><!-- Comments to be placed here async --></div>    
+
+        {% if perms.location.add_comment %}
+          {% include 'location/comment_add.html' %}
+        {% elif not user.is_authenticated %}
+          <div class="register promo">
+            <p><a href="{% url 'login' %}?next={{ request.get_full_path }}">{% translate 'sign in'|capfirst %}</a> {% translate 'or' %} <a href="#">{% translate 'register' %}</a> {% translate 'to comment' %}{% if could_have_comments %} {% translate 'or see comments shared with the community' %}{% endif %}.</p>
+          </div>
+        {% else %}
+          <div class="alert alert-warning" role="alert">
+            {% translate 'you do not have permission to comment on this location'|capfirst %}.
+          </div>
+        {% endif %}
+      </div>
+
       <!-- Nearby -->
       {% if nearby_locations|length > 1%}
         <div class="nearby card">
@@ -267,21 +286,6 @@
           {% endfor %}
         </div>
       {% endif %}
-
-
-      <!-- async comments -->
-      <div class="comments card">
-        <h2>{% translate 'comments'|capfirst %} <span id="comment counter"></span></h2>
-        {% if perms.location.add_comment %}
-          {% include 'location/comment_add.html' %}
-        {% else %}
-          <div class="register promo">
-            <p><a href="{% url 'login' %}?next={{ request.get_full_path }}">{% translate 'sign in'|capfirst %}</a> {% translate 'or' %} <a href="#">{% translate 'register' %}</a> {% translate 'to comment' %}{% if could_have_comments %} {% translate 'or see comments shared with the community' %}{% endif %}.</p>
-          </div>
-        {% endif %}
-        <div id="comment-messages"><!-- Comment messages to be placed here --></div>
-        <div id="comments"><!-- Comments to be placed here async --></div>    
-      </div>
       {% endif %}
     {% endif %}
   </div>

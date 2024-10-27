@@ -29,8 +29,9 @@ from location.models.List import ListDistance
 '''
 class EditLocationMaster(UpdateView, FilterClass):
   model = Location
-  fields = ['name', 'link', 'category', 'additional_category', 'visibility', 'status', 'address', 'phone', 'owners_names', 'chain']
+  fields = ['name', 'link', 'category', 'additional_category', 'visibility', 'address', 'phone', 'owners_names', 'chain']
   template_name = 'location/location/location_form.html'
+  
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context['scope'] = f"{ _('edit') }: { self.object .name}"
@@ -86,7 +87,8 @@ class EditLocationMaster(UpdateView, FilterClass):
 
   def get_form(self):
     ''' Add User field for staff '''
-    if self.request.user.is_staff == True:
+    if self.request.user.is_superuser:
+      self.fields.append('status')
       self.fields.append('user')
     form = super(EditLocationMaster, self).get_form()
     return form
@@ -106,6 +108,7 @@ class EditLocationMaster(UpdateView, FilterClass):
           Fetch user from stored object and retain'''
       original = Location.objects.get(slug=self.kwargs['slug'])
       form.instance.user = original.user
+      form.instance.status = original.status
       messages.add_message(self.request, messages.WARNING, f"{ _('you are not authorized to change the user. Keeping user') } \"{ original.user }\".")
     elif not form.instance.user:
       ''' If for some reason no user it set, set user to current user '''

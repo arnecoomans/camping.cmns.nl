@@ -1,28 +1,28 @@
-function getCommentDisplay(comment) {
-  var dt = DateTime.fromISO(comment.date_added);
-  var display = '<div class="comment card" data-id="comment-' + comment.id + '">' +
-                '  <div class="header">' +
-                '    <span data-bs-toggle="tooltip" data-bs-placement="top" title="' + dt.toFormat("dd LLLL y HH:MM") + '">' + dt.toRelative() +  '</span>' +
-                '    <a href="/comments/by:' + comment.user.username + '/">' + comment.user.displayname + '</a>' +
-                '    @ <a href="/location/' + comment.location.slug + '/">' + comment.location.name + '</a>' +
-                '   (' + comment.visibility + ')' +
-                '  </div>' +
-                '  <div class="content">' + comment.content + '</div>'
-  if (comment.user.id == currUser || currAuth === 'True') {
-    display = display + '<ul class="action list">'
-    if (comment.user.id == currUser) {
-      display = display + '<li><a href="/comment/' + comment.id + '/edit/"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="/static/bootstrap-icons/bootstrap-icons.svg#pencil"/></svg></a></li>' +
-                          '<li><a href="/comment/' + comment.id + '/delete/"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="/static/bootstrap-icons/bootstrap-icons.svg#trash"/></svg></a></li>'
-    }
-    if (currAuth === 'True') {
-      display = display + '<li><a href="/admin/location/comment/' + comment.id + '/change/" target="_blank" ><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="/static/bootstrap-icons/bootstrap-icons.svg#pencil-square"/></svg></a></li>'
-    }
-    display = display +'</ul>'
+// function getCommentDisplay(comment) {
+//   var dt = DateTime.fromISO(comment.date_added);
+//   var display = '<div class="comment card" data-id="comment-' + comment.id + '">' +
+//                 '  <div class="header">' +
+//                 '    <span data-bs-toggle="tooltip" data-bs-placement="top" title="' + dt.toFormat("dd LLLL y HH:MM") + '">' + dt.toRelative() +  '</span>' +
+//                 '    <a href="/comments/by:' + comment.user.username + '/">' + comment.user.displayname + '</a>' +
+//                 '    @ <a href="/location/' + comment.location.slug + '/">' + comment.location.name + '</a>' +
+//                 '   (' + comment.visibility + ')' +
+//                 '  </div>' +
+//                 '  <div class="content">' + comment.content + '</div>'
+//   if (comment.user.id == currUser || currAuth === 'True') {
+//     display = display + '<ul class="action list">'
+//     if (comment.user.id == currUser) {
+//       display = display + '<li><a href="/comment/' + comment.id + '/edit/"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="/static/bootstrap-icons/bootstrap-icons.svg#pencil"/></svg></a></li>' +
+//                           '<li><a href="/comment/' + comment.id + '/delete/"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="/static/bootstrap-icons/bootstrap-icons.svg#trash"/></svg></a></li>'
+//     }
+//     if (currAuth === 'True') {
+//       display = display + '<li><a href="/admin/location/comment/' + comment.id + '/change/" target="_blank" ><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="/static/bootstrap-icons/bootstrap-icons.svg#pencil-square"/></svg></a></li>'
+//     }
+//     display = display +'</ul>'
 
-  }
-  var display = display + '</div>'
-  return display;
-}
+//   }
+//   var display = display + '</div>'
+//   return display;
+// }
 
 function getAllComments(url, callback) {
   $.ajax({
@@ -36,8 +36,8 @@ function getAllComments(url, callback) {
         $('#comment-messages').append('<div class="alert alert-danger" role="alert">' + data.status.name + ' when loading comments: ' + data.status.message + '</div>');
         return false;
       } else {
-        $.each(data['data']['comments'], function(index, comment){
-          $('#comments').append(getCommentDisplay(comment));
+        $.each(data['payload'], function(index, comment){
+          $('#comments').append(comment);
         });
       } 
     }
@@ -71,7 +71,7 @@ $(document).ready(function() {
           return false;
         } else {
           $('#comment-messages').append('<div class="alert alert-success alert-dismissible fade show" role="alert">Comment added succesfully!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
-          $('#comments').prepend(getCommentDisplay(data.data.comment));
+          $('#comments').prepend(data['payload']);
           $('textarea[name="content"]').val('');
         }
       }

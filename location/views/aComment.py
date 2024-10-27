@@ -8,7 +8,10 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.http import JsonResponse
 from django.utils.html import strip_tags
+from django.template.loader import render_to_string
+
 import markdown
+
 
 from .snippets.a_helper import aHelper
 from .snippets.filter_class import FilterClass
@@ -39,24 +42,28 @@ class aListComments(aHelper, FilterClass, ListView):
     response['data']['comments'] = []
     ''' Filter comments by status and visibility '''
     comments = self.filter(comments).order_by('-date_modified').distinct()
-    ''' Add comments to response '''
+    # ''' Add comments to response '''
+    # for comment in comments:
+    #   response['data']['comments'].append({
+    #     'id': comment.id,
+    #     'location': { 
+    #       'slug': comment.location.slug,
+    #       'name': comment.location.name,
+    #       'id': comment.location.id,
+    #     },
+    #     'content': md.convert(strip_tags(comment.content)),
+    #     'user': { 
+    #       'id': comment.user.id,
+    #       'username': comment.user.username,
+    #       'displayname': comment.user.get_full_name() if comment.user.get_full_name() else comment.user.username,
+    #     },
+    #     'date_added': comment.date_added,
+    #     'visibility': comment.get_visibility_display(),
+    #   })
+    ''' Add rendered comments to payload '''
+    response['payload'] = []
     for comment in comments:
-      response['data']['comments'].append({
-        'id': comment.id,
-        'location': { 
-          'slug': comment.location.slug,
-          'name': comment.location.name,
-          'id': comment.location.id,
-        },
-        'content': md.convert(strip_tags(comment.content)),
-        'user': { 
-          'id': comment.user.id,
-          'username': comment.user.username,
-          'displayname': comment.user.get_full_name() if comment.user.get_full_name() else comment.user.username,
-        },
-        'date_added': comment.date_added,
-        'visibility': comment.get_visibility_display(),
-      })
+      response['payload'].append(render_to_string('partial/comment.html', {'comment': comment, 'user': self.request.user}))
     return JsonResponse(response)
 
 class aAddComment(aHelper, CreateView):
@@ -89,22 +96,23 @@ class aAddComment(aHelper, CreateView):
     ''' Proceed processing request '''
     response = self.getDefaultData()
     comment = Comment.objects.create(location=location, user=self.request.user, content=content, visibility=visibility)
-    response['data']['comment'] = {
-      'id': comment.id,
-        'location': { 
-          'slug': comment.location.slug,
-          'name': comment.location.name,
-          'id': comment.location.id,
-        },
-        'content': md.convert(strip_tags(comment.content)),
-        'user': { 
-          'id': comment.user.id,
-          'username': comment.user.username,
-          'displayname': comment.user.get_full_name(),
-        },
-        'date_added': comment.date_added,
-        'visibility': comment.get_visibility_display(),
-    }
+    # response['data']['comment'] = {
+    #   'id': comment.id,
+    #     'location': { 
+    #       'slug': comment.location.slug,
+    #       'name': comment.location.name,
+    #       'id': comment.location.id,
+    #     },
+    #     'content': md.convert(strip_tags(comment.content)),
+    #     'user': { 
+    #       'id': comment.user.id,
+    #       'username': comment.user.username,
+    #       'displayname': comment.user.get_full_name(),
+    #     },
+    #     'date_added': comment.date_added,
+    #     'visibility': comment.get_visibility_display(),
+    # }
+    response['payload'] = render_to_string('partial/comment.html', {'comment': comment,'user': self.request.user})
     return JsonResponse(response)
   
 

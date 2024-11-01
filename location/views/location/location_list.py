@@ -102,6 +102,7 @@ class LocationListMaster(FilterClass):
         self.available_filters['has_visited']   = True if self.get_queryset().filter(visitors__user=self.request.user).count() > 1 else False
       self.available_filters['order']         = ['distance', 'region']
       self.available_filters['visibility']    = self.get_available_visibilities()
+      self.available_filters['chains']           = self.get_available_chains()
       return self.available_filters
   
 
@@ -149,6 +150,9 @@ class LocationListMaster(FilterClass):
       'steps': steps
     }
 
+  def get_available_chains(self):
+    return self.get_queryset().filter(chain__children=None).exclude(chain__name=None).values('chain__slug', 'chain__name').order_by().distinct()
+  
   ''' Filter Queryset 
       Uses get_active_filters to determine filters that need to be processed
   '''

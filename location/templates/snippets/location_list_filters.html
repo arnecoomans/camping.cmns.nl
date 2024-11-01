@@ -1,6 +1,5 @@
 {% load i18n %}{% load static %}
 <div class="filter card">
-  {{ available_filters.chains }}---
   <!-- Show result counter -->
   <div class="results">
     <strong>{% translate 'showing'|capfirst %} {{ location_list.all.count }} {% translate scope %}, {% translate 'sorted on' %} {{ active_filters.order }}:</strong><br>

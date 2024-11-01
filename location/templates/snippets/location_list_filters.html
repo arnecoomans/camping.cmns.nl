@@ -1,5 +1,6 @@
 {% load i18n %}{% load static %}
 <div class="filter card">
+  {{ available_filters.chains }}---
   <!-- Show result counter -->
   <div class="results">
     <strong>{% translate 'showing'|capfirst %} {{ location_list.all.count }} {% translate scope %}, {% translate 'sorted on' %} {{ active_filters.order }}:</strong><br>
@@ -102,6 +103,12 @@
               <a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% update_query_params request add=category.category__slug to='category' active_filters=active_filters %}">{% translate category.category__name|title %}</a>{% if not forloop.last %}, {% else %}{% if available_filters.tag|length > 1 %},{% endif %}{% endif %}
           {% endfor %}
           </li>
+        {% endif %}
+        {% if available_filters.chains.all.count > 1 %}
+          <li><strong>{% translate 'chain'|capfirst %}</strong>:
+            {% for chain in available_filters.chains.all %}
+              <a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% update_query_params request add=chain.chain__slug to='chain' active_filters=active_filters %}">{{ chain.chain__name|title }}</a>{% if not forloop.last %}, {% else %}{% if available_filters.tag|length > 1 %},{% endif %}{% endif %}
+            {% endfor %}
         {% endif %}
       <!-- Tags -->
         {% if available_filters.tags.all.count > 1 and 'tag' not in active_filters %}

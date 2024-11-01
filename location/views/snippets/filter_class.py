@@ -34,8 +34,12 @@ class FilterClass:
     return queryset
   
   def filter(self, queryset):
-    queryset = self.filter_status(queryset)
-    queryset = self.filter_visibility(queryset)
+    model = queryset.model
+    ''' Conditionally filter queryset based on field availablity '''
+    if 'status' in [field.name for field in model._meta.get_fields()]:
+      queryset = self.filter_status(queryset)
+    if 'visibility' in [field.name for field in model._meta.get_fields()]:
+      queryset = self.filter_visibility(queryset)
     return queryset
 
   def filter_favorites(self, queryset):

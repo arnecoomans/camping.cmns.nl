@@ -72,7 +72,7 @@ class ToggleAttribute(UpdateView):
         'target': 'actionlist', 
         'name': _('favorite'), 
         'switch': True,
-        'default': Profile.objects.get(id=self.request.user.profile.id),
+        'default': Profile.objects.get_or_create(user=self.request.user)[0],
       },
       'dislike': {
         'model': Location, 

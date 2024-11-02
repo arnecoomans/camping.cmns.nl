@@ -121,7 +121,7 @@
         <div class="col-3 title-col">{% translate 'favorites'|capfirst %}:</div>
           <div class="col-9">
             {% for location in profile.favorite.all %}
-              <span class="favorite">{% include 'snippets/location_link.html' %} <a href="{% url 'location:ToggleFavorite' location.slug %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location.name }} {% translate 'from favorites' %}"></a></span>{% if not forloop.last %}, {% endif %}
+              <span class="favorite">{% include 'snippets/location_link.html' %} <a href="{% url 'location:ToggleAttribute' location.slug 'favorite' %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location.name }} {% translate 'from favorites' %}"></a></span>{% if not forloop.last %}, {% endif %}
             {% endfor %}
           </div>
         </div>
@@ -132,7 +132,7 @@
           <div class="col-3 title-col">{% translate 'least liked'|capfirst %}:</div>
             <div class="col-9">
               {% for location in profile.least_liked.all %}
-                <span class="favorite">{% include 'snippets/location_link.html' %} <a href="{% url 'location:ToggleLeastLiked' location.slug %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location.name }} {% translate 'from least-liked' %}"></a></span>{% if not forloop.last %}, {% endif %}
+                <span class="favorite">{% include 'snippets/location_link.html' %} <a href="{% url 'location:ToggleAttribute' location.slug 'dislike' %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location.name }} {% translate 'from least-liked' %}"></a></span>{% if not forloop.last %}, {% endif %}
               {% endfor %}
             </div>
         </div>
@@ -156,7 +156,7 @@
           <div class="col-3 title-col"><label for="family">{% translate 'family members'|capfirst %}:</div>
             <div class="col-9">
               {% for member in profile.family.all %}
-                <span class="family member">{{ member.get_full_name|default:member.username }}<a href="{% url 'location:ToggleFamily' member.id %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove family member '|capfirst %} {{ member.get_full_name|default:member.username }}"></a></span>{% if not forloop.last %}, {% endif %}
+                <span class="family member">{{ member.get_full_name|default:member.username }}<a href="#"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove family member '|capfirst %} {{ member.get_full_name|default:member.username }}"></a></span>{% if not forloop.last %}, {% endif %}
               {% endfor %}
             </div>
         </div>
@@ -167,7 +167,7 @@
           <div class="col-9">
             {% for person in user.family_of.all %}
                <span class="family member">
-                {% if person.user not in user.profile.family.all %}<svg class="bi" width="16" height="16" fill="#333"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#person-plus"/></svg><a href="{% url 'location:ToggleFamily' person.user.id %}">{% endif %}
+                {% if person.user not in user.profile.family.all %}<svg class="bi" width="16" height="16" fill="#333"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#person-plus"/></svg><a href="#">{% endif %}
                 {{ person.user.get_full_name|default:person.user.username }}
                 {% if person.user not in user.profile.family.all %}</a>{% endif %}
               </span>
@@ -181,7 +181,7 @@
           <div class="col-9">
             {% for member in available_family %}
               {% if member.profile not in user.family_of.all %}
-                <span class="family member"><svg class="bi" width="16" height="16" fill="#333"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#person-plus"/></svg><a href="{% url 'location:ToggleFamily' member.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'add'|capfirst %} {{ member.get_full_name|default:member.username }} {% translate 'to your family' %}">{{ member.get_full_name|default:member.username }}</a></span>{% if not forloop.last %}, {% endif %}
+                <span class="family member"><svg class="bi" width="16" height="16" fill="#333"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#person-plus"/></svg><a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'add'|capfirst %} {{ member.get_full_name|default:member.username }} {% translate 'to your family' %}">{{ member.get_full_name|default:member.username }}</a></span>{% if not forloop.last %}, {% endif %}
               {% endif %}
             {% endfor %}
             {% if available_family.count == 0 %}<p>{% translate 'no users available to add to your family'|capfirst %}.</p>{% endif %}
@@ -206,7 +206,7 @@
               <td>
                 <ul class="action list">
                   <li><a href="{% url 'location:EditVisit' visit.id %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil"/></svg></a></li>
-                  <li><a href="{% url 'location:DeleteVisit' visit.id %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#trash"/></svg></a></li>
+                  <li><a href="{% url 'location:ToggleDeleted' 'visit' visit.id %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#trash"/></svg></a></li>
                 </ul>
               </td>
             </tr>

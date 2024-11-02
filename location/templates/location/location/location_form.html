@@ -18,6 +18,10 @@
           <div class="col-3 title-col"><label for="name">{% translate 'name'|capfirst %}:</div>
           <div class="col-9"><input class="form-control form-control-lg" name="name" id="name" value="{{ location.name }}" required {% if not location %}autofocus{% endif %}></div>
         </div>
+        <div class="row">
+          <div class="col-3 title-col"></div>
+          <div class="col-9"><div id="namemessages"></div></div>
+        </div>
         {% if not location %}
           <!-- Description -->
           <div class="row">
@@ -196,52 +200,9 @@
       </div>
       <!-- Location Relations-->
       <a class="anchor" name="extra"></a>
-      <div class="relations card">
-        <!-- Manage Chain -->
-        <div class="row autoload" data-url="{% url 'location:aListChainsFor' location.slug %}" data-type="tag">
-          <div class="col-3 title-col">{% translate 'chains'|title %}<span class="valuecounter"></span>:</div>
-          <div class="col-8 list-col" id="tags"></div>
-          <div class="col-1 button-col"><button type="button" class="btn btn-outline-secondary show-edit">+</button></div>
-        </div>
-        <div class="row add_autosuggest">
-          <div class="col-3 title-col"></div>
-          <div class="col-6 tag" id="addtag">
-            <input type="text" class="autocomplete autocapitalize form-control submit-value" placeholder="{% translate 'start typing'|capfirst %}..." data-suggestions="{% url 'location:aListChainSuggestionsFor' location.slug %}" data-url="{% url 'location:aAddChain' location.slug %}">
-          </div>
-          <div class="col-3">
-            <button class="btn btn-primary submit-value">{% translate 'add'|capfirst %}</button>
-          </div>
-        </div>
-        <!-- Manage Additional Categories -->
-        <div class="row autoload" data-url="{% url 'location:aListCategoriesFor' location.slug %}" data-type="category" data-toggle-url="{% url 'location:aAddCategory' location.slug %}">
-          <div class="col-3 title-col">{% translate 'categories'|title %}<span class="valuecounter"></span>:</div>
-          <div class="col-8 list-col" id="tags"></div>
-          <div class="col-1 button-col"><button type="button" class="btn btn-outline-secondary show-edit">+</button></div>
-        </div>
-        <div class="row add_autosuggest"> 
-          <div class="col-3 title-col"></div>
-          <div class="col-6" id="additional_categories"> 
-            <input type="text" class="autocomplete autocapitalize form-control submit-value" placeholder="{% translate 'start typing'|capfirst %}..." name="addcategory" data-suggestions="{% url 'location:aListCategorySuggestionsFor' location.slug %}" data-url="{% url 'location:aAddCategory' location.slug %}">
-          </div>
-          <div class="col-3">
-            <button class="btn btn-primary submit-value">{% translate 'add'|capfirst %}</button>
-          </div>
-        </div>
-        <!-- Manage Tags -->
-        <div class="row autoload" data-url="{% url 'location:aListTagsFor' location.slug %}" data-type="tag">
-          <div class="col-3 title-col">{% translate 'tags'|title %}<span class="valuecounter"></span>:</div>
-          <div class="col-8 list-col" id="tags"></div>
-          <div class="col-1 button-col"><button type="button" class="btn btn-outline-secondary show-edit">+</button></div>
-        </div>
-        <div class="row add_autosuggest">
-          <div class="col-3 title-col"></div>
-          <div class="col-6 tag" id="addtag">
-            <input type="text" class="autocomplete autocapitalize form-control submit-value" placeholder="{% translate 'start typing'|capfirst %}..." name="addtag" data-suggestions="{% url 'location:aListTagSuggestionsFor' location.slug %}" data-url="{% url 'location:aAddTag' location.slug %}">
-          </div>
-          <div class="col-3">
-            <button class="btn btn-primary submit-value">{% translate 'add'|capfirst %}</button>
-          </div>
-        </div>
+      <!-- Location Attributes -->
+      {% include 'segment/location_attributes.html' %}
+
       </div>
     {% endif %}
   {% else %}
@@ -250,62 +211,87 @@
 {% endblock %}
 
 {% block scriptfooter %}
-  {% if request.user.is_authenticated %}
-    {% if perms.location.view_comments or allow_unauthenticated_read_comments%}
-      <script>
-        var tagBaseUrl = '/a/{{ location.slug }}/tag/';
-        var categoryBaseUrl = '/a/{{ location.slug }}/category/';
+<!-- automatically select category -->
+<script>
+  $(document).ready(function() {
+    $('#name').on('input', function() {
+      var inputValue = $(this).val().toLowerCase();  // Get the input value
+      var inputWords = inputValue.split(' ');  // Split into words
 
-        var csrf_token = '{{ csrf_token }}';
-        var currUser = {{ user.id }};
-        var currAuth = '{{ user.is_staff|default:"False" }}';
-        var tagAllowRemove = 1;
-        var allowDelete = 1;
-        var debug = 1;
+      // Loop over the typed words first
+      for (let i = 0; i < inputWords.length; i++) {
+        var currentWord = inputWords[i];
 
-      </script>
-      <script src="{% static 'js/async.js' %}" defer></script>
-      <script src="{% static 'js/autosuggest.js' %}" defer></script>
-      <script src="{% static 'js/autoloadvalues.js' %}" defer></script>
-      {% comment %} <script src="{% static 'js/comments.js' %}" defer></script> {% endcomment %}
-      {% comment %} <script src="{% static 'js/chains.js' %}" defer></script>  {% endcomment %}
-    {% endif %}
-
-    <!-- automatically select category -->
-    <script>
-      $(document).ready(function() {
-        $('#name').on('input', function() {
-          var inputValue = $(this).val().toLowerCase();  // Get the input value
-          var inputWords = inputValue.split(' ');  // Split into words
-  
-          // Loop over the typed words first
-          for (let i = 0; i < inputWords.length; i++) {
-            var currentWord = inputWords[i];
-    
-            // Then loop over the dropdown options to find a match
-            $('#categories option').each(function() {
-              var optionText = $(this).text().toLowerCase();
-              if (optionText === currentWord) {
-                $(this).prop('selected', true);  // Select the option
-                console.log('Setting category to ' + currentWord);
-                $('#categories').trigger('change');
-                return false;  // Exit the inner loop after the first match
-              }
-            });
-
-            // If a match was found, break out of the outer loop as well
-            if ($('#categoryDropdown').val()) {
-              break;
-            }
+        // Then loop over the dropdown options to find a match
+        $('#categories option').each(function() {
+          var optionText = $(this).text().toLowerCase();
+          if (optionText === currentWord) {
+            $(this).prop('selected', true);  // Select the option
+            console.log('Setting category to ' + currentWord);
+            $('#categories').trigger('change');
+            return false;  // Exit the inner loop after the first match
           }
         });
-      });
 
-      $('#categories').on('change', function() {
-        $(this)
-          .css('background-color', '#FFFF00')  // Set the initial background color
-          .animate({ backgroundColor: '#FFFFFF' }, 1000);  // Animate it back to the original color
+        // If a match was found, break out of the outer loop as well
+        if ($('#categoryDropdown').val()) {
+          break;
+        }
+      }
     });
+  });
+  $('#name').on('blur', function() {
+    // Check if location name is already known
+    var query = $(this).val().toLowerCase();
+    var url = '{% url 'location:getLocationSuggestions' %}';
+    console.log('Checking if location name is already known: ' + query);
+    $.ajax({
+      url: url,
+      type: 'GET',
+      data: {
+        'query': query,
+        'csrfmiddlewaretoken': "{{ csrf_token}}"
+      },
+      success: function(data) {
+        console.log('Location name is already known: ' + data);
+        if (data) {
+          $('#namemessages').empty();
+          $.each(data['payload'], function(index, payload){
+            $('#namemessages').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">{% translate 'did you mean'|capfirst %}: <a href="' + payload.url +'">' + payload.name + '</a> in ' + payload.country + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+          });
+        }
+      },
+      error: function(data) {
+        console.log('Error checking if location name is already known: ' + data);
+      }
+    });
+  });
+
+  $('#categories').on('change', function() {
+    $(this)
+      .css('background-color', '#FFFF00')  // Set the initial background color
+      .animate({ backgroundColor: '#FFFFFF' }, 1000);  // Animate it back to the original color
+  });
+</script>
+  {% if request.user.is_authenticated %}
+    <span id="csrf_token" style="display: none;">{{ csrf_token }}</span>
+    <script src="{% static 'js/getLocationAttributes.js' %}" defer></script>
+    <script src="{% static 'js/getAutocompleteValues.js' %}" defer></script>
+    
+    {% comment %} <script src="{% static 'js/load_tags.js' %}" defer></script> {% endcomment %}
+    <script type="text/javascript">
+      /** Configuration */
+      const debug = {% if user.is_staff %}1{% else %}0{% endif %};
+
+      /** Initialisation */
+      $(document).ready(function() {
+        {% if ajax_load_tags %}/** Load tags */ getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'tag' %}', 'tagslist'){% endif %}
+        {% if ajax_load_categories %}/** Load categories */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'category' %}', 'categorylist'){% endif %}
+        {% if ajax_load_chains %}/** Load chains */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'chain' %}', 'chainlist'){% endif %}
+        {% if ajax_load_comments %}/** Load comments */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'comment' %}', 'commentlist'){% endif %}
+        {% if ajax_load_actionlist %}/** Load action list */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'actionlist' %}', 'actionlist'){% endif %}
+      });
     </script>
   {% endif %}
+  
 {% endblock %}

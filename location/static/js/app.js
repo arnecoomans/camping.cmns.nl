@@ -1,5 +1,19 @@
 $(document).ready(function() {
-  
+  /**  Auto-Capitalize
+   * Auto-capitalize the first letter of each word in an input field
+   * with the class 'autocapitalize'
+   */
+  $('input.autocapitalize').on('input', function() {
+    var inputVal = $(this).val();
+    var capitalizedVal = inputVal.replace(/\b\w/g, function(char) {
+        return char.toUpperCase();
+    });
+    $(this).val(capitalizedVal);
+  });
+
+  /** Site Search Autocomplete
+   * Site-search is a slugles autocomplete
+   */
   $('.site_seach').autocomplete({
     source: function(request, response) {
       $.ajax({

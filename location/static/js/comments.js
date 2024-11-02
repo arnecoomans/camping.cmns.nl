@@ -1,81 +1,36 @@
-// function getCommentDisplay(comment) {
-//   var dt = DateTime.fromISO(comment.date_added);
-//   var display = '<div class="comment card" data-id="comment-' + comment.id + '">' +
-//                 '  <div class="header">' +
-//                 '    <span data-bs-toggle="tooltip" data-bs-placement="top" title="' + dt.toFormat("dd LLLL y HH:MM") + '">' + dt.toRelative() +  '</span>' +
-//                 '    <a href="/comments/by:' + comment.user.username + '/">' + comment.user.displayname + '</a>' +
-//                 '    @ <a href="/location/' + comment.location.slug + '/">' + comment.location.name + '</a>' +
-//                 '   (' + comment.visibility + ')' +
-//                 '  </div>' +
-//                 '  <div class="content">' + comment.content + '</div>'
-//   if (comment.user.id == currUser || currAuth === 'True') {
-//     display = display + '<ul class="action list">'
-//     if (comment.user.id == currUser) {
-//       display = display + '<li><a href="/comment/' + comment.id + '/edit/"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="/static/bootstrap-icons/bootstrap-icons.svg#pencil"/></svg></a></li>' +
-//                           '<li><a href="/comment/' + comment.id + '/delete/"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="/static/bootstrap-icons/bootstrap-icons.svg#trash"/></svg></a></li>'
-//     }
-//     if (currAuth === 'True') {
-//       display = display + '<li><a href="/admin/location/comment/' + comment.id + '/change/" target="_blank" ><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="/static/bootstrap-icons/bootstrap-icons.svg#pencil-square"/></svg></a></li>'
-//     }
-//     display = display +'</ul>'
-
-//   }
-//   var display = display + '</div>'
-//   return display;
-// }
-
-function getAllComments(url, callback) {
-  $.ajax({
-    url: url,
-    headers: {'X-CSRFToken': csrf_token},
-    dataType: 'json',
-    success: function(data){
-      // Based on the status of the response, take the correct action
-      // Ranging from bad to good; error, warning, success
-      if (data.status.code == 0) {
-        $('#comment-messages').append('<div class="alert alert-danger" role="alert">' + data.status.name + ' when loading comments: ' + data.status.message + '</div>');
-        return false;
-      } else {
-        $.each(data['payload'], function(index, comment){
-          $('#comments').append(comment);
-        });
-      } 
-    }
-  });
-}
-
 $(document).ready(function() {
-  // Fetch new comments on page load
-  getAllComments(fetchCommentUrl, function(data){
-    // take no action, the comments are already added to the DOM
-  });
-
-  // Handle Add Comment
-  $('#add-comment').click(function(){
-    // Fetch required fields
-    var url = $(this).data('url');
-    var content = $('textarea[name="content"]').val();
+  /// Handle Submit Comments
+  $('button.submit-comment').on('click', function() {
+    console.log('Submit Comment');
+    // Fetch Comment Data
+    parent = $('#addcomment')
+    var url = parent.data('url');
+    var csrf = parent.data('csrf');
+    var location = parent.data('location');
+    var comment = $('textarea[name="content"]').val();
     var visibility = $('select[name="visibility"]').val();
     /// Submit the data to the server
+    console.log('Preparing to post comment: "' + comment + '" to ' + url + ' with visibility ' + visibility);
     $.ajax({
       url: url,
-      headers: {'X-CSRFToken': csrf_token},
+      headers: {'X-CSRFToken': csrf},
       data: {
-        'content': content,
+        'location': location,
+        'comment': comment,
         'visibility': visibility,
       },
       dataType: 'json',
       success: function(data){
-        if (data.status.code == 0) {
-          $('#comment-messages').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">' + data.status.name + ': ' + data.status.message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
-          return false;
-        } else {
-          $('#comment-messages').append('<div class="alert alert-success alert-dismissible fade show" role="alert">Comment added succesfully!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
-          $('#comments').prepend(data['payload']);
-          $('textarea[name="content"]').val('');
-        }
+        console.log(data);
+        $('#commentmessages').empty().append('<div class="alert alert-success alert-dismissible fade show" role="alert">Comment added succesfully!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+        $('textarea[name="content"]').val('');
+        getLocationAttributes(data['success-url'], 'commentlist');
+      }, 
+      error: function(jqXHR, textStatus, errorThrown){
+        console.log(jqXHR);
+        $('#commentmessages').empty().append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error ' + jqXHR.status + ': ' + jqXHR.responseJSON.message + '.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+        return false;
       }
     });
   });
-
 });

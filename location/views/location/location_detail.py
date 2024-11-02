@@ -1,13 +1,12 @@
 from django.views.generic.list import ListView
 
-from django.contrib import messages
 from django.utils.translation import gettext as _
 from django.conf import settings
 
 from ..snippets.filter_class import FilterClass
 from ..snippets.order_media import order_media
 
-from location.models.Location import Location, Category, Chain, Link, Description
+from location.models.Location import Location, Link, Description
 from location.models.Comment import Comment
 from location.models.Tag import Tag
 from location.models.List import List, ListLocation
@@ -40,7 +39,6 @@ class LocationView(ListView, FilterClass):
   ''' Queryset 
       Get Comments for selected location
   '''
-
   def get_queryset(self):
     queryset = Comment.objects.filter(location__slug=self.get_location().slug)
     queryset = self.filter_status(queryset)

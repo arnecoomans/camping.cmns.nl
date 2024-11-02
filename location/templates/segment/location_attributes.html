@@ -1,0 +1,50 @@
+{% load i18n %}{% load static %}<!-- Location Attributes -->
+<div class="more information card">
+  <div class="row">
+    <div class="col-12"><h2>{% translate 'more information'|capfirst %}:</h2></div>
+  </div>
+  <div id="attributemessages"><!-- Attribute messages to be placed here --></div>
+  <!-- Category -->
+  <div class="row">
+    <div class="col-3 title-col">{% translate 'category'|title %}:</div>
+    <div class="col-8" id="categorylist">
+      {% if not ajax_load_categories %}
+        {% with category=location.category %}{% include 'partial/category.html' %}{% endwith %}{% if location.additional_category.all.count > 0 %}, {% endif %}
+        {% for category in location.additional_category.all %}
+          {% include 'partial/category.html' %}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
+    <div class="col-1 button-col"><button for="category" type="button" class="btn btn-outline-secondary show-autocomplete">+</button></div>
+    {% include 'partial/addattribute.html' with attribute="category" %}
+  </div>
+  <!-- Chain -->
+  <div class="row autoload">
+    <div class="col-3 title-col">{% translate 'chain'|title %}<span class="valuecounter"></span>:</div>
+    <div class="col-8 list-col" id="chainlist">
+      {% if not ajax_load_chains %}
+        {% for chain in location.chain.all %}
+          {% include 'partial/chain.html' %}
+        {% endfor %}
+      {% endif %}
+    </div>
+    <div class="col-1 button-col"><button for="chain" type="button" class="btn btn-outline-secondary show-autocomplete">+</button></div>
+    {% include 'partial/addattribute.html' with attribute="chain" %}
+  </div>
+  <!-- Tags -->
+  {% if user.is_authenticated %}
+    <div class="row autoload">
+      <div class="col-3 title-col">{% translate 'tags'|title %}<span class="valuecounter"></span>:</div>
+      <div class="col-8 list-col" id="tagslist">
+        {% if not ajax_load_tags %}
+          {% for tag in location.tags.all %}
+            {% include 'partial/tag.html' %}
+          {% endfor %}
+        {% endif %}
+      </div>
+      <div class="col-1 button-col"><button for="tag" type="button" class="btn btn-outline-secondary show-autocomplete">+</button></div>
+    </div>
+    {% include 'partial/addattribute.html' with attribute="tag" %}
+  {% endif %}
+
+</div>

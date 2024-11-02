@@ -1,0 +1,7 @@
+{% load static %}{% load i18n %}
+<a class="tag {{ tag.get_list_as_display }}" href="{% url 'location:tag' tag.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see details of tag'|capfirst %}: {{ tag|title }} ">
+  {% if tag.list_as == 'a' %}<img src="{% static 'bootstrap-icons/hand-thumbs-up-fill.svg' %}"> {% elif tag.list_as == 'd' %}<img src="{% static 'bootstrap-icons/hand-thumbs-down-fill.svg' %}"> {% endif %}
+  {% if tag.parent %}{{ tag.parent.name }}: {% endif %}
+  {{ tag.name }}
+</a>
+{% if user.is_staff %}<a href="{% url 'location:ToggleAttributeValue' location.slug 'tag' tag.slug %}" class="toggable" data-bs-toggle="tooltip" data-bs-placement="top" title="{% blocktranslate with name=tag.name location_name=location %}Remove &quot;{{ name }}&quot; from {{ location_name }}{% endblocktranslate %}"><sup>[X]</sup></a>{% endif %}

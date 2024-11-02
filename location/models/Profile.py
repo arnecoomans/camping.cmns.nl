@@ -1,3 +1,4 @@
+from typing import Any
 from django.db import models
 from django.contrib.auth.models import User
 from django.shortcuts import reverse
@@ -42,6 +43,13 @@ class Profile(models.Model):
   def get_home(self):
     return self.home
   
+  def name(self):
+    return f"{ _('profile of').capitalize() } { self.user.get_full_name() if self.user.get_full_name() else self.user.username }"
+  
+  def __init__(self, *args: Any, **kwargs: Any) -> None:
+    super().__init__(*args, **kwargs)
+    self.name = self.name()
+    
   def get_favorites(self):
     queryset = Location.objects.filter(favorite_of=self.user.profile)
     family_members = Profile.objects.filter(family=self.user)
@@ -63,5 +71,11 @@ class VisitedIn(BaseModel):
   def __str__(self) -> str:
     return f"{ self.user.get_full_name() } visited { self.location.name } in { str(self.year) }"
   
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+    # self.slug = self.id
+
   class Meta:
     ordering = ['location', 'year']
+  
+  

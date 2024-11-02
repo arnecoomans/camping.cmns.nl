@@ -1,0 +1,9 @@
+{% load i18n %}
+<span class="chain">
+  <a href="{% url 'location:search' %}?chain={{ chain.slug }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate location.getPCategory|capfirst %} {% translate 'by' %} {{ chain.name }}{% if chain.parent and user.is_authenticated %} ({{ chain.parent.name }}){% endif %}">
+    {{ chain.name|title }}
+    {% if user.is_staff %}<a href="{% url 'location:ToggleAttributeValue' location.slug 'chain' chain.slug %}" class="toggable" data-bs-toggle="tooltip" data-bs-placement="top" title="{% blocktranslate with name=tag.name location_name=location %}Remove &quot;{{ name }}&quot; from {{ location_name }}{% endblocktranslate %}"><sup>[X]</sup></a>{% endif %}
+  </a>
+  {% if chain.parent and user.is_authenticated %} - <a href="{% url 'location:search' %}?chain={{ chain.parent.slug }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% blocktranslate with chain=chain.name|title parent=chain.parent.name|title %}{{ chain }} is part of {{ parent }} {% endblocktranslate %}">{{ chain.parent.name|title }}</a>{% endif %}
+  {% if not forloop.last %}, {% endif %}
+</span>

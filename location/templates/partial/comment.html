@@ -7,17 +7,17 @@
     {% translate 'on' %}
     <strong>
       <a href="{% url 'location:location' comment.location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see details of'|capfirst %} {{ comment.location.name }}">{{ comment.location.name }}</a>
-    </strong>:
+    </strong>{% if user.is_superuser %}{{ comment.get_status_display }}{% endif %}:
   </div>
   <div class="content">{{ comment.content|markdown|safe }}</div>
   {% if user == comment.user or user.is_superuser%}
     <ul class="action list">
       {% if user == comment.user %}
         <li><a href="{% url 'location:EditComment' comment.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit'|capfirst %} {% translate 'my comment' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil"/></svg></a></li>
-        <li><a href="{% url 'location:DeleteComment' comment.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'delete'|capfirst %} {% translate 'my comment' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#trash"/></svg></a></li>
+        <li><a href="{% url 'location:ToggleDeleted' 'comment' comment.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'delete'|capfirst %} {% translate 'my comment' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#trash"/></svg></a></li>
       {% elif user.is_superuser %}
         <li><a href="{% url 'location:EditComment' comment.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit'|capfirst %} {% translate 'this comment' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil"/></svg></a></li>
-        <li><a href="{% url 'location:DeleteComment' comment.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'delete'|capfirst %} {% translate 'this comment' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#trash"/></svg></a></li>
+        <li><a href="{% url 'location:ToggleDeleted' 'comment' comment.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'delete'|capfirst %} {% translate 'this comment' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#trash"/></svg></a></li>
       {% endif %}
       {% if user.is_superuser %}
         <li><a href="/admin/location/comment/{{ comment.id }}/change/" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if user == comment.user %}{% translate 'edit my comment'|capfirst %}{% else %}{% translate 'edit this comment'|capfirst %}{% endif %} {% translate 'in admin' %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil-square"/></svg></a></li>

@@ -230,6 +230,8 @@ class LocationListMaster(FilterClass):
       queryset = queryset.order_by('date_added')
     elif order == 'date_modified':
       queryset = queryset.order_by('-date_modified')
+    elif order == 'user':
+      queryset = queryset.order_by('user')
     else:
       ''' Implicit ordering by region '''
       queryset = queryset.order_by(

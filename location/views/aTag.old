@@ -6,6 +6,7 @@ from django.conf import settings
 from django.http import JsonResponse
 from django.utils.html import strip_tags
 from django.utils.text import slugify
+from django.template.loader import render_to_string
 
 from .snippets.a_helper import aHelper
 from .snippets.filter_class import FilterClass
@@ -28,9 +29,14 @@ class aSuggestTags(aHelper, FilterClass, ListView):
       suggestions = suggestions.exclude(locations=location)
     suggestions = suggestions.exclude(children__gt=0).order_by('name').distinct()
     suggestions = self.filter(suggestions)
-    response = []
+    response = {
+      'error': False,
+      'message': '',
+      'payload': [],
+    }
     for suggestion in suggestions:
-      response.append(
+      response['payload'].append(
+        # render_to_string('partial/tag_suggestion.html', {'tag': suggestion})
         f"{ suggestion.parent.name }: { suggestion.name }" if suggestion.parent else suggestion.name,
       )
     return JsonResponse(response, safe=False)

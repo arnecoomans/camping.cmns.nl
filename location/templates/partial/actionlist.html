@@ -1,0 +1,55 @@
+{% load static %}{%load i18n %}<!-- Action List-->
+{% if user.is_authenticated %}
+  <ul class="action list">
+    <!-- Home -->
+    {% if location == user.profile.home %}
+      <li><a href="{% url 'location:profile' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'this is marked as your home'|capfirst %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#house"/></svg></a></li>
+    {% endif %}
+    <!-- Visibility -->
+    {% if location.visibility in 'f,q' %}
+      <li><a href="{% if location.isActivity %}{% url 'location:EditActivity' location.slug %}{% else %}{% url 'location:EditLocation' location.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'viewable by'|capfirst %} {{ location.get_visibility_display }}">
+        <svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}" ><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#{% if location.visibility == 'q' %}person{% else %}people{% endif %}"/></svg>
+      </a></li>
+    {% endif %}
+    {% if not location in user.profile.least_liked.all %}
+      <!-- Favorite -->
+      <li><a href="{% url 'location:ToggleAttribute' location.slug 'favorite' %}" class="toggable" id="like" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if location in user.profile.favorite.all %}{% translate 'you like'|capfirst %}{% else %}{% translate 'like'|capfirst %}{% endif %} {% translate 'this location' %}"><svg class="bi" width="32" height="32" fill="#c00"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#balloon-heart{% if location in user.profile.favorite.all %}-fill{% endif %}"/></svg></a></li>
+    {% endif %}
+    {% if not location in user.profile.favorite.all %}<!-- Favorite -->
+      <!-- Least liked -->
+      <li><a href="{% url 'location:ToggleAttribute' location.slug 'dislike' %}" class="toggable" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if location in user.profile.least_liked.all %}{% translate "you don't like"|capfirst %}{% else %}{% translate 'dislike'|capfirst %}{% endif %} {% translate 'this location' %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}#666{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#heartbreak{% if location in user.profile.least_liked.all %}-fill{% endif %}"/></svg></a></li>
+    {% endif %}
+    <!-- Add media -->
+    {% if perms.location.add_media %}
+      <li><a href="{% url 'location:AddMediaToLocation' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'add media to'|capfirst %} {% translate location.getCategory %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#camera"/></svg></a>
+    {% endif %}
+    {% if media|length > 0 %}
+        <li data-bs-toggle="tooltip" data-bs-placement="top" title="&quot;{{ media.0.title }}&quot; by {{ media.0.user.get_full_name }} ({{ media.0.get_visibility_display }} visible)">
+          {% if user.is_staff %}<a href="{% url 'location:MediaStack' location.slug %}">{% endif %}
+          <svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#image"/></svg>
+          {% if user.is_staff %}</a>{% endif %}
+        </li>
+    {% endif %}
+    <!-- Edit -->
+    {% if perms.location.edit_location and location.user == user or location.visibility == 'p' or location.visibility == 'c' %}
+      <li><a href="{% if location.isActivity %}{% url 'location:EditActivity' location.slug %}{% else %}{% url 'location:EditLocation' location.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit information of'|capfirst %} {{ location.name }}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil"/></svg></a></li>
+    {% endif %}
+    {% if user.is_superuser %}
+      <li><a href="/admin/location/location/{{ location.id }}/change/" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit information of'|capfirst %} {{ location.name }} {% translate 'in admin' %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil-square"/></svg></a></li>
+    {% endif %}
+    <!-- Distance to home -->
+    {% if not location.category.name == 'Home' and distance_to_home %}
+      <li data-bs-toggle="tooltip" data-bs-placement="top" title="{{ distance_to_home.getDistance }}, {{ distance_to_home.getTime }} {% translate 'from' %} {{ user.profile.home.name }}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#house-fill"/></svg></a></li>  
+    {% elif not location.category.name == 'Home' and user.profile.home and location.coord_lat and location.coord_lng %}
+      <li><a href="{% url 'location:DistanceToHome' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'calculate distance from home to'|capfirst %} {{ location.name }}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#house"/></svg></a></li>  
+    {% endif %}
+    <!-- Distance to center -->
+    {% if request.user.is_staff and location.distance_to_departure_center %}
+      <li><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#geo" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'geographical distance from'|capfirst %} {{ departure_center }} {% translate 'to this location' %}: {{ location.distance_to_departure_center }} {% translate 'km' %} ({% translate 'straight line' %})"></svg></li>
+    {% endif %}
+    <!-- Reset data-->
+    {% if user.is_staff %}
+      <li><a href="{% url 'location:ResetLocation' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'reset location data and fetch again'|capfirst %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#arrow-clockwise{% if location in user.profile.least_liked.all %}-fill{% endif %}"/></svg></a></li>
+    {% endif %}
+  </ul>
+{% endif %}

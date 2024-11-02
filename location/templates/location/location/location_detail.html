@@ -18,6 +18,7 @@
       <header {% if media|length > 0 %}class="withmedia" style="background-image: url('/media/{{ media.0.source }}');"{% endif %}>
         <!-- Header Line -->
         <h1>{{ location.name }}</h1> 
+        {% comment %} <a class="toggable" data-url="google.com">FOO</a> {% endcomment %}
         <span class="locator">
           {% if location.chain.all.count > 0 %}
             {% include 'snippets/chain.html' with chains=location.chain.all %}
@@ -33,60 +34,11 @@
           {% endif %}
         </span>
         <!-- Action List-->
-        {% if user.is_authenticated %}
-          <ul class="action list">
-            <!-- Home -->
-            {% if location == user.profile.home %}
-              <li><a href="{% url 'location:profile' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'this is marked as your home'|capfirst %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#house"/></svg></a></li>
-            {% endif %}
-            <!-- Visibility -->
-            {% if location.visibility in 'f,q' %}
-              <li><a href="{% if location.isActivity %}{% url 'location:EditActivity' location.slug %}{% else %}{% url 'location:EditLocation' location.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'viewable by'|capfirst %} {{ location.get_visibility_display }}">
-                <svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}" ><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#{% if location.visibility == 'q' %}person{% else %}people{% endif %}"/></svg>
-              </a></li>
-            {% endif %}
-            {% if not location in user.profile.least_liked.all %}
-              <!-- Favorite -->
-              <li><a href="{% url 'location:ToggleFavorite' location.slug %}" id="like" data-url="{% url 'location:aToggleFavorite' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if location in user.profile.favorite.all %}{% translate 'you like'|capfirst %}{% else %}{% translate 'like'|capfirst %}{% endif %} {% translate 'this location' %}"><svg class="bi" width="32" height="32" fill="#c00"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#balloon-heart{% if location in user.profile.favorite.all %}-fill{% endif %}"/></svg></a></li>
-            {% endif %}
-            {% if not location in user.profile.favorite.all %}<!-- Favorite -->
-              <!-- Least liked -->
-              <li><a href="{% url 'location:ToggleLeastLiked' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if location in user.profile.least_liked.all %}{% translate "you don't like"|capfirst %}{% else %}{% translate 'dislike'|capfirst %}{% endif %} {% translate 'this location' %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}#666{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#heartbreak{% if location in user.profile.least_liked.all %}-fill{% endif %}"/></svg></a></li>
-            {% endif %}
-            <!-- Add media -->
-            {% if perms.location.add_media %}
-              <li><a href="{% url 'location:AddMediaToLocation' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'add media to'|capfirst %} {% translate location.getCategory %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#camera"/></svg></a>
-            {% endif %}
-            {% if media|length > 0 %}
-                <li data-bs-toggle="tooltip" data-bs-placement="top" title="&quot;{{ media.0.title }}&quot; by {{ media.0.user.get_full_name }} ({{ media.0.get_visibility_display }} visible)">
-                  {% if user.is_staff %}<a href="{% url 'location:MediaStack' location.slug %}">{% endif %}
-                  <svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#image"/></svg>
-                  {% if user.is_staff %}</a>{% endif %}
-                </li>
-            {% endif %}
-            <!-- Edit -->
-            {% if perms.location.edit_location and location.user == user or location.visibility == 'p' or location.visibility == 'c' %}
-              <li><a href="{% if location.isActivity %}{% url 'location:EditActivity' location.slug %}{% else %}{% url 'location:EditLocation' location.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit information of'|capfirst %} {{ location.name }}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil"/></svg></a></li>
-            {% endif %}
-            {% if user.is_superuser %}
-              <li><a href="/admin/location/location/{{ location.id }}/change/" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit information of'|capfirst %} {{ location.name }} {% translate 'in admin' %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil-square"/></svg></a></li>
-            {% endif %}
-            <!-- Distance to home -->
-            {% if not location.category.name == 'Home' and distance_to_home %}
-              <li data-bs-toggle="tooltip" data-bs-placement="top" title="{{ distance_to_home.getDistance }}, {{ distance_to_home.getTime }} {% translate 'from' %} {{ user.profile.home.name }}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#house-fill"/></svg></a></li>  
-            {% elif not location.category.name == 'Home' and user.profile.home and location.coord_lat and location.coord_lng %}
-              <li><a href="{% url 'location:DistanceToHome' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'calculate distance from home to'|capfirst %} {{ location.name }}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#house"/></svg></a></li>  
-            {% endif %}
-            <!-- Distance to center -->
-             {% if request.user.is_staff and location.distance_to_departure_center %}
-              <li><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#geo" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'geographical distance from'|capfirst %} {{ departure_center }} {% translate 'to this location' %}: {{ location.distance_to_departure_center }} {% translate 'km' %} ({% translate 'straight line' %})"></svg></li>
-             {% endif %}
-            <!-- Reset data-->
-            {% if user.is_staff %}
-              <li><a href="{% url 'location:ResetLocation' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'reset location data and fetch again'|capfirst %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#arrow-clockwise{% if location in user.profile.least_liked.all %}-fill{% endif %}"/></svg></a></li>
-            {% endif %}
-          </ul>
-        {% endif %}
+         <div id="actionlist">
+          {% if not ajax_load_actionlist %}
+            {% include 'partial/actionlist.html' %}
+          {% endif %}
+         </div>
       </header>
       <!-- Verify User Permissions -->
       {% if location.visibility == 'q' and location.user != user %}
@@ -157,7 +109,7 @@
           {% endif %}
         {% endif %}
 
-        <!-- map -->
+        <!-- Map -->
         {% if not location in user.profile.least_liked.all and location.coord_lat %}
           <h3>{{ location.name }} {% translate 'on the map'|title %}:</h3>
           <div id="map">
@@ -182,46 +134,15 @@
         {% endif %}
       </div>
 
-      <!-- Categorisation and Tags -->
+      <!-- Location Attributes -->
+      {% include 'segment/location_attributes.html' %}
+
       <div class="more information card">
-        <div class="row">
-          <div class="col-12"><h2>{% translate 'more information'|capfirst %}:</h2></div>
-        </div>
-        <!-- Category -->
-        <div class="row">
-          <div class="col-3 title-col">{% translate 'category'|title %} ({{ location.additional_category.all.count|add:1 }}):</div>
-          <div class="col-9" id="categories">
-            <a href="{% url 'location:locations' %}?category={{ location.category.slug }}">{{ location.category.name|title }}{% with counter=location.category.locations.all.count|add:location.category.secondary_for.all.count %}{% if counter > 1 %} <sup>{{ counter }}</sup>{% endif %}{% endwith %}</a>{% if location.additional_category.all.count > 0 and user.is_authenticated %}, {% for category in location.additional_category.all %}<a href="{% url 'location:locations' %}?category={{ category.slug }}">{{ category|title }}{% with counter=category.locations.all.count|add:category.secondary_for.all.count %}{% if counter > 1 %} <sup>{{ counter }}</sup>{% endif %}{% endwith %}</a>{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}
-          </div>
-        </div>
-        <!-- Chain -->
-        <div class="row autoload" data-url="{% url 'location:aListChainsFor' location.slug %}" data-type="tag">
-          <div class="col-3 title-col">{% translate 'chain'|title %}<span class="valuecounter"></span>:</div>
-          <div class="col-8 list-col" id="tags"></div>
-          <div class="col-1 button-col"></div>
-        </div>
-        <!-- Tags -->
-        {% if user.is_authenticated %}
-          <div class="row autoload" data-url="{% url 'location:aListTagsFor' location.slug %}" data-type="tag">
-            <div class="col-3 title-col">{% translate 'tags'|title %}<span class="valuecounter"></span>:</div>
-            <div class="col-8 list-col" id="tags"></div>
-            <div class="col-1 button-col"><button type="button" class="btn btn-outline-secondary show-edit">+</button></div>
-          </div>
-          <div class="row add_autosuggest">
-            <div class="col-3 title-col"></div>
-            <div class="col-6 tag" id="addtag">
-              <input type="text" class="autocomplete autocapitalize form-control" placeholder="{% translate 'start typing'|capfirst %}..." name="addtag" data-suggestions="{% url 'location:aListTagSuggestionsFor' location.slug %}" data-url="{% url 'location:aAddTag' location.slug %}">
-            </div>
-            <div class="col-3">
-              <button class="btn btn-primary submit-value">{% translate 'add'|capfirst %}</button>
-            </div>
-          </div>
-        {% endif %}
         <!-- Links -->
         {% if location.link.all.count > 0 %}
           <div class="row">
             <div class="col-3 title-col">{% if location.link.all.count == 1 %}{% translate 'link'|capfirst %}{% else %}{% translate 'links'|capfirst %}{% endif %}:</div>
-            <div class="col-9"><ul>
+            <div class="col-8"><ul>
               {% for link in location.link.all %}          
                 <li><a href="{{ link.url }}" target="_blank">{{ link.get_title }}</a></li>
               {% endfor %}
@@ -257,14 +178,20 @@
         {% endif %}
       </div>
 
-      <!-- async comments -->
+      <!-- comments -->
       <div class="comments card">
         <h2>{% translate 'comments'|capfirst %} <span id="comment counter"></span></h2>
         <div id="comment-messages"><!-- Comment messages to be placed here --></div>
-        <div id="comments"><!-- Comments to be placed here async --></div>    
+        <div id="commentlist">
+          {% if not ajax_load_comments %}
+            {% for comment in comment_list %}
+              {% include 'partial/comment.html' %}
+            {% endfor %}
+          {% endif %}
+        </div>    
 
         {% if perms.location.add_comment %}
-          {% include 'location/comment_add.html' %}
+          {% include 'partial/comment_add.html' %}
         {% elif not user.is_authenticated %}
           <div class="register promo">
             <p><a href="{% url 'login' %}?next={{ request.get_full_path }}">{% translate 'sign in'|capfirst %}</a> {% translate 'or' %} <a href="#">{% translate 'register' %}</a> {% translate 'to comment' %}{% if could_have_comments %} {% translate 'or see comments shared with the community' %}{% endif %}.</p>
@@ -353,7 +280,6 @@
             });
             marker{{ location.0.id }}.addListener("click", ({ domEvent, latLng }) => {
               const { target } = domEvent;
-              console.log("FOO");
               infoWindow.close();
               infoWindow.setContent('<b><a href="{{ location.0.get_absolute_url }}">{{ location.0.name }}</a></b>' +
               '{% if location.0 in user.profile.favorite.all %}<svg class="bi" width="12" height="12" fill="#c00"><use xlink:href="{% static "bootstrap-icons/bootstrap-icons.svg" %}#balloon-heart-fill"/></svg>{% endif %}<br>' + 
@@ -381,22 +307,26 @@
 {% endblock %}
 
 {% block scriptfooter %}
-
-  {% if request.user.is_authenticated and perms.location.view_comments or allow_unauthenticated_read_comments%}
-    <script>
-      var tagBaseUrl = '/a/{{ location.slug }}/tag/';
-      var fetchCommentUrl = '{% url 'location:aListCommentsFor' location.slug %}';
-      
-      var csrf_token = '{{ csrf_token }}';
-      var currUser = {{ user.id }};
-      var currAuth = '{{ user.is_staff|default:"False" }}';
-      var tagAllowRemove = 0;
-    </script>
-    <script src="{% static 'js/async.js' %}" defer></script>
-    <script src="{% static 'js/autosuggest.js' %}" defer></script>
-    <script src="{% static 'js/autoloadvalues.js' %}" defer></script>
+  {% if request.user.is_authenticated %}
+    <span id="csrf_token" style="display: none;">{{ csrf_token }}</span>
+    <script src="{% static 'js/getLocationAttributes.js' %}" defer></script>
+    <script src="{% static 'js/getAutocompleteValues.js' %}" defer></script>
     <script src="{% static 'js/comments.js' %}" defer></script>
-    <script src="{% static 'js/locationmeta.js' %}" defer></script>
-    {% comment %} <script src="{% static 'js/categories.js' %}" defer></script> {% endcomment %}
+    
+    {% comment %} <script src="{% static 'js/load_tags.js' %}" defer></script> {% endcomment %}
+    <script type="text/javascript">
+      /** Configuration */
+      const debug = {% if user.is_staff %}1{% else %}0{% endif %};
+
+      /** Initialisation */
+      $(document).ready(function() {
+        {% if ajax_load_tags %}/** Load tags */ getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'tag' %}', 'tagslist'){% endif %}
+        {% if ajax_load_categories %}/** Load categories */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'category' %}', 'categorylist'){% endif %}
+        {% if ajax_load_chains %}/** Load chains */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'chain' %}', 'chainlist'){% endif %}
+        {% if ajax_load_comments %}/** Load comments */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'comment' %}', 'commentlist'){% endif %}
+        {% if ajax_load_actionlist %}/** Load action list */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'actionlist' %}', 'actionlist'){% endif %}
+      });
+    </script>
   {% endif %}
+  
 {% endblock %}

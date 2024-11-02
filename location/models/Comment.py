@@ -6,7 +6,7 @@ from .base_model import BaseModel
 from .Location import Location
 
 class Comment(BaseModel):
-  content             = models.TextField(blank=True, help_text='Markdown is supported')
+  content             = models.TextField(help_text='Markdown is supported')
   location            = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='comments')
 
   def __str__(self):
@@ -14,3 +14,8 @@ class Comment(BaseModel):
 
   def get_absolute_url(self):
     return reverse_lazy('location:location',  kwargs={'slug': self.location.slug }) + '#comments'
+  
+  class Meta:
+    verbose_name = _('Comment')
+    verbose_name_plural = _('Comments')
+    ordering = ['-date_added']

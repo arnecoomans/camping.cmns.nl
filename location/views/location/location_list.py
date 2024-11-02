@@ -222,10 +222,16 @@ class LocationListMaster(FilterClass):
       ).distinct()
     elif order == 'name':
       queryset = queryset.order_by('name')
+    elif order == '-name':
+      queryset = queryset.order_by('-name')
     elif order == 'date_added':
       queryset = queryset.order_by('-date_added')
+    elif order == '-date_added':
+      queryset = queryset.order_by('date_added')
     elif order == 'date_modified':
       queryset = queryset.order_by('-date_modified')
+    elif order == 'user':
+      queryset = queryset.order_by('user')
     else:
       ''' Implicit ordering by region '''
       queryset = queryset.order_by(

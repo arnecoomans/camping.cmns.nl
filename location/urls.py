@@ -97,15 +97,7 @@ urlpatterns = [
 
   path('chain/add/', views.AddChain.as_view(), name='AddChainTo'),
   path('chain/add/<str:slug>/', views.AddChain.as_view(), name='AddChainTo'),
-  # path('a/chains/suggest/', views.aSuggestChain.as_view(), name='aListChainSuggestions'),
-  # path('a/<location>/chain/list/', views.aListChains.as_view(), name='aListChainsFor'),
-  # path('a/<location>/chain/suggest/', views.aSuggestChain.as_view(), name='aListChainSuggestionsFor'),
-  # path('a/<location>/chain/', views.aAddChain.as_view(), name='aAddChain'),
-
-  # path('a/<location>/category/list/', views.aListCategories.as_view(), name='aListCategoriesFor'),
-  # path('a/<location>/category/suggest/', views.aSuggestCategories.as_view(), name='aListCategorySuggestionsFor'),
-  # path('a/<location>/category/', views.aAddCategory.as_view(), name='aAddCategory'),
-
+  
   path('media/add/<str:slug>/', views.AddMediaToLocation.as_view(), name='AddMediaToLocation'),
   path('media/stack/<str:slug>/', views.StackView.as_view(), name='MediaStack'),
   path('media/refresh/<str:slug>:<pk>/', views.MediaRefreshView.as_view(), name='MediaRefresh'),

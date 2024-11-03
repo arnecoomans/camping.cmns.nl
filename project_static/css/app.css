@@ -16,10 +16,13 @@ div.location>header.withmedia>h1,
 div.location>header.withmedia>span {
   background-color: rgba(255, 255, 255, 0.6);
 }
-
 div.card>header>h1,
 div.card>header>span {
   padding: 5px 10px;
+}
+div.card>header>span.author {
+  font-size: 80%;
+  font-style: italic;
 }
 div.card > div.row,
 div.card > form > div.row {

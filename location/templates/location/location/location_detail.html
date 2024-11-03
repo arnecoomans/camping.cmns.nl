@@ -33,6 +33,11 @@
             {% translate 'viewable by'|capfirst %} {% translate location.get_visibility_display %}.
           {% endif %}
         </span>
+        {% if user.is_authenticated %}
+          <br /><span class="locator author">
+            {% blocktranslate with date=location.date_added|date:"l d F Y" user=location.user.get_full_name|default:location.user.username %}Added on {{ date}} by {{ user }}{% endblocktranslate %}
+          </span>
+        {% endif %}
         <!-- Action List-->
          <div id="actionlist">
           {% if not ajax_load_actionlist %}

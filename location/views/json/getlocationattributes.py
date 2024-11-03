@@ -75,12 +75,19 @@ class JSONGetLocationAttributes(View, FilterClass):
       queryset = self.get_queryset(location=location)
     except Exception as e:
       return JsonResponse({'message': f"{ _('queryset not supported').capitalize() }: { e }"}, status=500)
+    ''' Process Additional Field'''
+    field = self.request.GET.get('field', None)
+    if field:
+      field_data = self.filter(getattr(location, field).all())
     # if not queryset:
     #   return JsonResponse({'message': f"{ _('No {} data found for location').format(attribute) } { location }"}, status=500)
     ''' Build Response '''
     response = []
     for object in queryset:
       seperator = '' if queryset.last() == object else ', '
-      payload = render_to_string(f'partial/{ attribute }.html', {attribute: object, 'location': location, 'user': request.user}, request=request)
+      if field:
+        payload = render_to_string(f'partial/{ attribute }.html', {attribute: object, 'location': location, 'user': request.user, field:field_data}, request=request)
+      else:
+        payload = render_to_string(f'partial/{ attribute }.html', {attribute: object, 'location': location, 'user': request.user}, request=request)
       response.append(payload + seperator)
     return JsonResponse({'payload': response,}, status=200)

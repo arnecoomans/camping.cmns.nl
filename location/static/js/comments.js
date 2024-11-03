@@ -22,13 +22,13 @@ $(document).ready(function() {
       dataType: 'json',
       success: function(data){
         console.log(data);
-        $('#commentmessages').empty().append('<div class="alert alert-success alert-dismissible fade show" role="alert">Comment added succesfully!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+        $('#messages-placeholder').empty().append('<div class="alert alert-success alert-dismissible fade show" role="alert">Comment added succesfully!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
         $('textarea[name="content"]').val('');
         getLocationAttributes(data['success-url'], 'commentlist');
       }, 
       error: function(jqXHR, textStatus, errorThrown){
         console.log(jqXHR);
-        $('#commentmessages').empty().append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error ' + jqXHR.status + ': ' + jqXHR.responseJSON.message + '.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+        $('#messages-placeholder').empty().append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error ' + jqXHR.status + ': ' + jqXHR.responseJSON.message + '.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
         return false;
       }
     });

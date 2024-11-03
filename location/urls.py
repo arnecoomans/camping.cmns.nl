@@ -91,21 +91,13 @@ urlpatterns = [
   path('profile/visit/add/', views.AddVisit.as_view(), name='AddVisit'),
   path('profile/visit/edit:<pk>/', views.EditVisit.as_view(), name='EditVisit'),
   # path('profile/visit/delete:<pk>/', views.ToggleDeletedVisit.as_view(), name='DeleteVisit'),
-  # path('session/allow_google_maps/', views.ToggleGoogleMapsSession.as_view(), name='MapsPermissionSession'),
-  # path('profile/allow_google_maps//', views.ToggleGoogleMapsProfile.as_view(), name='MapsPermissionProfile'),
+  path('session/allow_google_maps/', views.ToggleGoogleMapsSession.as_view(), name='MapsPermissionSession'),
+  path('profile/allow_google_maps//', views.ToggleGoogleMapsProfile.as_view(), name='MapsPermissionProfile'),
   # path('a/profile/favorite/<location>/', views.aToggleFavorite.as_view(), name='aToggleFavorite'),
 
   path('chain/add/', views.AddChain.as_view(), name='AddChainTo'),
   path('chain/add/<str:slug>/', views.AddChain.as_view(), name='AddChainTo'),
-  # path('a/chains/suggest/', views.aSuggestChain.as_view(), name='aListChainSuggestions'),
-  # path('a/<location>/chain/list/', views.aListChains.as_view(), name='aListChainsFor'),
-  # path('a/<location>/chain/suggest/', views.aSuggestChain.as_view(), name='aListChainSuggestionsFor'),
-  # path('a/<location>/chain/', views.aAddChain.as_view(), name='aAddChain'),
-
-  # path('a/<location>/category/list/', views.aListCategories.as_view(), name='aListCategoriesFor'),
-  # path('a/<location>/category/suggest/', views.aSuggestCategories.as_view(), name='aListCategorySuggestionsFor'),
-  # path('a/<location>/category/', views.aAddCategory.as_view(), name='aAddCategory'),
-
+  
   path('media/add/<str:slug>/', views.AddMediaToLocation.as_view(), name='AddMediaToLocation'),
   path('media/stack/<str:slug>/', views.StackView.as_view(), name='MediaStack'),
   path('media/refresh/<str:slug>:<pk>/', views.MediaRefreshView.as_view(), name='MediaRefresh'),

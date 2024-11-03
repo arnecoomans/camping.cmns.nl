@@ -123,8 +123,10 @@ class ToggleAttribute(UpdateView):
       if self.get_attribute() != None:
         model = self.get_attribute()['model']
         ''' Handle Parent/Child relations '''
-        parent, value = value.split(':') if ':' in value else (None, value)
-        parent = self.get_attribute()['model'].objects.get_or_create(slug=slugify(parent), defaults={'name': parent.capitalize(), 'user': self.request.user})[0] if parent != None else None
+        parent = None
+        if value and ':' in value:
+          parent, value = value.split(':')
+          parent = self.get_attribute()['model'].objects.get_or_create(slug=slugify(parent), defaults={'name': parent.capitalize(), 'user': self.request.user})[0] if parent != None else None
         ''' Fetch or create value object '''
         if 'parent' in [field.name for field in model._meta.get_fields()]:  
           if 'slug' in [field.name for field in model._meta.get_fields()]:
@@ -167,8 +169,8 @@ class ToggleAttribute(UpdateView):
       '''
       ''' Handle switch exceptions '''
       if self.get_attribute('switch'):
-        object = self.get_attribute('default') if value == None else value
         value = object
+        object = self.get_attribute('default') if self.get_value() == None else self.get_value()
       elif self.value == None and self.get_attribute('default') != None:
         value = self.get_attribute('default')
       ''' Toggle '''
@@ -181,7 +183,7 @@ class ToggleAttribute(UpdateView):
           getattr(object, attribute['field']).add(value)
           message = _('Added {} to {} {}').format(value, attribute['name'], object)
         except Exception as e:
-          message = f"[157] { _('Error when adding {} to {} of {}: {}').format(value, attribute['name'], object, e) }"
+          message = f"[157] { _('Error when adding {} to {} of {}: {}').format(value, attribute['name'], object, escape(e)) }"
           status = 500
     ''' Build response '''
     if self.value == None:

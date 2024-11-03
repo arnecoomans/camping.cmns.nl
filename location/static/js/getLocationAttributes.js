@@ -14,7 +14,7 @@ function getLocationAttributes(url, target) {
     success: function(data){
       // console.log(data);
       if (data.error == true) {
-        $('#attributemessages').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">' + data.message + '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+        $('#messages-placeholder').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">' + data.message + '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
         console.log('Error: ' + data.message);
         return false;
       } else {

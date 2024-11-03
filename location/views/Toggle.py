@@ -5,7 +5,10 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.utils.html import escape
-from django.db.models import ManyToManyField, ForeignKey, BooleanField
+from django.utils.text import slugify
+
+
+# from django.db.models import ManyToManyField, ForeignKey, BooleanField
 
 from django.contrib.auth.models import User
 
@@ -13,7 +16,7 @@ from location.models.Location import Location, Category, Chain
 from location.models.Profile import Profile, VisitedIn
 from location.models.Tag import Tag
 from location.models.Comment import Comment
-from location.models.Media import Media
+# from location.models.Media import Media
 
 ''' Toggle View
     - Toggle a value for a specific object
@@ -119,29 +122,42 @@ class ToggleAttribute(UpdateView):
       ''' Fetch value object '''
       if self.get_attribute() != None:
         model = self.get_attribute()['model']
-        if 'slug' in [field.name for field in model._meta.get_fields()]:
-          value = self.get_attribute()['model'].objects.get_or_create(slug=value, defaults={'name': value.capitalize(), 'user': self.request.user}) if value != None else None
+        ''' Handle Parent/Child relations '''
+        parent, value = value.split(':') if ':' in value else (None, value)
+        parent = self.get_attribute()['model'].objects.get_or_create(slug=slugify(parent), defaults={'name': parent.capitalize(), 'user': self.request.user})[0] if parent != None else None
+        ''' Fetch or create value object '''
+        if 'parent' in [field.name for field in model._meta.get_fields()]:  
+          if 'slug' in [field.name for field in model._meta.get_fields()]:
+            value = self.get_attribute()['model'].objects.get_or_create(slug=slugify(value), defaults={'name': value.title(), 'user': self.request.user, 'parent': parent}) if value != None else None
+          else:
+            value = self.get_attribute()['model'].objects.get_or_create(pk=value, defaults={'name': value.title(), 'user': self.request.user, 'parent': parent}) if value != None else None
         else:
-          value = self.get_attribute()['model'].objects.get_or_create(pk=value, defaults={'name': value.capitalize(), 'user': self.request.user}) if value != None else None
+          if 'slug' in [field.name for field in model._meta.get_fields()]:
+            value = self.get_attribute()['model'].objects.get_or_create(slug=slugify(value), defaults={'name': value.title(), 'user': self.request.user}) if value != None else None
+          else:
+            value = self.get_attribute()['model'].objects.get_or_create(pk=value, defaults={'name': value.title(), 'user': self.request.user}) if value != None else None
         self.value = value[0] if value != None else None
     return self.value
     
   def get(self, request, *args, **kwargs):
     message = ''
     status = 200
+    object = self.get_location()
+    attribute = self.get_attribute()
+    value = self.get_value() 
     ''' Verify Location'''
-    if self.get_location() == None:
+    if object == None:
       message = f"[023] { _('No location found with slug {}').format(self.kwargs['slug']) }"
       status = 404
     ''' Verify Attribute '''
-    if self.get_attribute() == None:
+    if attribute == None:
       message = f"[122] { _('Attribute is missing') }"
       status = 500
     ''' Verify Value '''
-    if self.get_value() == None and self.get_attribute('default') == None:
+    if value == None and self.get_attribute('default') == None:
       message = f"[215] { _('Value is missing') }"
       status = 500
-    elif self.get_value() == False:
+    elif value == False:
       message = f"[148] { _('Value not found') }"
       status = 404
     ''' Toggle '''
@@ -149,13 +165,10 @@ class ToggleAttribute(UpdateView):
       ''' Understand the query to be executed based on the parameters 
           so store the actionable parameters in variables
       '''
-      object = self.get_location()
-      attribute = self.get_attribute()
-      value = self.get_value() 
       ''' Handle switch exceptions '''
       if self.get_attribute('switch'):
-        object = self.get_attribute('default') if self.get_value() == None else self.get_value()
-        value = self.get_location()
+        object = self.get_attribute('default') if value == None else value
+        value = object
       elif self.value == None and self.get_attribute('default') != None:
         value = self.get_attribute('default')
       ''' Toggle '''

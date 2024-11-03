@@ -23,7 +23,7 @@ if echo "$git_output" | grep -q 'Already up to date'; then
 fi
 
 # Check if output contains 'migration' or 'project_static'
-if echo "$git_output" | grep -q -e 'migration' -e 'project_static'; then
+if echo "$git_output" | grep -q -e 'migration' -e 'static'; then
     echo "Changes detected in migrations or static files. Activating virtual environment..."
     
     # Activate virtual environment in .venv directory in the current directory
@@ -38,7 +38,7 @@ if echo "$git_output" | grep -q -e 'migration' -e 'project_static'; then
     fi
     
     # Check for 'project_static' keyword in git output
-    if echo "$git_output" | grep -q 'project_static'; then
+    if echo "$git_output" | grep -q 'static'; then
         echo "Collecting static files..."
         python manage.py collectstatic --noinput
         echo "Static files collected."

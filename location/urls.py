@@ -91,8 +91,8 @@ urlpatterns = [
   path('profile/visit/add/', views.AddVisit.as_view(), name='AddVisit'),
   path('profile/visit/edit:<pk>/', views.EditVisit.as_view(), name='EditVisit'),
   # path('profile/visit/delete:<pk>/', views.ToggleDeletedVisit.as_view(), name='DeleteVisit'),
-  # path('session/allow_google_maps/', views.ToggleGoogleMapsSession.as_view(), name='MapsPermissionSession'),
-  # path('profile/allow_google_maps//', views.ToggleGoogleMapsProfile.as_view(), name='MapsPermissionProfile'),
+  path('session/allow_google_maps/', views.ToggleGoogleMapsSession.as_view(), name='MapsPermissionSession'),
+  path('profile/allow_google_maps//', views.ToggleGoogleMapsProfile.as_view(), name='MapsPermissionProfile'),
   # path('a/profile/favorite/<location>/', views.aToggleFavorite.as_view(), name='aToggleFavorite'),
 
   path('chain/add/', views.AddChain.as_view(), name='AddChainTo'),

@@ -90,7 +90,10 @@ class JSONGetLocationAttributeSuggestions(View, FilterClass):
     ''' If query is set, filter queryset by query '''
     query = self.get_query()
     if query:
-      queryset = queryset.filter(name__icontains=query)
+      if 'parent' in [field.name for field in model._meta.get_fields()]:
+        queryset = queryset.filter(name__icontains=query) | queryset.filter(parent__name__icontains=query)
+      else:
+        queryset = queryset.filter(name__icontains=query)
     ''' Filter queryset '''
     queryset = self.filter(queryset)
     queryset = queryset.order_by('name')

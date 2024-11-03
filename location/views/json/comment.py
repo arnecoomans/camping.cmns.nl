@@ -7,71 +7,11 @@ from django.utils.translation import gettext as _
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.http import JsonResponse
-from django.utils.html import strip_tags
-from django.template.loader import render_to_string
-
-import markdown
-
 
 from ..snippets.filter_class import FilterClass
 
 from location.models.Comment import Comment
 from location.models.Location import Location
-
-
-# class BaseClass:
-#   def getDefaultData(self):
-#     return {
-#       'error': False,
-#       'message': '',
-#       'payload': '',
-#     }
-
-# class aListComments(BaseClass, FilterClass, ListView):
-#   model = Comment
-
-#   def get(self, request, *args, **kwargs):
-#     ''' Validate that user is logged in '''
-#     if self.verifyUserAuthenticated() is not True and not settings.ALLOW_UNAUTHENTICATED_READ_COMMENTS:
-#       return self.verifyUserAuthenticated()
-#     ''' Validate location '''
-#     location = self.getLocation()
-#     if not location:
-#       return self.getLocationError()
-#     ''' Proceed processing request '''
-#     response = self.getDefaultData()
-#     comments = Comment.objects.all()
-#     ''' Process Filters '''
-#     if location:
-#       comments = comments.filter(location=location)
-#     if self.request.GET.get('user', False):
-#       comments = comments.filter(user=self.request.GET.get('user'))
-#     response['data']['comments'] = []
-#     ''' Filter comments by status and visibility '''
-#     comments = self.filter(comments).order_by('-date_modified').distinct()
-#     # ''' Add comments to response '''
-#     # for comment in comments:
-#     #   response['data']['comments'].append({
-#     #     'id': comment.id,
-#     #     'location': { 
-#     #       'slug': comment.location.slug,
-#     #       'name': comment.location.name,
-#     #       'id': comment.location.id,
-#     #     },
-#     #     'content': md.convert(strip_tags(comment.content)),
-#     #     'user': { 
-#     #       'id': comment.user.id,
-#     #       'username': comment.user.username,
-#     #       'displayname': comment.user.get_full_name() if comment.user.get_full_name() else comment.user.username,
-#     #     },
-#     #     'date_added': comment.date_added,
-#     #     'visibility': comment.get_visibility_display(),
-#     #   })
-#     ''' Add rendered comments to payload '''
-#     response['payload'] = []
-#     for comment in comments:
-#       response['payload'].append(render_to_string('partial/comment.html', {'comment': comment, 'user': self.request.user}))
-#     return JsonResponse(response)
 
 class aAddComment(CreateView):
   model = Comment
@@ -164,38 +104,38 @@ class aCommentByUserListView(FilterClass, ListView):
     return queryset
 
 
-class aDeleteComment(UpdateView):
-  model = Comment
-  fields = ['status']
+# class aDeleteComment(UpdateView):
+#   model = Comment
+#   fields = ['status']
 
-  def get(self, request, *args, **kwargs):
-    comment = Comment.objects.get(pk=self.kwargs['pk'])
-    ''' Only allow action from Comment User or Staff'''
-    if comment.user == self.request.user or self.request.user.is_superuser():
-      ''' Mark comment as deleted '''
-      comment.status = 'x'
-      messages.add_message(self.request, messages.SUCCESS, f"{ _('Comment') } \"{ comment }\"  { _('has been removed')}. <a href=\"{reverse('location:UndeleteComment', args=[comment.id])}\">{ _('Undo') }</a>.")
-    else:
-      ''' Share errormessage that the comment cannot be modified '''
-      messages.add_message(self.request, messages.ERROR, f"{ _('Comment') } \"{ comment }\" { _('cannot be removed')}. { _('This is not your comment')}")
-    comment.save()
-    ''' Redirect to image, also listing comments '''
-    return redirect('location:location', comment.location.slug)
+#   def get(self, request, *args, **kwargs):
+#     comment = Comment.objects.get(pk=self.kwargs['pk'])
+#     ''' Only allow action from Comment User or Staff'''
+#     if comment.user == self.request.user or self.request.user.is_superuser():
+#       ''' Mark comment as deleted '''
+#       comment.status = 'x'
+#       messages.add_message(self.request, messages.SUCCESS, f"{ _('Comment') } \"{ comment }\"  { _('has been removed')}. <a href=\"{reverse('location:UndeleteComment', args=[comment.id])}\">{ _('Undo') }</a>.")
+#     else:
+#       ''' Share errormessage that the comment cannot be modified '''
+#       messages.add_message(self.request, messages.ERROR, f"{ _('Comment') } \"{ comment }\" { _('cannot be removed')}. { _('This is not your comment')}")
+#     comment.save()
+#     ''' Redirect to image, also listing comments '''
+#     return redirect('location:location', comment.location.slug)
   
-class aUndeleteComment(UpdateView):
-  model = Comment
-  fields = ['status']
+# class aUndeleteComment(UpdateView):
+#   model = Comment
+#   fields = ['status']
 
-  def get(self, request, *args, **kwargs):
-    comment = Comment.objects.get(pk=self.kwargs['pk'])
-    ''' Only allow action from Comment User or Staff'''
-    if comment.user == self.request.user or self.request.user.is_superuser():
-      ''' Mark comment as deleted '''
-      comment.status = 'p'
-      messages.add_message(self.request, messages.SUCCESS, f"{ _('Comment') } \"{ comment }\"  { _('has been restored')}. <a href=\"{reverse('location:DeleteComment', args=[comment.id])}\">{ _('Undo') }</a>.")
-    else:
-      ''' Share errormessage that the comment cannot be modified '''
-      messages.add_message(self.request, messages.ERROR, f"{ _('Comment') } \"{ comment }\" { _('cannot be removed')}. { _('This is not your comment')}")
-    comment.save()
-    ''' Redirect to image, also listing comments '''
-    return redirect('location:location', comment.location.slug)
+#   def get(self, request, *args, **kwargs):
+#     comment = Comment.objects.get(pk=self.kwargs['pk'])
+#     ''' Only allow action from Comment User or Staff'''
+#     if comment.user == self.request.user or self.request.user.is_superuser():
+#       ''' Mark comment as deleted '''
+#       comment.status = 'p'
+#       messages.add_message(self.request, messages.SUCCESS, f"{ _('Comment') } \"{ comment }\"  { _('has been restored')}. <a href=\"{reverse('location:DeleteComment', args=[comment.id])}\">{ _('Undo') }</a>.")
+#     else:
+#       ''' Share errormessage that the comment cannot be modified '''
+#       messages.add_message(self.request, messages.ERROR, f"{ _('Comment') } \"{ comment }\" { _('cannot be removed')}. { _('This is not your comment')}")
+#     comment.save()
+#     ''' Redirect to image, also listing comments '''
+#     return redirect('location:location', comment.location.slug)

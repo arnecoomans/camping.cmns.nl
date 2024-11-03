@@ -77,7 +77,9 @@ $(document).ready(function() {
       success: function(data) {
         getLocationAttributes(data['success-url'], data['target']);
         $('input#' + target).val('');
-        $('#messages-placeholder').append('<div class="alert alert-success" role="alert">' + data['message'] + '</div>');
+        $('input#' + target).data('slug', '');
+        $('#messages-placeholder').append('<div class="alert alert-success alert-dismissible fade show" role="alert">' + data.message + '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+        // $('#messages-placeholder').append('<div class="alert alert-success" role="alert">' + data['message'] + '</div>');
       },
       error: function(data) {
         console.log('Error' + data['message']);

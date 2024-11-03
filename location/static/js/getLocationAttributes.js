@@ -24,7 +24,7 @@ function getLocationAttributes(url, target) {
           $('#' + target).append(payload);
         });
         if (data['message']) {
-          $('#attributemessages').append('<div class="alert alert-success alert-dismissible fade show" role="alert">' + data.message + '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+          $('#messages-placeholder').append('<div class="alert alert-success alert-dismissible fade show" role="alert">' + data.message + '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
         }
       }
     },
@@ -32,9 +32,9 @@ function getLocationAttributes(url, target) {
       console.log(jqXHR);
       console.log('Error: ' + errorThrown);
       if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
-        $('#attributemessages').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error A: ' + jqXHR.responseJSON.message + '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+        $('#messages-placeholder').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error A: ' + jqXHR.responseJSON.message + '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
       } else {
-        $('#attributemessages').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error B: ' + errorThrown + '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+        $('#messages-placeholder').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error B: ' + errorThrown + '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
       }
     }
   });
@@ -60,21 +60,22 @@ function toggleLocationAttribute(element, callback) {
     success: function(data){
       // console.log(data);
       console.log('Request executed successfully: ' + data.message);
-      $('#attributemessages').empty().append('<div class="alert alert-success alert-dismissible fade show" role="alert">' + data.message + '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+      $('#messages-placeholder').empty().append('<div class="alert alert-success alert-dismissible fade show" role="alert">' + data.message + '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
       callback(data['success-url'], data['target']);
     },
     error: function(jqXHR, textStatus, errorThrown){
       console.log('Error: ' + errorThrown);
       if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
-        $('#attributemessages').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error: ' + jqXHR.responseJSON.message + '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+        $('#messages-placeholder').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error: ' + jqXHR.responseJSON.message + '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
       } else {
-        $('#attributemessages').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error: ' + errorThrown + '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+        $('#messages-placeholder').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error: ' + errorThrown + '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
       }
     }
   });
 }
 $(document).ready(function(){
   $(document).on('click', '.toggable', function(event) {
+    $(this).tooltip('dispose');
     toggleLocationAttribute($(this), getLocationAttributes);
     event.preventDefault();
     return false;

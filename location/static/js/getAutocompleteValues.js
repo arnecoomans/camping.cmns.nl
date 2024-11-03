@@ -77,7 +77,7 @@ $(document).ready(function() {
       success: function(data) {
         getLocationAttributes(data['success-url'], data['target']);
         $('input#' + target).val('');
-        $('input#' + target).closest('.card').find('.messages').empty().append('<div class="alert alert-success" role="alert">' + data['message'] + '</div>');
+        $('#messages-placeholder').append('<div class="alert alert-success" role="alert">' + data['message'] + '</div>');
       },
       error: function(data) {
         console.log('Error' + data['message']);

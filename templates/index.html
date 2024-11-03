@@ -27,6 +27,8 @@
     <title>{% if scope %}{{ scope|title }} - {% endif %}{{ app_title }}</title>
   </head>
   <body>
+    <!-- Messages -->
+    <div id="messages-placeholder" class="alert-container"></div>
 {% include 'header.html' %}
 {% include 'navigation.html' %}
 {% include 'messages.html' %}

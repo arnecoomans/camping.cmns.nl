@@ -17,14 +17,16 @@ from location.models.Comment import Comment
 class JSONGetLocationSuggestions(FilterClass, View):
 
   def get_location_query(self):
+    query = None
     if 'query' in self.kwargs:
-      return self.kwargs['query']
+      query = self.kwargs['query']
     elif 'query' in self.request.GET:
-      return self.request.GET['query']
+      query = self.request.GET['query']
     elif 'query' in self.request.POST:
-      return self.request.POST['query']
-    else:
-      return None
+      query = self.request.POST['query']
+    if len(query) > 1:
+      return query
+    return None
     
   def get(self, request, *args, **kwargs):
     if self.get_location_query() is None:

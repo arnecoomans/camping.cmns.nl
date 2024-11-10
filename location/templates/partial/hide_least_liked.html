@@ -1,0 +1,4 @@
+{% load i18n %}<div class="form-check form-switch">
+  <input class="form-check-input toggable" href="{% url 'location:ToggleAttribute' 'profile' 'hide-least-liked' %}" type="checkbox" role="switch" name="hide_least_liked" id="hide_least_liked" {% if user.profile.hide_least_liked %}checked{% endif %}>
+  <label class="form-check-label" for="hide_least_liked">{% translate 'hide disliked locations from search results'|capfirst %} </label>
+</div>

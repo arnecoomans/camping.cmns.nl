@@ -52,6 +52,7 @@ function getLocationAttributes(url, target) {
  * @returns {void}
  */
 function toggleLocationAttribute(element, callback) {
+  console.log('toggleLocationAttribute');
   url = $(element).attr('href');
   console.log('toggle value on ' + url);
   $.ajax({

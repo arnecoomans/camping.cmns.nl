@@ -76,119 +76,106 @@
           </select>
         </div>
       </div>
-      <!-- Google Maps Permission -->
-      <div class="row">
-        <div class="col-3 title-col">{% translate 'google maps'|title %}</div>
-        <div class="col-9">
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" name="maps_permission" id="maps_permission" {% if user.profile.maps_permission %}checked{% endif %}>
-            <label class="form-check-label" for="maps_permission">{% translate 'on location page, always allow google maps'|capfirst %}.</label>
-            {% if request.session.maps_permission == True %}<br>
-            {% translate 'permission currently granted for this session'|capfirst %}. <a href="{% url 'location:MapsPermissionSession' %}">{% translate 'revoke'|capfirst %}</a>.
-            {% endif %}
-          </div>
-        </div>
-      </div>
-      <!-- Category Labels in Location List -->
-      <div class="row">
-        <div class="col-3 title-col">{% translate 'category labels'|capfirst %}</div>
-        <div class="col-9">
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" name="show_category_label" id="show_category_label" {% if user.profile.show_category_label %}checked{% endif %}>
-            <label class="form-check-label" for="show_category_label">{% translate 'show category labels in list view'|capfirst %}.</label>
-          </div>
-        </div>
-      </div>
-      <!-- Allow filtering on location distance -->
-      <div class="row">
-        <div class="col-3 title-col">{% translate 'filter on distance'|capfirst %}</div>
-        <div class="col-9">
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" name="filter_by_distance" id="filter_by_distance" {% if user.profile.filter_by_distance %}checked{% endif %}>
-            <label class="form-check-label" for="filter_by_distance">{% translate 'allow filtering on distance'|capfirst %}.</label>
-          </div>
-        </div>
-      </div>
-
       <div class="spacer"></div>
       <div class="row">
         <div class="col-3"></div>
           <div class="col-9"><input type="submit" value="{% translate 'save changes'|capfirst %}" class="btn btn-success btn-lg"></div>
       </div>
-      <div class="spacer"><hr></div>
-      {% if profile.favorite.all.count > 0 %}
-      <div class="row">
-        <div class="col-3 title-col">{% translate 'favorites'|capfirst %}:</div>
-          <div class="col-9">
-            {% for location in profile.favorite.all %}
-              <span class="favorite">{% include 'snippets/location_link.html' %} <a href="{% url 'location:ToggleAttribute' location.slug 'favorite' %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location.name }} {% translate 'from favorites' %}"></a></span>{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-          </div>
-        </div>
-      {% endif %}
-      <!-- Dislikes -->
-      {% if user.profile.least_liked.all.count > 0 %}
-        <div class="row">
-          <div class="col-3 title-col">{% translate 'least liked'|capfirst %}:</div>
-            <div class="col-9">
-              {% for location in profile.least_liked.all %}
-                <span class="favorite">{% include 'snippets/location_link.html' %} <a href="{% url 'location:ToggleAttribute' location.slug 'dislike' %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location.name }} {% translate 'from least-liked' %}"></a></span>{% if not forloop.last %}, {% endif %}
-              {% endfor %}
-            </div>
-        </div>
-        <div class="row">
-          <div class="col-3"></div>
-            <div class="col-9">
-              <form method="post">
-                <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" role="switch" name="hide_least_liked" id="hide_least_liked" {% if user.profile.hide_least_liked %}checked{% endif %} onchange="this.form.submit();" >
-                  <label class="form-check-label" for="hide_least_liked">{% translate 'hide disliked locations from search results'|capfirst %} </label>
-                </div>
-              </form>
-            </div>
-        </div>
-      {% endif %}
-      
-      <div class="spacer"><hr></div>
-      <!-- Family -->
-      {% if profile.family.all.count > 0 %}
-        <div class="row">
-          <div class="col-3 title-col"><label for="family">{% translate 'family members'|capfirst %}:</div>
-            <div class="col-9">
-              {% for member in profile.family.all %}
-                <span class="family member">{{ member.get_full_name|default:member.username }}<a href="#"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove family member '|capfirst %} {{ member.get_full_name|default:member.username }}"></a></span>{% if not forloop.last %}, {% endif %}
-              {% endfor %}
-            </div>
-        </div>
-      {% endif %}
-      {% if user.family_of.all.count > 0 %}
-      <div class="row">
-        <div class="col-3 title-col">{% translate 'you are marked family of'|capfirst %}:</div>
-          <div class="col-9">
-            {% for person in user.family_of.all %}
-               <span class="family member">
-                {% if person.user not in user.profile.family.all %}<svg class="bi" width="16" height="16" fill="#333"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#person-plus"/></svg><a href="#">{% endif %}
-                {{ person.user.get_full_name|default:person.user.username }}
-                {% if person.user not in user.profile.family.all %}</a>{% endif %}
-              </span>
-              {% if not forloop.last %}, {% endif %}
-            {% endfor %}
-          </div>
-      </div>
-      {% endif %}
-      <div class="row">
-        <div class="col-3 title-col">{% translate 'add'|capfirst %} {% translate 'family members'|capfirst %}:</div>
-          <div class="col-9">
-            {% for member in available_family %}
-              {% if member.profile not in user.family_of.all %}
-                <span class="family member"><svg class="bi" width="16" height="16" fill="#333"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#person-plus"/></svg><a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'add'|capfirst %} {{ member.get_full_name|default:member.username }} {% translate 'to your family' %}">{{ member.get_full_name|default:member.username }}</a></span>{% if not forloop.last %}, {% endif %}
-              {% endif %}
-            {% endfor %}
-            {% if available_family.count == 0 %}<p>{% translate 'no users available to add to your family'|capfirst %}.</p>{% endif %}
-          </div>
-      </div>
-      
     </form>
+  </div>
+
+  <!-- Settings that do not require page reload -->
+  <div class="card">
+    <h2>{% translate 'settings'|capfirst %}</h2>
+    <!-- Google Maps Permission -->
+    <div class="row">
+      <div class="col-3 title-col">{% translate 'google maps'|title %}</div>
+      <div class="col-9" id="maps-permission">
+        {% include 'partial/maps_permission.html' %}
+      </div>
+    </div>
+    <!-- Category Labels in Location List -->
+    <div class="row">
+      <div class="col-3 title-col">{% translate 'category labels'|capfirst %}</div>
+      <div class="col-9" id="show-category-label">
+        {% include 'partial/show_category_label.html' %}
+      </div>
+    </div>
+    <!-- Allow filtering on location distance -->
+    <div class="row">
+      <div class="col-3 title-col">{% translate 'filter on distance'|capfirst %}</div>
+      <div class="col-9" id="filter-by-distance">
+        {% include 'partial/filter_by_distance.html' %}
+      </div>
+    </div>
+
+    <div class="spacer"><hr></div>
+    {% if profile.favorite.all.count > 0 %}
+    <div class="row">
+      <div class="col-3 title-col">{% translate 'favorites'|capfirst %}:</div>
+        <div class="col-9">
+          {% for location in profile.favorite.all %}
+            <span class="favorite">{% include 'snippets/location_link.html' %} <a href="{% url 'location:ToggleAttribute' location.slug 'favorite' %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location.name }} {% translate 'from favorites' %}"></a></span>{% if not forloop.last %}, {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+    <!-- Dislikes -->
+    {% if user.profile.least_liked.all.count > 0 %}
+      <div class="row">
+        <div class="col-3 title-col">{% translate 'least liked'|capfirst %}:</div>
+          <div class="col-9">
+            {% for location in profile.least_liked.all %}
+              <span class="favorite">{% include 'snippets/location_link.html' %} <a href="{% url 'location:ToggleAttribute' location.slug 'dislike' %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location.name }} {% translate 'from least-liked' %}"></a></span>{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </div>
+      </div>
+      <div class="row">
+        <div class="col-3"></div>
+          <div class="col-9" id="hide-least-liked">
+            {% include 'partial/hide_least_liked.html' %}
+          </div>
+      </div>
+    {% endif %}
+    
+    <div class="spacer"><hr></div>
+    <!-- Family -->
+    {% if profile.family.all.count > 0 %}
+      <div class="row">
+        <div class="col-3 title-col"><label for="family">{% translate 'family members'|capfirst %}:</div>
+          <div class="col-9">
+            {% for member in profile.family.all %}
+            <span class="family member">{{ member.get_full_name|default:member.username }}<a><sup>(x)</sup></a></span>{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </div>
+      </div>
+    {% endif %}
+    {% if user.family_of.all.count > 0 %}
+    <div class="row">
+      <div class="col-3 title-col">{% translate 'you are marked family of'|capfirst %}:</div>
+        <div class="col-9">
+          {% for person in user.family_of.all %}
+              <span class="family member">
+              {% if person.user not in user.profile.family.all %}<svg class="bi" width="16" height="16" fill="#333"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#person-plus"/></svg><a href="#">{% endif %}
+              {{ person.user.get_full_name|default:person.user.username }}
+              {% if person.user not in user.profile.family.all %}</a>{% endif %}
+            </span>
+            {% if not forloop.last %}, {% endif %}
+          {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    <div class="row">
+      <div class="col-3 title-col">{% translate 'add'|capfirst %} {% translate 'family members'|capfirst %}:</div>
+        <div class="col-9">
+          {% for member in available_family %}
+            {% if member.profile not in user.family_of.all %}
+              <span class="family member"><svg class="bi" width="16" height="16" fill="#333"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#person-plus"/></svg><a href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'add'|capfirst %} {{ member.get_full_name|default:member.username }} {% translate 'to your family' %}">{{ member.get_full_name|default:member.username }}</a></span>{% if not forloop.last %}, {% endif %}
+            {% endif %}
+          {% endfor %}
+          {% if available_family.count == 0 %}<p>{% translate 'no users available to add to your family'|capfirst %}.</p>{% endif %}
+        </div>
+    </div>
   </div>
   
   <!-- History -->
@@ -262,4 +249,27 @@
       </tbody>
     </table>
   </div>
+{% endblock %}
+
+{% block scriptfooter %}
+  {% if request.user.is_authenticated %}
+    <span id="csrf_token" style="display: none;">{{ csrf_token }}</span>
+    <script src="{% static 'js/getLocationAttributes.js' %}" defer></script>
+    <script src="{% static 'js/getAutocompleteValues.js' %}" defer></script>
+    
+    {% comment %} <script src="{% static 'js/load_tags.js' %}" defer></script> {% endcomment %}
+    <script type="text/javascript">
+      /** Configuration */
+      const debug = {% if user.is_staff %}1{% else %}0{% endif %};
+
+      /** Initialisation */
+      $(document).ready(function() {
+        {% if ajax_load_tags %}/** Load tags */ getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'tag' %}', 'tagslist'){% endif %}
+        {% if ajax_load_categories %}/** Load categories */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'category' %}', 'categorylist'){% endif %}
+        {% if ajax_load_chains %}/** Load chains */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'chain' %}', 'chainlist'){% endif %}
+        {% if ajax_load_comments %}/** Load comments */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'comment' %}', 'commentlist'){% endif %}
+        {% if ajax_load_actionlist %}/** Load action list */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'actionlist' %}', 'actionlist'){% endif %}
+      });
+    </script>
+  {% endif %}
 {% endblock %}

@@ -16,5 +16,5 @@ from .Chain import *
 # from .aChain import *
 from .Media import *
 from .Toggle import *
-from .translations import *
+from .Translations import *
 from .json import *

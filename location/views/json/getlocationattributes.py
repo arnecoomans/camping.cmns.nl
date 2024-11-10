@@ -17,10 +17,14 @@ from location.models.Comment import Comment
 class JSONGetLocationAttributes(View, FilterClass):
 
   def get_attribute(self):
-    supported_attributes = ['category', 'chain', 'tag', 'comment', 'actionlist']
+    supported_attributes = ['category', 'chain', 'tag', 'comment', 'actionlist',]
     translated_attributes = {
       'favorite': 'actionlist',
       'dislike': 'actionlist',
+      'maps-permission': 'maps_permission',
+      'show-category-label': 'show_category_label',
+      'filter-by-distance': 'filter_by_distance',
+      'hide-least-liked': 'hide_least_liked',
     }
     attribute = self.kwargs['attribute'].lower().strip()
     if attribute in supported_attributes:
@@ -40,6 +44,9 @@ class JSONGetLocationAttributes(View, FilterClass):
       queryset = Comment.objects.all()
     elif self.get_attribute() == 'actionlist':
       return Location.objects.filter(slug=location.slug)
+    elif self.get_attribute() in ['maps_permission', 'show_category_label', 'filter_by_distance', 'hide_least_liked']:
+      ''' Profile Boolean Fields '''
+      return getattr(self.request.user.profile, self.get_attribute())
     else:
       raise Exception(f"Queryset for attribute { self.get_attribute() } not supported")
     model = queryset.model
@@ -62,10 +69,13 @@ class JSONGetLocationAttributes(View, FilterClass):
 
   def get(self, request, *args, **kwargs):
     ''' Fetch location '''
-    try:
-      location = Location.objects.get(slug=kwargs['location'])
-    except Location.DoesNotExist:
-      return JsonResponse({'message': f"{ _('location not found').capitalize() }: { kwargs['location'] }"}, status=404)
+    if kwargs['location'] == 'profile':
+      location = request.user.profile
+    else:
+      try:
+        location = Location.objects.get(slug=kwargs['location'])
+      except Location.DoesNotExist:
+        return JsonResponse({'message': f"{ _('location not found').capitalize() }: { kwargs['location'] }"}, status=404)
     ''' Fetch attribute to process '''
     attribute = self.get_attribute()
     if not attribute:
@@ -83,11 +93,14 @@ class JSONGetLocationAttributes(View, FilterClass):
     #   return JsonResponse({'message': f"{ _('No {} data found for location').format(attribute) } { location }"}, status=500)
     ''' Build Response '''
     response = []
-    for object in queryset:
-      seperator = '' if queryset.last() == object else ', '
-      if field:
-        payload = render_to_string(f'partial/{ attribute }.html', {attribute: object, 'location': location, 'user': request.user, field:field_data}, request=request)
-      else:
-        payload = render_to_string(f'partial/{ attribute }.html', {attribute: object, 'location': location, 'user': request.user}, request=request)
-      response.append(payload + seperator)
+    if type(queryset) == bool:
+      response.append(render_to_string(f'partial/{ attribute }.html', {attribute: queryset, 'location': location, 'user': request.user}, request=request))
+    else:  
+      for object in queryset:
+        seperator = '' if queryset.last() == object else ', '
+        if field:
+          payload = render_to_string(f'partial/{ attribute }.html', {attribute: object, 'location': location, 'user': request.user, field:field_data}, request=request)
+        else:
+          payload = render_to_string(f'partial/{ attribute }.html', {attribute: object, 'location': location, 'user': request.user}, request=request)
+        response.append(payload + seperator)
     return JsonResponse({'payload': response,}, status=200)

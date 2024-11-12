@@ -115,7 +115,9 @@
       <div class="col-3 title-col">{% translate 'favorites'|capfirst %}:</div>
         <div class="col-9">
           {% for location in profile.favorite.all %}
-            <span class="favorite">{% include 'snippets/location_link.html' %} <a href="{% url 'location:ToggleAttribute' location.slug 'favorite' %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location.name }} {% translate 'from favorites' %}"></a></span>{% if not forloop.last %}, {% endif %}
+            {% include 'partial/location.html' %}
+            <a href="{% url 'location:ToggleAttributeWithValue' 'profile' 'favorite' location.slug %}" class="toggable" data-bs-toggle="tooltip" data-bs-placement="top" title="{% blocktranslate with location_name=location %}Remove from {{ location_name }} from favorites{% endblocktranslate %}"><sup>[x]</sup></a>
+            {% if not forloop.last %}, {% endif %}
           {% endfor %}
         </div>
       </div>
@@ -126,7 +128,9 @@
         <div class="col-3 title-col">{% translate 'least liked'|capfirst %}:</div>
           <div class="col-9">
             {% for location in profile.dislike.all %}
-              <span class="favorite">{% include 'snippets/location_link.html' %} <a href="{% url 'location:ToggleAttribute' location.slug 'dislike' %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location.name }} {% translate 'from least-liked' %}"></a></span>{% if not forloop.last %}, {% endif %}
+            {% include 'partial/location.html' %}
+            <a href="{% url 'location:ToggleAttributeWithValue' 'profile' 'dislike' location.slug %}" class="toggable" data-bs-toggle="tooltip" data-bs-placement="top" title="{% blocktranslate with location_name=location %}Remove from {{ location_name }} from disliked locations{% endblocktranslate %}"><sup>[x]</sup></a>
+            {% if not forloop.last %}, {% endif %}
             {% endfor %}
           </div>
       </div>

@@ -19,13 +19,13 @@ class JSONGetLocationAttributeSuggestions(View, FilterClass):
   def __init__(self, *args, **kwargs):
     super().__init__(**kwargs)
     self.mapping = {
-      'category': {
+      'additional_category': {
         'model': Category,
       },
       'chain': {
         'model': Chain,
       },
-      'tag': {
+      'tags': {
         'model': Tag,
       },
     }

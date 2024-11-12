@@ -4,4 +4,4 @@
   {% if tag.parent %}{{ tag.parent.name }}: {% endif %}
   {{ tag.name }}
 </a>
-{% if user.is_staff %}<a href="{% url 'location:ToggleAttributeValue' location.slug 'tag' tag.slug %}" class="toggable" data-bs-toggle="tooltip" data-bs-placement="top" title="{% blocktranslate with name=tag.name location_name=location %}Remove &quot;{{ name }}&quot; from {{ location_name }}{% endblocktranslate %}"><sup>[X]</sup></a>{% endif %}
+{% if user.is_staff %}<a href="{% url 'location:ToggleAttributeWithSlugWithValue' 'location' location.slug 'tags' tag.slug %}" class="toggable" data-bs-toggle="tooltip" data-bs-placement="top" title="{% blocktranslate with name=tag.name location_name=location %}Remove &quot;{{ name }}&quot; from {{ location_name }}{% endblocktranslate %}"><sup>[X]</sup></a>{% endif %}

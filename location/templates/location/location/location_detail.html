@@ -39,7 +39,7 @@
           </span>
         {% endif %}
         <!-- Action List-->
-         <div id="actionlist">
+         <div id="actionlist" data-source="{% url 'location:getAttributesFor' location.slug 'actionlist' %}?field=media">
           {% if not ajax_load_actionlist %}
             {% include 'partial/actionlist.html' %}
           {% endif %}

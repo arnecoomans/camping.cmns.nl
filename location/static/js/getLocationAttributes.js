@@ -60,20 +60,28 @@ function toggleLocationAttribute(element, callback) {
     dataType: 'json',
     success: function(data){
       // console.log(data);
-      console.log('Request executed successfully: ' + data.message);
-      $('#messages-placeholder').empty().append('<div class="alert alert-success alert-dismissible fade show" role="alert">' + data.message + '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
-      callback(data['success-url'], data['target']);
+      console.log('Request executed successfully: ' + data.__meta['resolver']);
+      /** Add messages to messages container */
+      data['messages'].forEach(function(message){
+        $('#messages-placeholder').append('<div class="alert alert-' + message[0] + ' alert-dismissible fade show" role="alert">' + message[1] + '.  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+      });
+      /** Callback - Update field data that has been toggled */
+      list = $('#' + data['field']);
+      if (list.attr('data-source')) {
+        getLocationAttributes(list.attr('data-source'), list.attr('id'));
+      } else {
+        console.log('No data-source found for ' + list.attr('id'));
+      }
     },
     error: function(jqXHR, textStatus, errorThrown){
       console.log('Error: ' + errorThrown);
-      if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
-        $('#messages-placeholder').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error: ' + jqXHR.responseJSON.message + '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
-      } else {
-        $('#messages-placeholder').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error: ' + errorThrown + '  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
-      }
+      jqXHR.responseJSON['messages'].forEach(function(message){
+        $('#messages-placeholder').append('<div class="alert alert-' + message[0] + ' alert-dismissible fade show" role="alert">' + message[1] + '.  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+      });
     }
   });
 }
+
 $(document).ready(function(){
   $(document).on('click', '.toggable', function(event) {
     $(this).tooltip('dispose');

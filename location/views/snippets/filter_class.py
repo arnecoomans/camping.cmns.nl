@@ -18,7 +18,7 @@ class FilterClass:
         ''' Process the dislike filter '''
         if self.request.user.profile.hide_least_liked:
           if hasattr(queryset.first(), 'slug'):
-            queryset = queryset.exclude(slug__in=self.request.user.profile.least_liked.values_list('slug', flat=True))
+            queryset = queryset.exclude(slug__in=self.request.user.profile.dislike.values_list('slug', flat=True))
           elif 'Comment.Comment' in str(type(queryset.first())):
             queryset = queryset.exclude(location__slug__in=self.request.user.profile.least_liked.values_list('slug', flat=True))
         ''' Process Ignored Tags '''

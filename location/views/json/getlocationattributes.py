@@ -17,14 +17,11 @@ from location.models.Comment import Comment
 class JSONGetLocationAttributes(View, FilterClass):
 
   def get_attribute(self):
-    supported_attributes = ['category', 'chain', 'tag', 'comment', 'actionlist',]
+    supported_attributes = ['category', 'chain', 'tag', 'comment', 'actionlist', 
+                            'maps_permission', 'show_category_label', 'filter_by_distance', 'hide_least_liked']
     translated_attributes = {
       'favorite': 'actionlist',
       'dislike': 'actionlist',
-      'maps-permission': 'maps_permission',
-      'show-category-label': 'show_category_label',
-      'filter-by-distance': 'filter_by_distance',
-      'hide-least-liked': 'hide_least_liked',
     }
     attribute = self.kwargs['attribute'].lower().strip()
     if attribute in supported_attributes:

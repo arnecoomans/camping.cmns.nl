@@ -23,13 +23,20 @@ if echo "$git_output" | grep -q 'Already up to date'; then
 fi
 
 # Check if output contains 'migration' or 'project_static'
-if echo "$git_output" | grep -q -e 'migration' -e 'static'; then
-    echo "Changes detected in migrations or static files. Activating virtual environment..."
+if echo "$git_output" | grep -q -e 'migration' -e 'static -e 'requirements.txt'; then
+    echo "Changes detected in requirements, migrations or static files. Activating virtual environment..."
     
     # Activate virtual environment in .venv directory in the current directory
     source .venv/bin/activate
     echo "Virtual environment activated."
 
+    # Install any new requirements
+    if echo "$git_output" | grep -q 'requirements.txt'; then
+        echo "Installing new requirements..."
+        pip install -r requirements.txt
+        echo "Requirements installed."
+    fi
+    
     # Check for 'migration' keyword in git output
     if echo "$git_output" | grep -q 'migration'; then
         echo "Running migrations..."

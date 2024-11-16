@@ -14,8 +14,10 @@
         {% endfor %}
       {% endif %}
     </div>
-    <div class="col-1 button-col"><button for="additional_category" type="button" class="btn btn-outline-secondary show-autocomplete">+</button></div>
-    {% include 'partial/addattribute.html' with attribute="additional_category" %}
+    {% if user.is_authenticated %}
+      <div class="col-1 button-col"><button for="additional_category" type="button" class="btn btn-outline-secondary show-autocomplete">+</button></div>
+      {% include 'partial/addattribute.html' with attribute="additional_category" %}
+    {% endif %}
   </div>
   <!-- Chain -->
   <div class="row autoload">
@@ -27,23 +29,27 @@
         {% endfor %}
       {% endif %}
     </div>
-    <div class="col-1 button-col"><button for="chain" type="button" class="btn btn-outline-secondary show-autocomplete">+</button></div>
-    {% include 'partial/addattribute.html' with attribute="chain" %}
+    {% if user.is_authenticated %}
+      <div class="col-1 button-col"><button for="chain" type="button" class="btn btn-outline-secondary show-autocomplete">+</button></div>
+      {% include 'partial/addattribute.html' with attribute="chain" %}
+    {% endif %}
   </div>
   <!-- Tags -->
-  {% if user.is_authenticated %}
-    <div class="row autoload">
-      <div class="col-3 title-col">{% translate 'tags'|title %}<span class="valuecounter"></span>:</div>
-      <div class="col-8 list" id="tagslist" data-source="{% url 'location:getAttributesFor' location.slug 'tag' %}">
-        {% if not ajax_load_tags %}
-          {% for tag in location.tags.all %}
-            {% include 'partial/tag.html' %}
-          {% endfor %}
-        {% endif %}
-      </div>
-      <div class="col-1 button-col"><button for="tags" type="button" class="btn btn-outline-secondary show-autocomplete">+</button></div>
+  <div class="row autoload">
+    <div class="col-3 title-col">{% translate 'tags'|title %}<span class="valuecounter"></span>:</div>
+    <div class="col-8 list" id="tagslist" data-source="{% url 'location:getAttributesFor' location.slug 'tag' %}">
+      {% if not ajax_load_tags %}
+        {% for tag in location.tags.all %}
+          {% include 'partial/tag.html' %}
+        {% endfor %}
+      {% endif %}
     </div>
-    {% include 'partial/addattribute.html' with attribute="tags" %}
-  {% endif %}
+    {% if user.is_authenticated %}
+      <div class="col-1 button-col">
+        <button for="tags" type="button" class="btn btn-outline-secondary show-autocomplete">+</button></div>
+      </div>
+      {% include 'partial/addattribute.html' with attribute="tags" %}
+    {% endif %}
+    </div>
 
 </div>

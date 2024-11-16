@@ -205,7 +205,14 @@ class ToggleAttribute(View):
       parent = None
     ''' Get or Create the value object '''
     defaults = { 'name': self.__get_value_display(), 'user': self.request.user, 'parent': parent }
-    value_object = value_model.objects.get_or_create(slug=slugify(value.lower()), defaults=defaults)
+    if 'slug' in [field.name for field in value_model._meta.get_fields()]:
+      value_object = value_model.objects.get_or_create(slug=slugify(value.lower()), defaults=defaults)
+    elif 'username' in [field.name for field in value_model._meta.get_fields()]:
+      value_object = value_model.objects.get_or_create(username=value.lower(), defaults=defaults)
+    else:
+      self.status = 500
+      self.messages.append(('danger', f"[520s] { _('lookup for model "{}" not supported in {}: {}').format(value_model.__name__, model.__name__, value_model._meta.get_fields()).capitalize() }"))
+      return self.__return_response()
     if value_object[1]:
       self.messages.append(('info', f"{ _('{} {} created').format(value_model.__name__, value_object[0].name).capitalize() }"))
     value_object = value_object[0]
@@ -213,7 +220,8 @@ class ToggleAttribute(View):
     if value_object in getattr(self.__get_object(), self.__get_field()).all():
       ''' Value is already in the ManyToManyField: Remove it '''
       getattr(self.__get_object(), self.__get_field()).remove(value_object)
-      self.messages.append(('success', f"{ _('removed {} from {} {}').format(value_object.name, self.__get_field(), self.__get_object().name).capitalize() } { self.__get_undo_link() }"))
+      value_object_name = value_object.name if hasattr(value_object, 'name') else value_object.username
+      self.messages.append(('success', f"{ _('removed {} from {} {}').format(value_object_name, self.__get_field(), self.__get_object().name).capitalize() } { self.__get_undo_link() }"))
     else:
       ''' Value should be added '''
       try:

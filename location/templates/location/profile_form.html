@@ -146,17 +146,20 @@
     <!-- Family -->
     {% if profile.family.all.count > 0 %}
       <div class="row">
-        <div class="col-3 title-col"><label for="family">{% translate 'family members'|capfirst %}:</div>
-          <div class="col-9">
+        <div class="col-3 title-col"><label for="family">{% translate 'you have marked the following persons as family'|capfirst %}:</div>
+          <div class="col-9 list" id="familylist" data-source="{% url 'location:getAttributesFor' 'profile' 'family' %}">
             {% for member in profile.family.all %}
-            <span class="family member">{{ member.get_full_name|default:member.username }}<a><sup>(x)</sup></a></span>{% if not forloop.last %}, {% endif %}
+              {% include 'partial/family.html' %}
             {% endfor %}
           </div>
       </div>
+      <div class="row">
+      </div>
+
     {% endif %}
     {% if user.family_of.all.count > 0 %}
     <div class="row">
-      <div class="col-3 title-col">{% translate 'you are marked family of'|capfirst %}:</div>
+      <div class="col-3 title-col">{% translate 'the following persons have marked you as family'|capfirst %}:</div>
         <div class="col-9">
           {% for person in user.family_of.all %}
               <span class="family member">

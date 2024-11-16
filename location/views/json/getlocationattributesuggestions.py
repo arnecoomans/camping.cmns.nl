@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 
 from ..snippets.filter_class import FilterClass
 
-from location.models.Location import Location, Category, Chain
+from location.models.Location import Location, Category, Chain, Link
 from location.models.Tag import Tag
 from location.models.Comment import Comment
 
@@ -27,6 +27,9 @@ class JSONGetLocationAttributeSuggestions(View, FilterClass):
       },
       'tags': {
         'model': Tag,
+      },
+      'link': {
+        'model': Link,
       },
     }
     self.model = None
@@ -92,6 +95,8 @@ class JSONGetLocationAttributeSuggestions(View, FilterClass):
     if query:
       if 'parent' in [field.name for field in model._meta.get_fields()]:
         queryset = queryset.filter(name__icontains=query) | queryset.filter(parent__name__icontains=query)
+      if 'url' in [field.name for field in model._meta.get_fields()]:
+        queryset = queryset.filter(name__icontains=query) | queryset.filter(url__icontains=query)
       else:
         queryset = queryset.filter(name__icontains=query)
     ''' Filter queryset '''
@@ -110,9 +115,15 @@ class JSONGetLocationAttributeSuggestions(View, FilterClass):
     ''' Build Response '''
     payload = []
     for suggestion in queryset:
-      parent = f"{ suggestion.parent.name }: " if suggestion.parent else ''
+      parent = f"{ suggestion.parent.name }: " if hasattr(suggestion, 'parent') else ''
       text = f"{ parent }{ suggestion.name }"
+      if hasattr(suggestion, 'url'):
+        if text == "":
+          text = suggestion.url
+        else:
+          text = text + f" ({ suggestion.url })"
+      # text += f" ({ suggestion.url })" if hasattr(suggestion, 'url') else ''
       # import re
       # rendered_text = re.sub(f"({ self.get_query() })", r"<strong>\1</strong>", text, flags=re.IGNORECASE)
-      payload.append({ 'text': text, 'slug': suggestion.slug })
+      payload.append({ 'text': text, 'slug': suggestion.slug if hasattr(suggestion, 'slug') else suggestion.id })
     return JsonResponse({'payload': payload}, status=200)

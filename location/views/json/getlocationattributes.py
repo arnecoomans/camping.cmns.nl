@@ -18,7 +18,8 @@ class JSONGetLocationAttributes(View, FilterClass):
 
   def get_attribute(self):
     supported_attributes = ['category', 'chain', 'tag', 'comment', 'actionlist', 
-                            'maps_permission', 'show_category_label', 'filter_by_distance', 'hide_least_liked']
+                            'maps_permission', 'show_category_label', 'filter_by_distance', 'hide_least_liked',
+                            'link']
     translated_attributes = {
       'favorite': 'actionlist',
       'dislike': 'actionlist',
@@ -41,6 +42,8 @@ class JSONGetLocationAttributes(View, FilterClass):
       queryset = Comment.objects.all()
     elif self.get_attribute() == 'actionlist':
       return Location.objects.filter(slug=location.slug)
+    elif self.get_attribute() == 'link':
+      return location.link.all()
     elif self.get_attribute() in ['maps_permission', 'show_category_label', 'filter_by_distance', 'hide_least_liked']:
       ''' Profile Boolean Fields '''
       return getattr(self.request.user.profile, self.get_attribute())
@@ -76,7 +79,7 @@ class JSONGetLocationAttributes(View, FilterClass):
     ''' Fetch attribute to process '''
     attribute = self.get_attribute()
     if not attribute:
-      return JsonResponse({'message': f"{ _('attribute not supported').capitalize() }: { attribute }"}, status=400)
+      return JsonResponse({'message': f"{ _('attribute not supported').capitalize() }: { self.kwargs['attribute'].lower().strip() }"}, status=400)
     ''' Build Queryset'''
     try:
       queryset = self.get_queryset(location=location)

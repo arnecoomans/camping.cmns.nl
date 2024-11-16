@@ -1,0 +1,2 @@
+{% load i18n %}<a href="{{ link.url }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'visit'|capfirst %} {{link.url }}" target="_blank">{{ link.get_title }}</a>
+{% if user.is_staff or location.user == user %}<a href="{% url 'location:ToggleAttributeWithSlugWithValue' 'location' location.slug 'link' link.id %}" class="toggable" data-bs-toggle="tooltip" data-bs-placement="top" title="{% blocktranslate with name=chain.name location_name=location %}Remove &quot;{{ name }}&quot; from {{ location_name }}{% endblocktranslate %}"><sup>[X]</sup></a>{% endif %}

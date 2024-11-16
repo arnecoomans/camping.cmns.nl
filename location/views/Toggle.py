@@ -160,7 +160,8 @@ class ToggleAttribute(View):
   def __get_value(self):
     if self.value == None:
       if self.__get_arg('value'):
-        if ':' in self.__get_arg('value'):
+        ''' Detect parent but not for URL's '''
+        if ':' in self.__get_arg('value') and not '://' in self.__get_arg('value'):
           self.parent =self.__get_arg('value').split(':')[0] 
           self.value = '-'.join(self.__get_arg('value').split(':')[1:])
         else:
@@ -204,14 +205,26 @@ class ToggleAttribute(View):
     else:
       parent = None
     ''' Get or Create the value object '''
-    defaults = { 'name': self.__get_value_display(), 'user': self.request.user, 'parent': parent }
+    defaults = { 'name': self.__get_value_display(), 'user': self.request.user }
+    if 'parent' in [field.name for field in value_model._meta.get_fields()]:
+      defaults['parent'] = parent
     if 'slug' in [field.name for field in value_model._meta.get_fields()]:
       value_object = value_model.objects.get_or_create(slug=slugify(value.lower()), defaults=defaults)
     elif 'username' in [field.name for field in value_model._meta.get_fields()]:
       value_object = value_model.objects.get_or_create(username=value.lower(), defaults=defaults)
+    elif self.__get_field() == 'link':
+      try:
+        value_object = (value_model.objects.get(id=value), False)
+      except ValueError:
+        value_object = value_model.objects.get_or_create(url=value, defaults=defaults)
+        self.value = value_object[0].id
+      except value_model.DoesNotExist:
+        self.status = 404
+        self.messages.append(('danger', f"[404] { _('value "{}" not found').format(value).capitalize() }"))
+        return self.__return_response()
     else:
       self.status = 500
-      self.messages.append(('danger', f"[520s] { _('lookup for model "{}" not supported in {}: {}').format(value_model.__name__, model.__name__, value_model._meta.get_fields()).capitalize() }"))
+      self.messages.append(('danger', f"[520s] { _('lookup for model "{}" not supported in {}: {}').format(value_model.__name__, self.__get_model().__name__, value_model._meta.get_fields()).capitalize() }"))
       return self.__return_response()
     if value_object[1]:
       self.messages.append(('info', f"{ _('{} {} created').format(value_model.__name__, value_object[0].name).capitalize() }"))
@@ -220,17 +233,25 @@ class ToggleAttribute(View):
     if value_object in getattr(self.__get_object(), self.__get_field()).all():
       ''' Value is already in the ManyToManyField: Remove it '''
       getattr(self.__get_object(), self.__get_field()).remove(value_object)
-      value_object_name = value_object.name if hasattr(value_object, 'name') else value_object.username
-      self.messages.append(('success', f"{ _('removed {} from {} {}').format(value_object_name, self.__get_field(), self.__get_object().name).capitalize() } { self.__get_undo_link() }"))
+      value_object_name = (
+        value_object.name if hasattr(value_object, 'name') and value_object.name 
+        else value_object.get_title() if hasattr(value_object, 'get_title') 
+        else value_object.username
+      )
+      self.messages.append(('success', f"{ _('removed "{}" from {} {}').format(value_object_name, self.__get_field(), self.__get_object().name).capitalize() } { self.__get_undo_link() }"))
     else:
       ''' Value should be added '''
       try:
         getattr(self.__get_object(), self.__get_field()).add(value_object)
-        self.messages.append(('success', f"{ _('added {} to {} {}').format(value, self.__get_field(), self.__get_object()).capitalize() } { self.__get_undo_link() }"))
+        value_object_name = (
+          value_object.name if hasattr(value_object, 'name') and value_object.name 
+          else value_object.get_title() if hasattr(value_object, 'get_title') 
+          else value_object.username
+        )
+        self.messages.append(('success', f"{ _('added "{}" to {} {}').format(value_object_name, self.__get_field(), self.__get_object()).capitalize() } { self.__get_undo_link() }"))
       except Exception as e:
         self.status = 500
-        self.messages.append(('danger', f"[152] { _('Error when adding {} to {} of {}: {}').format(value, self.__get_field(), self.__get_object(), escape(e)) }"))
-
+        self.messages.append(('danger', f"[152] { _('Error when adding {} to {} of {}: {}').format(value, self.__get_field(), self.__get_object(), escape(e)) }"))    
 
   def __get_undo_url(self):
     resolver = self.request.resolver_match.url_name

@@ -216,7 +216,8 @@ class ToggleAttribute(View):
       try:
         value_object = (value_model.objects.get(id=value), False)
       except ValueError:
-        value_object = value_model.objects.get_or_create(url=value, defaults=defaults)
+        defaults['name'] = None
+        value_object = value_model.objects.get_or_create(url=value.lower(), defaults=defaults)
         self.value = value_object[0].id
       except value_model.DoesNotExist:
         self.status = 404

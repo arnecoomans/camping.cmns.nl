@@ -104,10 +104,14 @@ urlpatterns = [
   # path('media/delete/<object_slug>:<pk>', views.ToggleMediaDeleted.as_view(), name='MediaDelete'),
   path('register/', views.SignUpView.as_view(), name='register'),
 
-  # Toggle Views
-  path('location/<str:slug>/toggle/<str:attribute>/', views.ToggleAttribute.as_view(), name='ToggleAttribute'),
-  path('location/<str:slug>/toggle/<str:attribute>/<value>/', views.ToggleAttribute.as_view(), name='ToggleAttributeValue'),
-  path('toggle/<str:model>/<pk>/delete/', views.ToggleDeleted.as_view(), name='ToggleDeleted'),
+  # Toggle Views 
+  # Toggle field of model, optioally with slug and value
+  path('json/toggle/<str:model>:<str:slug>/<str:field>/', views.ToggleAttribute.as_view(), name='ToggleAttributeWithSlug'),
+  path('json/toggle/<str:model>:<str:slug>/<str:field>/<value>/', views.ToggleAttribute.as_view(), name='ToggleAttributeWithSlugWithValue'),
+  path('json/toggle/<str:model>/<str:field>/', views.ToggleAttribute.as_view(), name='ToggleAttribute'),
+  path('json/toggle/<str:model>/<str:field>/<value>/', views.ToggleAttribute.as_view(), name='ToggleAttributeWithValue'),
+  # Toggle Deleted
+  path('json/toggle/<str:model>/<pk>/delete/', views.ToggleDeleted.as_view(), name='ToggleDeleted'),
 
 
   # Async Views

@@ -13,6 +13,15 @@ class DefaultAdmin(admin.ModelAdmin):
 
 class SlugDefaultAdmin(DefaultAdmin):
   prepopulated_fields = {'slug': ('name',)}
+  list_display = ['name', 'slug']
+
+  def get_list_display(self, request):
+    # Start with the base list_display
+    list_display = list(self.list_display)
+    # Check if the model has a "parent" field
+    if hasattr(self.model, 'parent'):
+      list_display.append('parent')
+    return list_display
   
 ''' ReadOnlyAdmin
     * Set all fields in admin to read-only

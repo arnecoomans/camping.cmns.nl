@@ -25,7 +25,7 @@ class Profile(models.Model):
     )
   order               = models.CharField(max_length=16, choices=order_choices, default=settings.DEFAULT_ORDER)
   favorite            = models.ManyToManyField(Location, blank=True, related_name='favorite_of')
-  least_liked         = models.ManyToManyField(Location, blank=True, related_name='least_liked_of')
+  dislike             = models.ManyToManyField(Location, blank=True, related_name='least_liked_of')
   ignored_tags        = models.ManyToManyField(Tag, blank=True, related_name='ignored_by')
   
   hide_least_liked    = models.BooleanField(default=False, help_text=_('It is possible to "unlike" a location. Enable this field to hide the least-liked locations'))

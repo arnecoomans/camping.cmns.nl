@@ -1,10 +1,10 @@
 {% load i18n %}
-<div class="row add_autocomplete add{{ attribute }}">
+<div class="row add_autocomplete add{{ value|default:attribute }}">
   <div class="col-3 title-col"></div>
   <div class="col-6 tag">
-    <input type="text" class="autocomplete autocapitalize form-control" placeholder="{% translate 'start typing'|capfirst %}..." id="add{{ attribute }}" data-suggest="{% url 'location:getSuggestionsFor' attribute location.slug %}" data-slug="">
+    <input type="text" class="autocomplete autocapitalize form-control" placeholder="{% translate 'start typing'|capfirst %}..." id="add{{ attribute }}" data-suggest="{% url 'location:getSuggestionsFor' value|default:attribute location.slug %}" data-slug="">
   </div>
   <div class="col-3">
-    <button for="add{{ attribute }}" class="btn btn-primary submit-value" data-url="{% url 'location:ToggleAttribute' location.slug attribute %}">{% translate 'add'|capfirst %}</button>
+    <button for="add{{ attribute }}" class="btn btn-primary submit-value" data-url="{% url 'location:ToggleAttributeWithSlug' 'location' location.slug value|default:attribute %}">{% translate 'add'|capfirst %}</button>
   </div>
 </div>

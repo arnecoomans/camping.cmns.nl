@@ -90,21 +90,21 @@
     <!-- Google Maps Permission -->
     <div class="row">
       <div class="col-3 title-col">{% translate 'google maps'|title %}</div>
-      <div class="col-9" id="maps-permission">
+      <div class="col-9 list" id="maps_permissionlist" data-source="{% url 'location:getAttributesFor' 'profile' 'maps_permission' %}">
         {% include 'partial/maps_permission.html' %}
       </div>
     </div>
     <!-- Category Labels in Location List -->
     <div class="row">
       <div class="col-3 title-col">{% translate 'category labels'|capfirst %}</div>
-      <div class="col-9" id="show-category-label">
+      <div class="col-9 list" id="show_category_labellist" data-source="{% url 'location:getAttributesFor' 'profile' 'show_category_label' %}">
         {% include 'partial/show_category_label.html' %}
       </div>
     </div>
     <!-- Allow filtering on location distance -->
     <div class="row">
       <div class="col-3 title-col">{% translate 'filter on distance'|capfirst %}</div>
-      <div class="col-9" id="filter-by-distance">
+      <div class="col-9" id="filter_by_distancelist" data-source="{% url 'location:getAttributesFor' 'profile' 'filter_by_distance' %}">
         {% include 'partial/filter_by_distance.html' %}
       </div>
     </div>
@@ -115,24 +115,28 @@
       <div class="col-3 title-col">{% translate 'favorites'|capfirst %}:</div>
         <div class="col-9">
           {% for location in profile.favorite.all %}
-            <span class="favorite">{% include 'snippets/location_link.html' %} <a href="{% url 'location:ToggleAttribute' location.slug 'favorite' %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location.name }} {% translate 'from favorites' %}"></a></span>{% if not forloop.last %}, {% endif %}
+            {% include 'partial/location.html' %}
+            <a href="{% url 'location:ToggleAttributeWithValue' 'profile' 'favorite' location.slug %}" class="toggable" data-bs-toggle="tooltip" data-bs-placement="top" title="{% blocktranslate with location_name=location %}Remove from {{ location_name }} from favorites{% endblocktranslate %}"><sup>[x]</sup></a>
+            {% if not forloop.last %}, {% endif %}
           {% endfor %}
         </div>
       </div>
     {% endif %}
     <!-- Dislikes -->
-    {% if user.profile.least_liked.all.count > 0 %}
+    {% if user.profile.dislike.all.count > 0 %}
       <div class="row">
         <div class="col-3 title-col">{% translate 'least liked'|capfirst %}:</div>
           <div class="col-9">
-            {% for location in profile.least_liked.all %}
-              <span class="favorite">{% include 'snippets/location_link.html' %} <a href="{% url 'location:ToggleAttribute' location.slug 'dislike' %}"><img src="{% static 'bootstrap-icons/x.svg' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location.name }} {% translate 'from least-liked' %}"></a></span>{% if not forloop.last %}, {% endif %}
+            {% for location in profile.dislike.all %}
+            {% include 'partial/location.html' %}
+            <a href="{% url 'location:ToggleAttributeWithValue' 'profile' 'dislike' location.slug %}" class="toggable" data-bs-toggle="tooltip" data-bs-placement="top" title="{% blocktranslate with location_name=location %}Remove from {{ location_name }} from disliked locations{% endblocktranslate %}"><sup>[x]</sup></a>
+            {% if not forloop.last %}, {% endif %}
             {% endfor %}
           </div>
       </div>
       <div class="row">
         <div class="col-3"></div>
-          <div class="col-9" id="hide-least-liked">
+          <div class="col-9" id="hide_least_likedlist" data-source="{% url 'location:getAttributesFor' 'profile' 'hide_least_liked' %}">
             {% include 'partial/hide_least_liked.html' %}
           </div>
       </div>
@@ -142,17 +146,20 @@
     <!-- Family -->
     {% if profile.family.all.count > 0 %}
       <div class="row">
-        <div class="col-3 title-col"><label for="family">{% translate 'family members'|capfirst %}:</div>
-          <div class="col-9">
+        <div class="col-3 title-col"><label for="family">{% translate 'you have marked the following persons as family'|capfirst %}:</div>
+          <div class="col-9 list" id="familylist" data-source="{% url 'location:getAttributesFor' 'profile' 'family' %}">
             {% for member in profile.family.all %}
-            <span class="family member">{{ member.get_full_name|default:member.username }}<a><sup>(x)</sup></a></span>{% if not forloop.last %}, {% endif %}
+              {% include 'partial/family.html' %}
             {% endfor %}
           </div>
       </div>
+      <div class="row">
+      </div>
+
     {% endif %}
     {% if user.family_of.all.count > 0 %}
     <div class="row">
-      <div class="col-3 title-col">{% translate 'you are marked family of'|capfirst %}:</div>
+      <div class="col-3 title-col">{% translate 'the following persons have marked you as family'|capfirst %}:</div>
         <div class="col-9">
           {% for person in user.family_of.all %}
               <span class="family member">

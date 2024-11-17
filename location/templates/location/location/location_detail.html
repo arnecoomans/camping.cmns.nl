@@ -76,13 +76,17 @@
             {{ location.address|default:'-' }}
           </div>
         </div>
-        {% if distance_to_home %}
-          <div class="row">
-            <div class="col-3"></div>
-            <div class="col-9">{{ distance_to_home.getDistance }} / {{ distance_to_home.getTime }} from {{ user.profile.home.name }}</div>
-          </div>
-        {% endif %}
         {% if user.is_authenticated %}
+          <!-- Distance to home -->
+          {% with location|find_distance:request.user as distance %}
+            {% if distance and distance.0 != 0 %}
+              <div class="row">
+                <div class="col-3"></div>
+                <div class="col-9">{{ distance.0 }} / {{ distance.1 }} from {{ user.profile.home.name }}</div>
+              </div>
+            {% endif %}
+          {% endwith %}
+          <!-- Additional Informations -->
           {% if location.owners_names %}
             <div class="row">
               <div class="col-3 title-col">{% translate 'owners names'|title %}:</div>

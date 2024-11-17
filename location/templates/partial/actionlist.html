@@ -38,11 +38,13 @@
       <li><a href="/admin/location/location/{{ location.id }}/change/" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit information of'|capfirst %} {{ location.name }} {% translate 'in admin' %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil-square"/></svg></a></li>
     {% endif %}
     <!-- Distance to home -->
-    {% if not location.category.name == 'Home' and distance_to_home %}
-      <li data-bs-toggle="tooltip" data-bs-placement="top" title="{{ distance_to_home.getDistance }}, {{ distance_to_home.getTime }} {% translate 'from' %} {{ user.profile.home.name }}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#house-fill"/></svg></a></li>  
-    {% elif not location.category.name == 'Home' and user.profile.home and location.coord_lat and location.coord_lng %}
-      <li><a href="{% url 'location:DistanceToHome' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'calculate distance from home to'|capfirst %} {{ location.name }}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#house"/></svg></a></li>  
-    {% endif %}
+    {% with location|find_distance:request.user as distance %}
+      {% if distance and distance.0 != 0 %}
+        <li data-bs-toggle="tooltip" data-bs-placement="top" title="{{ distance.0 }}, {{ distance.1 }} {% translate 'from' %} {{ user.profile.home.name }}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#house-fill"/></svg></a></li>  
+      {% else %}
+        <li><a href="{% url 'location:DistanceToHome' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'calculate distance from home to'|capfirst %} {{ location.name }}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#house"/></svg></a></li>  
+      {% endif %}
+    {% endwith %}
     <!-- Distance to center -->
     {% if request.user.is_staff and location.distance_to_departure_center %}
       <li><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#geo" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'geographical distance from'|capfirst %} {{ departure_center }} {% translate 'to this location' %}: {{ location.distance_to_departure_center }} {% translate 'km' %} ({% translate 'straight line' %})"></svg></li>

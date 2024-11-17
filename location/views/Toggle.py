@@ -70,7 +70,7 @@ class ToggleAttribute(JSONHelper):
       try:
         value_object = (value_model.objects.get(id=value), False)
       except ValueError:
-        defaults['name'] = None
+        defaults['name'] = ''
         value_object = value_model.objects.get_or_create(url=value.lower(), defaults=defaults)
         self.value = value_object[0].id
       except value_model.DoesNotExist:

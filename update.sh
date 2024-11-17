@@ -22,8 +22,8 @@ if echo "$git_output" | grep -q 'Already up to date'; then
     exit 0
 fi
 
-# Check if output contains 'migration' or 'project_static'
-if echo "$git_output" | grep -q -e 'migration' -e 'static -e 'requirements.txt'; then
+# Check if output contains 'migration' or 'project_static' or 'requirements.txt'
+if echo "$git_output" | grep -q -e 'migration' -e 'static' -e 'requirements.txt'; then
     echo "Changes detected in requirements, migrations or static files. Activating virtual environment..."
     
     # Activate virtual environment in .venv directory in the current directory

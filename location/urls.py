@@ -121,6 +121,7 @@ urlpatterns = [
   path('json/attributes/<str:location>/<str:attribute>/', views.JSONGetLocationAttributes.as_view(), name='getAttributesFor'),
   path('json/suggestions/<str:model>/<str:location>/', views.JSONGetLocationAttributeSuggestions.as_view(), name='getSuggestionsFor'),
   path('json/suggestions/', views.JSONGetLocationSuggestions.as_view(), name='getLocationSuggestions'),
+  path('json/get/<str:model>:<str:slug>/description/', views.JSONGetLocationDescription.as_view(), name='getLocationDescription'),
   ## Comments
   # path('a/comments/', views.aListComments.as_view(), name='aListComments'),
   # path('json/<location>/comments/', views.aListComments.as_view(), name='aListCommentsFor'),

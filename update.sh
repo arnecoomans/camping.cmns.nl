@@ -33,10 +33,11 @@ if echo "$git_output" | grep -q -e 'migration' -e 'static -e 'requirements.txt';
     # Install any new requirements
     if echo "$git_output" | grep -q 'requirements.txt'; then
         echo "Installing new requirements..."
+        python -m pip install --upgrade pip
         pip install -r requirements.txt
         echo "Requirements installed."
     fi
-    
+
     # Check for 'migration' keyword in git output
     if echo "$git_output" | grep -q 'migration'; then
         echo "Running migrations..."

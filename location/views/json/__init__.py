@@ -2,3 +2,4 @@ from .comment import *
 from .getlocationattributes import JSONGetLocationAttributes
 from .getlocationattributesuggestions import JSONGetLocationAttributeSuggestions
 from .getlocationsuggestions import JSONGetLocationSuggestions
+from .getlocationdescription import JSONGetLocationDescription

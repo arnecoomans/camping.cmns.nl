@@ -16,5 +16,5 @@ Markdown >= 3.4.4
 # Heic to JPG
 pillow-heif >= 0.13.1
 
-# OpenAI
+# OpenAI (experimental)
 openai >= 1.54.4

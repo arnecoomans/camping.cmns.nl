@@ -182,7 +182,7 @@ class JSONHelper(View):
     }
     if self.get_field():
       kwargs['field'] = self.get_field()
-    if self.get_object():
+    if self.get_object() and 'slug' in self.get_object()._meta.get_fields():
       kwargs['slug'] = self.get_object().slug
     if 'slug' in resolver.lower():
       kwargs['slug'] = self.get_slug()

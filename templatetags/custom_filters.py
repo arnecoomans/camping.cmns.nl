@@ -17,6 +17,6 @@ def find_distance(location, user):
         return (distance.getDistance(), distance.getTime())
     for distance in location.dest_destination.all():
       if distance.origin == user.profile.home:
-        return (distance.distance, distance.time, distance)
+        return (distance.getDistance(), distance.getTime())
   except AttributeError:
     return None

@@ -29,7 +29,7 @@ from location.models.List import ListDistance
 '''
 class EditLocationMaster(UpdateView, FilterClass):
   model = Location
-  fields = ['name', 'link', 'category', 'additional_category', 'visibility', 'address', 'phone', 'owners_names', 'chain']
+  fields = ['name', 'category', 'additional_category', 'visibility', 'address', 'phone', 'owners_names', 'chain']
   template_name = 'location/location/location_form.html'
   
   def get_context_data(self, **kwargs):
@@ -194,7 +194,7 @@ class AddLocation(CreateView):
       url = self.request.POST.get('url', '') if self.request.POST.get('url', False) else f"https://google.com/search?q={ form.cleaned_data['name'] }"
       link = Link.objects.get_or_create(url=url, defaults={
         'user': self.request.user,
-        'title': self.request.POST.get('link-title', None)
+        'name': self.request.POST.get('link-title', None)
       })
       location.link.add(link[0])
       messages.add_message(self.request, messages.INFO, f"{ _('added link') }: \"{ link[0].get_title() }\" { _('to') } { location.name }.")

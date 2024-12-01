@@ -96,9 +96,20 @@ class Link(BaseModel):
       query = query if str(query) != "['']" else _('search').capitalize()
       return f"{ query } on { hostname.capitalize() }"
     return hostname
+  
+  def save(self, *args, **kwargs):
+    ''' Enforce URL to be correct '''
+    if not self.url.startswith('http://') and not self.url.startswith('https://'):
+      self.url = f"https://{ self.url }"
+    return super(Link, self).save(*args, **kwargs)
     
   def hostname(self):
-    return urlparse(self.url).hostname.replace('www.', '')
+    if urlparse(self.url).hostname:
+      return urlparse(self.url).hostname.replace('www.', '')
+    elif self.url:
+      return self.url
+    return _('no url')
+  
   class Meta:
         ordering = ['-primary', 'url']
 

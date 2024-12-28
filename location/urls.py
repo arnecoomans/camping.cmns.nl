@@ -119,8 +119,10 @@ urlpatterns = [
   ## Triggered in the getLocationAttributes.js script
   ## Handled by the JSONGetLocationAttributes view in location/views/json/getlocationattributes.py
   path('json/attributes/<str:location>/<str:attribute>/', views.JSONGetLocationAttributes.as_view(), name='getAttributesFor'),
-  path('json/suggestions/<str:model>/<str:location>/', views.JSONGetLocationAttributeSuggestions.as_view(), name='getSuggestionsFor'),
+  path('json/suggestions/<str:model>/for:<str:location>/', views.JSONGetLocationAttributeSuggestions.as_view(), name='getSuggestionsFor'),
   path('json/suggestions/', views.JSONGetLocationSuggestions.as_view(), name='getLocationSuggestions'),
+  path('json/options/<str:model>/for:<str:location>/', views.JSONGetAttributeOptions.as_view(), name='getOptionsFor'),
+  path('json/options/<str:model>/', views.JSONGetAttributeOptions.as_view(), name='getOptions'),
   path('json/get/<str:model>:<str:slug>/description/', views.JSONGetLocationDescription.as_view(), name='getLocationDescription'),
   ## Comments
   # path('a/comments/', views.aListComments.as_view(), name='aListComments'),

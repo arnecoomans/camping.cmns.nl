@@ -1,0 +1,1 @@
+{% load i18n %}<a href="{% url 'location:search' %}?size={{ location.size.slug }}">{% if location.size %}{{ location.size.slug|upper }} - {% translate location.size.name|capfirst %}</a>{% endif %}

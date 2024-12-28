@@ -1,4 +1,4 @@
-from .Location import Location, Chain, Link, Category, Description
+from .Location import Location, Chain, Link, Category, Description, Size
 from .Geo import Region
 from .Tag import Tag
 from .Comment import Comment

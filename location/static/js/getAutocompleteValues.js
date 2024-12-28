@@ -44,6 +44,26 @@ $(document).ready(function() {
     }
   });
 
+  $('select.autocomplete').each(function() {
+    url = $(this).data('source');
+    select = $(this);
+    $.ajax({
+      url: url,
+      dataType: 'json',
+      success: function(data) {
+        // Append the data to the select $(this)
+        data['payload'].forEach(function(payload) {
+          select.append(payload);
+        });
+      },
+      error: function(data) {
+        console.log('error: ' + data['message']);
+        // console.log(data);
+      }
+    });    
+    console.log('Loaded ' + $(this).attr('id') + ' from ' + url);
+  });
+
   /** Handle Submit Value Button
    * 
    */
@@ -51,8 +71,13 @@ $(document).ready(function() {
     // Fetch the target from the "for" attribute of the button
     var target = $(this).attr('for');
     // Get the value and the slug
-    var value = $('input#' + target).val();
-    var slug = $('input#' + target).data('slug');
+    if ($('input#' + target).length != 0) {
+      var value = $('input#' + target).val();
+      var slug = $('input#' + target).data('slug');
+    } else if ($('select#' + target).length != 0) {
+      var value = $('select#' + target).text();
+      var slug = $('select#' + target).val();
+    }
     var url = $(this).data('url');
     if (value == '') {
       console.log('Value is empty');
@@ -83,8 +108,13 @@ $(document).ready(function() {
         });
         /** Callback - Update field data that has been toggled */
         list = $('#' + data['field']);
-        if (list.attr('data-source')) {
-          console.log('Get location attributes for ' + list.attr('data-source') + ' and ' + list.attr('id'));
+        console.log(list)
+        if (list.attr('data-value')) {
+          console.log('Get location attributes for value ' + list.attr('data-value') + ' and ' + list.attr('id'));
+          getLocationAttributes(list.attr('data-value'), list.attr('id'));
+        }
+        else if (list.attr('data-source')) {
+          console.log('Get location attributes for source ' + list.attr('data-source') + ' and ' + list.attr('id'));
           getLocationAttributes(list.attr('data-source'), list.attr('id'));
         } else {
           console.log('No source for ' + list.attr('id'));

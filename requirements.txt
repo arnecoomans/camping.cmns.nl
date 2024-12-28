@@ -14,7 +14,7 @@ googlemaps >= 4.10.0
 Markdown >= 3.7
 
 # Heic to JPG
-pillow-heif >= 0.21.1
+pillow-heif >= 0.21.0
 
 # OpenAI (experimental)
 openai >= 1.58.1

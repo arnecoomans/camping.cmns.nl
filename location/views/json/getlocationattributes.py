@@ -2,9 +2,11 @@ from django.views.generic import View, TemplateView, DetailView, ListView
 from django.utils.translation import gettext as _
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+from types import NoneType
+from django.db.models.fields.related import ForeignKey, ManyToManyField
 
 from ..snippets.filter_class import FilterClass
-from location.models.Location import Location, Category, Chain
+from location.models.Location import Location, Category, Chain, Size
 from location.models.Tag import Tag
 from location.models.Comment import Comment
 
@@ -19,7 +21,7 @@ class JSONGetLocationAttributes(View, FilterClass):
   def get_attribute(self):
     supported_attributes = ['category', 'chain', 'tag', 'comment', 'actionlist', 
                             'maps_permission', 'show_category_label', 'filter_by_distance', 'hide_least_liked',
-                            'link']
+                            'link', 'size']
     translated_attributes = {
       'favorite': 'actionlist',
       'dislike': 'actionlist',
@@ -44,6 +46,8 @@ class JSONGetLocationAttributes(View, FilterClass):
       return Location.objects.filter(slug=location.slug)
     elif self.get_attribute() == 'link':
       return location.link.all()
+    elif self.get_attribute() == 'size':
+      return location.size
     elif self.get_attribute() in ['maps_permission', 'show_category_label', 'filter_by_distance', 'hide_least_liked']:
       ''' Profile Boolean Fields '''
       return getattr(self.request.user.profile, self.get_attribute())
@@ -93,7 +97,13 @@ class JSONGetLocationAttributes(View, FilterClass):
     #   return JsonResponse({'message': f"{ _('No {} data found for location').format(attribute) } { location }"}, status=500)
     ''' Build Response '''
     response = []
+    print("FOOOOOOO")
+    print(type(queryset))
     if type(queryset) == bool:
+      response.append(render_to_string(f'partial/{ attribute }.html', {attribute: queryset, 'location': location, 'user': request.user}, request=request))
+    elif type(queryset) == NoneType:
+      response.append(render_to_string(f'partial/{ attribute }.html', {attribute: None, 'location': location, 'user': request.user}, request=request))
+    elif type(queryset) in (Size, ):
       response.append(render_to_string(f'partial/{ attribute }.html', {attribute: queryset, 'location': location, 'user': request.user}, request=request))
     else:  
       for object in queryset:

@@ -1,5 +1,5 @@
 from .comment import *
 from .getlocationattributes import JSONGetLocationAttributes
 from .getlocationattributesuggestions import JSONGetLocationAttributeSuggestions
-from .getlocationsuggestions import JSONGetLocationSuggestions
+from .getlocationsuggestions import JSONGetLocationSuggestions, JSONGetAttributeOptions
 from .getlocationdescription import JSONGetLocationDescription

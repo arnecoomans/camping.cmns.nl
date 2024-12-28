@@ -17,5 +17,6 @@ def setting_data(request):
     'ajax_load_categories': getattr(settings, 'AJAX_LOAD_CATEGORIES', False),
     'ajax_load_chains': getattr(settings, 'AJAX_LOAD_CHAINS', False),
     'ajax_load_actionlist': getattr(settings, 'AJAX_LOAD_ACTIONLIST', False),
+    'ajax_load_size': getattr(settings, 'AJAX_LOAD_SIZE', False),
     
   }

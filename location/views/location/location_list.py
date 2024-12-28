@@ -11,7 +11,7 @@ from ..snippets.filter_class import FilterClass
 
 from math import floor, ceil
 
-from location.models.Location import Location
+from location.models.Location import Location, Size
 
 ''' MASTER VIEWS '''
 ''' Location List Master View
@@ -49,7 +49,7 @@ class LocationListMaster(FilterClass):
       ''' Query filters
           are part of the request but not part of the url
       '''
-      for field in ['category', 'tag', 'chain', 'q', 'only', ]:
+      for field in ['category', 'tag', 'chain', 'q', 'only', 'size', ]:
         if self.request.GET.get(field, False):
           ''' All values in query parameters should be a list.
               Multiple values are seperated by a , resulting in multiple list items
@@ -100,8 +100,9 @@ class LocationListMaster(FilterClass):
       if hasattr(self.request.user, 'profile'):
         self.available_filters['has_favorites'] = True if self.get_queryset().filter(favorite_of=self.request.user.profile).count() > 1 else False
         self.available_filters['has_visited']   = True if self.get_queryset().filter(visitors__user=self.request.user).count() > 1 else False
-      self.available_filters['order']         = ['distance', 'region']
-      self.available_filters['visibility']    = self.get_available_visibilities()
+      self.available_filters['order']           = ['distance', 'region']
+      self.available_filters['size']            = self.get_available_sizes()
+      self.available_filters['visibility']      = self.get_available_visibilities()
       self.available_filters['chains']           = self.get_available_chains()
       return self.available_filters
   
@@ -153,6 +154,9 @@ class LocationListMaster(FilterClass):
   def get_available_chains(self):
     return self.get_queryset().filter(chain__children=None).exclude(chain__name=None).values('chain__slug', 'chain__name').order_by().distinct()
   
+  def get_available_sizes(self):
+    return self.get_queryset().exclude(size__slug__isnull=True).values('size__slug', 'size__name').order_by().distinct()
+  
   ''' Filter Queryset 
       Uses get_active_filters to determine filters that need to be processed
   '''
@@ -168,6 +172,7 @@ class LocationListMaster(FilterClass):
       'tag': 'tags__slug__in',
       'chain': ['chain__slug__in', 'chain__parent__slug__in'],
       'visibility': 'visibility__in',
+      'size': 'size__slug__in',
     }
     for field, map in mapping.items():
       if self.get_active_filters(field):

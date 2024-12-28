@@ -145,6 +145,13 @@ class Description(BaseModel):
   def __str__(self) -> str:
     return self.description
 
+class Size(BaseModel):
+  slug              = models.CharField(max_length=255, help_text=_('Slug of size'))
+  name              = models.CharField(max_length=255, unique=True, help_text=_('Name of size as displayed'))
+  description       = models.TextField(blank=True, help_text=_('Markdown is supported'))
+
+  def __str__(self):
+    return self.name
   
 ''' Location model
 '''
@@ -168,7 +175,7 @@ class Location(BaseModel):
   category            = models.ForeignKey(Category, blank=True, null=True, on_delete=models.DO_NOTHING, related_name='locations')
   additional_category = models.ManyToManyField(Category, blank=True, related_name='secondary_for')
   tags                = models.ManyToManyField(Tag, blank=True, related_name='locations')
-
+  size                = models.ForeignKey(Size, blank=True, null=True, on_delete=models.DO_NOTHING, related_name='locations')
   ''' Augmented Information '''
   meta_description    = models.CharField(max_length=255, blank=True, help_text=_('Meta description taken from website, if available'))
 

@@ -35,7 +35,7 @@
         {% endif %}
         <!-- Query Parameter items -->
         {% for param, values in active_filters.items %}
-          {% if param in 'category, tag, chain' %}
+          {% if param in 'category, tag, chain, size' %}
             <li>{% translate param|capfirst %}:
               {% for value in values %}
                 <a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% update_query_params request remove=value to=param active_filters=active_filters %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ param }}: {% translate value %} {% translate 'from filter' %}">{% translate value|title %} <svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#x"/></svg></a>{% if not forloop.last %}, {% endif %}
@@ -109,12 +109,19 @@
               <a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% update_query_params request add=chain.chain__slug to='chain' active_filters=active_filters %}">{{ chain.chain__name|title }}</a>{% if not forloop.last %}, {% else %}{% if available_filters.tag|length > 1 %},{% endif %}{% endif %}
             {% endfor %}
         {% endif %}
+      <!-- Size -->
+       {% if available_filters.size.all.count > 1 and 'size' not in active_filters %}
+       <li><strong>{% translate 'size'|capfirst %}</strong>:
+          {% for size in available_filters.size.all %}
+            <a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% update_query_params request add=size.size__slug to='size' active_filters=active_filters %}">{{ size.size__name|title }}</a>{% if not forloop.last %}, {% endif %}
+          {% endfor %}</li>
+       {% endif %}
       <!-- Tags -->
         {% if available_filters.tags.all.count > 1 and 'tag' not in active_filters %}
           <li><strong>{% translate 'tag'|capfirst %}:</strong>
           {% for tag in available_filters.tags.all %}
             <a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% update_query_params request add=tag.tags__slug to='tag' active_filters=active_filters %}">{% translate tag.tags__name|title %}</a>{% if not forloop.last %}, {% endif %}
-          {% endfor %}
+          {% endfor %}</li>
         {% endif %}
       <!-- Visibility -->
         {% if available_filters.visibility|length > 1 %}

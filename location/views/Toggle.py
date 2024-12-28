@@ -40,6 +40,34 @@ class ToggleAttribute(JSONHelper):
       self.status = 500
       self.messages.append(('danger', f"[137] { _('error when toggling {} of {}: {}').format(self.get_field(), self.get_object(), escape(e)).capitalize()}"))
 
+  def __toggleForeignKey(self, field):
+    ''' Fetch textual Value - should be slug of the object '''
+    value = self.get_value()
+    if not value:
+      self.status = 500
+      self.messages.append(('danger', f"[181] { _('value is required but missing').capitalize() }"))
+      return False
+    ''' Get the model of the ForeignKey '''
+    value_model = self.get_model()._meta.get_field(self.get_field()).related_model
+    ''' Get the value object '''
+    try:
+      object = value_model.objects.get(slug=value)
+    except value_model.DoesNotExist:
+      self.status = 404
+      self.messages.append(('danger', f"[404] { _('value "{}" not found').format(value).capitalize() }"))
+      return False
+    ''' Toggle the value '''
+    if getattr(self.get_object(), self.get_field()) == object:
+      ''' Value is already set: Remove it '''
+      setattr(self.get_object(), self.get_field(), None)
+      self.messages.append(('success', f"{ _('removed {} from {}').format(object, self.get_field()).capitalize() } { self.get_undo_link() }"))
+    else:
+      ''' Value should be set '''
+      setattr(self.get_object(), self.get_field(), object)
+      self.messages.append(('success', f"{ _('set {} to {}').format(self.get_field(), object).capitalize() } { self.get_undo_link() }"))
+    self.get_object().save()
+
+
   def __toggleManyToMany(self, field):
     ''' Fetch textual Value - should be slug of the object '''
     value = self.get_value()
@@ -151,6 +179,8 @@ class ToggleAttribute(JSONHelper):
       ''' Based on Field Type, toggle the value '''
       if field_type == 'BooleanField':
         self.__toggleBoolean(field)
+      elif field_type == 'ForeignKey':
+        self.__toggleForeignKey(field)
       elif field_type == 'ManyToManyField':
         self.__toggleManyToMany(field)
       else:

@@ -18,13 +18,34 @@
     </div>
     <div class="col-1 button-col">
       {% if user.is_authenticated %}
-        <button for="additional_category" type="button" class="btn btn-outline-secondary show-autocomplete">+</button>
+        <button for="additional_category" type="button" class="btn btn-outline-secondary show-autocomplete"><img src="{% static 'bootstrap-icons/plus.svg' %}"></button>
       {% endif %}
     </div>
   </div>
   {% if user.is_authenticated %}
     {% include 'partial/addattribute.html' with attribute="additional_category" %}
   {% endif %}
+
+  <!-- Size (only for locations) -->
+  {% if not location.isActivity %}
+    <div class="row">
+      <div class="col-3 title-col">{% translate 'size'|title %}:</div>
+      <div class="col-8 list" id="sizelist" data-source="{% url 'location:getAttributesFor' location.slug 'size' %}">
+        {% if location.size and not ajax_load_size %}
+          {% include 'partial/size.html' %}
+        {% endif %}
+      </div>
+      <div class="col-1 button-col">
+        {% if user.is_authenticated %}
+          <button for="size" type="button" class="btn btn-outline-secondary show-autocomplete">{% if location.size and location.size.slug  != '?' %}<img src="{% static 'bootstrap-icons/pencil.svg' %}">{% else %}<img src="{% static 'bootstrap-icons/plus.svg' %}">{% endif %}</button>
+        {% endif %}
+      </div>
+    </div>
+    {% if user.is_authenticated %}
+      {% include 'partial/addsize.html' with attribute="size" %}
+    {% endif %}
+  {% endif %}
+  
   <!-- Chain -->
   <div class="row autoload">
     <div class="col-3 title-col">{% translate 'chain'|title %}<span class="valuecounter"></span>:</div>
@@ -37,7 +58,7 @@
     </div>
     <div class="col-1 button-col">
       {% if user.is_authenticated %}
-        <button for="chain" type="button" class="btn btn-outline-secondary show-autocomplete">+</button>
+        <button for="chain" type="button" class="btn btn-outline-secondary show-autocomplete"><img src="{% static 'bootstrap-icons/plus.svg' %}"></button>
       {% endif %}
     </div>
   </div>
@@ -56,7 +77,7 @@
     </div>
     <div class="col-1 button-col">
       {% if user.is_authenticated %}
-        <button for="tags" type="button" class="btn btn-outline-secondary show-autocomplete">+</button>
+        <button for="tags" type="button" class="btn btn-outline-secondary show-autocomplete"><img src="{% static 'bootstrap-icons/plus.svg' %}"></button>
       {% endif %}
     </div>
   </div>
@@ -76,7 +97,7 @@
     </div>
     <div class="col-1 button-col">
       {% if user.is_authenticated %}
-        <button for="link" type="button" class="btn btn-outline-secondary show-autocomplete">+</button>
+        <button for="link" type="button" class="btn btn-outline-secondary show-autocomplete"><img src="{% static 'bootstrap-icons/plus.svg' %}"></button>
       {% endif %}
     </div>
   </div>

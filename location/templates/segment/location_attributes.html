@@ -27,9 +27,9 @@
   {% endif %}
 
   <!-- Size (only for locations and authenticated users) -->
-  {% if user.is_authenticated and not location.isActivity %}
+  {% if user.is_authenticated and location.canhavesize %}
     <div class="row">
-      <div class="col-3 title-col">{% translate 'size'|title %}:</div>
+      <div class="col-3 title-col">{% translate 'size'|title %}: <sup data-bs-toggle="tooltip" data-bs-position="top" title="{% translate 'size is available for camping or glamping'|capfirst %}.">(i)</sup></div>
       <div class="col-8 list" id="sizelist" data-source="{% url 'location:getAttributesFor' location.slug 'size' %}">
         {% if location.size and not ajax_load_size %}
           {% include 'partial/size.html' %}

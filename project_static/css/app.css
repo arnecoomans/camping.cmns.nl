@@ -150,7 +150,10 @@ div.location > div.description {
   padding: 5px;
   border: 1px solid #eee;
 }
-
+span.location.size.indicator {
+  font-size: 60%;
+  color: #999;
+}
 /** Filters */
 ul.filter.list {
   list-style-type: none;

@@ -26,8 +26,8 @@
     {% include 'partial/addattribute.html' with attribute="additional_category" %}
   {% endif %}
 
-  <!-- Size (only for locations) -->
-  {% if not location.isActivity %}
+  <!-- Size (only for locations and authenticated users) -->
+  {% if user.is_authenticated and not location.isActivity %}
     <div class="row">
       <div class="col-3 title-col">{% translate 'size'|title %}:</div>
       <div class="col-8 list" id="sizelist" data-source="{% url 'location:getAttributesFor' location.slug 'size' %}">
@@ -45,7 +45,7 @@
       {% include 'partial/addsize.html' with attribute="size" %}
     {% endif %}
   {% endif %}
-  
+
   <!-- Chain -->
   <div class="row autoload">
     <div class="col-3 title-col">{% translate 'chain'|title %}<span class="valuecounter"></span>:</div>

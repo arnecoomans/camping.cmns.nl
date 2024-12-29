@@ -431,3 +431,12 @@ class Location(BaseModel):
     if self.isActivity():
       return 'activities'
     return 'locations'
+  
+  def canhavesize(self):
+    canhavesize = False
+    if self.category.slug.lower() in ['camping', 'glamping', 'transit']:
+      canhavesize = True
+    for category in self.additional_category.all():
+      if category.slug.lower() in ['camping', 'glamping', 'transit']:
+        canhavesize = True
+    return canhavesize

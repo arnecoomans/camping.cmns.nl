@@ -155,7 +155,7 @@ class LocationListMaster(FilterClass):
     return self.get_queryset().filter(chain__children=None).exclude(chain__name=None).values('chain__slug', 'chain__name').order_by().distinct()
   
   def get_available_sizes(self):
-    return self.get_queryset().exclude(size__slug__isnull=True).values('size__slug', 'size__name').order_by().distinct()
+    return self.get_queryset().exclude(size__slug__isnull=True).values('size__slug', 'size__name').order_by('size__id').distinct()
   
   ''' Filter Queryset 
       Uses get_active_filters to determine filters that need to be processed
@@ -174,13 +174,14 @@ class LocationListMaster(FilterClass):
       'visibility': 'visibility__in',
       'size': 'size__slug__in',
     }
+    ''' Apply filters '''
     for field, map in mapping.items():
       if self.get_active_filters(field):
         if type(map) == str:
           queryset = queryset.filter(**{map: self.get_active_filters(field)})
         elif type(map) == list:
           queryset = queryset.filter(**{map[0]: self.get_active_filters(field)}) | queryset.filter(**{map[1]: self.get_active_filters(field)})
-    ''' Apply filters that require login and a user with a profile '''
+      ''' Apply filters that require login and a user with a profile '''
     if hasattr(self.request.user, 'profile'):
       if self.get_active_filters('favorites'):
         queryset = queryset.filter(favorite_of__user=self.request.user)

@@ -38,7 +38,9 @@
           {% if param in 'category, tag, chain, size' %}
             <li>{% translate param|capfirst %}:
               {% for value in values %}
-                <a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% update_query_params request remove=value to=param active_filters=active_filters %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ param }}: {% translate value %} {% translate 'from filter' %}">{% translate value|title %} <svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#x"/></svg></a>{% if not forloop.last %}, {% endif %}
+                {% if value %}
+                  <a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% update_query_params request remove=value to=param active_filters=active_filters %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ param }}: {% translate value %} {% translate 'from filter' %}">{% translate value|title %} <svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#x"/></svg></a>{% if not forloop.last %}, {% endif %}
+                  {% endif %}
               {% endfor %}
             </li>
           {% endif %}
@@ -113,7 +115,7 @@
        {% if available_filters.size.all.count > 1 and 'size' not in active_filters %}
        <li><strong>{% translate 'size'|capfirst %}</strong>:
           {% for size in available_filters.size.all %}
-            <a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% update_query_params request add=size.size__slug to='size' active_filters=active_filters %}">{{ size.size__name|title }}</a>{% if not forloop.last %}, {% endif %}
+            <a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% update_query_params request add=size.size__slug to='size' active_filters=active_filters %}" data-bs-toggle="tooltip" data-bs-position="top" title="{{ size.size__name }}{% if size.size__description %}: {{ size.size__description }}{% endif %}">{{ size.size__slug|upper }}</a>{% if not forloop.last %}, {% endif %}
           {% endfor %}</li>
        {% endif %}
       <!-- Tags -->

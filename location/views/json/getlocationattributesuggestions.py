@@ -105,7 +105,6 @@ class JSONGetLocationAttributeSuggestions(View, FilterClass):
     return queryset
 
   def get(self, request, *args, **kwargs):
-    # queryset = self.get_queryset()
     try:
       queryset = self.get_queryset()
     except Exception as e:
@@ -115,15 +114,20 @@ class JSONGetLocationAttributeSuggestions(View, FilterClass):
     ''' Build Response '''
     payload = []
     for suggestion in queryset:
-      parent = f"{ suggestion.parent.name }: " if hasattr(suggestion, 'parent') else ''
+      # parent = f"{ suggestion.parent.name }: " if hasattr(suggestion, 'parent') else ''
+      ''' Fix issue: parent should be set, and have a name. Else keep empty'''
+      parent = ''
+      if hasattr(suggestion, 'parent'):
+        if hasattr(suggestion.parent, 'name'):
+          parent = f"{ suggestion.parent.name }: "
+      ''' Build suggestion text, prepend with parent if it has a parent '''
       text = f"{ parent }{ suggestion.name }"
+      ''' If suggestion has a url, append it to the text '''
       if hasattr(suggestion, 'url'):
         if text == "":
           text = suggestion.url
         else:
           text = text + f" ({ suggestion.url })"
-      # text += f" ({ suggestion.url })" if hasattr(suggestion, 'url') else ''
-      # import re
-      # rendered_text = re.sub(f"({ self.get_query() })", r"<strong>\1</strong>", text, flags=re.IGNORECASE)
+      ''' Append suggestion to payload '''
       payload.append({ 'text': text, 'slug': suggestion.slug if hasattr(suggestion, 'slug') else suggestion.id })
     return JsonResponse({'payload': payload}, status=200)

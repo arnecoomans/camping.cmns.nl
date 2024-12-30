@@ -1,4 +1,12 @@
 #!/bin/bash
+# Update script for Django applications
+# Runs a git pull
+# Based on the outcome it will activate the virtual environment, 
+#  install new requirements, run migrations and collect static files
+# Restarts the application with supervisorctl
+#  based on the directory name (first part before the first dot)
+# Author: Arne Coomans
+# Version: 1.0.2
 
 # Change to the script's directory
 cd "$(dirname "$0")"
@@ -36,6 +44,8 @@ if echo "$git_output" | grep -q -e 'migration' -e 'static' -e 'requirements.txt'
         python -m pip install --upgrade pip
         python -m pip install -r requirements.txt
         echo "Requirements installed."
+    else
+        echo "No changes in requirements detected. Skipping requirement installation."
     fi
 
     # Check for 'migration' keyword in git output
@@ -43,6 +53,8 @@ if echo "$git_output" | grep -q -e 'migration' -e 'static' -e 'requirements.txt'
         echo "Running migrations..."
         python manage.py migrate
         echo "Migrations complete."
+    else
+        echo "No changes in migrations detected. Skipping migration."
     fi
     
     # Check for 'project_static' keyword in git output
@@ -50,6 +62,8 @@ if echo "$git_output" | grep -q -e 'migration' -e 'static' -e 'requirements.txt'
         echo "Collecting static files..."
         python manage.py collectstatic --noinput
         echo "Static files collected."
+    else
+        echo "No changes in static files detected. Skipping collectstatic."
     fi
 else
     echo "No changes in migrations or static files detected. Skipping migration and collectstatic."

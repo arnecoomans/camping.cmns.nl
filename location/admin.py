@@ -94,7 +94,7 @@ def copyDescriptionToDescriptions(modeladmin, request, queryset):
 ''' Custom Model Admin Classes '''
 class LocationAdmin(SlugDefaultAdmin):
   actions = [getAddress, getLatLng, getDistanceFromDepartureCenter, getRegion, clearCachableData, copyDescriptionToDescriptions]
-  list_display = ['name', 'location']
+  list_display = ['name', 'location', 'status']
 
 class LinkAdmin(DefaultAdmin):
   list_display = ['get_title', 'url', 'visibility', 'user']

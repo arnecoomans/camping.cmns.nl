@@ -36,6 +36,7 @@ class aSuggestLocations(aHelper, FilterClass, ListView):
       suggestions = []
       ''' Suggest locations '''
       locations = Location.objects.filter(name__icontains=query)
+      locations = self.filter(locations)
       for location in locations:
         for word in location.name.split():
           if query.lower() in word.lower():
@@ -43,6 +44,7 @@ class aSuggestLocations(aHelper, FilterClass, ListView):
               suggestions.append(word)
       ''' Suggest categories '''
       categories = Category.objects.filter(name__icontains=query)
+      categories = self.filter(categories)
       for category in categories:
         for word in category.name.split():
           if query.lower() in word.lower():
@@ -50,6 +52,7 @@ class aSuggestLocations(aHelper, FilterClass, ListView):
               suggestions.append(word)
       ''' Suggest Regions '''
       regions = Region.objects.filter(name__icontains=query) | Region.objects.filter(parent__name__icontains=query) | Region.objects.filter(parent__parent__name__icontains=query)
+      regions = self.filter(regions)
       for region in regions:
         for word in region.name.split():
           if query.lower() in word.lower():
@@ -57,6 +60,7 @@ class aSuggestLocations(aHelper, FilterClass, ListView):
               suggestions.append(word)
       ''' Suggest chains '''
       chains = Chain.objects.filter(name__icontains=query) | Chain.objects.filter(parent__name__icontains=query)
+      chains = self.filter(chains)
       for chain in chains:
         for word in chain.name.split():
           if query.lower() in word.lower():
@@ -64,6 +68,7 @@ class aSuggestLocations(aHelper, FilterClass, ListView):
               suggestions.append(word)
       ''' Suggest tags '''
       tags = Tag.objects.filter(name__icontains=query) |  Tag.objects.filter(parent__name__icontains=query)
+      tags = self.filter(tags)
       for tag in tags:  
         if tag.name not in suggestions:
           suggestions.append(tag.name)

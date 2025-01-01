@@ -35,6 +35,12 @@
             </div>
           </div>
         
+          <div class="row">
+            <div class="col-3 title-col"><label for="is_editable">{% translate 'allow new locations to this list'|capfirst %}</div>
+            <div class="col-9 form-switch"><input class="form-check-input" type="checkbox" role="switch" name="is_editable" id="is_editable" {% if list.is_editable %}checked{% endif %}></div>
+          </div>
+          <div class="spacer"></div>
+
         <div class="row">
           <div class="col-3 title-col"><label for="map">{% translate 'show map'|capfirst %}</div>
           <div class="col-9 form-switch"><input class="form-check-input" type="checkbox" role="switch" name="map" id="map" {% if list.map %}checked{% endif %}></div>

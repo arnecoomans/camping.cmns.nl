@@ -139,7 +139,7 @@ class LocationView(ListView, FilterClass):
     ''' Lists the location is mentioned in should be removed from available lists, to avoid
         double entries.
     '''
-    available_lists = List.objects.exclude(slug__in=listlocations)
+    available_lists = List.objects.filter(is_editable=True).exclude(slug__in=listlocations)
     available_lists = self.filter_status(available_lists)
     available_lists = self.filter_visibility(available_lists)
     available_lists = available_lists.order_by().distinct()

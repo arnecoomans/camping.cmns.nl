@@ -96,6 +96,9 @@ class List(BaseModel):
   name                = models.CharField(max_length=255, help_text=_('Name of location as it is identified by'))
   description         = models.TextField(blank=True, help_text=_('Markdown is supported'))
   
+  ''' Is Editable '''
+  is_editable         = models.BooleanField(default=True, help_text=_('should this list appear at locations when adding a location to a list'))
+  ''' Template options '''
   template_choices = (
       ('l', _('list')),
       ('t', _('trip')),

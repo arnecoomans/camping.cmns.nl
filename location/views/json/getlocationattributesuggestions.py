@@ -95,7 +95,7 @@ class JSONGetLocationAttributeSuggestions(View, FilterClass):
     if query:
       if 'parent' in [field.name for field in model._meta.get_fields()]:
         queryset = queryset.filter(name__icontains=query) | queryset.filter(parent__name__icontains=query)
-      if 'url' in [field.name for field in model._meta.get_fields()]:
+      elif 'url' in [field.name for field in model._meta.get_fields()]:
         queryset = queryset.filter(name__icontains=query) | queryset.filter(url__icontains=query)
       else:
         queryset = queryset.filter(name__icontains=query)

@@ -4,7 +4,8 @@
 {% block content %}
 <div class="list detail card">
   <h1>{% translate 'list'|title %}: {{ list.name|title }}</h1>
-  <p>{% translate 'list by'|capfirst %} {{ list.user.get_full_name|default:list.user.username }} | {% translate 'viewable by'|capfirst %} {{ list.get_visibility_display }} | {% translate 'created'|capfirst %} {{ list.date_added|date:"d/m/Y" }} {% if list.date_added|date:"d/m/Y" != list.date_modified|date:"d/m/Y" %}| {% translate 'last changed'|capfirst %} {{ list.date_modified|date:"d/m/Y" }}{% endif %}
+  <p>{% translate 'list by'|capfirst %} {{ list.user.get_full_name|default:list.user.username }} | {% translate 'viewable by'|capfirst %} {{ list.get_visibility_display }} | {% translate 'created'|capfirst %} {{ list.date_added|date:"d/m/Y" }} {% if list.date_added|date:"d/m/Y" != list.date_modified|date:"d/m/Y" %}| {% translate 'last changed'|capfirst %} {{ list.date_modified|date:"d/m/Y" }}{% endif %}</p>
+  {% if not list.is_editable %}<p>{% translate 'new locations can not be added to this list'|capfirst %}</p>{% endif %}
   <!-- Verify User Permissions -->
   {% if list.visibility == 'q' and list.user != user %}
     {% include 'snippets/private.html' %}

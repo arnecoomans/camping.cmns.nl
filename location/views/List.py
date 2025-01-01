@@ -115,7 +115,7 @@ class ListDetailView(FilterClass, DetailView):
 
 class AddList(CreateView):
   model = List
-  fields = ['name', 'description', 'visibility', 'template']
+  fields = ['name', 'description', 'visibility', 'template', 'is_editable']
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -153,7 +153,7 @@ class AddList(CreateView):
   
 class EditList(UpdateView):
   model = List
-  fields = ['name', 'description', 'visibility', 'template', 'map']
+  fields = ['name', 'description', 'visibility', 'template', 'map', 'is_editable']
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)

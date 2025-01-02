@@ -14,6 +14,7 @@ from django.utils.text import slugify
 from location.models.Profile import Profile, VisitedIn
 from location.models.Tag import Tag
 from location.models.Comment import Comment
+from location.models.Media import Media
 from .json.jsonhelper import JSONHelper
 # from location.models.Media import Media
 
@@ -198,6 +199,11 @@ class ToggleDeleted(UpdateView):
         # 'ajax_success_url': 'location:getAttributesFor',
         # 'ajax_target': 'tagslist',
       },
+      'media': {
+        'model': Media,
+        'success_url': 'location:MediaStack',
+        'ajax_success_url': 'location:getAttributesFor',
+      }
     }
 
   def get_model(self):

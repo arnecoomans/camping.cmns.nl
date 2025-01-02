@@ -18,19 +18,13 @@
       <header {% if media|length > 0 %}class="withmedia" style="background-image: url('/media/{{ media.0.source }}');"{% endif %}>
         <!-- Header Line -->
         <h1>{{ location.name }}</h1> 
-        {% comment %} <a class="toggable" data-url="google.com">FOO</a> {% endcomment %}
         <span class="locator">
           {% if location.chain.all.count > 0 %}
             {% include 'snippets/chain.html' with chains=location.chain.all %}
           {% endif %}
           {% if user.is_authenticated and location.size %}<span class="location size indicator" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ location.size.name }}{% if location.size.description %}: {{ location.size.description|capfirst }}{% endif %}">{{ location.size.slug|upper }}</span> {% endif %}
           <a href="{% if location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}?category={{ location.category.slug }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate location.getPCategory|capfirst %} {% translate 'marked' %} {{ location.category.name|title }}">{% translate location.category.name|title %}</a> 
-          {% if location.location %}
-            {% translate 'in' %}
-            {% if location.department %}<a href="{% if location.isActivity %}{% url 'location:ListLActivitiesByDepartment' location.country.slug location.region.slug location.department.slug %}{% else %}{% url 'location:ListLocationsByDepartment' location.country.slug location.region.slug location.department.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.department }}">{% translate location.department.name|title %}</a>,{% endif %}
-            {% if location.region %}<a href="{% if location.isActivity %}{% url 'location:ListActivitiesByRegion' location.country.slug location.region.slug %}{% else %}{% url 'location:ListLocationsByRegion' location.country.slug location.region.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.region }}">{% translate location.region.name|title %}</a>,{% endif %}
-            {% if location.country %}<a href="{% if location.isActivity %}{% url 'location:ListActivitiesByCountry' location.country %}{% else %}{% url 'location:ListLocationsByCountry' location.country %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.country }}">{% translate location.country.name|title %}</a>{% endif %}.
-          {% endif %}
+          {% include 'partial/location_breadcrumb.html' %}
           {% if user.is_authenticated %}
             {% translate 'viewable by'|capfirst %} {% translate location.get_visibility_display %}.
           {% endif %}

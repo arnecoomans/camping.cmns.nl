@@ -105,13 +105,15 @@ urlpatterns = [
   path('register/', views.SignUpView.as_view(), name='register'),
 
   # Toggle Views 
-  # Toggle field of model, optioally with slug and value
+  # Toggle Deleted
+  path('json/toggle/<str:model>/<int:pk>/delete/', views.ToggleDeleted.as_view(), name='ToggleDeleted'),
+  path('json/toggle/<str:model>/<str:slug>/delete/', views.ToggleDeleted.as_view(), name='ToggleDeletedBySlug'),
+  # Toggle field of model, optionally with slug and value
   path('json/toggle/<str:model>:<str:slug>/<str:field>/', views.ToggleAttribute.as_view(), name='ToggleAttributeWithSlug'),
   path('json/toggle/<str:model>:<str:slug>/<str:field>/<value>/', views.ToggleAttribute.as_view(), name='ToggleAttributeWithSlugWithValue'),
   path('json/toggle/<str:model>/<str:field>/', views.ToggleAttribute.as_view(), name='ToggleAttribute'),
   path('json/toggle/<str:model>/<str:field>/<value>/', views.ToggleAttribute.as_view(), name='ToggleAttributeWithValue'),
-  # Toggle Deleted
-  path('json/toggle/<str:model>/<pk>/delete/', views.ToggleDeleted.as_view(), name='ToggleDeleted'),
+  
 
 
   # Async Views

@@ -12,7 +12,7 @@
     <ul class="action list">
       <li><a href="{% url 'location:EditTag' tag.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'edit information of'|capfirst %} {{ tag.name }}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil"/></svg></a></li>
       {% if user.is_staff %}
-        <li><a href="{% url 'location:ToggleDeleted' 'tag' tag.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if tag.status == 'p' %}{% translate 'delete'|capfirst %}{% else %}{% translate 'restore'|capfirst %}{% endif %} {{ tag.name }}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#trash"/></svg></a></li>
+        <li><a href="{% url 'location:ToggleDeletedBySlug' 'tag' tag.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if tag.status == 'p' %}{% translate 'delete'|capfirst %}{% else %}{% translate 'restore'|capfirst %}{% endif %} {{ tag.name }}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#trash"/></svg></a></li>
       {% endif %}
     </ul>
   {% endif %}

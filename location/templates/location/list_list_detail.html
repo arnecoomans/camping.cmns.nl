@@ -56,12 +56,7 @@
                 {% include 'snippets/chain.html' with chain=location.location.chain %}
               {% endif %}
               <a href="{% if location.location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}?category={{ location.location.category.slug }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate location.location.getPCategory|capfirst %} {% translate 'marked' %} {{ location.location.category.name|title }}">{{ location.location.category.name|title }}</a> 
-              {% if location.location %}
-                in
-                <a href="{% if location.isActivity %}{% url 'location:ListLActivitiesByDepartment' location.location.location.parent.parent.slug location.location.location.parent.slug location.location.location.slug %}{% else %}{% url 'location:ListLocationsByDepartment' location.location.location.parent.parent.slug location.location.location.parent.slug location.location.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.location }}">{{ location.location.location.name|title }}</a>,
-                <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByRegion' location.location.location.parent.parent.slug location.location.location.parent.slug %}{% else %}{% url 'location:ListLocationsByRegion' location.location.location.parent.parent.slug location.location.location.parent.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.location.parent }}">{{ location.location.location.parent.name|title }}</a>,
-                <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByCountry' location.location.location.parent.parent.slug %}{% else %}{% url 'location:ListLocationsByCountry' location.location.location.parent.parent.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.location.location.parent.parent.name }}">{{ location.location.location.parent.parent.name|title }}</a>.
-              {% endif %}
+              {% include 'partial/location_breadcrumb.html' with location=location.location %}
             </span><br>
             {% if location.getDistanceToPreviousLocation %}
               <span class="distances">

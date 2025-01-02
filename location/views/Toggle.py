@@ -11,9 +11,9 @@ from django.utils.text import slugify
 #from django.contrib.auth.models import User
 
 # from location.models.Location import Location, Category, Chain
-# from location.models.Profile import Profile, VisitedIn
-# from location.models.Tag import Tag
-# from location.models.Comment import Comment
+from location.models.Profile import Profile, VisitedIn
+from location.models.Tag import Tag
+from location.models.Comment import Comment
 from .json.jsonhelper import JSONHelper
 # from location.models.Media import Media
 
@@ -134,26 +134,7 @@ class ToggleAttribute(JSONHelper):
         self.messages.append(('success', f"{ _('added "{}" to {} {}').format(value_object_name, self.get_field(), self.get_object()).capitalize() } { self.get_undo_link() }"))
       except Exception as e:
         self.status = 500
-        self.messages.append(('danger', f"[152] { _('Error when adding {} to {} of {}: {}').format(value, self.get_field(), self.get_object(), escape(e)) }"))    
-
-  
-  
-  # def return_response(self):
-  #   field = self.get_field()
-  #   if field in ['favorite', 'dislike', 'ignored_tags']:
-  #     field = 'action'
-  #   response = {
-  #     '__meta': {
-  #       'url': self.request.path,
-  #       'resolver': self.request.resolver_match.url_name,
-  #       'user': self.request.user.username if self.request.user.is_authenticated else False,
-  #     },
-  #     'status': self.status,
-  #     'messages': self.messages,
-  #     'undo-url': self.get_undo_url(),
-  #     'field': str(field) + 'list',
-  #   }
-  #   return JsonResponse(response, status=self.status)
+        self.messages.append(('danger', f"[152] { _('Error when adding {} to {} of {}: {}').format(value, self.get_field(), self.get_object(), escape(e)) }"))
   
   ''' Get function 
       @scope: public
@@ -191,12 +172,13 @@ class ToggleAttribute(JSONHelper):
 
 ''' Toggle Exceptions '''
 class ToggleDeleted(UpdateView):
-  # /toggle/<model>/<pk>/
+  # /toggle/<model>/<pk>/delete/ or /toggle/<model>/<slug>/delete/
   def __init__(self, **kwargs):
     super().__init__(**kwargs)
     self.model = None
     self.object = None
     self.kwargs = kwargs
+    self.success_url = None
     self.models = {
       'visit': {
         'model': VisitedIn, 
@@ -229,7 +211,7 @@ class ToggleDeleted(UpdateView):
       if self.get_model():
         model = self.get_model()
         if 'slug' in [field.name for field in model._meta.get_fields()]:
-          object = self.get_model().objects.get(slug=self.kwargs['pk'])
+          object = self.get_model().objects.get(slug=self.kwargs['slug'])
         else:
           object = self.get_model().objects.get(pk=self.kwargs['pk'])
         self.object = object
@@ -238,24 +220,25 @@ class ToggleDeleted(UpdateView):
     return self.object
   
   def get_success_url(self):
-    if self.get_attribute('success_url'):
-      return redirect(self.get_attribute('success_url'))
+    if self.success_url:
+      return redirect(self.success_url)
     elif self.models[self.kwargs['model'].lower().strip()]['success_url']:
       if hasattr(self.get_object(), 'location'):
-        return redirect(self.models[self.kwargs['model'].lower().strip()]['success_url'], self.get_object().location.slug)
+        self.success_url = redirect(self.models[self.kwargs['model'].lower().strip()]['success_url'], self.get_object().location.slug)
       else:
-        return redirect(self.models[self.kwargs['model'].lower().strip()]['success_url'])
-    return None
+        self.success_url = redirect(self.models[self.kwargs['model'].lower().strip()]['success_url'])
+    return self.success_url
   
   def get_ajax_success_url(self):
-    if self.get_attribute('success_url'):
-      return redirect(self.get_attribute('success_url'))
+    if self.success_url:
+      return redirect(self.success_url)
     elif self.models[self.kwargs['model'].lower().strip()]['ajax_success_url']:
       if hasattr(self.get_object(), 'location'):
-        return reverse_lazy(self.models[self.kwargs['model'].lower().strip()]['ajax_success_url'], kwargs={'location': self.get_object().location.slug, 'attribute': 'comment'})
+        self.success_url = reverse_lazy(self.models[self.kwargs['model'].lower().strip()]['ajax_success_url'], kwargs={'location': self.get_object().location.slug, 'attribute': 'comment'})
       else:
-        return reverse_lazy(self.models[self.kwargs['model'].lower().strip()]['ajax_success_url'])
-    return None
+        self.success_url = reverse_lazy(self.models[self.kwargs['model'].lower().strip()]['ajax_success_url'])
+    return self.success_url
+  
   def get_ajax_target(self):
     return self.models[self.kwargs['model'].lower().strip()]['ajax_target']
   
@@ -288,7 +271,10 @@ class ToggleDeleted(UpdateView):
         status = 500
     ''' Build response '''
     ''' Build Undo-link '''
-    url = reverse_lazy("location:ToggleDeleted", kwargs={"model": self.kwargs['model'], "pk": self.kwargs['pk']})
+    if 'slug' in [field.name for field in self.get_model()._meta.get_fields()]:
+      url = reverse_lazy("location:ToggleDeletedBySlug", kwargs={"model": self.kwargs['model'], "slug": self.kwargs['slug']})
+    else:
+      url = reverse_lazy("location:ToggleDeleted", kwargs={"model": self.kwargs['model'], "pk": self.kwargs['pk']})
     message = escape(message) + f'. (<a href="{ url }" class="toggable">{ _("undo").capitalize() }</a>)'
     ''' If request is triggered via AJAX, return JSON response '''
     if self.request.headers.get('x-requested-with') == 'XMLHttpRequest' and self.get_ajax_success_url():

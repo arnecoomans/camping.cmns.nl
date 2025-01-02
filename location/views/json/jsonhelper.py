@@ -97,14 +97,15 @@ class JSONHelper(View):
             self.messages.append(('danger', f"[282] { _('model "{}" requires slug but no object found with slug {}').format(model.__name__, self.slug).capitalize() }"))
             self.object = False
         elif 'user' in [field.name for field in model._meta.get_fields()]:
-          ''' Model has User Field (example: profile), get or create object where user = current user '''
-          try:
-            # @TODO: Check if user is authenticated
-            self.object = model.objects.get(user__username__iexact=self.get_slug())
-          except model.DoesNotExist:
-            self.status = 404
-            self.messages.append(('danger', f"[286] { _('model "{}" requires user but no object found for user {}').format(model.__name__, self.get_slug()).capitalize() }"))
-            self.object = False
+          ''' Model has User Field (for: profile), get or create object where user = current user '''
+          if self.get_model().__name__ in ['Profile']:
+            try:
+              # @TODO: Check if user is authenticated
+              self.object = model.objects.get(user__username__iexact=self.get_slug())
+            except model.DoesNotExist:
+              self.status = 404
+              self.messages.append(('danger', f"[286] { _('model "{}" requires user but no object found for user {}').format(model.__name__, self.get_slug()).capitalize() }"))
+              self.object = False
         else:
           ''' Lookup field not available in Model, log an error message '''
           self.status = 500
@@ -112,14 +113,15 @@ class JSONHelper(View):
           self.object = False
       else:
         ''' No Slug supplied, fall back to defaults '''
-        if 'user' in [field.name for field in model._meta.get_fields()]:
-          ''' If Model has User Field (example: profile), get or create object where user = current user '''
-          try:
-            self.object = model.objects.get_or_create(user=self.request.user)[0]
-          except model.DoesNotExist:
-            self.status = 404
-            self.messages.append(('danger', f"[284] { _('model "{}" requires user but no object found for user {}').format(model.__name__, self.request.user).capitalize() }"))
-            self.object = False
+        if self.get_model().__name__ in ['Profile']:
+          if 'user' in [field.name for field in model._meta.get_fields()]:
+            ''' If Model has User Field (example: profile), get or create object where user = current user '''
+            try:
+              self.object = model.objects.get_or_create(user=self.request.user)[0]
+            except model.DoesNotExist:
+              self.status = 404
+              self.messages.append(('danger', f"[284] { _('model "{}" requires user but no object found for user {}').format(model.__name__, self.request.user).capitalize() }"))
+              self.object = False
     return self.object
 
   def get_slug(self):

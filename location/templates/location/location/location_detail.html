@@ -290,24 +290,28 @@
 {% endblock %}
 
 {% block scriptfooter %}
+  <span id="csrf_token" style="display: none;">{{ csrf_token }}</span>
+  <script src="{% static 'js/getLocationAttributes.js' %}" defer></script>  
+  <script src="{% static 'js/comments.js' %}" defer></script>
+  
+  <script type="text/javascript">
+    /** Configuration */
+    const debug = {% if user.is_staff %}1{% else %}0{% endif %};
+    $(document).ready(function() {
+      {% if ajax_load_tags %}/** Load tags */ getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'tag' %}', 'tagslist'){% endif %}
+      {% if ajax_load_categories %}/** Load categories */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'category' %}', 'categorylist'){% endif %}
+      {% if ajax_load_chains %}/** Load chains */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'chain' %}', 'chainlist'){% endif %}
+      {% if ajax_load_comments %}/** Load comments */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'comment' %}', 'commentlist'){% endif %}
+    });
+  </script>
+  </script>
   {% if request.user.is_authenticated %}
-    <span id="csrf_token" style="display: none;">{{ csrf_token }}</span>
-    <script src="{% static 'js/getLocationAttributes.js' %}" defer></script>
     <script src="{% static 'js/getAutocompleteValues.js' %}" defer></script>
-    <script src="{% static 'js/comments.js' %}" defer></script>
     
-    {% comment %} <script src="{% static 'js/load_tags.js' %}" defer></script> {% endcomment %}
     <script type="text/javascript">
-      /** Configuration */
-      const debug = {% if user.is_staff %}1{% else %}0{% endif %};
-
       /** Initialisation */
       $(document).ready(function() {
-        {% if ajax_load_tags %}/** Load tags */ getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'tag' %}', 'tagslist'){% endif %}
         {% if ajax_load_size %}/** Load Size */ getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'size' %}', 'sizelist'){% endif %}
-        {% if ajax_load_categories %}/** Load categories */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'category' %}', 'categorylist'){% endif %}
-        {% if ajax_load_chains %}/** Load chains */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'chain' %}', 'chainlist'){% endif %}
-        {% if ajax_load_comments %}/** Load comments */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'comment' %}', 'commentlist'){% endif %}
         {% if ajax_load_actionlist %}/** Load action list */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'actionlist' %}?field=media', 'actionlist'){% endif %}
       });
     </script>

@@ -42,6 +42,16 @@
             </div>
           </div>
         </div>
+        <div class="row">
+          <div class="col-3 title-col"><label for="visibility">{% translate 'viewable by'|capfirst %} {{ tag.get_visibility_display }}</div>
+            <div class="col-9">
+              <select class="form-control" name="visibility" id="visibility">
+                {% for key, value in form.fields.visibility.choices %}
+                  <option value="{{ key }}" {% if tag.visibility == key %}selected{% elif not list and key == 'p' %}selected{% endif %}>{{ value|title }}</option>
+                {% endfor %} 
+              </select>
+            </div>
+        </div>
         {% endif %}
         <div class="spacer"></div>
         <div class="row">

@@ -89,7 +89,7 @@ class AddTag(CreateView):
   
 class EditTag(UpdateView):
   model = Tag
-  fields = ['name', 'parent', 'list_as', 'hide_from_filterlist']
+  fields = ['name', 'parent', 'list_as', 'hide_from_filterlist', 'visibility']
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)

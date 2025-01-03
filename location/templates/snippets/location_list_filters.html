@@ -112,7 +112,7 @@
             {% endfor %}
         {% endif %}
       <!-- Size -->
-       {% if available_filters.size.all.count > 1 and 'size' not in active_filters %}
+       {% if user.is_authenticated and available_filters.size.all.count > 1 and 'size' not in active_filters %}
        <li><strong>{% translate 'size'|capfirst %}</strong>:
           {% for size in available_filters.size.all %}
             <a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% update_query_params request add=size.size__slug to='size' active_filters=active_filters %}" data-bs-toggle="tooltip" data-bs-position="top" title="{{ size.size__name }}{% if size.size__description %}: {{ size.size__description }}{% endif %}">{{ size.size__slug|upper }}</a>{% if not forloop.last %}, {% endif %}

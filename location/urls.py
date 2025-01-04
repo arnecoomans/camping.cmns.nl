@@ -102,6 +102,7 @@ urlpatterns = [
   path('media/stack/<str:slug>/', views.StackView.as_view(), name='MediaStack'),
   path('media/refresh/<str:slug>:<pk>/', views.MediaRefreshView.as_view(), name='MediaRefresh'),
   # path('media/delete/<object_slug>:<pk>', views.ToggleMediaDeleted.as_view(), name='MediaDelete'),
+  path('media/<str:filename>', views.MediaStreamView.as_view(), name='MediaStream'),
   path('register/', views.SignUpView.as_view(), name='register'),
 
   # Toggle Views 

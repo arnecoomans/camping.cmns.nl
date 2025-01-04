@@ -11,6 +11,15 @@ from pathlib import Path
 from PIL import Image
 from pillow_heif import register_heif_opener
 
+''' Required for streaming downloads to user '''
+from django_sendfile import sendfile
+from django.http import Http404
+from django.core.exceptions import PermissionDenied
+''' Required for Attachment to Image '''
+import fitz
+
+from pathlib import Path
+
 from .snippets.filter_class import FilterClass
 from .snippets.order_media import order_media
 
@@ -130,3 +139,68 @@ class StackView(FilterClass, ListView):
     queryset = self.filter_visibility(queryset)
     return queryset
   
+class MediaStreamView(DetailView, FilterClass):
+  model = Media
+
+  def __get_object(self):
+    ''' Get filename from URL '''
+    filename = self.kwargs['filename']
+    ''' Verify if file exists in /public/media/ '''
+    media = settings.MEDIA_ROOT.joinpath(filename)
+    if not media.exists():
+      ''' If file does not exist, return 404 '''
+      raise Http404
+    return media
+
+  def get(self, request, *arg, **kwargs):
+    ''' Fetch Media Object '''
+    file = self.__get_object()
+    ''' Verify if file is accessible by the current user '''
+    try:
+      media = Media.objects.get(source=file.name)
+    except Media.DoesNotExist:
+      ''' If media object does not exist, return 404 '''
+      raise Http404
+    ''' Check if the media object is visible 
+        P - Publicly visible
+        C - Community Visible
+        F - Family Visible
+        P - Private
+    '''
+    if media.visibility == 'p':
+      ''' If media object is public, return the file '''
+      return sendfile(request, file)
+    ''' For all other visibility settings, check if the user is authenticated '''
+    if not request.user.is_authenticated:
+      ''' If user is not authenticated, return 403 '''
+      raise PermissionDenied
+    ''' If media object is community visible, return the file '''
+    if media.visibility == 'c':
+      return sendfile(request, file)
+    ''' For Private visibility, check if the user is the owner '''
+    if media.visibility == 'q':
+      if media.user == request.user:
+        ''' If user is the owner, return the file '''
+        return sendfile(request, file)
+      ''' If user is not the owner, return 403 '''
+      raise PermissionDenied
+    if media.visibility == 'f':
+      ''' If media user is request user, show the file '''
+      if media.user == request.user:
+        return sendfile(request, file)
+      ''' If user is not the owner, check if user is in the same family '''
+      if hasattr(media.user, 'profile') and request.user in media.user.profile.family.all():
+        ''' If user is in the same family, show the file '''
+        return sendfile(request, file)
+      ''' If user is not in the same family, return 403 '''
+      raise PermissionDenied
+    
+
+    
+    ''' If media object is visible, return the file '''
+    return sendfile(request, file)
+
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['scope'] = f"{ _('media') }: { self.object.title }"
+    return context

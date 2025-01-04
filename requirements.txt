@@ -16,5 +16,8 @@ Markdown >= 3.7
 # Heic to JPG
 pillow-heif >= 0.21.0
 
+# Sendfile for Attachments
+django-sendfile2 >= 0.7.0
+
 # OpenAI (experimental)
 openai >= 1.58.1

@@ -98,9 +98,9 @@ urlpatterns = [
   path('chain/add/', views.AddChain.as_view(), name='AddChainTo'),
   path('chain/add/<str:slug>/', views.AddChain.as_view(), name='AddChainTo'),
   
-  path('media/add/<str:slug>/', views.AddMediaToLocation.as_view(), name='AddMediaToLocation'),
-  path('media/stack/<str:slug>/', views.StackView.as_view(), name='MediaStack'),
-  path('media/refresh/<str:slug>:<pk>/', views.MediaRefreshView.as_view(), name='MediaRefresh'),
+  path('stack/add/<str:slug>/', views.AddMediaToLocation.as_view(), name='AddMediaToLocation'),
+  path('stack/list/<str:slug>/', views.StackView.as_view(), name='MediaStack'),
+  path('stack/refresh/<str:slug>:<pk>/', views.MediaRefreshView.as_view(), name='MediaRefresh'),
   # path('media/delete/<object_slug>:<pk>', views.ToggleMediaDeleted.as_view(), name='MediaDelete'),
   path('image/<str:filename>', views.MediaStreamView.as_view(), name='MediaStream'),
   path('register/', views.SignUpView.as_view(), name='register'),

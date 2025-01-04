@@ -163,7 +163,7 @@ class MediaStreamView(DetailView, FilterClass):
         P - Publicly visible
         C - Community Visible
         F - Family Visible
-        P - Private
+        Q - Private
     '''
     if media.visibility == 'p':
       ''' If media object is public, return the file '''

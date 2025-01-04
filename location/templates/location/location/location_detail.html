@@ -15,7 +15,7 @@
           {% translate 'This location is not visible'|capfirst %}. {% translate 'status'|capfirst %}: {% translate  location.get_status_display %}.
         </div>
       {% endif %}
-      <header {% if media|length > 0 %}class="withmedia" style="background-image: url('/media/{{ media.0.source }}');"{% endif %}>
+      <header {% if media|length > 0 %}class="withmedia" style="background-image: url('{% url 'location:MediaStream' media.0.source %}');"{% endif %}>
         <!-- Header Line -->
         <h1>{{ location.name }}</h1> 
         <span class="locator">

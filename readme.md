@@ -37,8 +37,8 @@ Install the application in your desired location:
 
 You should really run the application in a python virtual environment:
 
-> $ python -m venv ~/.venv/vknt
-> $ source ~/.venv/vknt/bin/activate
+> $ python -m venv .venv
+> $ source .venv/vknt/bin/activate
 
 
 The Package requirements are listed in requirements.txt. 
@@ -70,6 +70,16 @@ Test the setup with the development server. This should run without issues. If a
 Stop the development server and set up a proper hosting environment. I reccomend using gunicorn with supervisord and nginx.
 - https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-22-04#testing-gunicorn-s-ability-to-serve-the-project
 
+### Tips on setting up the Nginx configuration
+Vknt uses sendfile for media distribution. Include the following in the nginx config:
+`
+sendfile on;
+
+location /media/ {
+  internal;
+  alias   /path/to/project/public/media/;
+}
+`
 
 ## Configuration
 ### ALLOW_UNAUTHENTICATED_READ_COMMENTS

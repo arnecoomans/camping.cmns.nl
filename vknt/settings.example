@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '[INSERT YOUR SECRET KEY HERE]'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['[INSERT YOUR HOST(S) HERE]']
 
@@ -32,13 +32,13 @@ ALLOWED_HOSTS = ['[INSERT YOUR HOST(S) HERE]']
 # Application definition
 
 INSTALLED_APPS = [
-    ['django.contrib.admin',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',]
-    'location', # Added for application
+    'django.contrib.staticfiles', # For secure media distribution
+    'location', # For application
 ]
 
 MIDDLEWARE = [
@@ -69,7 +69,7 @@ TEMPLATES = [
             'builtins': [
                 'templatetags.markdown_extras', # Added for application
                 'templatetags.replace', # Added for application
-                'templatetags.query_filters', #Added for application
+                'templatetags.custom_filters', #Added for application
             ]
         },
     },
@@ -139,6 +139,14 @@ STATICFILES_DIRS = [
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR.joinpath('public').joinpath(MEDIA_URL)
 
+''' Sendfile Configuration
+    Sendfile is used for authenticated downloads, as for attachments
+'''
+SENDFILE_ROOT = MEDIA_ROOT
+# SENDFILE_BACKEND = 'django_sendfile.backends.development' # For development
+SENDFILE_BACKEND = 'django_sendfile.backends.nginx'  # For production
+SENDFILE_URL = '/media/' # For production
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -172,3 +180,10 @@ MAX_LIST_DISTANCE_QUERIES = 10
 NEARBY_RANGE = 75
 MAP_RANGE = 200
 DEFAULT_ORDER = 'distance'
+
+AJAX_LOAD_TAGS= False
+AJAX_LOAD_CATEGORIES = False
+AJAX_LOAD_CHAINS = False
+AJAX_LOAD_COMMENTS = False
+AJAX_LOAD_ACTIONLIST = False
+AJAX_LOAD_SIZE = False

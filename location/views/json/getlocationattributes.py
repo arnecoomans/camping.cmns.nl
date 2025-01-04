@@ -97,8 +97,6 @@ class JSONGetLocationAttributes(View, FilterClass):
     #   return JsonResponse({'message': f"{ _('No {} data found for location').format(attribute) } { location }"}, status=500)
     ''' Build Response '''
     response = []
-    print("FOOOOOOO")
-    print(type(queryset))
     if type(queryset) == bool:
       response.append(render_to_string(f'partial/{ attribute }.html', {attribute: queryset, 'location': location, 'user': request.user}, request=request))
     elif type(queryset) == NoneType:

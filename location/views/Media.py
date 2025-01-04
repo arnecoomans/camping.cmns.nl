@@ -15,8 +15,6 @@ from pillow_heif import register_heif_opener
 from django_sendfile import sendfile
 from django.http import Http404
 from django.core.exceptions import PermissionDenied
-''' Required for Attachment to Image '''
-import fitz
 
 from pathlib import Path
 

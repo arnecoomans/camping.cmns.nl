@@ -1,0 +1,1 @@
+django-support/update.sh

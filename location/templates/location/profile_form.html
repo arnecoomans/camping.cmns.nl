@@ -25,7 +25,11 @@
         <div class="col-3 title-col"><label for="email">{% translate 'email'|capfirst %}</label>:</div>
           <div class="col-9"><input class="form-control form-control-lg" type="email" name="email" id="email" value="{{ profile.user.email }}" disabled></div>
       </div>
-
+      <div class="spacer"><hr></div>
+      <div class="row">
+        <div class="col-3 title-col"><label for="notes">{% translate 'notes'|capfirst %}</label>:</div>
+        <div class="col-9"><textarea class="form-control" name="notes" id="notes">{{ profile.notes }}</textarea></div>
+      </div>
       <div class="spacer"><hr></div>
       <div class="row">
         <div class="col-3 title-col"><label for="home">{% translate 'home'|capfirst %}:</div>
@@ -275,7 +279,7 @@
         {% if ajax_load_categories %}/** Load categories */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'category' %}', 'categorylist'){% endif %}
         {% if ajax_load_chains %}/** Load chains */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'chain' %}', 'chainlist'){% endif %}
         {% if ajax_load_comments %}/** Load comments */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'comment' %}', 'commentlist'){% endif %}
-        {% if ajax_load_actionlist %}/** Load action list */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'actionlist' %}', 'actionlist'){% endif %}
+        {% comment %} {% if ajax_load_actionlist %}/** Load action list */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'actionlist' %}', 'actionlist'){% endif %} {% endcomment %}
       });
     </script>
   {% endif %}

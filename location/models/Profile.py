@@ -14,6 +14,8 @@ from .Tag import Tag
 class Profile(models.Model):
   user                = models.OneToOneField(User, on_delete=models.DO_NOTHING, related_name='profile', unique=True)
 
+  notes               = models.TextField(blank=True, help_text=_('personal notes'))
+  
   home                = models.ForeignKey(Location, blank=True, null=True, on_delete=models.DO_NOTHING, related_name='home_of')
   family              = models.ManyToManyField(User, blank=True, help_text=_('family members'), related_name='family_of')
 

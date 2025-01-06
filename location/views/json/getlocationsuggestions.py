@@ -31,17 +31,44 @@ class JSONGetLocationSuggestions(FilterClass, View):
   def get(self, request, *args, **kwargs):
     if self.get_location_query() is None:
       return JsonResponse([], safe=False)
+    ''' Build regular published locations queryset '''
     queryset = Location.objects.filter(name__icontains=self.get_location_query())
-    queryset = self.filter(queryset)
+    ''' Filter queryset based on status and visibility '''
+    filtered_queryset = self.filter(queryset)
     payload = []
-    for location in queryset: 
+    for location in filtered_queryset: 
       payload.append({
         'slug': location.slug,
         'name': location.name,
         'url': location.get_absolute_url(),
-        'country': location.country().name,
+        'country': _(location.country().name),
       })
-    return JsonResponse({'payload': payload})
+    ''' Exception Queryset
+        Holds locations that are not in the regular queryset
+        but are important with the correct context. Only show when query parameter
+        is set.
+    '''
+    exceptions = []
+    if self.request.GET.get('exceptions', False) == 'true':
+      exception_queryset = queryset.exclude(id__in=filtered_queryset)
+      for exception in exception_queryset:
+        reason = _('location is unavailable')
+        if exception.status == 'r':
+          reason = _('location is revoked')
+        elif exception.status == 'd':
+          reason = _('location is deleted')
+        elif exception.visibility != 'p' and not self.request.user.is_authenticated:
+          reason = _('location requires login to view')
+        elif exception.visibility == 'f':
+          reason = _('location is only visibly to user\'s family')
+        elif exception.visibility == 'q':
+          reason = _('location is only visible to user')
+        exceptions.append({
+          'name': exception.name,
+          'country': _(exception.country().name),
+          'reason': reason.capitalize()
+        })
+    return JsonResponse({'payload': payload, 'exceptions': exceptions})
 
 class JSONGetAttributeOptions(View):
   def get(self, request, *args, **kwargs):

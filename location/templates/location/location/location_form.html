@@ -198,7 +198,7 @@
   $('#name').on('blur', function() {
     // Check if location name is already known
     var query = $(this).val().toLowerCase();
-    var url = '{% url 'location:getLocationSuggestions' %}';
+    var url = '{% url 'location:getLocationSuggestions' %}?exceptions=true';
     console.log('Checking if location name is already known: ' + query);
     $.ajax({
       url: url,
@@ -208,11 +208,20 @@
         'csrfmiddlewaretoken': "{{ csrf_token}}"
       },
       success: function(data) {
-        console.log('Location name is already known: ' + data);
-        if (data) {
-          $('#namemessages').empty();
+        console.log(data);
+        $('#namemessages').empty();
+        if (data['payload'].length > 0) {
+          const names = data['payload'].map(item => item.name);
+          console.log('Found ' + data['payload'].length + ' existing locations: ' + names.join(", "));
           $.each(data['payload'], function(index, payload){
             $('#namemessages').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">{% translate 'did you mean'|capfirst %}: <a href="' + payload.url +'">' + payload.name + '</a> in ' + payload.country + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+          });
+        }
+        if (data['exceptions'].length > 0) {
+          const names = data['exceptions'].map(item => item.name);
+          console.log('Found ' + data['exceptions'].length + ' exceptions: ' + names.join(", "));
+          $.each(data['exceptions'], function(index, payload){
+            $('#namemessages').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">{% translate 'location'|capfirst %} ' + payload.name + ' in ' + payload.country + ' {% translate 'is unavailable' %}.  ' + payload.reason + '. <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
           });
         }
       },

@@ -37,7 +37,10 @@ class Profile(models.Model):
   filter_by_distance  = models.BooleanField(default=False, help_text=_('Allow to filter locations by distance'))
   
   def __str__(self) -> str:
-    return f'Profile of { self.user.get_full_name() if self.user.get_full_name() else self.user.username }'
+    try:
+      return f'Profile of { self.user.get_full_name() if self.user.get_full_name() else self.user.username }'
+    except:
+      return f'Profile of new user'
   
   def get_absolute_url(self):
       return reverse("location:profile")
@@ -46,7 +49,11 @@ class Profile(models.Model):
     return self.home
   
   def name(self):
-    return f"{ _('profile of').capitalize() } { self.user.get_full_name() if self.user.get_full_name() else self.user.username }"
+    try:
+      return f"{ _('profile of').capitalize() } { self.user.get_full_name() if self.user.get_full_name() else self.user.username }"
+    except:
+      return f'Profile of new user'
+    
   
   def __init__(self, *args: Any, **kwargs: Any) -> None:
     super().__init__(*args, **kwargs)

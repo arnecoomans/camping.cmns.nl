@@ -1,3 +1,0 @@
-[submodule "django-support"]
-	path = django-support
-	url = https://github.com/arnecoomans/django-support/

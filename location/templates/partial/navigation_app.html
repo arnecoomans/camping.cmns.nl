@@ -1,0 +1,1 @@
+{% load i18n %}<a href="{% objreplace app.url_format "{address}" location.address %}" rel="nofollow" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'navigate to'|capfirst %} {{ location.name }} {% translate 'using' %} {{ app.name }}">{{ app }}</a>

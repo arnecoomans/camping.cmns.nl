@@ -112,7 +112,12 @@
         {% include 'partial/filter_by_distance.html' %}
       </div>
     </div>
-
+    <div class="row">
+      <div class="col-3 title-col">{% translate 'navigation apps'|capfirst %}:</div>
+      <div class="col-9 list" id="navigation_appslist" data-source="{% url 'location:getAttributesFor' 'profile' 'navigation_apps' %}">
+        {% include 'partial/navigation_apps.html' %}
+      </div>
+    </div>
     <div class="spacer"><hr></div>
     {% if profile.favorite.all.count > 0 %}
     <div class="row">

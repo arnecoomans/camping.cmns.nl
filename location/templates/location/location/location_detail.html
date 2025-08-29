@@ -71,6 +71,14 @@
           <div class="col-9">
             {{ location.address|default:'-' }}
           </div>
+          {% if user.is_authenticated and user.profile.navigationapps.all.count > 0 %}
+            <div class="col-3"></div>
+            <div class="col-9">
+              {% for app in user.profile.navigationapps.all %}
+                {% include 'partial/navigation_app.html' %}
+              {% endfor %}
+            </div>
+          {% endif %}
         </div>
         {% if user.is_authenticated %}
           <!-- Distance to home -->

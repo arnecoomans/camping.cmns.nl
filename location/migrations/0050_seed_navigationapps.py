@@ -10,7 +10,7 @@ def create_navigation_apps(apps, schema_editor):
     {
       'slug': 'google-maps',
       'name': 'Google Maps',
-      'url_format': 'https://www.google.com/maps/search/?api=1&query={address}',
+      'url_format': 'https://www.google.com/maps/dir//{address}',
       'default_enabled': True,
     },
     {

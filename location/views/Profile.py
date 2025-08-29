@@ -14,7 +14,7 @@ from .snippets.filter_class import FilterClass
 
 from django.utils.translation import gettext as _
 
-from location.models.Profile import Profile, VisitedIn
+from location.models.Profile import Profile, VisitedIn, NavigationApps
 from location.models.Location import Location
 from location.models.Tag import Tag
 
@@ -46,6 +46,7 @@ class ProfileView(LoginRequiredMixin, FilterClass, UpdateView):
     visits = VisitedIn.objects.filter(user=self.request.user)
     visits = self.filter(visits)
     context['visits'] = visits
+    context['navigationapps'] = NavigationApps.objects.all()
     return context
   
   def form_invalid(self, form):

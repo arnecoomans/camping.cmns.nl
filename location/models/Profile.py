@@ -86,7 +86,7 @@ class Profile(models.Model):
 
     if is_new:  # if object is new, add default settings
       defaultnavigationapps = NavigationApps.objects.filter(default_enabled=True)
-      self.navigationapps.set(defaultnavigationapps)  # Set the default navigation aps
+      self.navigationapps.set(defaultnavigationapps)  # Set the default navigation apps
 
 class VisitedIn(BaseModel):
   user                = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='visits')

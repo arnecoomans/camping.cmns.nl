@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib import messages
 
 from .models import *
+from .forms import ProfileForm
 
 
 ''' Default Model Admin Class Templates '''
@@ -112,6 +113,9 @@ class CommentAdmin(DefaultAdmin):
 class DescriptionAdmin(DefaultAdmin):
   pass
 
+class ProfileAdmin(DefaultAdmin):
+  form = ProfileForm
+
 admin.site.register(Category, SlugDefaultAdmin)
 admin.site.register(Location, LocationAdmin)
 admin.site.register(Chain, SlugDefaultAdmin)
@@ -122,8 +126,9 @@ admin.site.register(Comment, CommentAdmin)
 admin.site.register(List, SlugDefaultAdmin)
 admin.site.register(ListLocation, ListLocationAdmin)
 admin.site.register(ListDistance, ListDistanceAdmin)
-admin.site.register(Profile)
+admin.site.register(Profile, ProfileAdmin)
 admin.site.register(VisitedIn, DefaultAdmin)
 admin.site.register(Media, DefaultAdmin)
 admin.site.register(Description, DescriptionAdmin)
 admin.site.register(Size, SlugDefaultAdmin)
+admin.site.register(NavigationApps, SlugDefaultAdmin)

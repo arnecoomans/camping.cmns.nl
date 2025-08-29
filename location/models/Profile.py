@@ -11,6 +11,17 @@ from .base_model import BaseModel
 from .Location import Location
 from .Tag import Tag
 
+class NavigationApps(models.Model):
+  slug = models.SlugField(max_length=50, unique=True)
+  name = models.CharField(max_length=100)
+  url_format = models.CharField(max_length=200, help_text=_('Use {address} as placeholder'))
+  default_enabled = models.BooleanField(default=True)
+  class Meta:
+    verbose_name = _("Navigation app")
+    verbose_name_plural = _("Navigation apps")
+  def __str__(self):
+    return self.name
+
 class Profile(models.Model):
   user                = models.OneToOneField(User, on_delete=models.DO_NOTHING, related_name='profile', unique=True)
 
@@ -18,6 +29,8 @@ class Profile(models.Model):
   
   home                = models.ForeignKey(Location, blank=True, null=True, on_delete=models.DO_NOTHING, related_name='home_of')
   family              = models.ManyToManyField(User, blank=True, help_text=_('family members'), related_name='family_of')
+
+  navigationapps      = models.ManyToManyField(NavigationApps, blank=True, related_name='profiles')
 
   order_choices      = (
       ('distance', _('distance')),
@@ -67,7 +80,14 @@ class Profile(models.Model):
         'location__parent__parent', 'location__parent', 'location__name', 'name').distinct()
     return queryset
 
-  
+  def save(self, *args, **kwargs):
+    is_new = self.pk is None
+    super().save(*args, **kwargs)  # Store object first, to ensure object has a pk
+
+    if is_new:  # if object is new, add default settings
+      defaultnavigationapps = NavigationApps.objects.filter(default_enabled=True)
+      self.navigationapps.set(defaultnavigationapps)  # Set the default navigation aps
+
 class VisitedIn(BaseModel):
   user                = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='visits')
   location            = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='visitors')

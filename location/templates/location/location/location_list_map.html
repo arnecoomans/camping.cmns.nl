@@ -68,7 +68,7 @@
             {% if location.coord_lat and location.coord_lng %}
               const pin{{ location.id }} = new PinElement({
                 scale: 0.{% if location.isActivity %}7{% else %}8{% endif %},
-                background: "#{% if location.isActivity %}666{% else %}0000ff{% endif %}",
+                background: "#{% if location.0.isActivity %}{% if location.0.id in visited_locations %}aaa{% else %}666{% endif %}{% else %}{% if location.0.id in visited_locations %}77f{% else %}00f{% endif %}{% endif %}",
                 borderColor: "#{% if location.isActivity %}333{% else %}000033{% endif %}",
                 glyphColor: "white",
 

@@ -78,6 +78,7 @@ class LocationView(ListView, FilterClass):
     if self.request.user.is_authenticated:
       context['has_bucketlist'] = True if List.objects.filter(name='Bucketlist', user=self.request.user).count() > 0 else False
       context['distance_to_home'] = self.get_distance_to_home()
+      context['visited_locations'] = self.request.user.visits.values_list("location_id", flat=True)
     ''' Visits '''
     if location.visibility == 'f':
       if hasattr(location.user, 'profile'):

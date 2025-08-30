@@ -276,6 +276,9 @@ class LocationListMaster(FilterClass):
       context['min_min_distance'] = floor(self.get_queryset().order_by('distance_to_departure_center').exclude(distance_to_departure_center=None).first().distance_to_departure_center / 100) * 100
       context['max_max_distance'] = ceil(self.get_queryset().order_by('distance_to_departure_center').exclude(distance_to_departure_center=None).last().distance_to_departure_center / 100) * 100
       context['range'] = self.get_range()
+    if self.request.user.is_authenticated:
+      context['visited_locations'] = self.request.user.visits.values_list("location_id", flat=True)
+    
     return context
   
   def get(self, request, *args, **kwargs):

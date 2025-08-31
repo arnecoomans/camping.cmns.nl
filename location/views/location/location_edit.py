@@ -140,7 +140,7 @@ def CreateCategories(request):
       parent = parent,
       user = request.user,
     )
-  for category in ['City', 'Village', 'Zoo', 'Theme-park', 'Museum', 'Park', 'Beach', 'Swimmingpool', 'Sight-to-see']:
+  for category in ['City', 'Village', 'Zoo', 'Theme-park', 'Museum', 'Park', 'Beach', 'Swimmingpool', 'Sight-to-see', 'Winery', 'Wellness', 'Shop']:
     Category.objects.create(
       slug = slugify(category),
       name = category,
@@ -151,7 +151,7 @@ def CreateCategories(request):
 class AddLocation(CreateView):
   model = Location
   template_name = 'location/location/location_form.html'
-  fields = ['name', 'category', 'visibility']
+  fields = ['name', 'category', 'address', 'visibility']
   
   def get_context_data(self, **kwargs):
     ''' If there are no categories, create them '''
@@ -170,9 +170,11 @@ class AddLocation(CreateView):
       messages.add_message(self.request, messages.INFO, f"{ _('visibility of your home is set to family') }.") 
     try:
       ''' Add location '''
+      print(form.cleaned_data)
       location = Location.objects.create(
         slug = slugify(form.cleaned_data['name']),
         name = form.cleaned_data['name'],
+        address = form.cleaned_data['address'] if 'address' in form.cleaned_data else '',
         category = form.cleaned_data['category'] if 'category' in form.cleaned_data else 'camping',
         visibility= form.cleaned_data['visibility'] if 'visibility' in form.cleaned_data else 'c',
         status = form.cleaned_data['status'] if 'status' in form.cleaned_data else 'p',

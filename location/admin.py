@@ -78,19 +78,19 @@ def GenerateThumbnail(modeladmin, request, queryset):
 def getData(modeladmin, request, queryset):
   for record in queryset:
     record.getData(request)
-@admin.action(description='Migrate website to link')
-def migrateWebsiteToLink(modeladmin, request, queryset):
-  for record in queryset:
-    link = Link.objects.get_or_create(url=record.website, defaults={'primary':True, 'user':request.user, 'visibility':'p'})[0]
-    record.link.add(link)
-    messages.add_message(request, messages.INFO, f"Migrated website { record.website } to link { link.id } for { record.name }")
-@admin.action(description='Copy Description to Descriotions')
-def copyDescriptionToDescriptions(modeladmin, request, queryset):
-  for location in queryset:
-    if len(location.description.strip()) > 0:
-      object = Description.objects.create(description=location.description, user=request.user)
-      location.descriptions.add(object)
-      messages.add_message(request, messages.INFO, f"Description copied to Descriptions for { location.name }")
+# @admin.action(description='Migrate website to link')
+# def migrateWebsiteToLink(modeladmin, request, queryset):
+#   for record in queryset:
+#     link = Link.objects.get_or_create(url=record.website, defaults={'primary':True, 'user':request.user, 'visibility':'p'})[0]
+#     record.link.add(link)
+#     messages.add_message(request, messages.INFO, f"Migrated website { record.website } to link { link.id } for { record.name }")
+# @admin.action(description='Copy Description to Descriotions')
+# def copyDescriptionToDescriptions(modeladmin, request, queryset):
+#   for location in queryset:
+#     if len(location.description.strip()) > 0:
+#       object = Description.objects.create(description=location.description, user=request.user)
+#       location.descriptions.add(object)
+#       messages.add_message(request, messages.INFO, f"Description copied to Descriptions for { location.name }")
 
 ''' Custom Model Admin Classes '''
 class LocationAdmin(SlugDefaultAdmin):

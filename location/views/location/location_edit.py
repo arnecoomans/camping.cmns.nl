@@ -170,7 +170,6 @@ class AddLocation(CreateView):
       messages.add_message(self.request, messages.INFO, f"{ _('visibility of your home is set to family') }.") 
     try:
       ''' Add location '''
-      print(form.cleaned_data)
       location = Location.objects.create(
         slug = slugify(form.cleaned_data['name']),
         name = form.cleaned_data['name'],

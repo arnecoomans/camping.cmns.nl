@@ -122,8 +122,8 @@ class LocationAdmin(SlugDefaultAdmin):
 
   actions = [getAddress, getLatLng, getDistanceFromDepartureCenter, getRegion, clearCachableData, change_visibility]
   action_form = VisibilityActionForm
-  list_display = ['name', 'location', 'status']
-  list_filter = ['status', 'chain']
+  list_display = ['name', 'location', 'visibility', 'status']
+  list_filter = ['status', 'category', 'chain', 'location']
 
 
 class LinkAdmin(DefaultAdmin):

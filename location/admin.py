@@ -1,9 +1,25 @@
+from django import forms
 from django.contrib import admin
 from django.contrib import messages
+from django.contrib.admin.helpers import ActionForm
 
 from .models import *
 from .forms import ProfileForm
 
+class VisibilityActionForm(ActionForm):
+  """
+  Extra field injected into the admin actions bar.
+  Lets the user choose the new visibility for the bulk update.
+  """
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+    # Pull choices from the model field to keep things DRY
+    field = Location._meta.get_field('visibility')
+    self.fields['visibility'] = forms.ChoiceField(
+      choices=field.choices,
+      required=True,
+      label="New visibility"
+    )
 
 ''' Default Model Admin Class Templates '''
 class DefaultAdmin(admin.ModelAdmin):
@@ -94,9 +110,21 @@ def getData(modeladmin, request, queryset):
 
 ''' Custom Model Admin Classes '''
 class LocationAdmin(SlugDefaultAdmin):
-  actions = [getAddress, getLatLng, getDistanceFromDepartureCenter, getRegion, clearCachableData, copyDescriptionToDescriptions]
+  @admin.action(description="Change visibility")
+  def change_visibility(self, request, queryset):
+    new_visibility = request.POST.get("visibility")
+    choices = {c[0] for c in Location._meta.get_field("visibility").choices}
+    if new_visibility not in choices:
+      self.message_user(request, "Invalid visibility", level=messages.WARNING)
+      return
+    updated = queryset.update(visibility=new_visibility)
+    self.message_user(request, f"Updated {updated} objects.", level=messages.SUCCESS)
+
+  actions = [getAddress, getLatLng, getDistanceFromDepartureCenter, getRegion, clearCachableData, change_visibility]
+  action_form = VisibilityActionForm
   list_display = ['name', 'location', 'status']
   list_filter = ['status', 'chain']
+
 
 class LinkAdmin(DefaultAdmin):
   list_display = ['get_title', 'url', 'visibility', 'user']
@@ -108,7 +136,8 @@ class ListDistanceAdmin(DefaultAdmin):
   actions = [getData, ]  
 
 class CommentAdmin(DefaultAdmin):
-  pass
+  list_display = ('location', 'user', 'visibility', 'status')
+  list_filter = ('location', 'user', 'visibility', 'status')
 
 class DescriptionAdmin(DefaultAdmin):
   pass

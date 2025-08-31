@@ -1,9 +1,25 @@
+from django import forms
 from django.contrib import admin
 from django.contrib import messages
+from django.contrib.admin.helpers import ActionForm
 
 from .models import *
 from .forms import ProfileForm
 
+class VisibilityActionForm(ActionForm):
+  """
+  Extra field injected into the admin actions bar.
+  Lets the user choose the new visibility for the bulk update.
+  """
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+    # Pull choices from the model field to keep things DRY
+    field = Location._meta.get_field('visibility')
+    self.fields['visibility'] = forms.ChoiceField(
+      choices=field.choices,
+      required=True,
+      label="New visibility"
+    )
 
 ''' Default Model Admin Class Templates '''
 class DefaultAdmin(admin.ModelAdmin):
@@ -78,25 +94,37 @@ def GenerateThumbnail(modeladmin, request, queryset):
 def getData(modeladmin, request, queryset):
   for record in queryset:
     record.getData(request)
-@admin.action(description='Migrate website to link')
-def migrateWebsiteToLink(modeladmin, request, queryset):
-  for record in queryset:
-    link = Link.objects.get_or_create(url=record.website, defaults={'primary':True, 'user':request.user, 'visibility':'p'})[0]
-    record.link.add(link)
-    messages.add_message(request, messages.INFO, f"Migrated website { record.website } to link { link.id } for { record.name }")
-@admin.action(description='Copy Description to Descriotions')
-def copyDescriptionToDescriptions(modeladmin, request, queryset):
-  for location in queryset:
-    if len(location.description.strip()) > 0:
-      object = Description.objects.create(description=location.description, user=request.user)
-      location.descriptions.add(object)
-      messages.add_message(request, messages.INFO, f"Description copied to Descriptions for { location.name }")
+# @admin.action(description='Migrate website to link')
+# def migrateWebsiteToLink(modeladmin, request, queryset):
+#   for record in queryset:
+#     link = Link.objects.get_or_create(url=record.website, defaults={'primary':True, 'user':request.user, 'visibility':'p'})[0]
+#     record.link.add(link)
+#     messages.add_message(request, messages.INFO, f"Migrated website { record.website } to link { link.id } for { record.name }")
+# @admin.action(description='Copy Description to Descriotions')
+# def copyDescriptionToDescriptions(modeladmin, request, queryset):
+#   for location in queryset:
+#     if len(location.description.strip()) > 0:
+#       object = Description.objects.create(description=location.description, user=request.user)
+#       location.descriptions.add(object)
+#       messages.add_message(request, messages.INFO, f"Description copied to Descriptions for { location.name }")
 
 ''' Custom Model Admin Classes '''
 class LocationAdmin(SlugDefaultAdmin):
-  actions = [getAddress, getLatLng, getDistanceFromDepartureCenter, getRegion, clearCachableData, copyDescriptionToDescriptions]
+  @admin.action(description="Change visibility")
+  def change_visibility(self, request, queryset):
+    new_visibility = request.POST.get("visibility")
+    choices = {c[0] for c in Location._meta.get_field("visibility").choices}
+    if new_visibility not in choices:
+      self.message_user(request, "Invalid visibility", level=messages.WARNING)
+      return
+    updated = queryset.update(visibility=new_visibility)
+    self.message_user(request, f"Updated {updated} objects.", level=messages.SUCCESS)
+
+  actions = [getAddress, getLatLng, getDistanceFromDepartureCenter, getRegion, clearCachableData, change_visibility]
+  action_form = VisibilityActionForm
   list_display = ['name', 'location', 'status']
   list_filter = ['status', 'chain']
+
 
 class LinkAdmin(DefaultAdmin):
   list_display = ['get_title', 'url', 'visibility', 'user']
@@ -108,7 +136,8 @@ class ListDistanceAdmin(DefaultAdmin):
   actions = [getData, ]  
 
 class CommentAdmin(DefaultAdmin):
-  pass
+  list_display = ('location', 'user', 'visibility', 'status')
+  list_filter = ('location', 'user', 'visibility', 'status')
 
 class DescriptionAdmin(DefaultAdmin):
   pass

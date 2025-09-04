@@ -300,6 +300,7 @@ class AddLocationToList(FilterClass, UpdateView):
                                                   location=location, 
                                                   order=order,
                                                   show_on_route=False if location.isActivity() else True,
+                                                  visibility = location.visibility if hasattr(location, 'visibility') else 'p',
                                                   user=self.request.user)
       messages.add_message(self.request, messages.SUCCESS, f"{ _('Added') } \"{ location.name }\"  { _('to list')} \"{ list.name }\".")
       try:

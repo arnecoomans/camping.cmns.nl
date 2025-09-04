@@ -145,6 +145,10 @@ class DescriptionAdmin(DefaultAdmin):
 class ProfileAdmin(DefaultAdmin):
   form = ProfileForm
 
+class VisitedInAdmin(DefaultAdmin):
+  list_display = ('location', 'user', 'year', 'status')
+  list_filter = ('user', 'year', 'status', 'location')
+
 admin.site.register(Category, SlugDefaultAdmin)
 admin.site.register(Location, LocationAdmin)
 admin.site.register(Chain, SlugDefaultAdmin)
@@ -156,7 +160,7 @@ admin.site.register(List, SlugDefaultAdmin)
 admin.site.register(ListLocation, ListLocationAdmin)
 admin.site.register(ListDistance, ListDistanceAdmin)
 admin.site.register(Profile, ProfileAdmin)
-admin.site.register(VisitedIn, DefaultAdmin)
+admin.site.register(VisitedIn, VisitedInAdmin)
 admin.site.register(Media, DefaultAdmin)
 admin.site.register(Description, DescriptionAdmin)
 admin.site.register(Size, SlugDefaultAdmin)

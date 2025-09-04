@@ -162,7 +162,7 @@
             <div class="col-3 title-col">{% translate 'your visits'|capfirst %}</div>
             <div class="col-9">
               {% for visit in visitors.all %}
-                {% if visit.status == "p" and visit.location == location %}{{ visit.year }}{% if not forloop.last %}, {% endif %}{% endif %}
+                {% if visit.location == location %}{{ visit.year }}{% if not forloop.last %}, {% endif %}{% endif %}
               {% endfor %}
             </div>
           </div>
@@ -255,7 +255,8 @@
           {% for location in map_locations %}
             const pin{{ location.0.id }} = new PinElement({
               scale: 0.{% if location.0.isActivity %}7{% else %}8{% endif %},
-              background: "#{% if location.0.isActivity %}{% if location.0.id in visited_locations %}aaa{% else %}666{% endif %}{% else %}{% if location.0.id in visited_locations %}77f{% else %}00f{% endif %}{% endif %}",
+              {% comment %} background: "#{% if location.0.isActivity %}{% if location.0.id in visited_locations %}aaa{% else %}666{% endif %}{% else %}{% if location.0.id in visited_locations %}77f{% else %}00f{% endif %}{% endif %}", {% endcomment %}
+              background: "{% mapsmarker location.0 visited_locations user.profile.favorite.all user.profile.dislike.all %}",
               borderColor: "#{% if location.0.isActivity %}333{% else %}000033{% endif %}",
               glyphColor: "white",
 
@@ -273,9 +274,12 @@
               const { target } = domEvent;
               infoWindow.close();
               infoWindow.setContent('<b><a href="{{ location.0.get_absolute_url }}">{{ location.0.name }}</a></b>' +
-              '{% if location.0 in user.profile.favorite.all %}<svg class="bi" width="12" height="12" fill="#c00"><use xlink:href="{% static "bootstrap-icons/bootstrap-icons.svg" %}#balloon-heart-fill"/></svg>{% endif %}<br>' + 
-                                    '{{ location.0.category.name|capfirst }} in {{ location.0.location.name|default:"" }}, {{ location.0.location.parent.name|default:"" }}, {{ location.0.location.parent.parent.name|default:"" }}<br>' +
-                                    '');
+              '{% if location.0 in user.profile.favorite.all %}<svg class="bi" width="12" height="12" fill="#c00"><use xlink:href="{% static "bootstrap-icons/bootstrap-icons.svg" %}#balloon-heart-fill"/></svg>{% endif %}' +
+              '{% if location.0 in user.profile.dislike.all %}<svg class="bi" width="12" height="12" fill="#000"><use xlink:href="{% static "bootstrap-icons/bootstrap-icons.svg" %}#heartbreak-fill"/></svg>{% endif %}' + 
+              '<br>' +
+              '{{ location.0.category.name|capfirst }} in {{ location.0.location.name|default:"" }}, {{ location.0.location.parent.name|default:"" }}, {{ location.0.location.parent.parent.name|default:"" }}<br>' +
+              '{% if location.0.id in visited_locations %}{% translate 'visited before'|capfirst %}{% endif %}' +
+              '');
               infoWindow.open(marker{{ location.0.id }}.map, marker{{ location.0.id }});
             });
           {% endfor %}
@@ -284,7 +288,9 @@
             const { target } = domEvent;
             infoWindow.close();
             infoWindow.setContent('<b><a href="{{ location.get_absolute_url }}">{{ location.name }}</a></b>' +
-            '{% if location in user.profile.favorite.all %}<svg class="bi" width="12" height="12" fill="#c00"><use xlink:href="{% static "bootstrap-icons/bootstrap-icons.svg" %}#balloon-heart-fill"/></svg>{% endif %}<br>' + 
+            '{% if location in user.profile.favorite.all %}<svg class="bi" width="12" height="12" fill="#c00"><use xlink:href="{% static "bootstrap-icons/bootstrap-icons.svg" %}#balloon-heart-fill"/></svg>{% endif %}' + 
+            '{% if location in user.profile.dislike.all %}<svg class="bi" width="12" height="12" fill="#000"><use xlink:href="{% static "bootstrap-icons/bootstrap-icons.svg" %}#heartbreak-fill"/></svg>{% endif %}' + 
+            '<br>' +
                                   '{{ location.category.name|capfirst }} in {{ location.department.name|default:"" }}, {{ location.region.name|default:"" }}, {{ location.country.name|default:"" }}<br>' +
                                   '');
             infoWindow.open(marker.map, marker);

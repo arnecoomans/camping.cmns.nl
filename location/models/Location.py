@@ -207,7 +207,6 @@ class Location(BaseModel):
       self.status = '-'
     return super(Location, self).save(*args, **kwargs)
 
-
   ''' Data Access Functions '''
   def addToChangelog(self, message):
     changelog = self.automated_changelog.split("\n")

@@ -86,7 +86,9 @@
                 const { target } = domEvent;
                 infoWindow.close();
                 infoWindow.setContent('<b><a href="{{ location.get_absolute_url }}">{{ location.name }}</a></b>' +
-                '{% if location in user.profile.favorite.all %}<svg class="bi" width="12" height="12" fill="#c00"><use xlink:href="{% static "bootstrap-icons/bootstrap-icons.svg" %}#balloon-heart-fill"/></svg>{% endif %}<br>' + 
+                '{% if location in user.profile.favorite.all %}<svg class="bi" width="12" height="12" fill="#c00"><use xlink:href="{% static "bootstrap-icons/bootstrap-icons.svg" %}#balloon-heart-fill"/></svg>{% endif %}' + 
+            '{% if location in user.profile.dislike.all %}<svg class="bi" width="12" height="12" fill="#000"><use xlink:href="{% static "bootstrap-icons/bootstrap-icons.svg" %}#heartbreak-fill"/></svg>{% endif %}' + 
+            '<br>' +
                                       '{{ location.category.name|capfirst }} in {{ location.location.name|default:"" }}, {{ location.location.parent.name|default:"" }}, {{ location.location.parent.parent.name|default:"" }}<br>' +
                                       '');
                 infoWindow.open(marker{{ location.id }}.map, marker{{ location.id }});

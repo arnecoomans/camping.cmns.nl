@@ -354,6 +354,9 @@ class Location(BaseModel):
         elif 'administrative_area_level_2' in field['types']:
           department = field['long_name']
           department_slug = field['short_name']
+        elif 'administrative_area_level_3' in field['types']:
+          department = field['long_name']
+          department_slug = field['short_name']
       ''' Check if Country, Region and Department exists '''
       countryObject, created = Region.objects.get_or_create(
           slug=slugify(country_slug),

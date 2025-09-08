@@ -4,7 +4,7 @@ register = template.Library()
 
 @register.simple_tag
 def mapsmarker(location, visited_locations, loved_locations=None, disliked_locations=None):
-  is_activity = location.isActivity()
+  is_activity = location.is_activity
 
   key = (
     'disliked' if location in disliked_locations else

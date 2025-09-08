@@ -425,6 +425,12 @@ class Location(BaseModel):
       if self.category.parent.slug.lower() == settings.ACTIVITY_SLUG or self.category.slug.lower() == settings.ACTIVITY_SLUG:
         return True
     return False
+  # Hybrid workaround to make activity field accessible as a property
+  # while maintaining the ability to use the original method in query filter
+  @property
+  def is_activity(self):
+    return self.isActivity()
+  
   def getCategory(self):
     if self.isActivity():
       return settings.ACTIVITY_SLUG

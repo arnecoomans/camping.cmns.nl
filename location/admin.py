@@ -2,6 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.contrib import messages
 from django.contrib.admin.helpers import ActionForm
+from django.conf import settings
 
 from .models import *
 from .forms import ProfileForm
@@ -20,6 +21,40 @@ class VisibilityActionForm(ActionForm):
       required=True,
       label="New visibility"
     )
+
+class IsActivityFilter(admin.SimpleListFilter):
+    title = 'Location type'
+    parameter_name = 'is_activity'
+
+    def lookups(self, request, model_admin):
+        return [
+            ('a', 'Activity'),
+            ('l', 'Location'),
+        ]
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value == 'a':
+            return queryset.filter(category__slug=settings.ACTIVITY_SLUG) | queryset.filter(category__parent__slug=settings.ACTIVITY_SLUG)
+        elif value == 'l':
+            return queryset.exclude(category__slug=settings.ACTIVITY_SLUG) | queryset.filter(category__parent__slug=settings.ACTIVITY_SLUG)
+        return queryset
+
+class GrandparentLocationFilter(admin.SimpleListFilter):
+    title = 'Country'  # or "Top-level location"
+    parameter_name = 'grandparent_location'
+
+    def lookups(self, request, model_admin):
+        # Return distinct grandparent locations
+        countries = Region.objects.filter(parent__isnull=True).order_by('name')
+        return [(loc.id, loc.name) for loc in countries]
+
+    def queryset(self, request, queryset):
+        grandparent_id = self.value()
+        if grandparent_id:
+            return queryset.filter(location__parent__parent_id=grandparent_id)
+        return queryset
+
 
 ''' Default Model Admin Class Templates '''
 class DefaultAdmin(admin.ModelAdmin):
@@ -122,8 +157,8 @@ class LocationAdmin(SlugDefaultAdmin):
 
   actions = [getAddress, getLatLng, getDistanceFromDepartureCenter, getRegion, clearCachableData, change_visibility]
   action_form = VisibilityActionForm
-  list_display = ['name', 'location', 'visibility', 'status']
-  list_filter = ['status', 'category', 'chain', 'location']
+  list_display = ['name', 'location', 'visibility', 'status', 'location__parent__parent']
+  list_filter = [IsActivityFilter, 'status', 'category', 'chain', GrandparentLocationFilter]
 
 
 class LinkAdmin(DefaultAdmin):

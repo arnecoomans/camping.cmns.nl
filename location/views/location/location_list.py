@@ -90,7 +90,7 @@ class LocationListMaster(FilterClass):
     else:
       self.available_filters = {}
       ''' Available Country Filters '''
-      self.available_filters['countries']     = self.get_queryset().values('location__parent__parent__slug', 'location__parent__parent__name').order_by().distinct()
+      self.available_filters['countries']     = self.get_queryset().values('location__parent__parent__slug', 'location__parent__parent__name').order_by('location__parent__parent__order').distinct()
       self.available_filters['regions']       = self.get_queryset().values('location__parent__slug', 'location__parent__name').order_by().distinct()
       self.available_filters['departments']   = self.get_queryset().values('location__slug', 'location__name').order_by().distinct()
       ''' Available Tag Filters '''

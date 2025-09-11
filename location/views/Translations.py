@@ -34,9 +34,10 @@ class Translations:
     _('Mobile Home'),
     _('Resort'),
     _('Villa'),
+    _('Resort'),
 
     # Activities
-    _('Sight-to-seen'),
+    _('Sight-to-see'),
     _('Transit (one nighter)'),
     _('Beach'),
     _('City'),
@@ -50,6 +51,7 @@ class Translations:
     _('Theatre'),
     _('Theme-park'),
     _('Village'),
+    _('Walk'),
     _('Winery'),
     _('Zoo'),
   ]

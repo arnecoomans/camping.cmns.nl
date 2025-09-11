@@ -19,6 +19,12 @@ def create_navigation_apps(apps, schema_editor):
       'url_format': 'https://waze.com/ul?q={address}',
       'default_enabled': True,
     },
+    {
+      'slug': 'apple-maps',
+      'name': 'Apple Maps',
+      'url_format': 'https://maps.apple.com/search?query={address}',
+      'default_enabled': False,
+    },
   ]
   for data in defaults:
     NavigationApps.objects.update_or_create(

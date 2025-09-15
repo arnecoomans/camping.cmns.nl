@@ -82,12 +82,36 @@ location /media/ {
 `
 
 ## Configuration
-### ALLOW_UNAUTHENTICATED_READ_COMMENTS
-Set to True to allow unauthenticated users to see public comments
-### ALLOW_UNAUTHENTICATED_SEE_OVERVIEW_MAP
-Set to True to allow unauthenticated users to the the map view of search results
-### DEPARTURE_CENTER
+### App configuration
+> APP_TITLE = ''
+> META_DESCRIPTION = ''
+> MASTER_CSS = ''
+### Activity Slug
+> ACTIVITY_SLUG = "activity"
+By default, all locations are categorized as location, unless the category or category parent has this configured slug. Defaults to "activity" when not present in settings.
+### Search defaults
+> DEFAULT_ORDER = 'distance'
+### Departure center
+> DEPARTURE_CENTER = 'Domkerk, Achter de Dom 1, 3512 JN Utrecht, Netherlands'
 Locations are sorted by straight-line distance to a single location. Select a ideal starting point for your use-case.
+### Location Size Categories
+> LOCATION_SIZE_CATEGORIES = ['camping', 'glamping', 'transit']
+Locations within these categories can have a size. Other locations do not have size displayed in the detail page. 
+### Unauthenticated access
+> ALLOW_UNAUTHENTICATED_READ_COMMENTS = True 
+> ALLOW_UNAUTHENTICATED_SEE_OVERVIEW_MAP = True
+### Google API
+> GOOGLE_API_KEY = ''
+> GOOGLE_MAPS_API_KEY = ''
+> NOMINATIM_USER_AGENT = 'vknt.cmns.nl v0.0.Dev'
+### Distance
+> MAX_LIST_DISTANCE_QUERIES = 10
+### Nearby locations 
+> NEARBY_RANGE = 75 
+Show locations and activities in nearby list within this range
+> MAP_RANGE = 200
+Show locations and activities nearby on the mapwithin this range
+
 
 ## About the Application
 

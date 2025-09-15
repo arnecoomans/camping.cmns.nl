@@ -430,6 +430,9 @@ class Location(BaseModel):
   @property
   def is_activity(self):
     return self.isActivity()
+  @property
+  def is_location(self):
+    return not self.isActivity()
   
   def getCategory(self):
     if self.isActivity():
@@ -441,10 +444,12 @@ class Location(BaseModel):
     return 'locations'
   
   def canhavesize(self):
+    ''' Determine if a location can have a size, based on category '''
+    categories = getattr(settings, 'LOCATION_SIZE_CATEGORIES', ['camping', 'glamping', 'transit'])
     canhavesize = False
-    if self.category.slug.lower() in ['camping', 'glamping', 'transit']:
+    if self.category.slug.lower() in categories:
       canhavesize = True
     for category in self.additional_category.all():
-      if category.slug.lower() in ['camping', 'glamping', 'transit']:
+      if category.slug.lower() in categories:
         canhavesize = True
     return canhavesize

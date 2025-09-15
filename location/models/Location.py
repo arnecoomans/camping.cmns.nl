@@ -430,6 +430,9 @@ class Location(BaseModel):
   @property
   def is_activity(self):
     return self.isActivity()
+  @property
+  def is_location(self):
+    return not self.isActivity()
   
   def getCategory(self):
     if self.isActivity():

@@ -1,9 +1,9 @@
 # Python
-pip >= 24.3.1
+pip >= 25.2
 
 # Django
-Django >= 5.1.0
-Pillow >= 11.0.0
+Django >= 5.2.6
+Pillow >= 11.3.0
 gunicorn >= 23.0.0
 
 # Location Services
@@ -11,13 +11,13 @@ geopy >= 2.4.1
 googlemaps >= 4.10.0
 
 # Markdown
-Markdown >= 3.7
+Markdown >= 3.9
 
 # Heic to JPG
-pillow-heif >= 0.21.0
+pillow-heif >= 1.1.0
 
 # Sendfile for Attachments
-django-sendfile2 >= 0.7.0
+django-sendfile2 >= 0.7.2
 
 # OpenAI (experimental)
 openai >= 1.58.1

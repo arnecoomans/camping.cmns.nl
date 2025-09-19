@@ -1,6 +1,0 @@
-User-agent: *
-Disallow: /admin/
-Disallow: /login
-Disallow: /logout
-Disallow: /accounts/
-Disallow: /password_reset/

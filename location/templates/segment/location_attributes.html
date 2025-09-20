@@ -66,7 +66,7 @@
   <div class="row autoload">
     <div class="col-3 title-col">{% translate 'tags'|title %}<span class="valuecounter"></span>:</div>
     <div class="col-8 list" id="tags">
-      FOO{% if not ajax_load_tags %}
+      {% if not ajax_load_tags %}
         {% for tag in location.tags.all|filter_by_visibility:request.user %}
           {% include 'partial/tag.html' %}{% if not forloop.last %}, {% endif %}
         {% endfor %}
@@ -86,7 +86,7 @@
   <div class="row autoload">
     <div class="col-3 title-col">{% translate 'links'|title %}<span class="valuecounter"></span>:</div>
     <div class="col-8 list" id="links">
-      FOO{% if not ajax_load_links %}
+      {% if not ajax_load_links %}
         {% for link in location.links.all|filter_by_visibility:request.user %}
           {% include 'partial/link.html' %}{% if not forloop.last %}, {% endif %}
         {% endfor %}

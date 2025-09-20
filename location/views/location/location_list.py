@@ -49,7 +49,7 @@ class LocationListMaster(FilterClass):
       ''' Query filters
           are part of the request but not part of the url
       '''
-      for field in ['category', 'tag', 'chain', 'q', 'only', 'size', ]:
+      for field in ['category', 'tag', 'chains', 'q', 'only', 'size', ]:
         if self.request.GET.get(field, False):
           ''' All values in query parameters should be a list.
               Multiple values are seperated by a , resulting in multiple list items
@@ -152,7 +152,7 @@ class LocationListMaster(FilterClass):
     }
 
   def get_available_chains(self):
-    return self.get_queryset().filter(chain__children=None).exclude(chain__name=None).values('chain__slug', 'chain__name').order_by().distinct()
+    return self.get_queryset().filter(chains__children=None).exclude(chains__name=None).values('chains__slug', 'chains__name').order_by().distinct()
   
   def get_available_sizes(self):
     return self.get_queryset().exclude(size__slug__isnull=True).values('size__slug', 'size__name').order_by('size__id').distinct()

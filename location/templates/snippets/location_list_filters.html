@@ -108,7 +108,7 @@
         {% if available_filters.chains.all.count > 1 %}
           <li><strong>{% translate 'chain'|capfirst %}</strong>:
             {% for chain in available_filters.chains.all %}
-              <a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% update_query_params request add=chain.chain__slug to='chain' active_filters=active_filters %}">{{ chain.chain__name|title }}</a>{% if not forloop.last %}, {% else %}{% if available_filters.tag|length > 1 %},{% endif %}{% endif %}
+              <a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% update_query_params request add=chain.chain__slug to='chain' active_filters=active_filters %}">{{ chains.chain__name|title }}</a>{% if not forloop.last %}, {% else %}{% if available_filters.tag|length > 1 %},{% endif %}{% endif %}
             {% endfor %}
         {% endif %}
       <!-- Size -->

@@ -177,7 +177,7 @@
         <h2>{% translate 'comments'|capfirst %} <span id="comment counter"></span></h2>
         <div id="comment-messages"><!-- Comment messages to be placed here --></div>
         <div id="comments">
-          FOO{% if not ajax_load_comments %}
+          {% if not ajax_load_comments %}
             {% for comment in comment_list %}
               {% include 'partial/comment.html' %}
             {% endfor %}

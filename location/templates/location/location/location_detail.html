@@ -54,15 +54,18 @@
       {% else %}
 
       <!-- Descriptions -->
-      {% for description in descriptions %}
-        {% if description.description|length > 0 %}
-        <div class="spacer"></div>
-          <div class="object description">
-            {{ description.description|markdown|safe }}
-            <div class="meta">{% translate 'description'|capfirst %}{% if user.is_authenticated %} {% translate 'added by' %} {{ description.user.get_full_name|default:description.user.username }}{% endif %} {% translate 'for' %} {% translate description.get_visibility_display %}</div>
-          </div>
-        {% endif %}
-      {% endfor %}
+      <div id="descriptions">
+        {% include 'field/descriptions.html' %}
+        {% comment %} {% for description in descriptions %}
+          {% if description.description|length > 0 %}
+          <div class="spacer"></div>
+            <div class="object description">
+              {{ description.description|markdown|safe }}
+              <div class="meta">{% translate 'description'|capfirst %}{% if user.is_authenticated %} {% translate 'added by' %} {{ description.user.get_full_name|default:description.user.username }}{% endif %} {% translate 'for' %} {% translate description.get_visibility_display %}</div>
+            </div>
+          {% endif %}
+        {% endfor %} {% endcomment %}
+      </div>
         <div class="spacer"></div>
         
         <!-- Location Address Details -->
@@ -173,8 +176,8 @@
       <div class="comments card">
         <h2>{% translate 'comments'|capfirst %} <span id="comment counter"></span></h2>
         <div id="comment-messages"><!-- Comment messages to be placed here --></div>
-        <div id="commentlist">
-          {% if not ajax_load_comments %}
+        <div id="comments">
+          FOO{% if not ajax_load_comments %}
             {% for comment in comment_list %}
               {% include 'partial/comment.html' %}
             {% endfor %}
@@ -304,6 +307,37 @@
 {% endblock %}
 
 {% block scriptfooter %}
+  <script type="module">
+  import cmnsd from "{% static 'js/cmnsd/index.js' %}";
+
+  cmnsd.init({
+    baseURL: '',
+    debug: true, // enable console.debug tracing
+    messages: { container: '#messages', dismissible: true, clearBefore: true },
+    actions: { autoBind: true } // bind delegated [data-action] on document
+  });
+
+  // Load some sections on page-load
+  cmnsd.loadContent({
+    // url: 'location/{{ location.id }}-{{ location.slug }}/tags,comments,descriptions,category,size,chains,links/',
+    {% with fields='tags,comments,descriptions,category,size,chains,links' %}
+    url: '{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug  fields %}',
+    {% endwith%}
+    map: {  tags: '#tags', 
+            comments: '#comments',
+            descriptions: '#descriptions',
+            category: '#additional_categorylist',
+            size: '#sizelist',
+            chains: '#chains', 
+            links: '#links',
+          }
+    // comments, description, category, size, chain
+    // name, address, phone, owners_names
+  });
+</script>
+{% endblock %}
+
+{% block old_scriptfooter %}
   <span id="csrf_token" style="display: none;">{{ csrf_token }}</span>
   <script src="{% static 'js/getLocationAttributes.js' %}" defer></script>  
   <script src="{% static 'js/comments.js' %}" defer></script>

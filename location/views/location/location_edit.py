@@ -29,7 +29,7 @@ from location.models.List import ListDistance
 '''
 class EditLocationMaster(UpdateView, FilterClass):
   model = Location
-  fields = ['name', 'category', 'additional_category', 'visibility', 'address', 'phone', 'owners_names', 'chain']
+  fields = ['name', 'category', 'additional_category', 'visibility', 'address', 'phone', 'owners_names', 'chains']
   template_name = 'location/location/location_form.html'
   
   def get_context_data(self, **kwargs):
@@ -79,7 +79,7 @@ class EditLocationMaster(UpdateView, FilterClass):
   ''' Get Links
   '''
   def get_links(self):
-    links = self.object.link.all()
+    links = self.object.links.all()
     links = self.filter_status(links)
     links = self.filter_visibility(links)
     links = links.order_by('-primary').distinct()

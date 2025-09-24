@@ -29,7 +29,7 @@ from location.models.List import ListDistance
 '''
 class EditLocationMaster(UpdateView, FilterClass):
   model = Location
-  fields = ['name', 'category', 'additional_category', 'visibility', 'address', 'phone', 'owners_names', 'chain']
+  fields = ['name', 'category', 'additional_category', 'visibility', 'address', 'phone', 'owners_names', 'chains']
   template_name = 'location/location/location_form.html'
   
   def get_context_data(self, **kwargs):
@@ -79,7 +79,7 @@ class EditLocationMaster(UpdateView, FilterClass):
   ''' Get Links
   '''
   def get_links(self):
-    links = self.object.link.all()
+    links = self.object.links.all()
     links = self.filter_status(links)
     links = self.filter_visibility(links)
     links = links.order_by('-primary').distinct()
@@ -197,7 +197,7 @@ class AddLocation(CreateView):
         'user': self.request.user,
         'name': self.request.POST.get('link-title', None)
       })
-      location.link.add(link[0])
+      location.links.add(link[0])
       messages.add_message(self.request, messages.INFO, f"{ _('added link') }: \"{ link[0].get_title() }\" { _('to') } { location.name }.")
     except IntegrityError as e:
       suggested_location = Location.objects.get(name__iexact=form.cleaned_data['name'])
@@ -420,7 +420,7 @@ class addLinkToLocation(UpdateView):
           visibility=request.POST.get('visibility', 'c'),
           primary=True if request.POST.get('primary', False) else False,
         )
-        location.link.add(link)
+        location.links.add(link)
         messages.add_message(self.request, messages.INFO, f"{ _('created and') } { _('added link') }: \"{ link.get_title() }\" to { location.name }.")
     else:
       messages.add_message(self.request, messages.ERROR, f"{ _('you did not supply a valid URL') }.")

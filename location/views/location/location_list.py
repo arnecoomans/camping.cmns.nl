@@ -196,11 +196,11 @@ class LocationListMaster(FilterClass):
         queryset = queryset.filter(name__icontains=q) |\
                    queryset.filter(address__icontains=q) |\
                    queryset.filter(owners_names__icontains=q) |\
-                   queryset.filter(description__icontains=q) |\
+                   queryset.filter(descriptions__description=q) |\
                    queryset.filter(category__name__icontains=q) |\
                    queryset.filter(additional_category__name__icontains=q) |\
-                   queryset.filter(chain__name__icontains=q) |\
-                   queryset.filter(chain__parent__name__icontains=q) |\
+                   queryset.filter(chains__name__icontains=q) |\
+                   queryset.filter(chains__parent__name__icontains=q) |\
                    queryset.filter(tags__name__icontains=q) |\
                    queryset.filter(location__name__icontains=q) |\
                    queryset.filter(location__parent__name__icontains=q) |\

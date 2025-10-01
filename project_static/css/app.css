@@ -46,7 +46,7 @@ div#map > p:first-child {
   margin-top: 140px;
 }
 /* HTML marker styles */
-.location-tag {
+/* .location-tag {
   background-color: #4285F4;
   border-radius: 8px;
   padding: 10px 15px;
@@ -70,7 +70,7 @@ div#map > p:first-child {
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
   border-top: 8px solid #4285F4;
-}
+} */
 
 /** Action list */
 ul.action.list {

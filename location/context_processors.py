@@ -12,11 +12,11 @@ def setting_data(request):
     'allow_unauthenticated_see_overview_map': getattr(settings, 'ALLOW_UNAUTHENTICATED_SEE_OVERVIEW_MAP', False),
     'departure_center': getattr(settings, 'DEPARTURE_CENTER', 'Domplein, Utrecht'),
 
-    'ajax_load_comments': getattr(settings, 'AJAX_LOAD_COMMENTS', False),
-    'ajax_load_tags': getattr(settings, 'AJAX_LOAD_TAGS', False),
-    'ajax_load_categories': getattr(settings, 'AJAX_LOAD_CATEGORIES', False),
-    'ajax_load_chains': getattr(settings, 'AJAX_LOAD_CHAINS', False),
-    'ajax_load_actionlist': getattr(settings, 'AJAX_LOAD_ACTIONLIST', False),
-    'ajax_load_size': getattr(settings, 'AJAX_LOAD_SIZE', False),
+    # 'ajax_load_comments': getattr(settings, 'AJAX_LOAD_COMMENTS', False),
+    # 'ajax_load_tags': getattr(settings, 'AJAX_LOAD_TAGS', False),
+    # 'ajax_load_categories': getattr(settings, 'AJAX_LOAD_CATEGORIES', False),
+    # 'ajax_load_chains': getattr(settings, 'AJAX_LOAD_CHAINS', False),
+    # 'ajax_load_actionlist': getattr(settings, 'AJAX_LOAD_ACTIONLIST', False),
+    # 'ajax_load_size': getattr(settings, 'AJAX_LOAD_SIZE', False),
     
   }

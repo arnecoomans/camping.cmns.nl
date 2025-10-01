@@ -136,6 +136,8 @@ class Category(models.Model):
   
   def get_absolute_url(self):
     return reverse_lazy('location:locations') + f"?category={ self.slug }"
+  
+  js_template_name = 'categories'
 
 
 ''' Description Model '''
@@ -453,3 +455,9 @@ class Location(BaseModel):
       if category.slug.lower() in categories:
         canhavesize = True
     return canhavesize
+  
+  def availablesizes(self):
+    ''' Return a queryset of sizes that are applicable for this location '''
+    if self.canhavesize():
+      return Size.objects.all().order_by().distinct()
+    return Size.objects.none()

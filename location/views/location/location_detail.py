@@ -6,7 +6,7 @@ from django.conf import settings
 from ..snippets.filter_class import FilterClass
 from ..snippets.order_media import order_media
 
-from location.models.Location import Location, Link, Description
+from location.models.Location import Location, Link, Description, Size
 from location.models.Comment import Comment
 from location.models.Tag import Tag
 from location.models.List import List, ListLocation
@@ -216,3 +216,4 @@ class LocationView(ListView, FilterClass):
       return True
     ''' Check for maps permission in session '''
     return True if self.request.session.get('maps_permission', False) else False
+  

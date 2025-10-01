@@ -1,0 +1,57 @@
+{% load static %}{% load i18n %}<div class="col-3 title-col">{% translate 'links'|title %}<span class="valuecounter"></span>:</div>
+<div class="col-8 list">
+  {% if links.all.count > 0 %}
+    {% for link in location.links.all|filter_by_visibility:request.user %}
+      {% include 'field/link.html' %}{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+  {% endif %}
+  {% if json.editable and perms.location.change_location %}
+    <form class="cmnd-autosuggest"
+      action="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'links' %}"
+      data-action
+      data-method="POST"
+      data-body="form"
+      data-map='{"links":"#links"}'
+    >
+      <input
+        name="name"
+        type="text"
+        id="link-input"
+        placeholder="{% translate 'add link'|capfirst %} - {% translate 'start typing to see suggestions'|capfirst %}"
+        class="form-control"
+        data-autosuggest
+        data-url="{% url 'cmnsd:dispatch' 'links'%}"
+        data-param="{{ search_query_character}}"
+        data-extra-params='{"format":"json", "exclude": "location__slug:{{ location.slug }}"}'
+        data-container="link"
+        data-field-input="name"
+        data-field-hidden="slug"
+      >
+      <button type="submit" class="btn btn-primary">{% translate 'add link'|title %}</button>
+    </form>
+  {% endif %}
+</div>
+<div class="col-1 button-col">
+  {% if user.is_authenticated %}
+    {% if json.editable %}
+      <button type="button" 
+              class="btn btn-outline-secondary show-autocomplete"
+              title="{% translate 'stop editing links'|capfirst %}"
+              data-action
+              data-method="GET"
+              data-url	="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'links' %}"
+              data-map	= '{"links":"#links"}'
+              ><img src="{% static 'bootstrap-icons/x.svg' %}"></button>
+    {% else %}
+      <button type="button" 
+              class="btn btn-outline-secondary show-autocomplete"
+              title="{% translate 'edit links'|capfirst %}"
+              data-action
+              data-method="GET"
+              data-url	="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'links' %}"
+              data-params	= "editable"
+              data-map	= '{"links":"#links"}'
+              ><img src="{% static 'bootstrap-icons/pencil.svg' %}"></button>
+    {% endif %}
+  {% endif %}
+</div>

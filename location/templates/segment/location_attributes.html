@@ -5,85 +5,26 @@
       <h2>{% translate 'more information'|capfirst %}:</h2>
     </div>
   </div>
+
   <!-- Category -->
-  <div class="row">
-    <div class="col-3 title-col">{% translate 'category'|title %}:</div>
-    <div class="col-8 list" id="additional_categorylist" data-source="{% url 'location:getAttributesFor' location.slug 'category' %}">
-      {% if not ajax_load_categories %}
-        {% with category=location.category %}{% include 'partial/category.html' %}{% endwith %}{% if location.additional_category.all.count > 0 %}, {% endif %}
-        {% for category in location.additional_category.all %}
-          {% include 'partial/category.html' %}{% if not forloop.last %}, {% endif %}
-        {% endfor %}
-      {% endif %}
-    </div>
-    <div class="col-1 button-col">
-      {% if user.is_authenticated %}
-        <button for="additional_category" type="button" class="btn btn-outline-secondary show-autocomplete"><img src="{% static 'bootstrap-icons/plus.svg' %}"></button>
-      {% endif %}
-    </div>
-  </div>
-  {% if user.is_authenticated %}
-    {% include 'partial/addattribute.html' with attribute="additional_category" %}
-  {% endif %}
-
+   <div class="row category" id="category">
+    {% include 'field/categories.html'%}
+   </div>
   <!-- Size (only for locations and authenticated users) -->
-  {% if user.is_authenticated and location.canhavesize %}
-    <div class="row">
-      <div class="col-3 title-col">{% translate 'size'|title %}: <sup data-bs-toggle="tooltip" data-bs-position="top" title="{% translate 'size is available for camping or glamping'|capfirst %}.">(i)</sup></div>
-      <div class="col-8 list" id="sizelist" data-source="{% url 'location:getAttributesFor' location.slug 'size' %}">
-        {% if location.size and not ajax_load_size %}
-          {% include 'partial/size.html' %}
-        {% endif %}
-      </div>
-      <div class="col-1 button-col">
-        <button for="size" type="button" class="btn btn-outline-secondary show-autocomplete">{% if location.size and location.size.slug  != '?' %}<img src="{% static 'bootstrap-icons/pencil.svg' %}">{% else %}<img src="{% static 'bootstrap-icons/plus.svg' %}">{% endif %}</button>
-      </div>
-    </div>
-    {% include 'partial/addsize.html' with attribute="size" %}
-  {% endif %}
-
-  <!-- Chain -->
-  <div class="row autoload">
-    <div class="col-3 title-col">{% translate 'chain'|title %}<span class="valuecounter"></span>:</div>
-    <div class="col-8 list" id="chains" data-source="{% url 'location:getAttributesFor' location.slug 'chain' %}">
-      FOO{% if not ajax_load_chains %}
-        {% for chain in location.chain.all %}
-          {% include 'partial/chain.html' %}{% if not forloop.last %}, {% endif %}
-        {% endfor %}
-      {% endif %}
-    </div>
-    <div class="col-1 button-col">
-      {% if user.is_authenticated %}
-        <button for="chain" type="button" class="btn btn-outline-secondary show-autocomplete"><img src="{% static 'bootstrap-icons/plus.svg' %}"></button>
-      {% endif %}
-    </div>
+  <div class="row size" id="size">
+    {% include 'field/size.html'%}
   </div>
-  {% if user.is_authenticated %}
-    {% include 'partial/addattribute.html' with attribute="chain" %}
-  {% endif %}
-
+  <!-- Chain -->
+  <div class="row chains" id="chains">
+    {% include 'field/chains.html' %}
+  </div>
   <!-- Tags -->
   <div class="row tags" id="tags">
     {% include 'field/tags.html' %}
   </div>
-  
   <!-- Links -->
-  <div class="row autoload">
-    <div class="col-3 title-col">{% translate 'links'|title %}<span class="valuecounter"></span>:</div>
-    <div class="col-8 list" id="links">
-      {% if not ajax_load_links %}
-        {% for link in location.links.all|filter_by_visibility:request.user %}
-          {% include 'partial/link.html' %}{% if not forloop.last %}, {% endif %}
-        {% endfor %}
-      {% endif %}
-    </div>
-    <div class="col-1 button-col">
-      {% if user.is_authenticated %}
-        <button for="link" type="button" class="btn btn-outline-secondary show-autocomplete"><img src="{% static 'bootstrap-icons/plus.svg' %}"></button>
-      {% endif %}
-    </div>
-  </div>
-  {% if user.is_authenticated %}
-    {% include 'partial/addattribute.html' with value="link" attribute="location" %}
-  {% endif %}
+   <div class="row links" id="links">
+    {% include 'field/links.html' %}
+   </div>
+   
 </div>

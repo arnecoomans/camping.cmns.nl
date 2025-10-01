@@ -319,10 +319,9 @@
   });
 
   // Load some sections on page-load
-  cmnsd.loadContent({
+  {% comment %} cmnsd.loadContent({
     // url: 'location/{{ location.id }}-{{ location.slug }}/tags,comments,descriptions,category,size,chains,links/',
-    {% comment %} {% with fields='tags,comments,descriptions,category,size,chains,links' %} {% endcomment %}
-    {% with fields='tags' %}
+    {% with fields='tags,comments,descriptions,category,size,chains,links' %}
     url: '{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug  fields %}',
     {% endwith%}
     map: {  tags: '#tags', 
@@ -335,7 +334,7 @@
           }
     // comments, description, category, size, chain
     // name, address, phone, owners_names
-  });
+  }); {% endcomment %}
 
   // Initialize autosuggest on any input with [data-autosuggest]
   initAutosuggest();

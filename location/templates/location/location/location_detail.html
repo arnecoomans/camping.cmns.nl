@@ -309,18 +309,20 @@
 {% block scriptfooter %}
   <script type="module">
   import cmnsd from "{% static 'js/cmnsd/index.js' %}";
+  import { initAutosuggest } from "{% static 'js/cmnsd/autosuggest.js' %}";
 
   cmnsd.init({
     baseURL: '',
-    debug: true, // enable console.debug tracing
-    messages: { container: '#messages', dismissible: true, clearBefore: true },
+    debug: {{ debug|lower|default:'false' }}, // enable console.debug tracing when django DEBUG=True
+    messages: { container: '#messages', dismissible: true, clearBefore: false, max: 5 }, // message container, see messages.html
     actions: { autoBind: true } // bind delegated [data-action] on document
   });
 
   // Load some sections on page-load
   cmnsd.loadContent({
     // url: 'location/{{ location.id }}-{{ location.slug }}/tags,comments,descriptions,category,size,chains,links/',
-    {% with fields='tags,comments,descriptions,category,size,chains,links' %}
+    {% comment %} {% with fields='tags,comments,descriptions,category,size,chains,links' %} {% endcomment %}
+    {% with fields='tags' %}
     url: '{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug  fields %}',
     {% endwith%}
     map: {  tags: '#tags', 
@@ -334,35 +336,8 @@
     // comments, description, category, size, chain
     // name, address, phone, owners_names
   });
-</script>
-{% endblock %}
 
-{% block old_scriptfooter %}
-  <span id="csrf_token" style="display: none;">{{ csrf_token }}</span>
-  <script src="{% static 'js/getLocationAttributes.js' %}" defer></script>  
-  <script src="{% static 'js/comments.js' %}" defer></script>
-  
-  <script type="text/javascript">
-    /** Configuration */
-    const debug = {% if user.is_staff %}1{% else %}0{% endif %};
-    $(document).ready(function() {
-      {% if ajax_load_tags %}/** Load tags */ getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'tag' %}', 'tagslist'){% endif %}
-      {% if ajax_load_categories %}/** Load categories */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'category' %}', 'categorylist'){% endif %}
-      {% if ajax_load_chains %}/** Load chains */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'chain' %}', 'chainlist'){% endif %}
-      {% if ajax_load_comments %}/** Load comments */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'comment' %}', 'commentlist'){% endif %}
-    });
-  </script>
-  </script>
-  {% if request.user.is_authenticated %}
-    <script src="{% static 'js/getAutocompleteValues.js' %}" defer></script>
-    
-    <script type="text/javascript">
-      /** Initialisation */
-      $(document).ready(function() {
-        {% if ajax_load_size %}/** Load Size */ getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'size' %}', 'sizelist'){% endif %}
-        {% if ajax_load_actionlist %}/** Load action list */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'actionlist' %}?field=media', 'actionlist'){% endif %}
-      });
-    </script>
-  {% endif %}
-  
+  // Initialize autosuggest on any input with [data-autosuggest]
+  initAutosuggest();
+</script>
 {% endblock %}

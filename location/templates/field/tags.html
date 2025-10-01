@@ -1,0 +1,55 @@
+{% load static %}{% load i18n %}<div class="col-3 title-col">{% translate 'tags'|title %}<span class="valuecounter"></span>:</div>
+<div class="col-8 list">
+  {% for tag in location.tags.all|filter_by_visibility:request.user %}
+    {% include 'field/tag.html' %}{% if not forloop.last %}, {% endif %}
+  {% endfor %}
+  {% if json.editable and perms.location.change_location %}
+    <form
+      action="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'tags' %}"
+      data-action
+      data-method="POST"
+      data-body="form"
+      data-map='{"tags":"#tags"}'
+    >
+      <input
+        name="name"
+        type="text"
+        id="tag-input"
+        placeholder="{% translate 'add tag'|capfirst %} - {% translate 'start typing to see suggestions'|capfirst %}"
+        class="form-control"
+        data-autosuggest
+        data-url="{% url 'cmnsd:dispatch' 'tags'%}"
+        data-param="{{ search_query_character}}"
+        data-extra-params='{"format":"json", "exclude": "locations__slug:{{ location.slug }}"}'
+        data-container="tag"
+        data-field-input="name"
+        data-field-hidden="slug"
+      >
+      <button type="submit" class="btn btn-primary">{% translate 'add tag'|title %}</button>
+    </form>
+  {% endif %}
+</div>
+<div class="col-1 button-col">
+  {% if user.is_authenticated %}
+    {% if json.editable %}
+      <button type="button" 
+              class="btn btn-outline-secondary show-autocomplete"
+              title="{% translate 'stop editing tags'|capfirst %}"
+              data-action
+              data-method="GET"
+              data-url	="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'tags' %}"
+              data-map	= '{"tags":"#tags"}'
+              ><img src="{% static 'bootstrap-icons/x.svg' %}"></button>
+    {% else %}
+      <button type="button" 
+              class="btn btn-outline-secondary show-autocomplete"
+              title="{% translate 'edit tags'|capfirst %}"
+              data-action
+              data-method="GET"
+              data-url	="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'tags' %}"
+              data-params	= "editable"
+              data-map	= '{"tags":"#tags"}'
+              ><img src="{% static 'bootstrap-icons/pencil.svg' %}"></button>
+    {% endif %}
+  {% endif %}
+</div>

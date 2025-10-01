@@ -155,16 +155,10 @@ div.card>form>dl>dd {
   clear: right;
 }
 
-/** Messages */
-.alert-container {
-  position: fixed;
-  top: 20px; /* Adjust the spacing from the top as needed */
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1050; /* Ensure it appears above other content */
-  width: 90%; /* You can adjust the width */
-  max-width: 600px; /* Or set a maximum width */
+/* Tag */
+span.tag {
+  white-space: nowrap;
 }
-.alert-container .alert {
-  margin-bottom: 10px; /* Space between messages */
+span.tag:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 }

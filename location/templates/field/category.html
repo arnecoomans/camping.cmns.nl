@@ -1,1 +1,6 @@
-<span class="category">{{ category.name }}</span>
+<span class="nowrap"><span class="category">{{ category.name }}</span>
+  {% if json.editable and category in location.additional_category.all%}<a href="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'additional_category' %}"
+    data-action
+    data-method="PATCH"
+    data-body='{"slug": "{{ category.slug }}", "editable": true}'
+    data-map='{"category":"#category", "additional_category":"#category"}'>[X]</a>{% endif %}</span>

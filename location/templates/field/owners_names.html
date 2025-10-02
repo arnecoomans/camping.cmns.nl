@@ -1,0 +1,12 @@
+{%load i18n %}
+{% if location.owners_names %}
+  <div class="row">
+    <div class="col-3 title-col">{% translate 'owners names'|title %}:</div>
+    <div class="col-8">
+      {{ location.owners_names }}
+    </div>
+    <div class="col-1 button-col">
+      {% include 'element/reusable_edit_button.html' with field='owners_names' %}
+    </div>
+  </div>
+{% endif %}

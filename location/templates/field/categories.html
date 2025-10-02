@@ -32,26 +32,5 @@
   {% endif %}
 </div>
 <div class="col-1 button-col">
-  {% if user.is_authenticated %}
-    {% if json.editable %}
-      <button type="button" 
-              class="btn btn-outline-secondary show-autocomplete"
-              title="{% translate 'stop editing categories'|capfirst %}"
-              data-action
-              data-method="GET"
-              data-url	="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'category' %}"
-              data-map	= '{"category":"#category"}'
-              ><img src="{% static 'bootstrap-icons/x.svg' %}"></button>
-    {% else %}
-      <button type="button" 
-              class="btn btn-outline-secondary show-autocomplete"
-              title="{% translate 'edit categories'|capfirst %}"
-              data-action
-              data-method="GET"
-              data-url	="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'category' %}"
-              data-params	= "editable"
-              data-map	= '{"category":"#category"}'
-              ><img src="{% static 'bootstrap-icons/pencil.svg' %}"></button>
-    {% endif %}
-  {% endif %}
+  {% include 'element/reusable_edit_button.html' with field='category' %}
 </div>

@@ -1,0 +1,9 @@
+{% load i18n %}{% if location.phone %}
+  <div class="row">
+    <div class="col-3 title-col">{% translate 'phone'|title %}:</div>
+    <div class="col-8">{{ location.phone|default:'-' }}</div>
+    <div class="col-1 button-col">
+      {% include 'element/reusable_edit_button.html' with field='owners_names' %}
+    </div>
+  </div>
+{% endif %}

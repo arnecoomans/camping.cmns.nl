@@ -4,10 +4,10 @@
 {% block content %}
   <div class="{{ location.getCategory }} card">
     {% if location.status != 'p' and not request.user.is_superuser %}
-    <!-- Show warning that location is not published for users, do not show location details -->
-    <div class="alert alert-danger" role="alert">
-      {% translate 'This location is not visible'|capfirst %}. {% translate 'status'|capfirst %}: {% translate  location.get_status_display %}.
-    </div>
+      <!-- Show warning that location is not published for users, do not show location details -->
+      <div class="alert alert-danger" role="alert">
+        {% translate 'This location is not visible'|capfirst %}. {% translate 'status'|capfirst %}: {% translate  location.get_status_display %}.
+      </div>
     {% else %}
       {% if location.status != 'p' %}
         <!-- Show warning that location is not published for superuser but show location details -->
@@ -56,88 +56,52 @@
       <!-- Descriptions -->
       <div id="descriptions">
         {% include 'field/descriptions.html' %}
-        {% comment %} {% for description in descriptions %}
-          {% if description.description|length > 0 %}
-          <div class="spacer"></div>
-            <div class="object description">
-              {{ description.description|markdown|safe }}
-              <div class="meta">{% translate 'description'|capfirst %}{% if user.is_authenticated %} {% translate 'added by' %} {{ description.user.get_full_name|default:description.user.username }}{% endif %} {% translate 'for' %} {% translate description.get_visibility_display %}</div>
-            </div>
-          {% endif %}
-        {% endfor %} {% endcomment %}
       </div>
-        <div class="spacer"></div>
+      <div class="spacer"></div>
         
-        <!-- Location Address Details -->
+      <!-- Location Address Details -->
+      <div id="address">
+        {% include 'field/address.html' %}
+      </div>
+      <div class="spacer"></div>
+      <!-- Additional Informations -->
+      <div id="owners_names">
+        {% include 'field/owners_names.html' %}
+      </div>
+      <div id="phone">
+        {% include 'field/phone.html' %}
+      </div>
+      {% if location.home_of.all.count > 0 %}
         <div class="row">
-          <div class="col-3 title-col">{% translate 'address'|title %}:</div>
-          <div class="col-9">
-            {{ location.address|default:'-' }}
-          </div>
-          {% if user.is_authenticated and user.profile.navigationapps.all.count > 0 %}
-            <div class="col-3"></div>
-            <div class="col-9">
-              {% for app in user.profile.navigationapps.all %}
-                {% include 'partial/navigation_app.html' %}
-              {% endfor %}
-            </div>
+          <div class="col-3 title-col">{% translate 'home of'|capfirst %}</div>
+          <div class="col-9">{% for profile in location.home_of.all %}{{ profile.user.get_full_name|default:profile.user.username }}{% if not forloop.last %}, {% endif %}{% endfor %}</div>
+        </div>
+      {% endif %}
+        
+      <!-- Map -->
+      {% if not location in user.profile.least_liked.all and location.coord_lat %}
+        <h3>{{ location.name }} {% translate 'on the map'|title %}:</h3>
+        <div id="map">
+          {% if not maps_permission %}
+            <p>
+              {% translate 'this site uses google maps to show the location of this object on a map'|capfirst %}.<br>
+              {% translate 'this means your data will be shared with google when the request loads'|capfirst %}.
+            </p>
+            <p>
+              <a href="{{ location.get_absolute_url }}?maps_permission=true">{% translate 'allow once'|capfirst %}</a>{% if user.is_authenticated and not user.profile.maps_permission %},{% else %} or{% endif %}
+              <a href="{% url 'location:MapsPermissionSession' %}?next={{ location.get_absolute_url }}">{% translate 'allow for this session' %}</a>
+              {% if user.is_authenticated %} or <a href="{% url 'location:MapsPermissionProfile' %}?next={{ location.get_absolute_url }}">{% translate 'always allow' %}</a>{% endif %}. </p>
           {% endif %}
         </div>
-        {% if user.is_authenticated %}
-          <!-- Distance to home -->
-          {% with location|find_distance:request.user as distance %}
-            {% if distance and distance.0 != 0 %}
-              <div class="row">
-                <div class="col-3"></div>
-                <div class="col-9">{{ distance.0 }} / {{ distance.1 }} from {{ user.profile.home.name }}</div>
-              </div>
-            {% endif %}
-          {% endwith %}
-          <!-- Additional Informations -->
-          {% if location.owners_names %}
-            <div class="row">
-              <div class="col-3 title-col">{% translate 'owners names'|title %}:</div>
-              <div class="col-9">{{ location.owners_names }}</div>
-            </div>
-          {% endif %}
-          {% if location.phone %}
-            <div class="row">
-              <div class="col-3 title-col">{% translate 'phone'|title %}:</div>
-              <div class="col-9">{{ location.phone|default:'-' }}</div>
-            </div>
-          {% endif %}
-          {% if location.home_of.all.count > 0 %}
-            <div class="row">
-              <div class="col-3 title-col">{% translate 'home of'|capfirst %}</div>
-              <div class="col-9">{% for profile in location.home_of.all %}{{ profile.user.get_full_name|default:profile.user.username }}{% if not forloop.last %}, {% endif %}{% endfor %}</div>
-            </div>
-          {% endif %}
+        {% if maps_permission %}
+          <ul class="action list">
+            <li><a href="https://maps.google.com/maps?q={{ location.name|urlencode }}+{{ location.address|urlencode }}" rel="nofollow" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ location }} {% translate 'on google maps' %}"><img src="{% static 'bootstrap-icons/globe.svg' %}"></a></li>
+            <li><a href="https://www.google.com/maps/dir/{{ user.profile.get_home.address|urlencode }}/{{ location.address|urlencode }}/" rel="nofollow" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'navigate to from home'|capfirst %}"><img src="{% static 'bootstrap-icons/sign-turn-right.svg' %}"> to</a></li>
+            <li><a href="https://www.google.com/maps/dir/{{ location.address|urlencode }}/" rel="nofollow" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'navigate from'|capfirst %}"><img src="{% static 'bootstrap-icons/sign-turn-right.svg' %}"> from</a></li>
+          </ul>
         {% endif %}
-
-        <!-- Map -->
-        {% if not location in user.profile.least_liked.all and location.coord_lat %}
-          <h3>{{ location.name }} {% translate 'on the map'|title %}:</h3>
-          <div id="map">
-            {% if not maps_permission %}
-              <p>
-                {% translate 'this site uses google maps to show the location of this object on a map'|capfirst %}.<br>
-                {% translate 'this means your data will be shared with google when the request loads'|capfirst %}.
-              </p>
-              <p>
-                <a href="{{ location.get_absolute_url }}?maps_permission=true">{% translate 'allow once'|capfirst %}</a>{% if user.is_authenticated and not user.profile.maps_permission %},{% else %} or{% endif %}
-                <a href="{% url 'location:MapsPermissionSession' %}?next={{ location.get_absolute_url }}">{% translate 'allow for this session' %}</a>
-                {% if user.is_authenticated %} or <a href="{% url 'location:MapsPermissionProfile' %}?next={{ location.get_absolute_url }}">{% translate 'always allow' %}</a>{% endif %}. </p>
-            {% endif %}
-          </div>
-          {% if maps_permission %}
-            <ul class="action list">
-              <li><a href="https://maps.google.com/maps?q={{ location.name|urlencode }}+{{ location.address|urlencode }}" rel="nofollow" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ location }} {% translate 'on google maps' %}"><img src="{% static 'bootstrap-icons/globe.svg' %}"></a></li>
-              <li><a href="https://www.google.com/maps/dir/{{ user.profile.get_home.address|urlencode }}/{{ location.address|urlencode }}/" rel="nofollow" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'navigate to from home'|capfirst %}"><img src="{% static 'bootstrap-icons/sign-turn-right.svg' %}"> to</a></li>
-              <li><a href="https://www.google.com/maps/dir/{{ location.address|urlencode }}/" rel="nofollow" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'navigate from'|capfirst %}"><img src="{% static 'bootstrap-icons/sign-turn-right.svg' %}"> from</a></li>
-            </ul>
-          {% endif %}
-        {% endif %}
-      </div>
+      {% endif %}
+    </div>
 
       <!-- Location Attributes -->
       {% include 'segment/location_attributes.html' %}

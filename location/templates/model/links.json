@@ -1,0 +1,5 @@
+ {
+  {% for link in links %}
+    {% include "model/link.json" %}{% if not forloop.last %},{% endif %}
+  {% endfor %}
+ }

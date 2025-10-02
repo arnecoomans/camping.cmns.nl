@@ -1,1 +1,7 @@
-{% load i18n %}<a href="{{ link.url }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'visit'|capfirst %} {{link.url }}" target="_blank">{{ link.get_title }}</a>
+<span class="nowrap">{% load i18n %}<a href="{{ link.url }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'visit'|capfirst %} {{link.url }}" target="_blank">{{ link.get_title }}</a>
+{% if json.editable and perms.location.change_location %}<a href="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'links' %}"
+              data-action
+              data-method="PATCH"
+              data-body='{"id": "{{ link.id }}", "editable": true}'
+              data-map='{"links":"#links"}'>[X]</a>
+{% endif %}</span>

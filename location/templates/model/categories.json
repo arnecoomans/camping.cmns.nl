@@ -1,0 +1,5 @@
+ {
+  {% for category in categories %}
+    {% include "model/category.json" %}{% if not forloop.last %},{% endif %}
+  {% endfor %}
+ }

@@ -1,0 +1,4 @@
+"{{ category.slug }}": {
+  "slug": "{{ category.slug }}",
+  "name": "{{ category.name }}"
+}

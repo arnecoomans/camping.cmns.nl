@@ -11,9 +11,9 @@
     {% include 'field/categories.html'%}
    </div>
   <!-- Size (only for locations and authenticated users) -->
-  <div class="row size" id="size">
+  {% if location.canhavesize %}<div class="row size" id="size">
     {% include 'field/size.html'%}
-  </div>
+  </div>{% endif %}
   <!-- Chain -->
   <div class="row chains" id="chains">
     {% include 'field/chains.html' %}
@@ -22,9 +22,6 @@
   <div class="row tags" id="tags">
     {% include 'field/tags.html' %}
   </div>
-  <!-- Links -->
-   <div class="row links" id="links">
-    {% include 'field/links.html' %}
-   </div>
+  
    
 </div>

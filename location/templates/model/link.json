@@ -1,0 +1,5 @@
+"{{ link.id }}": {
+  "id": "{{ link.id }}",
+  "name": "{{ link.get_title|title|safe }}",
+  "url": "{{ link.url|safe }}"
+}

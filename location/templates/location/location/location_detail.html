@@ -71,6 +71,10 @@
       <div id="phone">
         {% include 'field/phone.html' %}
       </div>
+      <!-- Links -->
+      <div id="links">
+        {% include 'field/links.html' %}
+      </div>
       {% if location.home_of.all.count > 0 %}
         <div class="row">
           <div class="col-3 title-col">{% translate 'home of'|capfirst %}</div>

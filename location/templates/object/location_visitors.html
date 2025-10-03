@@ -1,0 +1,55 @@
+  <div class="col-3 title-col">{% translate 'your visits'|title %}:</div>
+  <div class="col-8 list">
+    {% for visit in location.visitors|filter_by_status|filter_by_visibility:request.user|filter_by_user:request.user %}
+      {% include 'object/location_visit.html' with visit=visit %}{% if not forloop.last %},{% endif %}
+    {% endfor %}
+    {% if ajax.editable and perms.location.change_location %}
+      <form class="cmnd-autosuggest"
+        action="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'visitors' %}?editable"
+        data-action
+        data-method="POST"
+        data-body="form"
+        data-map='{"tags":"#tags"}'
+      >
+        <div class="input-group">
+          <input type="hidden" name="editable" value="true">
+          <input type="hidden" name="location" value="{{ location.id }}">
+          <input type="hidden" name="user" value="{{ request.user.id }}">
+          <input
+            name="day"
+            type="number"
+            placeholder="{% translate 'day'|capfirst %} {{ visit.month_choices}}"
+            class="form-control"
+            min="1"
+            max="31"
+          >
+          <select name="month" class="form-select">
+            <option value="" selected>{% translate 'month'|capfirst %}</option>
+            <option value="1">{% translate 'january'|capfirst %}</option>
+            <option value="2">{% translate 'february'|capfirst %}</option>
+            <option value="3">{% translate 'march'|capfirst %}</option>
+            <option value="4">{% translate 'april'|capfirst %}</option>
+            <option value="5">{% translate 'may'|capfirst %}</option>
+            <option value="6">{% translate 'june'|capfirst %}</option>
+            <option value="7">{% translate 'july'|capfirst %}</option>
+            <option value="8">{% translate 'august'|capfirst %}</option>
+            <option value="9">{% translate 'september'|capfirst %}</option>
+            <option value="10">{% translate 'october'|capfirst %}</option>
+            <option value="11">{% translate 'november'|capfirst %}</option>
+            <option value="12">{% translate 'december'|capfirst %}</option>
+          </select>
+          <input
+            name="year"
+            type="number"
+            placeholder="{% translate 'year'|capfirst %}*"
+            class="form-control"
+            required
+          >
+          <button type="submit" class="btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/></svg></button>
+        </div>
+      </form>
+    {% endif %}
+  </div>
+  <div class="col-1 button-col">
+      {% include 'element/reusable_edit_button.html' with field='visitors' %}
+  </div>

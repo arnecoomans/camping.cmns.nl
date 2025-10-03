@@ -1,4 +1,4 @@
-{% load static %}{% load i18n %}<div class="col-3 title-col">{% translate 'category'|title %}:</div>
+<div class="col-3 title-col">{% translate 'category'|title %}:</div>
 <div class="col-8 list">
  {% include 'field/category.html' with category=location.category %}
  {% if location.additional_category.all.count > 0 %} {% endif %}

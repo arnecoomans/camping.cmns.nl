@@ -128,17 +128,6 @@
         {% if not location in user.profile.least_liked.all and perms.location.add_listlocation %}
           {% include 'snippets/add_list_form.html' %}
         {% endif %}
-        <!-- Visited In -->
-        {% if visitors.all.count > 0 %}
-          <div class="row">
-            <div class="col-3 title-col">{% translate 'your visits'|capfirst %}</div>
-            <div class="col-9">
-              {% for visit in visitors.all %}
-                {% if visit.location == location %}{{ visit.year }}{% if not forloop.last %}, {% endif %}{% endif %}
-              {% endfor %}
-            </div>
-          </div>
-        {% endif %}
       </div>
 
       <!-- comments -->

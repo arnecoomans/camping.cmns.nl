@@ -15,6 +15,8 @@ class Region(models.Model):
   
   order               = models.PositiveIntegerField(default=0, help_text=f"{ _('add order to countries for sorting in distance sorted overview') }. { _('only works for countries') }")
 
+  cached_average_distance_to_center = models.FloatField(null=True, blank=True, editable=False, help_text=f"{ _('cached average distance to center of this region') } ({ _('in km') })")
+
   # Meta-information
   date_added          = models.DateTimeField(editable=False, auto_now_add=True)
   date_modified       = models.DateTimeField(editable=False, auto_now=True)
@@ -27,3 +29,24 @@ class Region(models.Model):
   
   class Meta:
     ordering = ['name']
+
+  def calculate_average_distance_to_center(self):
+    ''' Calculate the average distance to the center of this region
+        and store it in the cached_average_distance_to_center field
+    '''
+    locations = self.locations.all()
+    if locations.exists():
+      total_distance = sum([loc.distance_to_departure_center for loc in locations if loc.distance_to_departure_center is not None])
+      average_distance = total_distance / locations.count()
+      self.cached_average_distance_to_center = average_distance
+      self.save(update_fields=['cached_average_distance_to_center'])
+    regions = self.children.all()
+    if regions.exists():
+      total_distance = sum([reg.cached_average_distance_to_center for reg in regions if reg.cached_average_distance_to_center is not None])
+      average_distance = total_distance / regions.count()
+      self.cached_average_distance_to_center = average_distance
+      self.save(update_fields=['cached_average_distance_to_center'])
+    # For location parent, calculate the average distance
+    if self.parent:
+      self.parent.calculate_average_distance_to_center()
+    return self.cached_average_distance_to_center

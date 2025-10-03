@@ -184,11 +184,33 @@ class VisitedInAdmin(DefaultAdmin):
   list_display = ('location', 'user', 'year', 'status')
   list_filter = ('user', 'year', 'status', 'location')
 
+class RegionAdmin(SlugDefaultAdmin):
+  list_display = ['name', 'parent', 'cached_average_distance_to_center']
+  actions = ['calculate_average_distance_to_center_bulk', 'reset_average_distance_to_center_bulk']
+
+  @admin.action(description="Calculate average distance to center for selected regions")
+  def calculate_average_distance_to_center_bulk(self, request, queryset):
+    for region in queryset:
+      curr_distance = region.cached_average_distance_to_center
+      avg_distance = region.calculate_average_distance_to_center()
+      if avg_distance is not None:
+        if avg_distance != curr_distance:
+          self.message_user(request, f"Updated average distance to center for {region.name}: {avg_distance:.2f} km", level=messages.SUCCESS)
+        else:
+          self.message_user(request, f"No change in average distance to center for {region.name}: remains {avg_distance:.2f} km", level=messages.INFO)
+      else:
+        self.message_user(request, f"No locations found for region {region.name}.", level=messages.WARNING)
+  @admin.action(description="Reset average distance to None for selected regions")
+  @admin.action(description="Reset average distance to None for selected regions")
+  def reset_average_distance_to_center_bulk(self, request, queryset):
+    updated = queryset.update(cached_average_distance_to_center=None)
+    self.message_user(request, f"Reset average distance to center for {updated} regions.", level=messages.SUCCESS)
+
 admin.site.register(Category, SlugDefaultAdmin)
 admin.site.register(Location, LocationAdmin)
 admin.site.register(Chain, SlugDefaultAdmin)
 admin.site.register(Link, LinkAdmin)
-admin.site.register(Geo.Region, SlugDefaultAdmin)
+admin.site.register(Geo.Region, RegionAdmin)
 admin.site.register(Tag, SlugDefaultAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(List, SlugDefaultAdmin)

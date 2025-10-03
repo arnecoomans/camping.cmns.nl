@@ -1,4 +1,4 @@
-{% load i18n %}{% load static %}<!-- Location Attributes -->
+<!-- General Location Attributes -->
 <div class="more information card">
   <div class="row">
     <div class="col-12">
@@ -21,6 +21,15 @@
   <!-- Tags -->
   <div class="row tags" id="tags">
     {% include 'field/tags.html' %}
+  </div>
+</div>
+
+<!-- User related location attributes -->
+<div class="user related information card">
+  <div class="row">
+    <div class="col-12">
+      <h2>{% translate 'your information'|capfirst %}:</h2>
+    </div>
   </div>
   <!-- Visitors -->
   <div class="row visitors" id="visitors">

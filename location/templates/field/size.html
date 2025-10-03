@@ -1,7 +1,7 @@
 {% load static %}{% load i18n %}
 <div class="col-3 title-col">{% translate 'size'|title %}: <sup data-bs-toggle="tooltip" data-bs-position="top" title="{% translate 'size is available for camping or glamping'|capfirst %}.">(i)</sup></div>
 <div class="col-8 list">
-  {% if json.editable %}
+  {% if ajax.editable %}
   <form class="cmnd-autosuggest"
     action="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'size' %}"
     data-action

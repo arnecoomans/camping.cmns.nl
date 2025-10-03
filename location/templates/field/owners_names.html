@@ -1,9 +1,9 @@
 {%load i18n %}
-{% if location.owners_names %}
+{% if location.owners_names or ajax.editable%}
   <div class="row">
     <div class="col-3 title-col">{% translate 'owners names'|title %}:</div>
     <div class="col-8">
-      {% if json.editable %}
+      {% if ajax.editable %}
       <form class="cmnd-autosuggest"
           action="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'owners_names' %}"
           data-action

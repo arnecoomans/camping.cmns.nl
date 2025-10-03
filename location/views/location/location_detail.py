@@ -91,6 +91,10 @@ class LocationView(ListView, FilterClass):
     context['media'] = self.get_media()
     ''' Maps '''
     context['maps_permission'] = self.get_maps_permission()
+    context['ajax'] = {
+      'editable': True if 'editable' in self.request.GET else False,
+      'foo': 'bar'
+    }
     return context
 
   ''' Get Descriptions 

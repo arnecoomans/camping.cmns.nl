@@ -6,7 +6,7 @@
         {% include 'field/link.html' %}{% if not forloop.last %}, {% endif %}
       {% endfor %}
     {% endif %}
-    {% if json.editable and perms.location.change_location %}
+    {% if ajax.editable and perms.location.change_location %}
       <form class="cmnd-autosuggest"
         action="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'links' %}?editable"
         data-action

@@ -17,7 +17,8 @@
       {% endif %}
       <header {% if media|length > 0 %}class="withmedia" style="background-image: url('{% url 'location:MediaStream' media.0.source %}');"{% endif %}>
         <!-- Header Line -->
-        <h1>{{ location.name }}</h1> 
+        {% comment %} <h1>{{ location.name }}</h1>  {% endcomment %}
+        <div id="name">{% include 'field/name.html' with name=location.name header_size=1%}</div>
         <span class="locator">
           {% if location.chain.all.count > 0 %}
             {% include 'snippets/chain.html' with chains=location.chain.all %}

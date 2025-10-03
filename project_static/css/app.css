@@ -13,7 +13,9 @@ div.location>header.withmedia {
 div.card>header.withmedia>h1,
 div.card>header.withmedia>span,
 div.location>header.withmedia>h1,
-div.location>header.withmedia>span {
+div.location>header.withmedia>span,
+div.location>header.withmedia>div>h1,
+div.location>header.withmedia>div>span {
   background-color: rgba(255, 255, 255, 0.6);
 }
 div.card>header>h1,

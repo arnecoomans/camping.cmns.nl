@@ -1,1 +1,9 @@
-{{ visitors|filter_by_user:request.user }}
+  <div class="col-3 title-col">{% translate 'visits'|title %}:</div>
+  <div class="col-8 list">
+    {% for visit in visitors|filter_by_user:request.user %}
+      {% include 'object/location_visit.html' with visit=visit %}{% if not loop.last %},{% endif %}
+    {% endfor %}
+  </div>
+  <div class="col-1 button-col">
+      {% include 'element/reusable_edit_button.html' with field='visitors' %}
+  </div>

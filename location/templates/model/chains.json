@@ -1,0 +1,5 @@
+ {
+  {% for chain in chains %}
+    {% include "model/chain.json" %}{% if not forloop.last %},{% endif %}
+  {% endfor %}
+ }

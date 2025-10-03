@@ -1,3 +1,3 @@
-<span class="nowrap">{% load i18n %}<a href="{{ link.url }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'visit'|capfirst %} {{link.url }}" target="_blank">{{ link.get_title }}</a>
+<span class="nowrap"><a href="{{ link.url }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'visit'|capfirst %} {{link.url }}" target="_blank">{{ link.get_title }}</a>
   {% include 'element/reusable_delete_button.html' with field='links' map_id='id' map_value=link.id %}
 </span>

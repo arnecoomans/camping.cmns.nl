@@ -1,4 +1,4 @@
-{% load static %}{% load i18n %}
+{% load static %}
 <span class="tag"><a class="tag {{ tag.get_list_as_display }}" href="{% url 'location:tag' tag.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see details of tag'|capfirst %}: {{ tag|title }} ">
   {% if tag.list_as == 'a' %}<img src="{% static 'bootstrap-icons/hand-thumbs-up-fill.svg' %}"> {% elif tag.list_as == 'd' %}<img src="{% static 'bootstrap-icons/hand-thumbs-down-fill.svg' %}"> {% endif %}
   {% if tag.parent %}{{ tag.parent.name }}: {% endif %}

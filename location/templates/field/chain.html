@@ -1,4 +1,3 @@
-{% load i18n %}
 <span class="chain">
   <a href="{% url 'location:search' %}?chain={{ chain.slug }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate location.getPCategory|capfirst %} {% translate 'by' %} {{ chain.name }}{% if chain.parent and user.is_authenticated %} ({{ chain.parent.name }}){% endif %}">
     {{ chain.name|title }}

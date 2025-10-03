@@ -4,9 +4,5 @@
   {% if tag.parent %}{{ tag.parent.name }}: {% endif %}
   {{ tag.name }}
 </a>
-{% if json.editable %}<a href="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'tags' %}"
-              data-action
-              data-method="PATCH"
-              data-body='{"slug": "{{ tag.slug }}", "editable": true}'
-              data-map='{"tags":"#tags"}'>[X]</a>{% endif %}
+{% include 'element/reusable_delete_button.html' with field='tags' map_id='slug' map_value=tag.slug %}
 </span>

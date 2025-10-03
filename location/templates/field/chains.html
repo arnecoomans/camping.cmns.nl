@@ -1,7 +1,7 @@
 {% load static %}{% load i18n %}<div class="col-3 title-col">{% translate 'chains'|title %}<span class="valuecounter"></span>:</div>
 <div class="col-8 list">
-  {% if chains.all.count > 0 %}
-    {% for chain in location.chains.all|filter_by_visibility:request.user %}
+  {% if location.chains.all.count > 0 %}
+    {% for chain in location.chains.all %}
       {% include 'field/chain.html' %}{% if not forloop.last %}, {% endif %}
     {% endfor %}
   {% endif %}

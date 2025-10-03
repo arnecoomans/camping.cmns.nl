@@ -207,6 +207,9 @@ class Location(BaseModel):
   def save(self, *args, **kwargs):
     if self.category == 'home':
       self.status = '-'
+    # Calculate average distance to center for region
+    if self.location:
+      self.location.calculate_average_distance_to_center()
     return super(Location, self).save(*args, **kwargs)
 
   ''' Data Access Functions '''

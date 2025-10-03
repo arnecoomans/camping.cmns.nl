@@ -1,5 +1,0 @@
-"{{ chain.slug }}": {
-  "slug": "{{ chain.slug }}",
-  "name": "{{ chain.name|title|safe }}",
-  "url": "{{ chain.get_absolute_url }}"
-}

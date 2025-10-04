@@ -96,24 +96,30 @@ ul.action.list>li>a:hover {
 /** Comments */
 div.comment {
   border: 1px solid var(--highlight-color);
-  margin: 2em 1em;
+  margin-bottom: 2em;
   border-radius: 1em;
+  padding-left: 0;
+  padding-right: 0;
 }
 
-div.comment>div.header {
+div.comment>header {
   background-color: var(--highlight-color);
   color: var(--contrast-color);
   border-radius: 1em 1em 0 0;
   padding: 1em 2em;
 }
 
-div.comment>div.header>a,
-div.comment>div.header>strong>a {
+div.comment>header>a {
   color: var(--contrast-color);
 }
 
 div.comment>div.content {
   margin: 1em 1em;
+}
+div.comment>footer {
+  border-top: 1px solid var(--highlight-color);
+  font-size: 75%;
+  padding: 0.4em 2em;
 }
 
 /** Tags */

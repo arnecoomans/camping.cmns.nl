@@ -1,0 +1,45 @@
+{% load static %}<div class="row">
+  <div class="col-11 comment">
+    <header>
+      {% blocktranslate with user=comment.user.get_full_name|default:comment.user.username time=comment.date_added|humanize_date:"j F Y" audience=comment.get_visibility_display %}{{user}} commented {{time}} for {{audience}} on{% endblocktranslate %} <a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see details of'|capfirst %} {{ comment.location.name }}">{{ comment.location.name }}</a>:
+    </header>
+    <div class="content">
+      {% if ajax.editable and perms.location.change_location and perms.location.change_comment and request.user == comment.user or request.user.is_superuser %}
+        <div class="input-group">
+          <textarea class="form-control">{{ comment.content }}</textarea>
+          <button type="button" 
+            class="btn btn-outline-secondary show-autocomplete"
+            ><img src="{% static 'img/bootstrap-icons/floppy.svg' %}"></button>
+        </div>
+      {% else %}
+        {{ comment.content|markdown|safe }}
+      {% endif %}
+    </div>
+    {% if request.user.is_authenticated %}
+      <footer>
+        {{ comment.date_added|date:"l j F Y H:i" }} |
+        {% if request.user.is_staff and comment.date_added|date:"ymd" != comment.date_modified|date:"ymd" %} {% translate 'edited'|capfirst %} {{ comment.date_modified|date:"l j F Y" }} |{% endif %}
+        {{ comment.user.get_full_name|default:comment.user.username }} | 
+        {{ comment.get_visibility_display }}
+      </footer>
+    {% endif %}
+  </div>
+  <div class="col-1">
+    {% if request.user.is_authenticated %}
+      {% if perms.location.change_location and perms.location.change_comment and request.user == comment.user or request.user.is_superuser %}
+        {% if ajax.editable %}
+          <button type="button" 
+          class="btn btn-outline-secondary show-autocomplete"
+          ><img src="{% static 'img/bootstrap-icons/x.svg' %}"></button>
+        {% else %}
+          <button type="button" 
+            class="btn btn-outline-secondary show-autocomplete"
+            ><img src="{% static 'img/bootstrap-icons/pencil.svg' %}"></button>
+        {% endif %}
+        <!-- delete -->
+          
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+    

@@ -30,24 +30,15 @@
 </div>
 
 {% if user.is_authenticated %}
-<!-- Distance to home -->
-  {% with location|find_distance:request.user as distance %}
-    {% if distance and distance.0 != 0 %}
-      <div class="row">
-        <div class="col-3 title-col"></div>
-        <div class="col-9">{{ distance.0 }} / {{ distance.1 }} from {{ user.profile.home.name }}</div>
+  <!-- Navigation apps -->
+  {% if user.profile.navigationapps.all.count > 0 %}
+    <div class="row">
+      <div class="col-3 title-col">{% translate 'navigate'|title %}:</div>
+      <div class="col-8">
+        {% for app in user.profile.navigationapps.all %}
+          {% include 'partial/navigation_app.html' %}
+        {% endfor %}
       </div>
-    {% endif %}
-  {% endwith %}
-<!-- Navigation apps -->
-{% if user.profile.navigationapps.all.count > 0 %}
-  <div class="row">
-    <div class="col-3 title-col">{% translate 'navigate'|title %}:</div>
-    <div class="col-8">
-      {% for app in user.profile.navigationapps.all %}
-        {% include 'partial/navigation_app.html' %}
-      {% endfor %}
     </div>
-  </div>
   {% endif %}
 {% endif %}

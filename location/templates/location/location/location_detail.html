@@ -1,5 +1,4 @@
 {% extends 'index.html' %}
-{% load i18n %}\
 {% load static %}
 {% block content %}
   <div class="{{ location.getCategory }} card">
@@ -111,49 +110,7 @@
       <!-- Location Attributes -->
       {% include 'segment/location_attributes.html' %}
 
-      <div class="more information card">
-        <!-- Lists -->
-        {% if lists.count > 0 %}
-        <div class="row">
-          <div class="col-3 title-col">{% translate 'lists'|capfirst %}</div>
-          <div class="col-9">
-            <ul>
-              {% for list in lists %}
-                <li><a href="{% url 'location:list' list.list.slug %}">{{ list.list.name }}</a> {% translate 'by' %} {{ list.list.user.get_full_name|default:list.list.user.username }}: ({{ list.list.get_visibility_display }}, {{ list.list.locations.all.count }} location(s))</li>
-              {% endfor %}
-            </ul>
-          </div>
-        </div>
-        {% endif %}
-        {% if not location in user.profile.least_liked.all and perms.location.add_listlocation %}
-          {% include 'snippets/add_list_form.html' %}
-        {% endif %}
-      </div>
-
-      <!-- comments -->
-      <div class="comments card">
-        <h2>{% translate 'comments'|capfirst %} <span id="comment counter"></span></h2>
-        <div id="comment-messages"><!-- Comment messages to be placed here --></div>
-        <div id="comments">
-          {% if not ajax_load_comments %}
-            {% for comment in comment_list %}
-              {% include 'partial/comment.html' %}
-            {% endfor %}
-          {% endif %}
-        </div>    
-
-        {% if perms.location.add_comment %}
-          {% include 'partial/comment_add.html' %}
-        {% elif not user.is_authenticated %}
-          <div class="register promo">
-            <p><a href="{% url 'login' %}?next={{ request.get_full_path }}">{% translate 'sign in'|capfirst %}</a> {% translate 'or' %} <a href="#">{% translate 'register' %}</a> {% translate 'to comment' %}{% if could_have_comments %} {% translate 'or see comments shared with the community' %}{% endif %}.</p>
-          </div>
-        {% else %}
-          <div class="alert alert-warning" role="alert">
-            {% translate 'you do not have permission to comment on this location'|capfirst %}.
-          </div>
-        {% endif %}
-      </div>
+      
 
       <!-- Nearby -->
       {% if nearby_locations|length > 1%}

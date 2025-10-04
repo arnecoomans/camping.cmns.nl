@@ -1,4 +1,5 @@
-{% load static %}{% load i18n %}{% if user.is_authenticated %}
+{% load static %}
+{% if user.is_authenticated %}
 {% if ajax.editable %}
     <button type="button" 
             class="btn btn-outline-secondary show-autocomplete"

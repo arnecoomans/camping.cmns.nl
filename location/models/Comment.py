@@ -2,10 +2,11 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse_lazy
 
-from .base_model import BaseModel
+# from .base_model import BaseModel
+from cmnsd.models.cmnsd_basemodel import BaseModel, VisibilityModel
 from .Location import Location
 
-class Comment(BaseModel):
+class Comment(VisibilityModel, BaseModel):
   content             = models.TextField(help_text='Markdown is supported')
   location            = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='comments')
 
@@ -18,4 +19,4 @@ class Comment(BaseModel):
   class Meta:
     verbose_name = _('Comment')
     verbose_name_plural = _('Comments')
-    ordering = ['-date_added']
+    ordering = ['-date_created']

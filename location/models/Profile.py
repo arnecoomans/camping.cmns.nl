@@ -7,7 +7,8 @@ from django.conf import settings
 
 from django.utils.translation import gettext_lazy as _
 
-from .base_model import BaseModel
+from cmnsd.models.cmnsd_basemodel import BaseModel, VisibilityModel
+#from .base_model import BaseModel
 from .Location import Location
 from .Tag import Tag
 
@@ -88,7 +89,7 @@ class Profile(models.Model):
       defaultnavigationapps = NavigationApps.objects.filter(default_enabled=True)
       self.navigationapps.set(defaultnavigationapps)  # Set the default navigation apps
 
-class VisitedIn(BaseModel):
+class VisitedIn(VisibilityModel, BaseModel):
   user                = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='visits')
   location            = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='visitors')
 

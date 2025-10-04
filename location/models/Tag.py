@@ -4,9 +4,10 @@ from django.utils.translation import pgettext_lazy as __
 
 from django.urls import reverse_lazy
 
-from .base_model import BaseModel
+from cmnsd.models.cmnsd_basemodel import BaseModel, VisibilityModel
+# from .base_model import BaseModel
 
-class Tag(BaseModel):
+class Tag(VisibilityModel,BaseModel):
   slug                = models.CharField(max_length=64, unique=True, help_text=f"{ _('Identifier in URL') } ({ _('automatically generated') })")
   name                = models.CharField(max_length=128, help_text=_('Name of tag'))
   parent              = models.ForeignKey("self", on_delete=models.CASCADE, related_name='children', null=True, blank=True)

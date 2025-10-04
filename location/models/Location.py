@@ -20,8 +20,8 @@ from urllib.parse import urlparse
 from geopy import distance, exc
 from geopy.geocoders import GoogleV3
 
-
-from .base_model import BaseModel
+from cmnsd.models.cmnsd_basemodel import BaseModel, VisibilityModel
+# from .base_model import BaseModel
 from .Geo import Region
 from .Tag import Tag
 
@@ -56,7 +56,7 @@ class Chain(models.Model):
 ''' Links model
     Any location may have multiple links related to the location, such as several review websites
 '''
-class Link(BaseModel):
+class Link(VisibilityModel,BaseModel):
   name                = models.CharField(max_length=255, blank=True, help_text=_('Title of link, optional'))
   url                 = models.CharField(max_length=512, unique=True, help_text=_('full url of link'))
   primary             = models.BooleanField(default=False, help_text=_('primary link for location'))  
@@ -141,7 +141,7 @@ class Category(models.Model):
 
 
 ''' Description Model '''
-class Description(BaseModel):
+class Description(VisibilityModel, BaseModel):
   description         = models.TextField(blank=True, help_text=_('Markdown is supported'))
 
   def __str__(self) -> str:
@@ -157,7 +157,7 @@ class Size(BaseModel):
   
 ''' Location model
 '''
-class Location(BaseModel):
+class Location(VisibilityModel,BaseModel):
   ''' Internal Identifier '''
   slug                = models.CharField(max_length=255, unique=True, help_text=f"{ _('Identifier in URL') } ({ _('automatically generated') })")
 

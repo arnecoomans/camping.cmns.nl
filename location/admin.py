@@ -157,7 +157,7 @@ class LocationAdmin(SlugDefaultAdmin):
 
   actions = [getAddress, getLatLng, getDistanceFromDepartureCenter, getRegion, clearCachableData, change_visibility]
   action_form = VisibilityActionForm
-  list_display = ['name', 'location', 'visibility', 'status', 'location__parent__parent']
+  list_display = ['name', 'location', 'visibility', 'status', 'location__parent__parent','token']
   list_filter = [IsActivityFilter, 'status', 'category', 'chains', GrandparentLocationFilter]
 
 
@@ -171,7 +171,7 @@ class ListDistanceAdmin(DefaultAdmin):
   actions = [getData, ]  
 
 class CommentAdmin(DefaultAdmin):
-  list_display = ('location', 'user', 'visibility', 'status')
+  list_display = ('location', 'user', 'visibility', 'status', 'token')
   list_filter = ('location', 'user', 'visibility', 'status')
 
 class DescriptionAdmin(DefaultAdmin):

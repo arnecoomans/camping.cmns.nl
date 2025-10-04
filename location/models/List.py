@@ -7,7 +7,8 @@ from django.conf import settings
 from django.contrib import messages
 from django.utils.safestring import mark_safe
 
-from .base_model import BaseModel
+from cmnsd.models.cmnsd_basemodel import BaseModel, VisibilityModel
+# from .base_model import BaseModel
 from .Location import Location
 from .Media import Media
 
@@ -88,7 +89,7 @@ def metersToKilometers(meters):
   return f"{ str(floor(meters/100)/10) } km"
 
 
-class List(BaseModel):
+class List(VisibilityModel, BaseModel):
   ''' Internal Identifier '''
   slug                = models.CharField(max_length=255, unique=True, help_text=f"{ _('Identifier in URL') } ({ _('automatically generated') })")
 
@@ -141,7 +142,7 @@ class List(BaseModel):
   def getPrice(self):
     return self.location.aggregate(Sum('price'))['price__sum']
 
-class ListLocation(BaseModel):
+class ListLocation(VisibilityModel,BaseModel):
   list                = models.ForeignKey(List, related_name='locations', on_delete=models.CASCADE)
   location            = models.ForeignKey(Location, related_name='list', on_delete=models.CASCADE)
   order               = models.IntegerField(default=0)

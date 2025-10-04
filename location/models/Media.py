@@ -1,10 +1,10 @@
 from django.db import models
-from .base_model import BaseModel
 from django.conf import settings
+from cmnsd.models.cmnsd_basemodel import BaseModel, VisibilityModel
 from .Location import Location
 
 
-class Media(BaseModel):
+class Media(VisibilityModel, BaseModel):
   source = models.ImageField()
   title = models.CharField(max_length=255)
 

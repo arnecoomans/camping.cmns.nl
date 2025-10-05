@@ -146,6 +146,12 @@ class Description(VisibilityModel, BaseModel):
 
   def __str__(self) -> str:
     return self.description
+  
+  class Meta:
+        verbose_name = _("Description")
+        verbose_name_plural = _("Descriptions")
+        # 👇 ensure it's concrete
+        abstract = False
 
 class Size(BaseModel):
   slug              = models.CharField(max_length=255, help_text=_('Slug of size'))

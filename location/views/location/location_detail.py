@@ -43,7 +43,7 @@ class LocationView(ListView, FilterClass):
     queryset = Comment.objects.filter(location__slug=self.get_location().slug)
     queryset = self.filter_status(queryset)
     queryset = self.filter_visibility(queryset)
-    return queryset.order_by('-date_added').distinct()
+    return queryset.order_by('-date_created').distinct()
 
   ''' Context Data
       Most information in this view is stowed away in the Context Data.
@@ -103,7 +103,7 @@ class LocationView(ListView, FilterClass):
     descriptions = Description.objects.filter(locations__id=self.get_location().id)
     descriptions = self.filter_status(descriptions)
     descriptions = self.filter_visibility(descriptions)
-    descriptions = descriptions.order_by('-date_added').distinct()
+    descriptions = descriptions.order_by('-date_created').distinct()
     return descriptions
   ''' Get Links
   '''

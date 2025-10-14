@@ -1,26 +1,26 @@
 {% load static %}<div class="row">
   <div class="col-11 comment">
     <header>
-      {% blocktranslate with user=comment.user.get_full_name|default:comment.user.username time=comment.date_added|humanize_date:"j F Y" audience=comment.get_visibility_display %}{{user}} commented {{time}} for {{audience}} on{% endblocktranslate %} <a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see details of'|capfirst %} {{ comment.location.name }}">{{ comment.location.name }}</a>:
+      {% blocktranslate with user=comment.user.get_full_name|default:comment.user.username time=comment.date_created|humanize_date:"j F Y" audience=comment.get_visibility_display %}{{user}} commented {{time}} for {{audience}} on{% endblocktranslate %} <a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see details of'|capfirst %} {{ comment.location.name }}">{{ comment.location.name }}</a>:
     </header>
     <div class="content">
-      {% if ajax.editable and perms.location.change_location and perms.location.change_comment and request.user == comment.user or request.user.is_superuser %}
-        <div class="input-group">
-          <textarea class="form-control">{{ comment.content }}</textarea>
-          <button type="button" 
-            class="btn btn-outline-secondary show-autocomplete"
-            ><img src="{% static 'img/bootstrap-icons/floppy.svg' %}"></button>
-        </div>
+      {% if ajax.editable %}
+        {% if perms.location.change_location and perms.location.change_comment and request.user == comment.user or request.user.is_superuser %}
+          {% include 'element/reusable_comment_textarea.html' with comment=comment field='content' %}
+        {% else %}
+          {{ comment.content|markdown|safe }}
+        {% endif %}
       {% else %}
         {{ comment.content|markdown|safe }}
       {% endif %}
     </div>
     {% if request.user.is_authenticated %}
       <footer>
-        {{ comment.date_added|date:"l j F Y H:i" }} |
-        {% if request.user.is_staff and comment.date_added|date:"ymd" != comment.date_modified|date:"ymd" %} {% translate 'edited'|capfirst %} {{ comment.date_modified|date:"l j F Y" }} |{% endif %}
-        {{ comment.user.get_full_name|default:comment.user.username }} | 
-        {{ comment.get_visibility_display }}
+        {{ comment.date_created|date:"l j F Y H:i"|capfirst }} |
+        {% if request.user.is_staff and comment.date_added|date:"ymd" != comment.date_modified|date:"ymd" %} {% translate 'last edited'|capfirst %}: {{ comment.date_modified|date:"l j F Y" }} |{% endif %}
+        {% translate 'commented by'|capfirst %} <a href="/comments/?user={{ comment.user.username }}">{{ comment.user.get_full_name|default:comment.user.username }}</a> | 
+        {{ comment.get_visibility_display|capfirst }}
+        {% if comment.status != 'p' %}| {{ comment.get_status_display }}{% endif %}
       </footer>
     {% endif %}
   </div>
@@ -29,15 +29,35 @@
       {% if perms.location.change_location and perms.location.change_comment and request.user == comment.user or request.user.is_superuser %}
         {% if ajax.editable %}
           <button type="button" 
-          class="btn btn-outline-secondary show-autocomplete"
+            class="btn btn-outline-secondary show-autocomplete"
+            title="{% translate 'stop editing'|capfirst %} {% translate 'comment' %}"
+            data-action
+            data-method="GET"
+            data-url	="{% url 'cmnsd:dispatch_object_by_id_and_slug' 'comment' comment.id comment.token %}"
+            data-map	= '{"comment":"#comment-{{ comment.id }}"}'
           ><img src="{% static 'img/bootstrap-icons/x.svg' %}"></button>
+          <button type="button" 
+            class="btn btn-outline-secondary show-autocomplete"
+            title="{% translate 'delete comment'|capfirst %} {% translate field|capfirst %}"
+            data-action
+            data-method="DELETE"
+            data-url	="{% url 'cmnsd:dispatch_object_by_id_and_slug' 'comment' comment.id comment.token %}"
+            data-confirm="{% translate 'are you sure you want to delete this comment?'|capfirst %}"
+            data-refresh-url="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' comment.location.id comment.location.slug 'comments' %}"
+            data-refresh-map='{"comments":"#comments"}'
+            data-refresh-mode="update"
+            ><img src="{% static 'img/bootstrap-icons/trash.svg' %}"></button>
         {% else %}
           <button type="button" 
             class="btn btn-outline-secondary show-autocomplete"
+            title="{% translate 'edit'|capfirst %} {% translate 'comment' %}"
+            data-action
+            data-method="GET"
+            data-url	="{% url 'cmnsd:dispatch_object_by_id_and_slug' 'comment' comment.id comment.token %}"
+            data-map	= '{"comment":"#comment-{{ comment.id }}"}'
+            data-params	= "editable"
             ><img src="{% static 'img/bootstrap-icons/pencil.svg' %}"></button>
-        {% endif %}
-        <!-- delete -->
-          
+        {% endif %}          
       {% endif %}
     {% endif %}
   </div>

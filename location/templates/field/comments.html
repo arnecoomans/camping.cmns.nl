@@ -1,38 +1,15 @@
 {% load static %}{% load i18n %}
-  {% for comment in location.comments.all|filter_by_visibility:request.user %}
-    {% include 'object/comment.html' %}
+  {% for comment in location.comments.all|filter_by_status|filter_by_visibility:request.user %}
+    <div id="comment-{{ comment.id }}">
+      {% include 'object/comment.html' %}
+    </div>
   {% endfor %}
 <div class="row">
+  <div class="col-3 title-col">
+    {% translate 'add comment'|capfirst %}:
+  </div>
   <div class="col-8">
-    {% if ajax.editable and perms.location.change_location %}
-      <form class="cmnd-autosuggest"
-        action="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'tags' %}?editable"
-        data-action
-        data-method="POST"
-        data-body="form"
-        data-map='{"tags":"#tags"}'
-      >
-        <div class="input-group">
-          <input
-            name="name"
-            type="text"
-            id="tag-input"
-            placeholder="{% translate 'add tag'|capfirst %} - {% translate 'start typing to see suggestions'|capfirst %}"
-            class="form-control"
-            data-autosuggest
-            data-url="{% url 'cmnsd:dispatch' 'tags'%}"
-            data-param="{{ search_query_character}}"
-            data-extra-params='{"format":"json", "exclude": "locations__slug:{{ location.slug }}"}'
-            data-container="tag"
-            data-field-input="name"
-            data-field-hidden="slug"
-          >
-          <button type="submit" class="btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/></svg></button>
-        </div>
-      </form>
-    {% endif %}
+    {% include 'element/reusable_comment_textarea.html' with comment=new_comment %}
   </div>
-  <div class="col-1 button-col">
-    {% comment %} {% include 'element/reusable_edit_button.html' with field='tags' %} {% endcomment %}
-  </div>
+  <div class="col-1 button-col"></div>
 </div>

@@ -1,0 +1,22 @@
+{% load static %}
+<form>
+  <textarea name="content" class="form-control" data-autoresize>{{ comment.content }}</textarea>
+  <div class="input-group">
+  <span class="input-group-text">{% translate 'visibility'|capfirst %}</span>
+  <select name="visibility" id="comment-visibility" class="form-select" aria-label="{% translate 'select comment visibility'|capfirst %}">
+    <option value="q" {% if comment.visibility == 'q' %}selected{% endif %}>{% translate 'private'|capfirst %}</option>
+    <option value="f" {% if comment.visibility == 'f' %}selected{% endif %}>{% translate 'family'|capfirst %}</option>
+    <option value="c" {% if comment.visibility == 'c' %}selected{% endif %}>{% translate 'community'|capfirst %}</option>
+    <option value="p" {% if comment.visibility == 'p' %}selected{% endif %}>{% translate 'public'|capfirst %}</option>
+  </select>
+  <button type="button" 
+    class="btn btn-outline-secondary show-autocomplete"
+    title="{% if comment %}{% translate 'save changes to'|capfirst %} {% translate field|capfirst %}{% else %}{% translate 'add'|capfirst %} {% translate 'comment' %}{% endif %}"
+    data-action
+    data-method="POST"
+    data-body="form"
+    data-url	="{% if comment %}{% url 'cmnsd:dispatch_object_by_id_and_slug' 'comment' comment.id comment.token %}{% else %}{% endif %}"
+    data-map	= '{"comment":"#comment-{{ comment.id }}"}'
+    ><img src="{% if comment %}{% static 'img/bootstrap-icons/floppy.svg' %}{% else %}{% static 'img/bootstrap-icons/plus.svg' %}{% endif %}"></button>
+  </div>
+</form>

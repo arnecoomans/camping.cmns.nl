@@ -4,7 +4,7 @@
     <a href="{% url 'cmnsd:dispatch_object_by_id_and_slug' 'visitedin' visit.id location.slug %}"
       data-action
       data-method="DELETE"
-      data-body='{"id": "{{ visit.id }}", "editable": true}'
+      data-body='{"visitedin__id": "{{ visit.id }}", "editable": true}'
       data-refresh-url="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'visitors' %}?editable"
       data-refresh-map='{"visitors":"#visitors"}'
       data-refresh-mode="update">

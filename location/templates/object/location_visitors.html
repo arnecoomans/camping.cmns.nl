@@ -13,37 +13,42 @@
       >
         <div class="input-group">
           <input type="hidden" name="editable" value="true">
-          <input type="hidden" name="location" value="{{ location.id }}">
-          <input type="hidden" name="user" value="{{ request.user.id }}">
+          <input type="hidden" name="visitors__location__id" value="{{ location.id }}">
+          <input type="hidden" name="visitors__user__id" value="{{ request.user.id }}">
+          <input type="hidden" name="visitors__location__slug" value="{{ location.slug }}">
           <input
-            name="day"
+            name="visitors__day"
             type="number"
-            placeholder="{% translate 'day'|capfirst %}"
+            placeholder="{% now "d" %}"
             class="form-control"
             min="1"
             max="31"
           >
-          <select name="month" class="form-select">
-            <option value="" selected>{% translate 'month'|capfirst %}</option>
-            <option value="1">{% translate 'january'|capfirst %}</option>
-            <option value="2">{% translate 'february'|capfirst %}</option>
-            <option value="3">{% translate 'march'|capfirst %}</option>
-            <option value="4">{% translate 'april'|capfirst %}</option>
-            <option value="5">{% translate 'may'|capfirst %}</option>
-            <option value="6">{% translate 'june'|capfirst %}</option>
-            <option value="7">{% translate 'july'|capfirst %}</option>
-            <option value="8">{% translate 'august'|capfirst %}</option>
-            <option value="9">{% translate 'september'|capfirst %}</option>
-            <option value="10">{% translate 'october'|capfirst %}</option>
-            <option value="11">{% translate 'november'|capfirst %}</option>
-            <option value="12">{% translate 'december'|capfirst %}</option>
+          {% now "n" as month %}
+          <select name="visitors__month" class="form-select">
+            <option value="">{% translate 'unknown'|capfirst %}</option>
+            <option value="1" {% if month == "1" %}selected{% endif %}>{% translate 'january'|capfirst %}</option>
+            <option value="2" {% if month == "2" %}selected{% endif %}>{% translate 'february'|capfirst %}</option>
+            <option value="3" {% if month == "3" %}selected{% endif %}>{% translate 'march'|capfirst %}</option>
+            <option value="4" {% if month == "4" %}selected{% endif %}>{% translate 'april'|capfirst %}</option>
+            <option value="5" {% if month == "5" %}selected{% endif %}>{% translate 'may'|capfirst %}</option>
+            <option value="6" {% if month == "6" %}selected{% endif %}>{% translate 'june'|capfirst %}</option>
+            <option value="7" {% if month == "7" %}selected{% endif %}>{% translate 'july'|capfirst %}</option>
+            <option value="8" {% if month == "8" %}selected{% endif %}>{% translate 'august'|capfirst %}</option>
+            <option value="9" {% if month == "9" %}selected{% endif %}>{% translate 'september'|capfirst %}</option>
+            <option value="10" {% if month == "10" %}selected{% endif %}>{% translate 'october'|capfirst %}</option>
+            <option value="11" {% if month == "11" %}selected{% endif %}>{% translate 'november'|capfirst %}</option>
+            <option value="12" {% if month == "12" %}selected{% endif %}>{% translate 'december'|capfirst %}</option>
           </select>
           <input
-            name="year"
+            name="visitors__year"
             type="number"
             placeholder="{% translate 'year'|capfirst %}*"
             class="form-control"
             required
+            min="1900"
+            max="{% now "Y" %}"
+            value="{% now "Y" %}"
           >
           <button type="submit" class="btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/></svg></button>
         </div>

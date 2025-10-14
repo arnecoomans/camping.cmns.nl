@@ -9,7 +9,7 @@
     data-map='{"size":"#size"}'
   >
     <div class="input-group">
-      <select name="slug" class="form-select" id="size-select">
+      <select name="size__slug" class="form-select" id="size-select">
         {% for size in location.availablesizes.all %}
           <option value="{{ size.slug }}" {% if location.size and location.size.slug == size.slug %}selected{% endif %}>{{ size.slug|upper }} - {% translate size.name|capfirst %}</option>
         {% endfor %}

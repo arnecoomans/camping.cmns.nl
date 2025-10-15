@@ -3,6 +3,12 @@
   <textarea name="content" class="form-control" data-autoresize>{{ comment.content }}</textarea>
   <div class="input-group">
   <span class="input-group-text">{% translate 'visibility'|capfirst %}</span>
+  {% if not comment %}
+    <input type="hidden" name="location__id" value="{{ location.id }}">
+    <input type="hidden" name="location__slug" value="{{ location.slug }}">
+    <input type="hidden" name="location__token" value="{{ location.token }}">
+    <input type="hidden" name="user__id" value="{{ request.user.id }}">
+  {% endif %}
   <select name="visibility" id="comment-visibility" class="form-select" aria-label="{% translate 'select comment visibility'|capfirst %}">
     <option value="q" {% if comment.visibility == 'q' %}selected{% endif %}>{% translate 'private'|capfirst %}</option>
     <option value="f" {% if comment.visibility == 'f' %}selected{% endif %}>{% translate 'family'|capfirst %}</option>
@@ -15,8 +21,12 @@
     data-action
     data-method="POST"
     data-body="form"
-    data-url	="{% if comment %}{% url 'cmnsd:dispatch_object_by_id_and_slug' 'comment' comment.id comment.token %}{% else %}{% endif %}"
-    data-map	= '{"comment":"#comment-{{ comment.id }}"}'
+    data-url	="{% if comment %}{% url 'cmnsd:dispatch_object_by_id_and_slug' 'comment' comment.id comment.token %}{% else %}{% url 'cmnsd:dispatch' 'comment' %}{% endif %}"
+    data-map	= '{"content":"#comment-{{ comment.id }}-content"}'
+    data-refresh-url="{% if comment %}{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' comment.location.id comment.location.slug 'comments' %}{% else %}{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'comments' %}{% endif %}"
+    data-refresh-map='{"comments":"#comments"}'
+    data-refresh-mode="update"
+
     ><img src="{% if comment %}{% static 'img/bootstrap-icons/floppy.svg' %}{% else %}{% static 'img/bootstrap-icons/plus.svg' %}{% endif %}"></button>
   </div>
 </form>

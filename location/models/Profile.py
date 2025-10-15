@@ -50,6 +50,8 @@ class Profile(models.Model):
   show_category_label = models.BooleanField(default=True, help_text=_('Show category label on location list page'))
   filter_by_distance  = models.BooleanField(default=False, help_text=_('Allow to filter locations by distance'))
   
+  RESTRICT_READ_ACCESS = 'user'  # only allow users to read their own visits via AJAX
+  
   def __str__(self) -> str:
     try:
       return f'Profile of { self.user.get_full_name() if self.user.get_full_name() else self.user.username }'
@@ -97,7 +99,7 @@ class VisitedIn(VisibilityModel, BaseModel):
   year                = models.PositiveSmallIntegerField(help_text='')
   month               = models.PositiveSmallIntegerField(blank=True, null=True, help_text='', choices=MONTHS)
   day                 = models.PositiveSmallIntegerField(blank=True, null=True, help_text='', validators=[MinValueValidator(1), MaxValueValidator(31)])
-  
+
   def __str__(self) -> str:
     return f"{ self.user.get_full_name() } visited { self.location.name } in { str(self.year) }"
   

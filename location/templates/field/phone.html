@@ -1,4 +1,4 @@
-{% if location.phone or ajax.editable%}
+{% if location.phone or ajax.editable %}
   <div class="row">
     <div class="col-3 title-col">{% translate 'phone'|title %}:</div>
     <div class="col-8">
@@ -26,7 +26,7 @@
       {% endif %}
     </div>
     <div class="col-1 button-col">
-      {% include 'element/reusable_edit_button.html' with field='phone' %}
+      {% comment %} {% include 'element/reusable_edit_button.html' with field='phone' %} {% endcomment %}
     </div>
   </div>
 {% endif %}

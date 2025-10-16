@@ -1,4 +1,4 @@
-<div class="row">
+{% load static %}<div class="row">
   <div class="col-3 title-col">{% translate 'address'|title %}:</div>
   <div class="col-8">
     {% if ajax.editable %}
@@ -25,7 +25,28 @@
     {% endif %}
   </div>
   <div class="col-1 button-col">
-    {% include 'element/reusable_edit_button.html' with field='address' %}
+    {% if user.is_authenticated %}
+    {% if ajax.editable %}
+        <button type="button" 
+                class="btn btn-outline-secondary show-autocomplete"
+                title="{% translate 'stop editing'|capfirst %} {% translate 'address'|capfirst %}"
+                data-action
+                data-method="GET"
+                data-url	="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'address,phone,owners_names' %}"
+                data-map	= '{"address":"#address","phone":"#phone", "owners_names":"#owners_names"}'
+                ><img src="{% static 'bootstrap-icons/x.svg' %}"></button>
+      {% else %}
+        <button type="button" 
+                class="btn btn-outline-secondary show-autocomplete"
+                title="{% translate 'edit'|capfirst %} {% translate field|capfirst %}"
+                data-action
+                data-method="GET"
+                data-url	="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'address,phone,owners_names' %}"
+                data-params	= "editable"
+                data-map	= '{"address":"#address","phone":"#phone", "owners_names":"#owners_names"}'
+                ><img src="{% static 'bootstrap-icons/pencil.svg' %}"></button>
+      {% endif %}
+    {% endif %}
   </div>
 </div>
 

@@ -166,7 +166,7 @@
 {% endblock %}
 
 {% block scriptfooter %}
-<!-- automatically select category -->
+{% comment %} <!-- automatically select category -->
 <script>
   $(document).ready(function() {
     $('#name').on('input', function() {
@@ -236,28 +236,5 @@
       .css('background-color', '#FFFF00')  // Set the initial background color
       .animate({ backgroundColor: '#FFFFFF' }, 1000);  // Animate it back to the original color
   });
-</script>
-  {% if request.user.is_authenticated %}
-    <span id="csrf_token" style="display: none;">{{ csrf_token }}</span>
-    <script src="{% static 'js/getLocationAttributes.js' %}" defer></script>
-    <script src="{% static 'js/getAutocompleteValues.js' %}" defer></script>
-    
-    {% comment %} <script src="{% static 'js/load_tags.js' %}" defer></script> {% endcomment %}
-    <script type="text/javascript">
-      /** Configuration */
-      const debug = {% if user.is_staff %}1{% else %}0{% endif %};
-
-      /** Initialisation */
-      $(document).ready(function() {
-        {% if location %}
-          {% if ajax_load_tags %}/** Load tags */ getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'tag' %}', 'tagslist'){% endif %}
-          {% if ajax_load_categories %}/** Load categories */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'category' %}', 'categorylist'){% endif %}
-          {% if ajax_load_chains %}/** Load chains */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'chain' %}', 'chainlist'){% endif %}
-          {% if ajax_load_comments %}/** Load comments */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'comment' %}', 'commentlist'){% endif %}
-          {% if ajax_load_actionlist %}/** Load action list */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'actionlist' %}', 'actionlist'){% endif %}
-        {% endif %}
-      });
-    </script>
-  {% endif %}
-  
+</script> {% endcomment %}
 {% endblock %}

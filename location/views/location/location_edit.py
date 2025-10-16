@@ -67,7 +67,7 @@ class EditLocationMaster(UpdateView, FilterClass):
     descriptions = self.object.descriptions.all()
     descriptions = self.filter_status(descriptions)
     descriptions = self.filter_visibility(descriptions)
-    descriptions = descriptions.order_by('-date_added').distinct()
+    descriptions = descriptions.order_by('-date_created').distinct()
     return descriptions
   def get_description_visibilities(self):
     all_visibilities = Description.visibility_choices

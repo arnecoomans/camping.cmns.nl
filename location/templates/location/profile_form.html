@@ -94,27 +94,27 @@
     <!-- Google Maps Permission -->
     <div class="row">
       <div class="col-3 title-col">{% translate 'google maps'|title %}</div>
-      <div class="col-9 list" id="maps_permissionlist" data-source="{% url 'location:getAttributesFor' 'profile' 'maps_permission' %}">
+      <div class="col-9 list" id="maps_permissionlist" >
         {% include 'partial/maps_permission.html' %}
       </div>
     </div>
     <!-- Category Labels in Location List -->
     <div class="row">
       <div class="col-3 title-col">{% translate 'category labels'|capfirst %}</div>
-      <div class="col-9 list" id="show_category_labellist" data-source="{% url 'location:getAttributesFor' 'profile' 'show_category_label' %}">
+      <div class="col-9 list" id="show_category_labellist" >
         {% include 'partial/show_category_label.html' %}
       </div>
     </div>
     <!-- Allow filtering on location distance -->
     <div class="row">
       <div class="col-3 title-col">{% translate 'filter on distance'|capfirst %}</div>
-      <div class="col-9" id="filter_by_distancelist" data-source="{% url 'location:getAttributesFor' 'profile' 'filter_by_distance' %}">
+      <div class="col-9" id="filter_by_distancelist" >
         {% include 'partial/filter_by_distance.html' %}
       </div>
     </div>
     <div class="row">
       <div class="col-3 title-col">{% translate 'navigation apps'|capfirst %}:</div>
-      <div class="col-9 list" id="navigation_appslist" data-source="{% url 'location:getAttributesFor' 'profile' 'navigation_apps' %}">
+      <div class="col-9 list" id="navigation_appslist" >
         {% include 'partial/navigation_apps.html' %}
       </div>
     </div>
@@ -125,7 +125,7 @@
         <div class="col-9">
           {% for location in profile.favorite.all %}
             {% include 'partial/location.html' %}
-            <a href="{% url 'location:ToggleAttributeWithValue' 'profile' 'favorite' location.slug %}" class="toggable" data-bs-toggle="tooltip" data-bs-placement="top" title="{% blocktranslate with location_name=location %}Remove from {{ location_name }} from favorites{% endblocktranslate %}"><sup>[x]</sup></a>
+            <a href="#" class="toggable" data-bs-toggle="tooltip" data-bs-placement="top" title="{% blocktranslate with location_name=location %}Remove from {{ location_name }} from favorites{% endblocktranslate %}"><sup>[x]</sup></a>
             {% if not forloop.last %}, {% endif %}
           {% endfor %}
         </div>
@@ -138,14 +138,14 @@
           <div class="col-9">
             {% for location in profile.dislike.all %}
             {% include 'partial/location.html' %}
-            <a href="{% url 'location:ToggleAttributeWithValue' 'profile' 'dislike' location.slug %}" class="toggable" data-bs-toggle="tooltip" data-bs-placement="top" title="{% blocktranslate with location_name=location %}Remove from {{ location_name }} from disliked locations{% endblocktranslate %}"><sup>[x]</sup></a>
+            <a href="#" class="toggable" data-bs-toggle="tooltip" data-bs-placement="top" title="{% blocktranslate with location_name=location %}Remove from {{ location_name }} from disliked locations{% endblocktranslate %}"><sup>[x]</sup></a>
             {% if not forloop.last %}, {% endif %}
             {% endfor %}
           </div>
       </div>
       <div class="row">
         <div class="col-3"></div>
-          <div class="col-9" id="hide_least_likedlist" data-source="{% url 'location:getAttributesFor' 'profile' 'hide_least_liked' %}">
+          <div class="col-9" id="hide_least_likedlist">
             {% include 'partial/hide_least_liked.html' %}
           </div>
       </div>
@@ -156,7 +156,7 @@
     {% if profile.family.all.count > 0 %}
       <div class="row">
         <div class="col-3 title-col"><label for="family">{% translate 'you have marked the following persons as family'|capfirst %}:</div>
-          <div class="col-9 list" id="familylist" data-source="{% url 'location:getAttributesFor' 'profile' 'family' %}">
+          <div class="col-9 list" id="familylist">
             {% for member in profile.family.all %}
               {% include 'partial/family.html' %}
             {% endfor %}
@@ -209,7 +209,7 @@
               <td>
                 <ul class="action list">
                   <li><a href="{% url 'location:EditVisit' visit.id %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil"/></svg></a></li>
-                  <li><a href="{% url 'location:ToggleDeleted' 'visit' visit.id %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#trash"/></svg></a></li>
+                  <li><a href=""><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#trash"/></svg></a></li>
                 </ul>
               </td>
             </tr>
@@ -267,25 +267,3 @@
   </div>
 {% endblock %}
 
-{% block scriptfooter %}
-  {% if request.user.is_authenticated %}
-    <span id="csrf_token" style="display: none;">{{ csrf_token }}</span>
-    <script src="{% static 'js/getLocationAttributes.js' %}" defer></script>
-    <script src="{% static 'js/getAutocompleteValues.js' %}" defer></script>
-    
-    {% comment %} <script src="{% static 'js/load_tags.js' %}" defer></script> {% endcomment %}
-    <script type="text/javascript">
-      /** Configuration */
-      const debug = {% if user.is_staff %}1{% else %}0{% endif %};
-
-      /** Initialisation */
-      $(document).ready(function() {
-        {% if ajax_load_tags %}/** Load tags */ getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'tag' %}', 'tagslist'){% endif %}
-        {% if ajax_load_categories %}/** Load categories */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'category' %}', 'categorylist'){% endif %}
-        {% if ajax_load_chains %}/** Load chains */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'chain' %}', 'chainlist'){% endif %}
-        {% if ajax_load_comments %}/** Load comments */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'comment' %}', 'commentlist'){% endif %}
-        {% comment %} {% if ajax_load_actionlist %}/** Load action list */getLocationAttributes('{% url 'location:getAttributesFor' location.slug 'actionlist' %}', 'actionlist'){% endif %} {% endcomment %}
-      });
-    </script>
-  {% endif %}
-{% endblock %}

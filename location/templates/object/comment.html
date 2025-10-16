@@ -1,7 +1,7 @@
 {% load static %}<div class="row">
   <div class="col-11 comment">
     <header>
-      {% blocktranslate with user=comment.user.get_full_name|default:comment.user.username time=comment.date_created|humanize_date:"j F Y" audience=comment.get_visibility_display %}{{user}} commented {{time}} for {{audience}} on{% endblocktranslate %} <a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see details of'|capfirst %} {{ comment.location.name }}">{{ comment.location.name }}</a>:
+      {% blocktranslate with user=comment.user.get_full_name|default:comment.user.username time=comment.date_created|humanize_date:"j F Y" audience=comment.get_visibility_display %}{{user}} commented {{time}} for {{audience}} on{% endblocktranslate %} <a href="{{ comment.location.get_absolute_url }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see details of'|capfirst %} {{ comment.location.name }}">{{ comment.location.name }}</a>:
     </header>
     <div class="content" id="comment-{{ comment.id }}-content">
       {# If ajax.editable is set, show textarea for editing #}

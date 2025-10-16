@@ -1,9 +1,11 @@
 <div class="col-3 title-col">{% translate 'your lists'|title %}:</div>
 <div class="col-8 list">
   <ul>
-    {% for list in lists|filter_by_status|filter_by_visibility:request.user|filter_by_user:request.user %}
-      <li>{% include 'object/location_list.html' with list=list.list %}</li>
-    {% endfor %}
+    {% if lists|length > 0 %}
+      {% for list in lists|filter_by_status|filter_by_visibility:request.user|filter_by_user:request.user %}
+        <li>{% include 'object/location_list.html' with list=list.list %}</li>
+      {% endfor %}
+    {% endif %}
   </ul>
   {% if ajax.editable and perms.location.change_location %}
     <form class="cmnd-autosuggest"

@@ -107,13 +107,13 @@ urlpatterns = [
 
   # Toggle Views 
   # Toggle Deleted
-  path('json/toggle/<str:model>/<int:pk>/delete/', views.ToggleDeleted.as_view(), name='ToggleDeleted'),
-  path('json/toggle/<str:model>/<str:slug>/delete/', views.ToggleDeleted.as_view(), name='ToggleDeletedBySlug'),
-  # Toggle field of model, optionally with slug and value
-  path('json/toggle/<str:model>:<str:slug>/<str:field>/', views.ToggleAttribute.as_view(), name='ToggleAttributeWithSlug'),
-  path('json/toggle/<str:model>:<str:slug>/<str:field>/<value>/', views.ToggleAttribute.as_view(), name='ToggleAttributeWithSlugWithValue'),
-  path('json/toggle/<str:model>/<str:field>/', views.ToggleAttribute.as_view(), name='ToggleAttribute'),
-  path('json/toggle/<str:model>/<str:field>/<value>/', views.ToggleAttribute.as_view(), name='ToggleAttributeWithValue'),
+  # path('json/toggle/<str:model>/<int:pk>/delete/', views.ToggleDeleted.as_view(), name='ToggleDeleted'),
+  # path('json/toggle/<str:model>/<str:slug>/delete/', views.ToggleDeleted.as_view(), name='ToggleDeletedBySlug'),
+  # # Toggle field of model, optionally with slug and value
+  # path('json/toggle/<str:model>:<str:slug>/<str:field>/', views.ToggleAttribute.as_view(), name='ToggleAttributeWithSlug'),
+  # path('json/toggle/<str:model>:<str:slug>/<str:field>/<value>/', views.ToggleAttribute.as_view(), name='ToggleAttributeWithSlugWithValue'),
+  # path('json/toggle/<str:model>/<str:field>/', views.ToggleAttribute.as_view(), name='ToggleAttribute'),
+  # path('json/toggle/<str:model>/<str:field>/<value>/', views.ToggleAttribute.as_view(), name='ToggleAttributeWithValue'),
   
 
 
@@ -121,16 +121,16 @@ urlpatterns = [
   ## JSONGetLocationAttributes Functions: fetch a list of attibutes for a location
   ## Triggered in the getLocationAttributes.js script
   ## Handled by the JSONGetLocationAttributes view in location/views/json/getlocationattributes.py
-  path('json/attributes/<str:location>/<str:attribute>/', views.JSONGetLocationAttributes.as_view(), name='getAttributesFor'),
-  path('json/suggestions/<str:model>/for:<str:location>/', views.JSONGetLocationAttributeSuggestions.as_view(), name='getSuggestionsFor'),
-  path('json/suggestions/', views.JSONGetLocationSuggestions.as_view(), name='getLocationSuggestions'),
-  path('json/options/<str:model>/for:<str:location>/', views.JSONGetAttributeOptions.as_view(), name='getOptionsFor'),
-  path('json/options/<str:model>/', views.JSONGetAttributeOptions.as_view(), name='getOptions'),
-  path('json/get/<str:model>:<str:slug>/description/', views.JSONGetLocationDescription.as_view(), name='getLocationDescription'),
+  # path('json/attributes/<str:location>/<str:attribute>/', views.JSONGetLocationAttributes.as_view(), name='getAttributesFor'),
+  # path('json/suggestions/<str:model>/for:<str:location>/', views.JSONGetLocationAttributeSuggestions.as_view(), name='getSuggestionsFor'),
+  # path('json/suggestions/', views.JSONGetLocationSuggestions.as_view(), name='getLocationSuggestions'),
+  # path('json/options/<str:model>/for:<str:location>/', views.JSONGetAttributeOptions.as_view(), name='getOptionsFor'),
+  # path('json/options/<str:model>/', views.JSONGetAttributeOptions.as_view(), name='getOptions'),
+  # path('json/get/<str:model>:<str:slug>/description/', views.JSONGetLocationDescription.as_view(), name='getLocationDescription'),
   ## Comments
   # path('a/comments/', views.aListComments.as_view(), name='aListComments'),
   # path('json/<location>/comments/', views.aListComments.as_view(), name='aListCommentsFor'),
-  path('json/<location>/comment/', views.aAddComment.as_view(), name='aAddComment'),
+  # path('json/<location>/comment/', views.aAddComment.as_view(), name='aAddComment'),
 
   ## Action List
   # path('a/<str:location>/actionlist/', views.JsonActionList.as_view(), name='getActionlist'),

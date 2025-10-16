@@ -5,9 +5,13 @@
 
 <div class="comment list card">
   <h1>{% translate 'comments'|title %}</h1>
-  {% for comment in comment_list %}
-    {% include 'partial/comment.html' %}
-  {% endfor %}
+  {% if comment_list %}
+    {% for comment in comment_list.all|filter_by_status|filter_by_visibility:request.user %}
+      <div id="comment-{{ comment.id }}">
+        {% include 'object/comment.html' %}
+      </div>
+    {% endfor %}
+  {% endif %}
 </div>
 
 {% endblock %}

@@ -1,4 +1,4 @@
 {% load i18n %}<div class="form-check form-switch">
-  <input class="form-check-input toggable" href="{% url 'location:ToggleAttribute' 'profile' 'filter_by_distance' %}" type="checkbox" role="switch" name="filter_by_distance" id="filter_by_distance" {% if user.profile.filter_by_distance %}checked{% endif %}>
+  <input class="form-check-input toggable" href="#" type="checkbox" role="switch" name="filter_by_distance" id="filter_by_distance" {% if user.profile.filter_by_distance %}checked{% endif %}>
   <label class="form-check-label" for="filter_by_distance">{% translate 'allow filtering on distance'|capfirst %}.</label>
 </div>

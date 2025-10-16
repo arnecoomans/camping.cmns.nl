@@ -35,7 +35,7 @@
           </span>
         {% endif %}
         <!-- Action List-->
-         <div id="actionlist" data-source="{% url 'location:getAttributesFor' location.slug 'actionlist' %}?field=media">
+         <div id="actionlist">
           {% if not ajax_load_actionlist %}
             {% include 'partial/actionlist.html' %}
           {% endif %}
@@ -221,37 +221,5 @@
   {% endif %}
 {% endblock %}
 
-{% block scriptfooter %}
-  <script type="module">
-  import cmnsd from "{% static 'js/cmnsd/index.js' %}";
-  import { initAutosuggest } from "{% static 'js/cmnsd/autosuggest.js' %}";
 
-  cmnsd.init({
-    baseURL: '',
-    debug: {{ debug|lower|default:'false' }}, // enable console.debug tracing when django DEBUG=True
-    messages: { container: '#messages', dismissible: true, clearBefore: false, max: 5 }, // message container, see messages.html
-    actions: { autoBind: true } // bind delegated [data-action] on document
-  });
-
-  // Load some sections on page-load
-  {% comment %} cmnsd.loadContent({
-    // url: 'location/{{ location.id }}-{{ location.slug }}/tags,comments,descriptions,category,size,chains,links/',
-    {% with fields='tags,comments,descriptions,category,size,chains,links' %}
-    url: '{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug  fields %}',
-    {% endwith%}
-    map: {  tags: '#tags', 
-            comments: '#comments',
-            descriptions: '#descriptions',
-            category: '#additional_categorylist',
-            size: '#sizelist',
-            chains: '#chains', 
-            links: '#links',
-          }
-    // comments, description, category, size, chain
-    // name, address, phone, owners_names
-  }); {% endcomment %}
-
-  // Initialize autosuggest on any input with [data-autosuggest]
-  initAutosuggest();
-</script>
-{% endblock %}
+{% block cmnsdInit %}{% endblock %}

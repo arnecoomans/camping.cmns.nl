@@ -13,11 +13,11 @@
     {% endif %}
     {% if not location in user.profile.dislike.all %}
       <!-- Favorite -->
-      <li><a href="{% url 'location:ToggleAttributeWithValue' 'profile' 'favorite' location.slug %}" class="toggable" id="like" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if location in user.profile.favorite.all %}{% translate 'you like'|capfirst %}{% else %}{% translate 'like'|capfirst %}{% endif %} {% translate 'this location' %}"><svg class="bi" width="32" height="32" fill="#c00"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#balloon-heart{% if location in user.profile.favorite.all %}-fill{% endif %}"/></svg></a></li>
+      <li><a href="#" class="toggable" id="like" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if location in user.profile.favorite.all %}{% translate 'you like'|capfirst %}{% else %}{% translate 'like'|capfirst %}{% endif %} {% translate 'this location' %}"><svg class="bi" width="32" height="32" fill="#c00"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#balloon-heart{% if location in user.profile.favorite.all %}-fill{% endif %}"/></svg></a></li>
     {% endif %}
     {% if not location in user.profile.favorite.all %}<!-- Favorite -->
       <!-- Disliked -->
-      <li><a href="{% url 'location:ToggleAttributeWithValue' 'profile' 'dislike' location.slug %}" class="toggable" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if location in user.profile.dislike.all %}{% translate "you don't like"|capfirst %}{% else %}{% translate 'dislike'|capfirst %}{% endif %} {% translate 'this location' %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}#666{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#heartbreak{% if location in user.profile.dislike.all %}-fill{% endif %}"/></svg></a></li>
+      <li><a href="#" class="toggable" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if location in user.profile.dislike.all %}{% translate "you don't like"|capfirst %}{% else %}{% translate 'dislike'|capfirst %}{% endif %} {% translate 'this location' %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}#666{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#heartbreak{% if location in user.profile.dislike.all %}-fill{% endif %}"/></svg></a></li>
     {% endif %}
     <!-- Add media -->
     {% if perms.location.add_media %}

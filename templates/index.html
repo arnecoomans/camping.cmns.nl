@@ -46,14 +46,24 @@
 {% include 'footer.html' %}
 
 <!-- Javascripts -->
-<script src="{% static 'js/jquery.min.js' %}"></script>
-<script src="{% static 'js/jquery-ui.min.js' %}"></script>
+<script src="{% static 'js/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'js/jquery-ui.min.js' %}"></script> 
+<script type="module">
+import cmnsd from "{% static 'js/cmnsd/index.js' %}";
+import { initAutosuggest } from "{% static 'js/cmnsd/autosuggest.js' %}";
 
-<script src="{% static 'js//luxon.min.js' %}"></script>
-<script>
-  var DateTime = luxon.DateTime;
+cmnsd.init({
+  baseURL: '',
+  debug: {{ debug|lower|default:'false' }}, // enable console.debug tracing when django DEBUG=True
+  messages: { container: '#messages', dismissible: true, clearBefore: false, max: 5 }, // message container, see messages.html
+  actions: { autoBind: true } // bind delegated [data-action] on document
+
+  {% block cmnsdInit %}{% endblock %}
+});
+
+initAutosuggest();
 </script>
-
 {% block scriptfooter %}{% endblock %}
+
   </body>
 </html>

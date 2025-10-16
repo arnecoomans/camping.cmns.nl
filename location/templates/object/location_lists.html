@@ -1,18 +1,22 @@
 <div class="col-3 title-col">{% translate 'your lists'|title %}:</div>
 <div class="col-8 list">
-  {% for list in lists|filter_by_status|filter_by_visibility:request.user|filter_by_user:request.user %}
-    {% include 'object/location_list.html' with list=list %}{% if not forloop.last %},{% endif %}
-  {% endfor %}
+  <ul>
+    {% for list in lists|filter_by_status|filter_by_visibility:request.user|filter_by_user:request.user %}
+      <li>{% include 'object/location_list.html' with list=list.list %}</li>
+    {% endfor %}
+  </ul>
   {% if ajax.editable and perms.location.change_location %}
     <form class="cmnd-autosuggest"
       action="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'lists' %}?editable"
       data-action
       data-method="POST"
       data-body="form"
-      data-map='{"lists":"#list"}'
+      data-map='{"lists":"#lists"}'
     >
-      <input type="hidden" name="editable" value="true">
-      <input type="hidden" name="location" value="{{ location.id }}">
+      <input type="hidden" name="lists__location__id" value="{{ location.id }}">
+      <input type="hidden" name="lists__location__slug" value="{{ location.slug }}">
+      <input type="hidden" name="lists__user__id" value="{{ request.user.id }}">
+      <input type="hidden" name="lists__user__username" value="{{ request.user.username }}">
       <div class="input-group">
         <input
           name="name"
@@ -21,13 +25,13 @@
           placeholder="{% translate 'add list'|capfirst %} - {% translate 'start typing to see suggestions'|capfirst %}"
           class="form-control"
           data-autosuggest
-          data-url="{% url 'cmnsd:dispatch' 'lists'%}"
+          data-url="{% url 'cmnsd:dispatch' 'list'%}"
           data-param="{{ search_query_character}}"
-          data-extra-params='{"format":"json", "exclude": "locations__slug:{{ location.slug }}"}'
-          data-container="lists"
+          data-extra-params='{"format":"json", "exclude": "locations__location__slug:{{ location.slug }}"}'
+          data-container="list"
           data-field-input="name"
           data-field-hidden="slug"
-          data-field-prefix="lists__"
+          data-field-prefix="lists__list__"
         >
         <button type="submit" class="btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/></svg></button>
       </div>
@@ -35,5 +39,5 @@
   {% endif %}
 </div>
 <div class="col-1 button-col">
-    {% include 'element/reusable_edit_button.html' with field='list' %}
+    {% include 'element/reusable_edit_button.html' with field='lists' %}
 </div>

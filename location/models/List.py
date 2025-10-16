@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.conf import settings
 from django.contrib import messages
 from django.utils.safestring import mark_safe
-
+from django.utils.text import slugify
 from cmnsd.models.cmnsd_basemodel import BaseModel, VisibilityModel
 # from .base_model import BaseModel
 from .Location import Location
@@ -110,11 +110,16 @@ class List(VisibilityModel, BaseModel):
   map                 = models.BooleanField(default=False, help_text=_('Show map on list page'))
 
   class Meta:
-    verbose_name = _("list")
-    verbose_name_plural = _("lists")
+    verbose_name = "list"
+    verbose_name_plural = "lists"
 
   def __str__(self):
     return f"{ self.name } { _('by') } { self.user.get_full_name() if self.user.get_full_name() else self.user.username }"
+
+  def save(self, *args, **kwargs):
+    if not self.slug:
+      self.slug = slugify(self.name)
+    super().save(*args, **kwargs)
 
   def get_absolute_url(self):
     return reverse_lazy("location:list", kwargs={"slug": self.slug})
@@ -144,7 +149,7 @@ class List(VisibilityModel, BaseModel):
 
 class ListLocation(VisibilityModel,BaseModel):
   list                = models.ForeignKey(List, related_name='locations', on_delete=models.CASCADE)
-  location            = models.ForeignKey(Location, related_name='list', on_delete=models.CASCADE)
+  location            = models.ForeignKey(Location, related_name='lists', on_delete=models.CASCADE)
   order               = models.IntegerField(default=0)
 
   comment             = models.TextField(blank=True, help_text=_('Markdown is supported'))
@@ -158,8 +163,8 @@ class ListLocation(VisibilityModel,BaseModel):
   
 
   class Meta:
-    verbose_name = _("list-location")
-    verbose_name_plural = _("list-locations")
+    verbose_name = "list-location"
+    verbose_name_plural = "list-locations"
     ordering          = ['list', 'order']
     get_latest_by     = ['order']
 

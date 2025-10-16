@@ -1,7 +1,7 @@
 <span class="nowrap">
   {% if visit.day %}{{ visit.day|default:'' }} {% endif %}{% translate visit.get_month_display|capfirst|default:'' %} {{ visit.year }}
   {% if ajax.editable %}
-    <a href="{% url 'cmnsd:dispatch_object_by_id_and_slug' 'visitedin' visit.id location.slug %}"
+    <a href="{% url 'cmnsd:dispatch_object_by_id_and_slug' 'visitedin' visit.id visit.token %}"
       data-action
       data-method="DELETE"
       data-body='{"visitedin__id": "{{ visit.id }}", "editable": true}'

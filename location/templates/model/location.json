@@ -1,0 +1,4 @@
+"{{ location.slug }}": {
+  "name": "{{ location.name|highlight:query|safe }}",
+  "slug": "{{ location.slug }}"
+}

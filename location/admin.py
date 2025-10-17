@@ -175,6 +175,7 @@ class CommentAdmin(DefaultAdmin):
   list_filter = ('location', 'user', 'visibility', 'status')
 
 class DescriptionAdmin(DefaultAdmin):
+  list_display = ('description', 'visibility', 'location')
   pass
 
 class ProfileAdmin(DefaultAdmin):

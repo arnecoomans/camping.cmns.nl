@@ -1,0 +1,39 @@
+{% load static %}
+
+{% if location.get_available_description_visibilities|length == 0 %}
+  <div class="alert alert-warning" role="alert">
+    {% translate 'all description visibilities have been used'|capfirst %}. {% translate 'please edit an existing description'|capfirst %}.
+  </div>
+{% else %}
+  <form>
+    <textarea name="descriptions__description" class="form-control" data-autoresize>{{ description.content }}</textarea>
+    <div class="input-group">
+    <span class="input-group-text">{% translate 'visibility'|capfirst %}</span>
+    {% if not comment %}
+      {% comment %} <input type="hidden" name="location__id" value="{{ location.id }}">
+      <input type="hidden" name="location__slug" value="{{ location.slug }}">
+      <input type="hidden" name="location__token" value="{{ location.token }}"> {% endcomment %}
+      <input type="hidden" name="descriptions__user__id" value="{{ request.user.id }}">
+      <input type="hidden" name="descriptions__location__id" value="{{ location.id }}">
+    {% endif %}
+    <select name="descriptions__visibility" id="comment-visibility" class="form-select" aria-label="{% translate 'select comment visibility'|capfirst %}">
+      {% if 'q' in location.get_available_description_visibilities %}<option value="q" {% if description.visibility == 'q' %}selected{% endif %}>{% translate 'private'|capfirst %}</option>{% endif %}
+      {% if 'f' in location.get_available_description_visibilities %}<option value="f" {% if description.visibility == 'f' %}selected{% endif %}>{% translate 'family'|capfirst %}</option>{% endif %}
+      {% if 'c' in location.get_available_description_visibilities %}<option value="c" {% if description.visibility == 'c' %}selected{% endif %}>{% translate 'community'|capfirst %}</option>{% endif %}
+      {% if 'p' in location.get_available_description_visibilities %}<option value="p" {% if description.visibility == 'p' %}selected{% endif %}>{% translate 'public'|capfirst %}</option>{% endif %}
+    </select>
+    <button type="button" 
+      class="btn btn-outline-secondary show-autocomplete"
+      title="{% if comment %}{% translate 'save changes to'|capfirst %} {% translate 'description'|capfirst %}{% else %}{% translate 'add'|capfirst %} {% translate 'description' %}{% endif %}"
+      data-action
+      data-method="POST"
+      data-body="form"
+      data-url	="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'descriptions' %}"
+      data-map	= ''
+      data-refresh-url="{% if description %}{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' description.location.id description.location.slug 'descriptions' %}{% else %}{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'descriptions' %}{% endif %}"
+      data-refresh-map='{"descriptions":"#descriptions"}'
+      data-refresh-mode="update"
+      ><img src="{% if description %}{% static 'img/bootstrap-icons/floppy.svg' %}{% else %}{% static 'img/bootstrap-icons/plus.svg' %}{% endif %}"></button>
+    </div>
+  </form>
+{% endif %}

@@ -143,15 +143,17 @@ class Category(models.Model):
 ''' Description Model '''
 class Description(VisibilityModel, BaseModel):
   description         = models.TextField(blank=True, help_text=_('Markdown is supported'))
+  location            = models.ForeignKey('Location', related_name='descriptions', on_delete=models.CASCADE)
 
   def __str__(self) -> str:
     return self.description
   
+  def locs(self):
+    return self.locations.all()
   class Meta:
-        verbose_name = _("Description")
-        verbose_name_plural = _("Descriptions")
-        # 👇 ensure it's concrete
-        abstract = False
+    # 👇 ensure it's concrete
+    abstract = False
+    ordering = ['-date_created']
 
 class Size(BaseModel):
   slug              = models.CharField(max_length=255, help_text=_('Slug of size'))
@@ -174,7 +176,7 @@ class Location(VisibilityModel,BaseModel):
   owners_names        = models.CharField(max_length=255, blank=True, help_text=_('Name of owner(s), if known'))
 
   # description         = models.TextField(blank=True, help_text=_('Markdown is supported'))
-  descriptions        = models.ManyToManyField(Description, blank=True, related_name='locations')
+  # descriptions        = models.ManyToManyField(Description, blank=True, related_name='locations')
 
   links               = models.ManyToManyField(Link, blank=True, help_text=_('Add links to related websites, such as blogs refering to this location or review websites'))
   chains              = models.ManyToManyField(Chain, blank=True, related_name='locations')
@@ -470,3 +472,10 @@ class Location(VisibilityModel,BaseModel):
     if self.canhavesize():
       return Size.objects.all().order_by().distinct()
     return Size.objects.none()
+  
+  def get_available_description_visibilities(self):
+    visibilities = {}
+    for key, label in Description.visibility.field.choices:
+      if not Description.objects.filter(location=self, visibility=key).exists():
+        visibilities[key] = label
+    return visibilities

@@ -55,7 +55,7 @@ class LocationView(ListView, FilterClass):
     location = self.get_location()
     context['location'] = location
     ''' Descriptions '''
-    context['descriptions'] = self.get_descriptions()
+    # context['descriptions'] = self.get_descriptions()
     ''' Scope '''
     context['scope'] = f"{ _(location.getCategory()) }: { location.name }"
     ''' Links '''
@@ -99,12 +99,12 @@ class LocationView(ListView, FilterClass):
 
   ''' Get Descriptions 
   '''
-  def get_descriptions(self):
-    descriptions = Description.objects.filter(locations__id=self.get_location().id)
-    descriptions = self.filter_status(descriptions)
-    descriptions = self.filter_visibility(descriptions)
-    descriptions = descriptions.order_by('-date_created').distinct()
-    return descriptions
+  # def get_descriptions(self):
+  #   descriptions = Description.objects.filter(locations__id=self.get_location().id)
+  #   descriptions = self.filter_status(descriptions)
+  #   descriptions = self.filter_visibility(descriptions)
+  #   descriptions = descriptions.order_by('-date_created').distinct()
+  #   return descriptions
   ''' Get Links
   '''
   def get_links(self):

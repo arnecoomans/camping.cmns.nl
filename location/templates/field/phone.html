@@ -1,4 +1,4 @@
-{% if location.phone or ajax.editable%}
+{% load static %}{% if location.phone or ajax.editable %}
   <div class="row">
     <div class="col-3 title-col">{% translate 'phone'|title %}:</div>
     <div class="col-8">
@@ -22,11 +22,13 @@
         </div>
       </form>
       {% else %}
-        {{ location.phone|default:'-' }}
+        {{ location.phone|default:'-' }} 
+        &nbsp;<a href="tel:{{ location.phone|default:''}}" title="{% translate 'call phone number' %}"><img src="{% static 'img/bootstrap-icons/telephone.svg' %}" alt="Call"></a>
+        &nbsp;<a href="https://wa.me/{{ location.phone|whatsapp_number|default:''}}" target="_blank" title="{% translate 'send whatsapp message' %}"><img src="{% static 'img/bootstrap-icons/whatsapp.svg' %}" alt="WhatsApp"></a>
       {% endif %}
     </div>
     <div class="col-1 button-col">
-      {% include 'element/reusable_edit_button.html' with field='phone' %}
+      {% comment %} {% include 'element/reusable_edit_button.html' with field='phone' %} {% endcomment %}
     </div>
   </div>
 {% endif %}

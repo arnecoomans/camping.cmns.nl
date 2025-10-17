@@ -1,0 +1,14 @@
+<div class="row">
+  <div class="col-3 title-col">{% if descriptions.all.count == 1 %}{% translate 'description'|title %}{% else %}{% translate 'descriptions'|title %}{% endif %}:</div>
+  <div class="col-8 list">
+    {% for description in location.descriptions.all %}
+      {% include 'field/description.html' %}
+    {% endfor %}
+    {% if ajax.editable and perms.location.change_location %}
+      {% include 'element/reusable_description_textarea.html' with comment=new_comment %}
+    {% endif %}
+  </div>
+  <div class="col-1 button-col">
+    {% include 'element/reusable_edit_button.html' with field='descriptions' %}
+  </div>
+</div>

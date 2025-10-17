@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load static %}
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
@@ -87,8 +87,22 @@
         {% endif %}
       </ul>
       <form class="d-flex" action="{% url 'location:search' %}" method="get">
-        <input class="site_seach form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q" {% if q %}value="{{ q }}"{% endif %} data-suggestions="{% url 'location:aListLocationSuggestions' %}">
-        <button class="btn btn-outline-success" type="submit">Search</button>
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            name="{{ search_query_character|default:'q'}}"
+            placeholder="{% translate 'search' %}..."
+            data-autosuggest
+            data-url="{% url 'cmnsd:dispatch' 'locations' %}?format=json"
+            data-container="location"
+            data-field-input="name"
+            data-field-hidden="slug"
+            data-field-prefix=""
+            data-search-mode="true" 
+          />
+          <button class="btn btn-outline-success" type="submit"><img src="{% static 'bootstrap-icons/search.svg' %}"></button>
+        </div>
       </form>
     </div>
   </div>

@@ -1,14 +1,23 @@
-<div class="row">
-  <div class="col-3 title-col">{% if descriptions.all.count == 1 %}{% translate 'description'|title %}{% else %}{% translate 'descriptions'|title %}{% endif %}:</div>
-  <div class="col-8 list">
-    {% for description in location.descriptions.all %}
-      {% include 'field/description.html' %}
-    {% endfor %}
-    {% if ajax.editable and perms.location.change_location %}
-      {% include 'element/reusable_description_textarea.html' with comment=new_comment %}
+{% load static %}
+{% for description in location.descriptions.all|filter_by_status|filter_by_visibility:user %}
+  <div class="description card" id="description-{{ description.id }}">
+    {% include 'object/description.html' %}
+  </div>
+{% endfor %}
+{% if location.get_available_description_visibilities|length > 0 and user.is_authenticated and perms.location.change_location %}
+  <div class="description card" id="description-new">
+    {% if ajax.add %}
+      {% include 'element/reusable_description_textarea.html' with description=None location=location %}
+    {% else %}
+      <button type="button" 
+              class="btn btn-outline-primary show-autocomplete"
+              title="{% translate 'add'|capfirst %} {% translate 'description'|capfirst %}"
+              data-action
+              data-method="GET"
+              data-url	="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'descriptions' %}"
+              data-params	= "add"
+              data-map	= '{"descriptions":"#descriptions"}'
+              ><img src="{% static 'bootstrap-icons/plus.svg' %}">{% translate 'add description'|capfirst %}</button>
     {% endif %}
   </div>
-  <div class="col-1 button-col">
-    {% include 'element/reusable_edit_button.html' with field='descriptions' %}
-  </div>
-</div>
+{% endif %}

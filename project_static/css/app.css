@@ -201,3 +201,8 @@ div.meta {
   color: #888;
   text-align: right;
 }
+
+.description.card {
+  margin: 1em 0;
+  background-color: rgba(0,0,0,0.01);
+}

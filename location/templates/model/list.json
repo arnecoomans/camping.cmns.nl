@@ -3,7 +3,6 @@
     "{{ list.slug }}": {
       "name": "{{ list.name|escapejs }}",
       "slug": "{{ list.slug }}",
-      "url": "{% url 'location:list' list.slug %}",
       "locations_count": {{ list.locations.count }}
     }{% if not forloop.last %},{% endif %}
   {% endfor %}

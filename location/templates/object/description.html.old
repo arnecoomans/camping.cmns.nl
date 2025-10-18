@@ -1,0 +1,92 @@
+{% load static %}
+<div class="row align-items-start">
+  <div class="col-11 ">
+    {% if ajax.editable %}
+        {% include 'element/reusable_description_textarea.html' with description=description location=description.location %}
+      {% else %}
+        {{ description.description|markdown|safe }}
+      {% endif %}
+    {% if description and user.is_authenticated %}
+      <div class="meta">
+        {% translate 'description added by'|capfirst %} {{ description.user.get_full_name|default:description.user.username }} - {{ description.date_created|humanize_date:"j F Y" }} - {% translate 'visible for' %} {% translate description.get_visibility_display %}
+      </div>
+    {% endif %}
+  </div>
+  <div class="col-1 button-col">
+    {% if description and user.is_authenticated %}
+      {% if ajax.editable %}
+        <button type="button" 
+                class="btn btn-outline-secondary show-autocomplete"
+                title="{% translate 'stop editing'|capfirst %} {% translate 'description'|capfirst %}"
+                data-action
+                data-method="GET"
+                data-url	="{% url 'cmnsd:dispatch_object_by_id_and_slug' 'description' description.id description.token %}"
+                data-map	= '{"description":"#description-{{ description.id }}"}'
+                ><img src="{% static 'bootstrap-icons/x.svg' %}"></button>
+      {% else %}
+        <button type="button" 
+                class="btn btn-outline-secondary show-autocomplete"
+                title="{% translate 'edit'|capfirst %} {% translate 'description'|capfirst %}"
+                data-action
+                data-method="GET"
+                data-url	="{% url 'cmnsd:dispatch_object_by_id_and_slug' 'description' description.id description.token %}?forceheader"
+                data-params	= "editable"
+                data-map	= '{"description":"#description-{{ description.id }}"}'
+                ><img src="{% static 'bootstrap-icons/pencil.svg' %}"></button>
+      {% endif %}
+    {% endif %}
+</div class="row">
+<!-- 
+ {% comment %} <div class="row align-items-start">
+  <div class="col-10">
+    <div class="description">
+      
+      {% if description and user.is_authenticated %}
+        <div class="meta">{% translate 'description added by'|capfirst %} {{ description.user.get_full_name|default:description.user.username }} - {{ description.date_created|humanize_date:"j F Y" }} - {% translate 'visible for' %} {% translate description.get_visibility_display %}</div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-1 button-col">
+    button
+  </div>
+</div>  {% endcomment %}
+
+{% comment %}   
+  <div class="col-8 list" id="description-{{ description.id }}">
+    <div class="description">
+      {% if ajax.editable %}
+        {% include 'element/reusable_description_textarea.html' with description=description location=description.location %}
+      {% else %}
+        {{ description|markdown|safe }}
+      {% endif %}
+      {% if description and user.is_authenticated %}
+        <div class="meta">{% translate 'description added by'|capfirst %} {{ description.user.get_full_name|default:description.user.username }} - {{ description.date_created|humanize_date:"j F Y" }} - {% translate 'visible for' %} {% translate description.get_visibility_display %}</div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-1 button-col">
+
+    {% if description and user.is_authenticated %}
+      {% if ajax.editable %}
+        <button type="button" 
+                class="btn btn-outline-secondary show-autocomplete"
+                title="{% translate 'stop editing'|capfirst %} {% translate field|capfirst %}"
+                data-action
+                data-method="GET"
+                data-url	="{% url 'cmnsd:dispatch_object_by_id_and_slug' 'description' description.id description.token %}"
+                data-map	= '{"description":"#description-{{ description.id }}"}'
+                ><img src="{% static 'bootstrap-icons/x.svg' %}"></button>
+      {% else %}
+        <button type="button" 
+                class="btn btn-outline-secondary show-autocomplete"
+                title="{% translate 'edit'|capfirst %} {% translate field|capfirst %}"
+                data-action
+                data-method="GET"
+                data-url	="{% url 'cmnsd:dispatch_object_by_id_and_slug' 'description' description.id description.token %}?forceheader"
+                data-params	= "editable"
+                data-map	= '{"description":"#description-{{ description.id }}"}'
+                ><img src="{% static 'bootstrap-icons/pencil.svg' %}"></button>
+      {% endif %}
+    {% endif %}
+  </div>
+</div> {% endcomment %}

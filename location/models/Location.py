@@ -154,6 +154,7 @@ class Description(VisibilityModel, BaseModel):
     # 👇 ensure it's concrete
     abstract = False
     ordering = ['-date_created']
+    unique_together = ('location', 'visibility')
 
 class Size(BaseModel):
   slug              = models.CharField(max_length=255, help_text=_('Slug of size'))

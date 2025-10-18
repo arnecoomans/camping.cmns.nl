@@ -1,6 +1,0 @@
-{% load i18n %}<div class="description">
-  {{ description|markdown|safe }}
-  {% if user.is_authenticated %}
-    <div class="meta">{% translate 'description added by'|capfirst %} {{ description.user.get_full_name|default:description.user.username }} - {{ description.date_created|humanize_date:"j F Y" }} - {% translate 'visible for' %} {% translate description.get_visibility_display %}</div>
-  {% endif %}
-</div>

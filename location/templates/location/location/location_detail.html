@@ -107,8 +107,84 @@
       {% endif %}
     </div>
 
-      <!-- Location Attributes -->
-      {% include 'segment/location_attributes.html' %}
+    <!-- General Location Attributes -->
+    <div class="more information card">
+      <div class="row">
+        <div class="col-12">
+          <h2>{% translate 'more information'|capfirst %}:</h2>
+        </div>
+      </div>
+
+      <!-- Category -->
+      <div class="row category" id="category">
+        {% include 'field/categories.html'%}
+      </div>
+      <!-- Size (only for locations and authenticated users) -->
+      {% if location.canhavesize %}
+        <div class="row size" id="size">
+          {% include 'field/size.html'%}
+        </div>
+      {% endif %}
+      <!-- Chain -->
+      <div class="row chains" id="chains">
+        {% include 'field/chains.html' %}
+      </div>
+      <!-- Tags -->
+      <div class="row tags" id="tags">
+        {% include 'field/tags.html' %}
+      </div>
+    </div>
+
+    <!-- User related location attributes -->
+    {% if request.user.is_authenticated %}
+      <div class="user related information card">
+        <div class="row">
+          <div class="col-12">
+            <h2>{% translate 'your information'|capfirst %}:</h2>
+          </div>
+        </div>
+        <!-- Love and Hate
+          - Show heart balloon and dislike broken heart
+        -->
+
+        <!-- Distance to home
+          - if ho home is set, instruct to set home
+          - if home is set, but no distance, instruct to set distance
+          - if home and distance is set, show distance
+        -->
+        <!-- Distance to home -->
+        <div class="row" id="distance_from_home">
+          {% with location|find_distance:request.user as distance %}
+            {% if distance and distance.0 != 0 %}
+              <div class="col-3 title-col">{% translate 'distance from home'|title %}:</div>
+              <div class="col-8">{{ distance.0 }} / {{ distance.1 }} from {{ user.profile.home.name }}</div>
+              <div class="col-1 button-col">
+                <button type="button" 
+                  class="btn btn-outline-secondary show-autocomplete"><img src="{% static 'bootstrap-icons/arrow-clockwise.svg' %}"></button>
+              </div>
+          {% endif %}
+        {% endwith %}
+        </div>
+        <!-- Visits -->
+        <div class="row visitors" id="visitors">
+          {% include 'object/location_visitors.html' %}
+        </div>
+        <!-- Lists -->
+        <div class="row lists" id="lists">
+          {% include 'object/location_lists.html' %}
+        </div>
+      </div>
+    {% endif %}
+
+      <!-- Comments -->
+      <div class="comments card" id="comments">
+        <div class="row">
+            <div class="col-12">
+              <h2>{% translate 'comments'|capfirst %}:</h2>
+            </div>
+          </div>
+        {% include 'field/comments.html'%}
+      </div>
 
       
 

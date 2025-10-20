@@ -1,22 +1,23 @@
+{% load static %}
 <div class="col-3 title-col">{% translate 'size'|title %}: <sup data-bs-toggle="tooltip" data-bs-position="top" title="{% translate 'size is available for camping or glamping'|capfirst %}.">(i)</sup></div>
 <div class="col-8 list">
   {% if ajax.editable %}
-  <form class="cmnd-autosuggest"
-    action="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'size' %}"
-    data-action
-    data-method="POST"
-    data-body="form"
-    data-map='{"size":"#size"}'
-  >
-    <div class="input-group">
-      <select name="size__slug" class="form-select" id="size-select">
-        {% for size in location.availablesizes.all %}
-          <option value="{{ size.slug }}" {% if location.size and location.size.slug == size.slug %}selected{% endif %}>{{ size.slug|upper }} - {% translate size.name|capfirst %}</option>
-        {% endfor %}
-      </select>
-      <button type="submit" class="btn btn-primary"><img src="{% static 'img/bootstrap-icons/floppy.svg' %}"></button>
-    </div>
-  </form>
+    <form class="cmnd-autosuggest"
+      action="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'size' %}"
+      data-action
+      data-method="POST"
+      data-body="form"
+      data-map='{"size":"#size"}'
+    >
+      <div class="input-group">
+        <select name="size__slug" class="form-select" id="size-select">
+          {% for size in location.availablesizes.all %}
+            <option value="{{ size.slug }}" {% if location.size and location.size.slug == size.slug %}selected{% endif %}>{{ size.slug|upper }} - {% translate size.name|capfirst %}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary"><img src="{% static 'img/bootstrap-icons/floppy.svg' %}"></button>
+      </div>
+    </form>
   {% else %}
     <a href="{% url 'location:search' %}?size={{ location.size.slug }}">{% if location.size %}{{ location.size.slug|upper }} - {% translate location.size.name|capfirst %}</a>{% endif %}
   {% endif %}

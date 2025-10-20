@@ -7,6 +7,9 @@ from django.conf import settings
 from .models import *
 from .forms import ProfileForm
 
+import json
+from django.utils.safestring import mark_safe
+
 class VisibilityActionForm(ActionForm):
   """
   Extra field injected into the admin actions bar.
@@ -154,7 +157,17 @@ class LocationAdmin(SlugDefaultAdmin):
       return
     updated = queryset.update(visibility=new_visibility)
     self.message_user(request, f"Updated {updated} objects.", level=messages.SUCCESS)
+  
+  readonly_fields = ["formatted_json"]
+  def formatted_json(self, obj):
+    """Pretty-print JSON data in a <pre> block for readability."""
+    if not obj.cached_google:
+      return "-"
+    pretty = json.dumps(obj.cached_google, indent=2, ensure_ascii=False)
+    return mark_safe(f"<details><summary>Show JSON</summary><pre style='white-space: pre-wrap;'>{pretty}</pre>")
 
+  formatted_json.short_description = "Data"
+  # fields = "__all__"
   actions = [getAddress, getLatLng, getDistanceFromDepartureCenter, getRegion, clearCachableData, change_visibility]
   action_form = VisibilityActionForm
   list_display = ['name', 'location', 'visibility', 'status', 'location__parent__parent','token']

@@ -358,19 +358,35 @@ class Location(VisibilityModel,BaseModel):
       return message
     ''' Identify Region, department and country '''
     if location:
-      for field in location.raw['address_components']:
-        if 'country' in field['types']:
-          country = field['long_name']
-          country_slug = field['short_name']
-        elif 'administrative_area_level_1' in field['types']:
-          region = field['long_name']
-          region_slug = field['short_name']
-        elif 'administrative_area_level_2' in field['types']:
-          department = field['long_name']
-          department_slug = field['short_name']
-        elif 'administrative_area_level_3' in field['types']:
-          department = field['long_name']
-          department_slug = field['short_name']
+      self.cached_google = location.raw
+      self.save()
+      data = self.extract_address_parts(location)
+      country         = data['country']
+      country_slug    = data['country_slug']
+      region          = data['region']
+      region_slug     = data['region_slug']
+      department      = data['department']
+      department_slug = data['department_slug']
+      # for field in location.raw['address_components']:
+      #   if 'country' in field['types']:
+      #     country = field['long_name']
+      #     country_slug = field['short_name']
+      #   elif 'administrative_area_level_1' in field['types']:
+      #     region = field['long_name']
+      #     region_slug = field['short_name']
+      #   elif 'sublocality_level_1' in field['types']:
+      #     region = field['long_name']
+      #     region_slug = field['short_name']
+      #   elif 'administrative_area_level_2' in field['types']:
+      #     department = field['long_name']
+      #     department_slug = field['short_name']
+      #   elif 'administrative_area_level_3' in field['types']:
+      #     department = field['long_name']
+      #     department_slug = field['short_name']
+      #   elif 'locality' in field['types'] and 'political' in field['types']:
+      #     department = field['long_name']
+      #     department_slug = field['short_name']
+        
       ''' Check if Country, Region and Department exists '''
       countryObject, created = Region.objects.get_or_create(
           slug=slugify(country_slug),
@@ -398,7 +414,62 @@ class Location(VisibilityModel,BaseModel):
       messages.add_message(request, messages.INFO, message)
     else:
       return message
-    
+  
+  def extract_address_parts(self, location):
+    """Extract structured address info (country, region, department) from Google Maps `address_components`."""
+    from django.conf import settings
+
+    components = location.raw.get('address_components', [])
+    if not components:
+      raise ValueError("Location has no address_components in raw data.")
+
+    # Define mapping of Google types → your internal logical fields
+    mapping = {
+      'country': ('country', 'country_slug'),
+      # Regions:
+      'administrative_area_level_1': ('region', 'region_slug'),
+      'sublocality_level_1': ('region', 'region_slug'), 
+      # Departments:
+      'administrative_area_level_2': ('department', 'department_slug'),
+      'administrative_area_level_3': ('department', 'department_slug'),
+      'locality': ('department', 'department_slug'),
+    }
+
+    # Initialize defaults
+    result = dict(
+      country='(unknown)',
+      country_slug='xx',
+      region='(unknown region)',
+      region_slug='xx',
+      department='(unknown department)',
+      department_slug='xx',
+    )
+
+    # Parse components
+    for component in components:
+      types = component.get('types', [])
+      long_name = component.get('long_name', '')
+      short_name = component.get('short_name', '')
+
+      for google_type, (target_name, target_slug) in mapping.items():
+        if google_type in types:
+          result[target_name] = long_name
+          result[target_slug] = short_name
+
+    # Log missing info for debug visibility
+    if getattr(settings, 'DEBUG', False):
+      missing = [k for k, v in result.items() if v.startswith('(')]
+      if missing:
+        print(f"[DEBUG] Missing address fields for {location}: {', '.join(missing)}")
+
+    # Optionally raise if critical fields (e.g., country) are missing
+    if result['country'] == '(unknown)':
+      raise ValueError(
+        f"Could not detect country in address_components for location '{getattr(location, 'name', '?')}'. "
+        "Expected a 'country' field in Google response."
+      )
+
+    return result
   ''' Quick access to Country, Region and Department '''
   def __get_region_info(self):
     data = {

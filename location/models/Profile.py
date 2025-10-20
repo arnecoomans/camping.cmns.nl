@@ -91,6 +91,13 @@ class Profile(models.Model):
       defaultnavigationapps = NavigationApps.objects.filter(default_enabled=True)
       self.navigationapps.set(defaultnavigationapps)  # Set the default navigation apps
 
+  def available_family(self):
+    return User.objects.exclude(id__in=self.family.all()).exclude(id=self.user.id).exclude(profile=None)
+  def get_order_choices(self):
+    return dict(self.order_choices)
+  def get_all_navigation_apps(self):
+    return NavigationApps.objects.all()
+
 class VisitedIn(VisibilityModel, BaseModel):
   user                = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='visits')
   location            = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='visitors')

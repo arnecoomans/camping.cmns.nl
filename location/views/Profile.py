@@ -22,6 +22,7 @@ from location.models.Tag import Tag
 class ProfileView(LoginRequiredMixin, FilterClass, UpdateView):
   login_url = "/login/"
   redirect_field_name = "next"
+  template_name = "location/profile.html"
 
   fields = ['home', 'hide_least_liked', 'order', 'ignored_tags', 'notes']
   
@@ -38,7 +39,7 @@ class ProfileView(LoginRequiredMixin, FilterClass, UpdateView):
     homes = self.filter(homes)
     homes = homes.order_by().distinct
     context['homes'] = homes
-    context['available_family'] = User.objects.exclude(id__in=self.get_object().family.all()).exclude(id=self.request.user.id)
+    context['available_family'] = User.objects.exclude(id__in=self.get_object().family.all()).exclude(id=self.request.user.id).exclude(profile=None)
     context['scope'] = f"{ _('profile') }: { _('edit your profile') }"
     available_locations = self.filter(Location.objects.all())
     context['available_locations'] = available_locations

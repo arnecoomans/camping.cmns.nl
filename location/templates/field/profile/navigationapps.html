@@ -1,0 +1,23 @@
+<div class="row">
+  <div class="col-3 title-col">
+    {% translate 'external apps'|capfirst %}:
+  </div>
+  <div class="col-8">
+    {% for app in profile.get_all_navigation_apps.all %}
+      <div class="form-check form-switch">
+        <input  class="form-check-input" 
+                type="checkbox" 
+                role="switch" 
+                name="navigationapps__slug_{{ app.slug }}" 
+                {% if app in user.profile.navigationapps.all %}checked{% endif %}
+                data-action
+                data-params='{"navigationapps__slug":"{{ app.slug }}"}'
+                data-url="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' user.profile.id user.username 'navigationapps' %}"
+                data-method="POST"
+                data-map='{"navigationapps":"#navigationapps"}'
+                >
+                <label for="navigationapps">{{ app.name }}</label><br>
+      </div>
+    {% endfor %}
+  </div>
+</div>

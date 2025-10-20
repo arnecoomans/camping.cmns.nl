@@ -23,7 +23,7 @@
           data-autosuggest
           data-url="{% url 'cmnsd:dispatch' 'categories'%}"
           data-param="{{ search_query_character}}"
-          data-extra-params='{"format":"json", "exclude": "locations__slug:{{ location.slug }}"}'
+          data-extra-params='{"format":"json", "exclude": "locations__slug:{{ location.slug }}", "exclude": "slug:{{ activity_slug|default:"activity" }}"}'
           data-container="category"
           data-field-input="name"
           data-field-hidden="slug"

@@ -1,0 +1,101 @@
+{% load static %}
+<div class="row">
+  <div class="col-3 title-col">
+    {% translate 'family'|capfirst %}:
+  </div>
+  <div class="col-8">
+    {% for family_member in profile.family.all %}
+      <span class="family-member">
+        {{ family_member.get_full_name|default:family_member.username }}
+        {% if ajax.editable %}
+          <a href="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' profile.id user.username 'family' %}"
+                      data-action
+                      data-method="PATCH"
+                      data-body='{"family__id": "{{ family_member.id }}", "editable": "true" }'
+                      data-map='{"family":"#family"}'
+                      data-confirm="{% translate 'are you sure you want to remove this family member'|capfirst %}"
+                      >
+                      <img src="{% static 'img/bootstrap-icons/person-dash.svg' %}" title="{% translate 'remove family member'|capfirst %}"></a>
+                    </a>
+        {% endif %}
+      </span>
+      {% if not forloop.last %}, {% endif %}
+    {% endfor %}
+  </div>
+  <div class="col-1">
+    {% if ajax.editable %}
+      <button type="button" 
+              class="btn btn-outline-secondary show-autocomplete"
+              title="{% translate 'stop editing'|capfirst %} {% translate 'family'|capfirst %}"
+              data-action
+              data-method="POST"
+              data-body="form"
+              data-url	="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' profile.id profile.user.username 'family' %}"
+              data-map	= '{"family":"#family"}'
+              ><img src="{% static 'img/bootstrap-icons/x.svg' %}"></button>
+      {% else %}
+        <button type="button" 
+                class="btn btn-outline-secondary show-autocomplete"
+                title="{% translate 'edit'|capfirst %} {% translate 'family'|capfirst %}"
+                data-action
+                data-method="GET"
+                data-url	="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' profile.id profile.user.username 'family' %}"
+                data-params	= "editable"
+                data-map	= '{"family":"#family"}'
+                ><img src="{% static 'img/bootstrap-icons/pencil.svg' %}"></button>
+        {% endif %}
+  </div>
+</div>
+{% if user.is_authenticated and ajax.editable%}
+  <div class="row">
+    <div class="col-3 title-col">
+    </div>
+    <div class="col-8">
+      <form>
+        
+        <div class="input-group">
+          <select class="form-control" name="family__username">
+            {% if profile.available_family.all.count == 0 %}
+              <option value="" selected disabled>{% translate 'no available family members to add'|capfirst %}</option>
+            {% else %}
+              <option value="" selected disabled>{% translate 'add family member'|capfirst %}</option>
+              {% for user in profile.available_family.all %}
+                <option value="{{ user.username }}">{{ user.get_full_name|default:user.username }}</option>
+              {% endfor %}
+            {% endif %}
+          </select>
+          <button type="button" 
+                  class="btn btn-outline-secondary show-autocomplete"
+                  title="{% translate 'add family member'|capfirst %}"
+                  {% if profile.available_family|length == 0 %} disabled {% endif %}
+                  data-action
+                  data-method="POST"
+                  data-body="form"
+                  data-url	="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' profile.id profile.user.username 'family' %}"
+                  data-map	= '{"family":"#family"}'
+                  ><img src="{% static 'img/bootstrap-icons/person-plus.svg' %}"></button>
+        </div>
+      </form>
+    </div>
+    <div class="col-1">
+      
+    </div>
+  </div>
+{% endif %}
+{% if user.family_of.all.count > 0 %}
+  <div class="row">
+    <div class="col-3 title-col">
+      {% translate 'you are family of'|capfirst %}:
+    </div>
+    <div class="col-8">
+      {% for family_member in user.family_of.all %}
+        <span class="family-member">
+          {{ family_member.user.get_full_name|default:family_member.user.username }}
+        </span>
+        {% if not forloop.last %}, {% endif %}
+      {% endfor %}
+    </div>
+    <div class="col-1">
+    </div>
+  </div>
+{% endif %}

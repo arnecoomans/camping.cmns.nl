@@ -1,6 +1,0 @@
-{% load i18n %}{% for app in navigationapps.all %}
-  <div class="form-check form-switch">
-    <input class="form-check-input toggable" href="#" type="checkbox" role="switch" name="navigationapp{{app|lower}}" id="navigationapp{{app|lower}}" {% if app in profile.navigationapps.all %}checked{% endif %} onclick="alert('{% translate 'status change not yet supported'|capfirst %}')">
-    {{ app }}<br>
-  </div>
-{% endfor %}

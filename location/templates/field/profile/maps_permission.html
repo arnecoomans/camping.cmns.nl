@@ -1,0 +1,22 @@
+<div class="row">
+  <div class="col-3 title-col">{% translate 'google maps'|title %}:</div>
+  <div class="col-9 list" id="maps_permissionlist" >
+    <div class="form-check form-switch">
+      <input  class="form-check-input" 
+              type="checkbox" 
+              role="switch" 
+              name="maps_permission" 
+              {% if user.profile.maps_permission %}checked{% endif %}
+              data-action
+              data-params='{"maps_permission":"{% if user.profile.maps_permission %}false{% else %}true{% endif %}"}'
+              data-url="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' user.profile.id user.username 'maps_permission' %}"
+              data-method="POST"
+              data-map='{"maps_permission":"#maps_permission"}'
+              >
+      <label class="form-check-label" for="maps_permission">{% translate 'on location page, always allow google maps'|capfirst %}.</label>
+      {% if request.session.maps_permission == True %}<br>
+      {% translate 'permission currently granted for this session'|capfirst %}. <a href="{% url 'location:MapsPermissionSession' %}">{% translate 'revoke'|capfirst %}</a>.
+      {% endif %}
+    </div>
+  </div>
+</div>

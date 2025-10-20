@@ -1,6 +1,6 @@
 {% load static %}
 {% if user.is_authenticated %}
-{% if ajax.editable %}
+  {% if ajax.editable %}
     <button type="button" 
             class="btn btn-outline-secondary show-autocomplete"
             title="{% translate 'stop editing'|capfirst %} {% translate field|capfirst %}"

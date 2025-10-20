@@ -1,0 +1,30 @@
+{% if profile.favorite.all.count > 0 %}
+  <div class="row">
+    <div class="col-3 title-col">
+      {% translate 'favorite locations'|capfirst %}:
+    </div>
+    <div class="col-8 list">
+      {% for location in profile.favorite.all %}
+        <a href="{% url 'location:location' location.slug %}">{{ location.name }}</a>
+        {% if not forloop.last %}, {% endif %}
+      {% endfor %}
+    </div>
+    <div class="col-1 button-col">
+    </div>
+  </div>
+{% endif %}
+{% if profile.dislike.all.count > 0%}
+  <div class="row">
+    <div class="col-3 title-col">
+      {% translate 'ignored locations'|capfirst %}:
+    </div>
+    <div class="col-8 list">
+      {% for location in profile.dislike.all %}
+        <a href="{% url 'location:location' location.slug %}">{{ location.name }}</a>
+        {% if not forloop.last %}, {% endif %}
+      {% endfor %}
+    </div>
+    <div class="col-1 button-col">
+    </div>
+  </div>
+{% endif %}

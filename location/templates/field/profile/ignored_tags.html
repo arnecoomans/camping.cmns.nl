@@ -1,0 +1,91 @@
+{% load static %}
+<div class="row">
+  <div class="col-3 title-col">
+    {% translate 'ignored tags'|capfirst %}:
+  </div>
+  <div class="col-8">
+    {% for tag in profile.ignored_tags.all %}
+      <span class="tag"><a class="tag {{ tag.get_list_as_display }}" href="{% url 'location:tag' tag.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see details of tag'|capfirst %}: {{ tag|title }} ">
+        {% if tag.list_as == 'a' %}<img src="{% static 'bootstrap-icons/hand-thumbs-up-fill.svg' %}"> {% elif tag.list_as == 'd' %}<img src="{% static 'bootstrap-icons/hand-thumbs-down-fill.svg' %}"> {% endif %}
+        {% if tag.parent %}{{ tag.parent.name }}: {% endif %}
+        {{ tag.name }}
+      </a>
+      {% if ajax.editable %}
+        <a  href="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' profile.id user.username 'ignored_tags' %}"
+            data-action
+            data-method="PATCH"
+            data-body='{"ignored_tags__id": "{{ tag.id }}", "editable": "true" }'
+            data-map='{"ignored_tags":"#ignored_tags"}'
+            data-confirm="{% translate 'are you sure you want to remove this ignored tag'|capfirst %}"
+            >
+            <img src="{% static 'img/bootstrap-icons/trash.svg' %}" title="{% translate 'remove ignored tag'|capfirst %}"></a>
+          </a>
+      {% endif %}
+      </span>
+    {% empty %}
+      <span class="text-muted">{% translate 'no ignored tags'|capfirst %}</span>
+    {% endfor %}
+  </div>
+  <div class="col-1">
+    {% if user.is_authenticated %}
+      {% if ajax.editable %}
+        <button type="button" 
+                class="btn btn-outline-secondary show-autocomplete"
+                title="{% translate 'stop editing'|capfirst %} {% translate field|capfirst %}"
+                data-action
+                data-method="GET"
+                data-url	="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' profile.id profile.user.username 'ignored_tags' %}"
+                data-map	= '{"ignored_tags":"#ignored_tags"}'
+                ><img src="{% static 'bootstrap-icons/x.svg' %}"></button>
+      {% else %}
+        <button type="button" 
+                class="btn btn-outline-secondary show-autocomplete"
+                title="{% translate 'edit'|capfirst %} {% translate field|capfirst %}"
+                data-action
+                data-method="GET"
+                data-url	="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' profile.id profile.user.username 'ignored_tags' %}"
+                data-params	= "editable"
+                data-map	= '{"ignored_tags":"#ignored_tags"}'
+                ><img src="{% static 'bootstrap-icons/pencil.svg' %}"></button>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+{% if ajax.editable %}
+<div class="row">
+  <div class="col-3 title-col">
+    {% translate 'ignore tag'|capfirst %}:
+  </div>
+  <div class="col-8">
+    <form class="cmnd-autosuggest"
+      action="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' profile.id profile.user.username 'ignored_tags' %}?editable"
+      data-action
+      data-method="POST"
+      data-body="form"
+      data-map='{"ignored_tags":"#ignored_tags"}'
+    >
+      <div class="input-group">
+        <input
+          name="name"
+          type="text"
+          id="tag-input"
+          placeholder="{% translate 'add tag'|capfirst %} - {% translate 'start typing to see suggestions'|capfirst %}"
+          class="form-control"
+          data-autosuggest
+          data-url="{% url 'cmnsd:dispatch' 'tags'%}"
+          data-param="{{ search_query_character}}"
+          data-extra-params='{"format":"json"}'
+          data-container="tag"
+          data-field-input="name"
+          data-field-hidden="slug"
+          data-field-prefix="ignored_tags__"
+          data-allow-create="0"
+        >
+        <button type="submit" class="btn btn-primary"><img src="{% static 'img/bootstrap-icons/floppy.svg' %}"></button>
+      </div>
+    </form>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+{% endif %}

@@ -1,0 +1,19 @@
+<div class="row">
+  <div class="col-3 title-col">{% translate 'show category labels'|title %}:</div>
+  <div class="col-9 list" >
+    <div class="form-check form-switch">
+      <input  class="form-check-input" 
+              type="checkbox" 
+              role="switch" 
+              name="show_category_label" 
+              {% if user.profile.show_category_label %}checked{% endif %}
+              data-action
+              data-params='{"show_category_label":"{% if user.profile.show_category_label %}false{% else %}true{% endif %}"}'
+              data-url="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' user.profile.id user.username 'show_category_label' %}"
+              data-method="POST"
+              data-map='{"show_category_label":"#show_category_label"}'
+              >
+      <label class="form-check-label" for="show_category_label">{% translate 'on location page, always show category labels'|capfirst %}.</label>
+    </div>
+  </div>
+</div>

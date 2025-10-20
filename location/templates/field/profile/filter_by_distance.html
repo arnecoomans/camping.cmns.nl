@@ -1,0 +1,19 @@
+<div class="row">
+  <div class="col-3 title-col">{% translate 'allow filtering on distance'|title %}:</div>
+  <div class="col-9 list" >
+    <div class="form-check form-switch">
+      <input  class="form-check-input" 
+              type="checkbox" 
+              role="switch" 
+              name="filter_by_distance" 
+              {% if user.profile.filter_by_distance %}checked{% endif %}
+              data-action
+              data-params='{"filter_by_distance":"{% if user.profile.filter_by_distance %}false{% else %}true{% endif %}"}'
+              data-url="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' user.profile.id user.username 'filter_by_distance' %}"
+              data-method="POST"
+              data-map='{"filter_by_distance":"#filter_by_distance"}'
+              >
+      <label class="form-check-label" for="filter_by_distance">{% translate 'allow filtering on distance'|capfirst %}.</label>
+    </div>
+  </div>
+</div>

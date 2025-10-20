@@ -1,0 +1,137 @@
+{% extends 'index.html' %}
+{% load i18n %}
+{% load static %}
+{% block content %}
+  <div class="profile detail card">
+    <h1>{% translate 'profile of'|capfirst %} {{ profile.user.get_full_name }}:</h1>
+    <hr>
+    <h2>{% translate 'account details'|capfirst %}:</h2>
+    <div id="user">
+      {% include 'field/profile/user.html' %}
+    </div>
+
+    <div id="notes">
+      {% include 'field/profile/notes.html' %}
+    </div>
+
+    <div id="favorites">
+      {% include 'field/profile/favorites.html' %}
+    </div>
+
+  </div>
+
+  <div class="settings card">
+    <h2>{% translate 'account settings'|capfirst %}:</h2>
+    <div id="home">
+      {% include 'field/profile/home.html' %}
+    </div>
+    <div id="family">
+      {% include 'field/profile/family.html' %}
+    </div>
+  </div>
+
+  <div class="settings card">
+    <h2>{% translate 'site settings'|capfirst %}:</h2>
+    <!-- Toggles -->
+    <div id="maps_permission">
+      {% include 'field/profile/maps_permission.html' %}
+    </div>
+    <div id="show_category_label">
+      {% include 'field/profile/show_category_label.html' %}
+    </div>
+    <div id="filter_by_distance">
+      {% include 'field/profile/filter_by_distance.html' %}
+    </div>
+    <div id="navigationapps">
+      {% include 'field/profile/navigationapps.html' %}
+    </div>
+
+    <div id="order">
+      {% include 'field/profile/order.html' %}
+    </div>
+
+    <div id="ignored_tags">
+      {% include 'field/profile/ignored_tags.html' %}
+    </div>    
+  </div>
+  
+  
+
+      <!-- Configuration of Settings -->
+      <div class="spacer"><hr></div>
+      
+
+  <!-- Settings that do not require page reload -->
+  <!-- History -->
+  <div class="visits card">
+    {% if visits.all.count > 0 %}
+      <h2>{% translate 'visits'|capfirst %}:</h2>
+      <p>{% translate 'show all'|capfirst %} <a href="{% url 'location:locations' %}?visited">visited locations</a> {% translate 'or' %} <a href="{% url 'location:activities' %}?visited">visited activities</a>.</p>
+
+      <table>
+        <tbody>
+          {% for visit in visits.all %}
+            <tr>
+              <td>{% ifchanged visit.location %}{% include 'snippets/location_link.html' with location=visit.location %}{% endifchanged %}</td>
+              <td colspan="3">{{ visit.day|default:'' }} {{ visit.get_month_display|default:''|capfirst }} <a href="{% if location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}?visited={{ visit.year }}">{{ visit.year }}</a></td>
+              <td>
+                <ul class="action list">
+                  <li><a href="{% url 'location:EditVisit' visit.id %}"><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#pencil"/></svg></a></li>
+                  <li><a href=""><svg class="bi" width="16" height="16" fill="currentColor"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#trash"/></svg></a></li>
+                </ul>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <table>
+    {% endif %}
+      <form method="post" action="{% url 'location:AddVisit' %}">
+        <tbody>
+          <tr>
+            {% csrf_token %}
+            <td class="title"><strong>{% translate 'add visit'|capfirst %}</strong></td>
+            <td>
+              <select name="location" id="location" class="form-control" required>
+                <option value="">--------</option>
+                {% for location in available_locations %}
+                  <option value="{{ location.id }}">{{ location.name|title }}</option>
+                {% endfor %}
+              </select>
+            </td>
+            <td>
+              <input type="number" min="1" max="31" name="day" class="form-control form-control" placeholder="day">
+            </td>
+            <td>
+              {% now "n" as month%}
+              <select name="month" id="month" class="form-control">
+                <option value="">--------</option>
+                <option value="1" {% if month == '1' %}selected{% endif %}>{% translate 'january'|capfirst %}</option>
+                <option value="2" {% if month == '2' %}selected{% endif %}>{% translate 'february'|capfirst %}</option>
+                <option value="3" {% if month == '3' %}selected{% endif %}>{% translate 'march'|capfirst %}</option>
+                <option value="4" {% if month == '4' %}selected{% endif %}>{% translate 'april'|capfirst %}</option>
+                <option value="5" {% if month == '5' %}selected{% endif %}>{% translate 'may'|capfirst %}</option>
+                <option value="6" {% if month == '6' %}selected{% endif %}>{% translate 'june'|capfirst %}</option>
+                <option value="7" {% if month == '7' %}selected{% endif %}>{% translate 'july'|capfirst %}</option>
+                <option value="8" {% if month == '8' %}selected{% endif %}>{% translate 'august'|capfirst %}</option>
+                <option value="9" {% if month == '9' %}selected{% endif %}>{% translate 'september'|capfirst %}</option>
+                <option value="10" {% if month == '10' %}selected{% endif %}>{% translate 'october'|capfirst %}</option>
+                <option value="11" {% if month == '11' %}selected{% endif %}>{% translate 'november'|capfirst %}</option>
+                <option value="12" {% if month == '12' %}selected{% endif %}>{% translate 'december'|capfirst %}</option>
+              </select>
+            </td>
+            <td>
+              <input type="number" min="1970" max="{% now "Y" %}" name="year" required class="form-control form-control" value="{% now "Y" %}">
+            </td>
+        </tr>
+        <tr>
+          <td colspan="4"></td>
+          <td><input type="submit" value="{% translate 'add visit'|capfirst %}">
+          </td>
+          </form>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
+

@@ -1,0 +1,25 @@
+{% load static %}
+<div class="row">
+  <div class="col-3 title-col">
+    {% translate 'order locations by'|capfirst %}:
+  </div>
+  <div class="col-8">
+    <form
+      action="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' profile.id profile.user.username 'order' %}"
+      data-action
+      data-method="POST"
+      data-body="form"
+      data-map='{"order":"#order"}'>
+      <div class="input-group">
+        <select class="form-control" name="order" id="order">
+          {% for key, value in profile.get_order_choices.items %}
+            <option value="{{ key }}" {% if profile.order == key %}selected{% endif %}>{{ value|title }}</option>
+          {% endfor %}
+        </select>
+        <button class="btn btn-outline-secondary"><img src="{% static 'img/bootstrap-icons/floppy.svg' %}"></button>
+      </div>
+    </form>
+  </div>
+  <div class="col-1">
+  </div>
+</div>

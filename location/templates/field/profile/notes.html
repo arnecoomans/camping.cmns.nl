@@ -1,0 +1,22 @@
+{% load static %}
+<form>
+  <div class="row">
+    <div class="col-3 title-col">
+      {% translate 'notes'|title %}:
+    </div>
+    <div class="col-8">
+      <textarea class="form-control" name="notes" data-autoresize>{{ profile.notes }}</textarea>
+    </div>
+    <div class="col-1">
+      <button type="button" 
+              class="btn btn-outline-secondary show-autocomplete"
+              title="{% translate 'save changes to'|capfirst %} {% translate 'notes'|capfirst %}"
+              data-action
+              data-method="POST"
+              data-body="form"
+              data-url	="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' profile.id profile.user.username 'notes' %}"
+              data-map	= '{"notes":"#notes"}'
+              ><img src="{% static 'img/bootstrap-icons/floppy.svg' %}"></button>
+    </div>
+  </div>
+</form>

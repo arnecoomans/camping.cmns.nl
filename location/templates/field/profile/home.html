@@ -1,0 +1,63 @@
+{% load static %}
+<div class="row">
+  <div class="col-3 title-col">
+    {% translate 'home'|capfirst %}:
+  </div>
+  <div class="col-8">
+    {% if ajax.editable or not profile.home %}
+    <form class="cmnd-autosuggest"
+    action="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' user.profile.id user.username 'home' %}"
+    data-action
+    data-method="POST"
+    data-body="form"
+    data-map='{"home":"#home"}'
+  >
+    <div class="input-group">
+      <input
+        name="name"
+        type="text"
+        value="{{ profile.home }}"
+        id="home-input"
+        placeholder="{% translate 'add home'|capfirst %} - {% translate 'start typing to see suggestions'|capfirst %}"
+        class="form-control"
+        data-autosuggest
+        data-url="{% url 'cmnsd:dispatch' 'locations'%}"
+        data-param="{{ search_query_character}}"
+        data-extra-params='{"format":"json", "category__slug":"home"}'
+        data-container="location"
+        data-field-input="name"
+        data-field-hidden="id"
+        data-field-prefix="home__"
+        data-allow-create="0"
+      >
+      <button type="submit" class="btn btn-primary"><img src="{% static 'img/bootstrap-icons/floppy.svg' %}"></button>
+    </div>
+  </form>
+    {% else %}
+      <p class="form-control-static"><a href="{% url 'location:location' profile.home.slug %}">{{ profile.home }}</a></p>
+    {% endif %}
+  </div>
+  <div class="col-1">
+    {% if ajax.editable %}
+      <button type="button" 
+              class="btn btn-outline-secondary show-autocomplete"
+              title="{% translate 'stop editing'|capfirst %} {% translate 'first name'|capfirst %}"
+              data-action
+              data-method="POST"
+              data-body="form"
+              data-url	="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' profile.id profile.user.username 'home' %}"
+              data-map	= '{"home":"#home"}'
+              ><img src="{% static 'img/bootstrap-icons/x.svg' %}"></button>
+      {% else %}
+        <button type="button" 
+                class="btn btn-outline-secondary show-autocomplete"
+                title="{% translate 'edit'|capfirst %} {% translate 'first name'|capfirst %}"
+                data-action
+                data-method="GET"
+                data-url	="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' profile.id profile.user.username 'home' %}"
+                data-params	= "editable"
+                data-map	= '{"home":"#home"}'
+                ><img src="{% static 'img/bootstrap-icons/pencil.svg' %}"></button>
+        {% endif %}
+  </div>
+</div>

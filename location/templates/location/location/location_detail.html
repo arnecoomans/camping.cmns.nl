@@ -250,7 +250,7 @@
             const pin{{ location.0.id }} = new PinElement({
               scale: 0.{% if location.0.isActivity %}7{% else %}8{% endif %},
               {% comment %} background: "#{% if location.0.isActivity %}{% if location.0.id in visited_locations %}aaa{% else %}666{% endif %}{% else %}{% if location.0.id in visited_locations %}77f{% else %}00f{% endif %}{% endif %}", {% endcomment %}
-              background: "{% mapsmarker location.0 visited_locations user.profile.favorite.all user.profile.dislike.all %}",
+              background: "{% mapsmarker location.0 user.profile.home visited_locations user.profile.favorite.all user.profile.dislike.all %}",
               borderColor: "#{% if location.0.isActivity %}333{% else %}000033{% endif %}",
               glyphColor: "white",
 

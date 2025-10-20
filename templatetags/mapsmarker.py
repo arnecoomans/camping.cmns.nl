@@ -3,10 +3,11 @@ from django import template
 register = template.Library()
 
 @register.simple_tag
-def mapsmarker(location, visited_locations, loved_locations=None, disliked_locations=None):
+def mapsmarker(location, home, visited_locations, loved_locations=None, disliked_locations=None):
   is_activity = location.is_activity
 
   key = (
+    'home' if location == home else
     'disliked' if location in disliked_locations else
     'loved' if location in loved_locations else
     'visited' if location.id in visited_locations else
@@ -14,11 +15,13 @@ def mapsmarker(location, visited_locations, loved_locations=None, disliked_locat
   )
 
   color_map = {
+    (True, 'home'):     "rgba(255, 125, 0, 1)",
     (True, 'default'):  "rgba(255, 223, 70, 1)",
     (True, 'visited'):  "rgba(255, 236, 140, 0.8)",
     (True, 'loved'):    "rgba(255, 190, 40, 1)",
     (True, 'disliked'): "rgba(180, 160, 30, 0.7)",
 
+    (False, 'home'):    "rgba(255, 125, 0, 1)",
     (False, 'default'):  "rgba(0, 102, 255, 1)",
     (False, 'visited'):  "rgba(153, 204, 255, 0.6)",
     (False, 'loved'):    "rgba(0, 70, 180, 1)",

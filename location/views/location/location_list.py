@@ -9,6 +9,7 @@ from django.utils.html import escape
 
 # from ..snippets.filter_class import FilterClass
 from cmnsd.views.cmnsd_filter import FilterMixin
+from cmnsd.views.utils__request import RequestMixin
 
 from math import floor, ceil
 
@@ -20,7 +21,7 @@ from location.models.Location import Location, Size
     - adds active filters to the context data
     - adds function filter_queryset, that returns the queryset based on the active filters
 '''
-class LocationListMaster(FilterMixin):
+class LocationListMaster(FilterMixin, RequestMixin):
   template_name = 'location/location/location_list.html'
 
   def get_default_order(self):

@@ -98,6 +98,16 @@
       {% for family_member in user.family_of.all %}
         <span class="family-member">
           {{ family_member.user.get_full_name|default:family_member.user.username }}
+          {% if family_member.user not in profile.family.all %}
+            <a href="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' profile.id user.username 'family' %}"
+                      data-action
+                      data-method="PATCH"
+                      data-body='{"family__id": "{{ family_member.user.id }}"}'
+                      data-map='{"family":"#family"}'
+                      >
+                      <img src="{% static 'img/bootstrap-icons/person-plus.svg' %}" title="{% translate 'add family member back'|capfirst %}"></a>
+                    </a>
+          {% endif %}
         </span>
         {% if not forloop.last %}, {% endif %}
       {% endfor %}

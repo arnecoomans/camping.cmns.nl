@@ -1,4 +1,0 @@
-{% load static %}{% load i18n %}
-<span class="family member">
-  {{ member.get_full_name|default:member.username }}
-  {% if member in user.profile.family.all %}<a href="#"><sup>(x)</sup></a></span>{% endif %}{% if not forloop.last %}, {% endif %}

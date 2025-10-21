@@ -206,3 +206,11 @@ div.meta {
   margin: 1em 0;
   background-color: rgba(0,0,0,0.01);
 }
+
+.infoblock {
+  margin: 1em 0;
+  padding: 1em;
+  background-color: rgba(0,0,0,0.02);
+  border: 1px solid #eee;
+  font-size: 85%;
+}

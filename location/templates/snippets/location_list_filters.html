@@ -101,28 +101,29 @@
         {% if available_filters.categories.all.count > 1 and 'category' not in active_filters %}
           <li><strong>{% translate 'category'|capfirst %}</strong>:
           {% for category in available_filters.categories.all %}
-              <a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% update_query_params request add=category.category__slug to='category' active_filters=active_filters %}">{% translate category.category__name|title %}</a>{% if not forloop.last %}, {% else %}{% if available_filters.tag|length > 1 %},{% endif %}{% endif %}
+              <a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% update_query_params request add=category.category__slug to='category__slug' active_filters=active_filters %}">{% translate category.category__name|title %}</a>{% if not forloop.last %}, {% else %}{% if available_filters.tag|length > 1 %},{% endif %}{% endif %}
           {% endfor %}
           </li>
         {% endif %}
+        <!-- Chains -->
         {% if available_filters.chains.all.count > 1 %}
           <li><strong>{% translate 'chain'|capfirst %}</strong>:
             {% for chain in available_filters.chains.all %}
-              <a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% update_query_params request add=chain.chain__slug to='chain' active_filters=active_filters %}">{{ chains.chain__name|title }}</a>{% if not forloop.last %}, {% else %}{% if available_filters.tag|length > 1 %},{% endif %}{% endif %}
+              <a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% update_query_params request add=chain.chains__slug to='chains__slug' active_filters=active_filters %}">{{ chain.chains__name|title }}</a>{% if not forloop.last %}, {% else %}{% if available_filters.tag|length > 1 %},{% endif %}{% endif %}
             {% endfor %}
         {% endif %}
       <!-- Size -->
        {% if user.is_authenticated and available_filters.size.all.count > 1 and 'size' not in active_filters %}
        <li><strong>{% translate 'size'|capfirst %}</strong>:
           {% for size in available_filters.size.all %}
-            <a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% update_query_params request add=size.size__slug to='size' active_filters=active_filters %}" data-bs-toggle="tooltip" data-bs-position="top" title="{{ size.size__name }}{% if size.size__description %}: {{ size.size__description }}{% endif %}">{{ size.size__slug|upper }}</a>{% if not forloop.last %}, {% endif %}
+            <a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% update_query_params request add=size.size__slug to='size__slug' active_filters=active_filters %}" data-bs-toggle="tooltip" data-bs-position="top" title="{{ size.size__name }}{% if size.size__description %}: {{ size.size__description }}{% endif %}">{{ size.size__slug|upper }}</a>{% if not forloop.last %}, {% endif %}
           {% endfor %}</li>
        {% endif %}
       <!-- Tags -->
         {% if available_filters.tags.all.count > 1 and 'tag' not in active_filters %}
           <li><strong>{% translate 'tag'|capfirst %}:</strong>
           {% for tag in available_filters.tags.all %}
-            <a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% update_query_params request add=tag.tags__slug to='tag' active_filters=active_filters %}">{% translate tag.tags__name|title %}</a>{% if not forloop.last %}, {% endif %}
+            <a href="{% if location_list.first.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% update_query_params request add=tag.tags__slug to='tags__slug' active_filters=active_filters %}">{% translate tag.tags__name|title %}</a>{% if not forloop.last %}, {% endif %}
           {% endfor %}</li>
         {% endif %}
       <!-- Visibility -->

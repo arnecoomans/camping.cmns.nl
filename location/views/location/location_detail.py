@@ -1,7 +1,9 @@
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 
 from django.utils.translation import gettext as _
 from django.conf import settings
+from django.shortcuts import redirect
 
 from ..snippets.filter_class import FilterClass
 from ..snippets.order_media import order_media
@@ -220,4 +222,3 @@ class LocationView(ListView, FilterClass):
       return True
     ''' Check for maps permission in session '''
     return True if self.request.session.get('maps_permission', False) else False
-  

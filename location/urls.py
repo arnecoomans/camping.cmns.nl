@@ -12,7 +12,7 @@ urlpatterns = [
   path('locations/<country>/', views.LocationListView.as_view(), name='ListLocationsByCountry'),
   path('locations/<country>/<region>/', views.LocationListView.as_view(), name='ListLocationsByRegion'),
   path('locations/<country>/<region>/<department>/', views.LocationListView.as_view(), name='ListLocationsByDepartment'),
-  path('locations/a/suggest', views.aSuggestLocations.as_view(), name='aListLocationSuggestions'),
+  # path('locations/a/suggest', views.aSuggestLocations.as_view(), name='aListLocationSuggestions'),
 
   path('map/', views.LocationMapView.as_view(), name='locationsMap'),
   path('map/<country>/', views.LocationMapView.as_view(), name='ListLocationsByCountryMap'),
@@ -30,7 +30,7 @@ urlpatterns = [
   path('location/<str:slug>/description/add/', views.AddDescriptionToLocation.as_view(), name='AddDescriptionToLocation'),
   path('location/description/add:<int:pk>/', views.AddLocationToDescription.as_view(), name='AddLocationToDescription'),
   path('location/description/edit:<int:pk>/', views.editDescription.as_view(), name='EditDescription'),
-  path('location/<str:slug>/description/toggle:<int:descriptionid>/', views.deleteDescriptionFromLocation.as_view(), name='deleteDescriptionFromLocation'),
+  # path('location/<str:slug>/description/toggle:<int:descriptionid>/', views.deleteDescriptionFromLocation.as_view(), name='deleteDescriptionFromLocation'),
   path('location/<str:slug>/links/add/', views.addLinkToLocation.as_view(), name='AddLinkToLocation'),
   path('location/<str:slug>/links/delete:<linkid>/', views.deleteLinkFromLocation.as_view(), name='DeleteLinkFromLocation'),
   path('location/<location_slug>/links/edit:<pk>/', views.editLinkAtLocation.as_view(), name='EditLinkAtLocation'),
@@ -90,9 +90,10 @@ urlpatterns = [
   # path('profile/least-like/<str:slug>/', views.ToggleLeastLiked.as_view(), name='ToggleLeastLiked'),
   path('profile/visit/add/', views.AddVisit.as_view(), name='AddVisit'),
   path('profile/visit/edit:<pk>/', views.EditVisit.as_view(), name='EditVisit'),
+
   # path('profile/visit/delete:<pk>/', views.ToggleDeletedVisit.as_view(), name='DeleteVisit'),
-  path('session/allow_google_maps/', views.ToggleGoogleMapsSession.as_view(), name='MapsPermissionSession'),
-  path('profile/allow_google_maps//', views.ToggleGoogleMapsProfile.as_view(), name='MapsPermissionProfile'),
+  path('session/allow_google_maps/', views.ToggleGoogleMapsSession.as_view(), name='MapsPermissionSession'), #Profile
+  path('profile/allow_google_maps//', views.ToggleGoogleMapsProfile.as_view(), name='MapsPermissionProfile'), #Profile
   # path('a/profile/favorite/<location>/', views.aToggleFavorite.as_view(), name='aToggleFavorite'),
 
   path('chain/add/', views.AddChain.as_view(), name='AddChainTo'),

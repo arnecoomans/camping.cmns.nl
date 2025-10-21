@@ -259,8 +259,8 @@
               const { target } = domEvent;
               infoWindow.close();
               infoWindow.setContent('<b><a href="{{ location.0.get_absolute_url }}">{{ location.0.name }}</a></b>' +
-              '{% if location.0 in user.profile.favorite.all %}<svg class="bi" width="12" height="12" fill="#c00"><use xlink:href="{% static "bootstrap-icons/bootstrap-icons.svg" %}#balloon-heart-fill"/></svg>{% endif %}' +
-              '{% if location.0 in user.profile.dislike.all %}<svg class="bi" width="12" height="12" fill="#000"><use xlink:href="{% static "bootstrap-icons/bootstrap-icons.svg" %}#heartbreak-fill"/></svg>{% endif %}' + 
+              '{% if location.0 in user.profile.favorite.all %}<svg class="bi" width="12" height="12" fill="#c00"><use xlink:href="{% static "img/bootstrap-icons/bootstrap-icons.svg" %}#balloon-heart-fill"/></svg>{% endif %}' +
+              '{% if location.0 in user.profile.dislike.all %}<svg class="bi" width="12" height="12" fill="#000"><use xlink:href="{% static "img/bootstrap-icons/bootstrap-icons.svg" %}#heartbreak-fill"/></svg>{% endif %}' + 
               '<br>' +
               '{{ location.0.category.name|capfirst }} in {{ location.0.location.name|default:"" }}, {{ location.0.location.parent.name|default:"" }}, {{ location.0.location.parent.parent.name|default:"" }}<br>' +
               '{% if location.0.id in visited_locations %}{% translate 'visited before'|capfirst %}{% endif %}' +
@@ -273,8 +273,8 @@
             const { target } = domEvent;
             infoWindow.close();
             infoWindow.setContent('<b><a href="{{ location.get_absolute_url }}">{{ location.name }}</a></b>' +
-            '{% if location in user.profile.favorite.all %}<svg class="bi" width="12" height="12" fill="#c00"><use xlink:href="{% static "bootstrap-icons/bootstrap-icons.svg" %}#balloon-heart-fill"/></svg>{% endif %}' + 
-            '{% if location in user.profile.dislike.all %}<svg class="bi" width="12" height="12" fill="#000"><use xlink:href="{% static "bootstrap-icons/bootstrap-icons.svg" %}#heartbreak-fill"/></svg>{% endif %}' + 
+            '{% if location in user.profile.favorite.all %}<svg class="bi" width="12" height="12" fill="#c00"><use xlink:href="{% static "img/bootstrap-icons/bootstrap-icons.svg" %}#balloon-heart-fill"/></svg>{% endif %}' + 
+            '{% if location in user.profile.dislike.all %}<svg class="bi" width="12" height="12" fill="#000"><use xlink:href="{% static "img/bootstrap-icons/bootstrap-icons.svg" %}#heartbreak-fill"/></svg>{% endif %}' + 
             '<br>' +
                                   '{{ location.category.name|capfirst }} in {{ location.department.name|default:"" }}, {{ location.region.name|default:"" }}, {{ location.country.name|default:"" }}<br>' +
                                   '');

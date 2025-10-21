@@ -1,0 +1,16 @@
+{% load static %}
+{% if not location in user.profile.dislike.all %}
+  <a  
+      data-action 
+      data-url="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'favorite_of' %}" 
+      data-method="PATCH" 
+      data-body='{"favorite_of__id": "{{ user.profile.id }}" }'
+      data-map='{"favorite_of":"#favorite_of"}' 
+      class="toggable" 
+      id="like" 
+      data-bs-toggle="tooltip" 
+      data-bs-placement="top" 
+      title="{% if location in user.profile.favorite.all %}{% translate 'you like'|capfirst %}{% else %}{% translate 'like'|capfirst %}{% endif %} {% translate 'this location' %}">
+        <svg class="bi" width="32" height="32" fill="#c00"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#balloon-heart{% if location in user.profile.favorite.all %}-fill{% endif %}"/></svg>
+      </a>
+{% endif %}

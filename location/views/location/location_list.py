@@ -7,7 +7,8 @@ from django.db.models import Avg
 from django.shortcuts import redirect
 from django.utils.html import escape
 
-from ..snippets.filter_class import FilterClass
+# from ..snippets.filter_class import FilterClass
+from cmnsd.views.cmnsd_filter import FilterMixin
 
 from math import floor, ceil
 
@@ -19,7 +20,7 @@ from location.models.Location import Location, Size
     - adds active filters to the context data
     - adds function filter_queryset, that returns the queryset based on the active filters
 '''
-class LocationListMaster(FilterClass):
+class LocationListMaster(FilterMixin):
   template_name = 'location/location/location_list.html'
 
   def get_default_order(self):
@@ -175,36 +176,37 @@ class LocationListMaster(FilterClass):
       'size': 'size__slug__in',
     }
     ''' Apply filters '''
-    for field, map in mapping.items():
-      if self.get_active_filters(field):
-        if type(map) == str:
-          queryset = queryset.filter(**{map: self.get_active_filters(field)})
-        elif type(map) == list:
-          queryset = queryset.filter(**{map[0]: self.get_active_filters(field)}) | queryset.filter(**{map[1]: self.get_active_filters(field)})
-      ''' Apply filters that require login and a user with a profile '''
-    if hasattr(self.request.user, 'profile'):
-      if self.get_active_filters('favorites'):
-        queryset = queryset.filter(favorite_of__user=self.request.user)
-      if self.get_active_filters('visited') == True:
-        queryset = queryset.filter(slug__in=self.request.user.visits.filter(status='p').values_list('location__slug', flat=True))
-      elif self.get_active_filters('visited'):
-        queryset = queryset.filter(slug__in=self.request.user.visits.filter(status='p', year=self.get_active_filters('visited')).values_list('location__slug', flat=True))
-    ''' Free Text Search Filters '''
-    if self.get_active_filters('q'):
-      query = self.get_active_filters('q')
-      for q in query:
-        queryset = queryset.filter(name__icontains=q) |\
-                   queryset.filter(address__icontains=q) |\
-                   queryset.filter(owners_names__icontains=q) |\
-                   queryset.filter(descriptions__description=q) |\
-                   queryset.filter(category__name__icontains=q) |\
-                   queryset.filter(additional_category__name__icontains=q) |\
-                   queryset.filter(chains__name__icontains=q) |\
-                   queryset.filter(chains__parent__name__icontains=q) |\
-                   queryset.filter(tags__name__icontains=q) |\
-                   queryset.filter(location__name__icontains=q) |\
-                   queryset.filter(location__parent__name__icontains=q) |\
-                   queryset.filter(location__parent__parent__name__icontains=q)
+    queryset = self.filter(queryset)
+    # for field, map in mapping.items():
+    #   if self.get_active_filters(field):
+    #     if type(map) == str:
+    #       queryset = queryset.filter(**{map: self.get_active_filters(field)})
+    #     elif type(map) == list:
+    #       queryset = queryset.filter(**{map[0]: self.get_active_filters(field)}) | queryset.filter(**{map[1]: self.get_active_filters(field)})
+    #   ''' Apply filters that require login and a user with a profile '''
+    # if hasattr(self.request.user, 'profile'):
+    #   if self.get_active_filters('favorites'):
+    #     queryset = queryset.filter(favorite_of__user=self.request.user)
+    #   if self.get_active_filters('visited') == True:
+    #     queryset = queryset.filter(slug__in=self.request.user.visits.filter(status='p').values_list('location__slug', flat=True))
+    #   elif self.get_active_filters('visited'):
+    #     queryset = queryset.filter(slug__in=self.request.user.visits.filter(status='p', year=self.get_active_filters('visited')).values_list('location__slug', flat=True))
+    # ''' Free Text Search Filters '''
+    # if self.get_active_filters('q'):
+    #   query = self.get_active_filters('q')
+    #   for q in query:
+    #     queryset = queryset.filter(name__icontains=q) |\
+    #                queryset.filter(address__icontains=q) |\
+    #                queryset.filter(owners_names__icontains=q) |\
+    #                queryset.filter(descriptions__description=q) |\
+    #                queryset.filter(category__name__icontains=q) |\
+    #                queryset.filter(additional_category__name__icontains=q) |\
+    #                queryset.filter(chains__name__icontains=q) |\
+    #                queryset.filter(chains__parent__name__icontains=q) |\
+    #                queryset.filter(tags__name__icontains=q) |\
+    #                queryset.filter(location__name__icontains=q) |\
+    #                queryset.filter(location__parent__name__icontains=q) |\
+    #                queryset.filter(location__parent__parent__name__icontains=q)
     ''' Min and Max Distance '''
     if self.get_active_filters('dist_min'):
       queryset = queryset.filter(distance_to_departure_center__gt=self.get_active_filters('dist_min'))

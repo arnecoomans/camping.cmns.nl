@@ -5,8 +5,9 @@ from django.utils.translation import gettext as _
 from django.conf import settings
 from django.shortcuts import redirect
 
-from ..snippets.filter_class import FilterClass
+# from ..snippets.filter_class import FilterClass
 from ..snippets.order_media import order_media
+from cmnsd.views.cmnsd_filter import FilterMixin
 
 from location.models.Location import Location, Link, Description, Size
 from location.models.Comment import Comment
@@ -15,10 +16,12 @@ from location.models.List import List, ListLocation
 from location.models.Profile import VisitedIn
 from location.models.Media import Media
 
+
+
 ''' Location Detail View '''
 
 
-class LocationView(ListView, FilterClass):
+class LocationView(FilterMixin, ListView):
   ''' Location View 
       The location view loads all information about the location and displays this to the user.
       The location view is built around the Comment model. This allows for the comments to be

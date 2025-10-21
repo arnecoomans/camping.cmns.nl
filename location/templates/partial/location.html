@@ -1,3 +1,2 @@
-{% load static %}{% load i18n %}
 <a class="{% if location.isActivity %}activity{% else %}location{% endif %}" href="{% url 'location:location' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see details of location'|capfirst %}: {{ location.name|title }} ">{{ location.name }}</a>
 {% if user.profile.show_category_label %}<span class="category"> {% translate location.category.name|title context 'category' %}</span>{% if location.additional_category.all.count > 1 %}{% for category in location.additional_category.all %} <span class="category secondary"> {% translate category.name|title %}</span>{% endfor %}{% endif %}{% endif %}

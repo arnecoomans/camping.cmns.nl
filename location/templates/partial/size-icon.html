@@ -1,0 +1,1 @@
+{% if user.is_authenticated and location.size %}<span class="location size indicator" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ location.size.name }}{% if location.size.description %}: {{ location.size.description|capfirst }}{% endif %}">{{ location.size.slug|upper }}</span> {% endif %}

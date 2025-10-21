@@ -21,6 +21,13 @@
       </span>
       {% if not forloop.last %}, {% endif %}
     {% endfor %}
+    <div class="infoblock">
+      {% blocktranslate %}
+        A family member is someone you are closely related to, and want to share information with on this platform.
+        People who you have marked as family have access to all information you mark as 'family visible'. This is a great
+        way to keep comments and lists private within your family circle.
+      {% endblocktranslate %}
+    </div>
   </div>
   <div class="col-1">
     {% if ajax.editable %}
@@ -91,9 +98,26 @@
       {% for family_member in user.family_of.all %}
         <span class="family-member">
           {{ family_member.user.get_full_name|default:family_member.user.username }}
+          {% if family_member.user not in profile.family.all %}
+            <a href="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' profile.id user.username 'family' %}"
+                      data-action
+                      data-method="PATCH"
+                      data-body='{"family__id": "{{ family_member.user.id }}"}'
+                      data-map='{"family":"#family"}'
+                      >
+                      <img src="{% static 'img/bootstrap-icons/person-plus.svg' %}" title="{% translate 'add family member back'|capfirst %}"></a>
+                    </a>
+          {% endif %}
         </span>
         {% if not forloop.last %}, {% endif %}
       {% endfor %}
+      <div class="infoblock">
+      {% blocktranslate %}
+        People who have marked you as family can share information with you that is marked as 'family visible'.
+        Having you marked as family does not automatically mark them as your family, and does not give them access to
+        information you have marked as 'family visible'.
+      {% endblocktranslate %}
+    </div>
     </div>
     <div class="col-1">
     </div>

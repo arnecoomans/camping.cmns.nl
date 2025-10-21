@@ -1,2 +1,1 @@
-{% load i18n %}{{ category.name|title }}
-{% if user.is_staff or location.user == user %}{% if not location.category == category %}<a href="{% url 'location:ToggleAttributeWithSlugWithValue' 'location' location.slug 'additional_category' category.slug %}" class="toggable" data-bs-toggle="tooltip" data-bs-placement="top" title="{% blocktranslate with name=category.name location_name=location %}Remove &quot;{{ name }}&quot; from {{ location_name }}{% endblocktranslate %}"><sup>[X]</sup></a>{% endif %}{% endif %}
+<a href="{% url 'location:search' %}?category__slug={{ category.slug }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ category }}">{% translate category.name|title %}</a>

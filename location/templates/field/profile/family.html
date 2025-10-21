@@ -59,9 +59,27 @@
     </div>
     <div class="col-8">
       <form>
-        
         <div class="input-group">
-          <select class="form-control" name="family__username">
+          <input
+            id="user-input"
+            type="text"
+            class="form-control"
+            placeholder="{% translate 'select a family member'|capfirst %}"
+            data-autosuggest
+            data-local-source='[
+              {% for user in profile.available_family.all %}
+                {"id": {{ user.id }}, "name": "{{ user.get_full_name|default:user.username }}", "username": "{{ user.username }}"}{% if not forloop.last %},{% endif %}
+              {% endfor %}
+            ]'
+            data-field-input="name"
+            data-field-hidden="username"
+            data-display-fields="name"
+            data-display-secondary-size="0.8"
+            data-allow-create="0"
+            data-min="4"
+            data-field-prefix="family__"
+          >
+          {% comment %} <select class="form-control" name="family__username">
             {% if profile.available_family.all.count == 0 %}
               <option value="" selected disabled>{% translate 'no available family members to add'|capfirst %}</option>
             {% else %}
@@ -70,7 +88,7 @@
                 <option value="{{ user.username }}">{{ user.get_full_name|default:user.username }}</option>
               {% endfor %}
             {% endif %}
-          </select>
+          </select> {% endcomment %}
           <button type="button" 
                   class="btn btn-outline-secondary show-autocomplete"
                   title="{% translate 'add family member'|capfirst %}"
@@ -78,6 +96,7 @@
                   data-action
                   data-method="POST"
                   data-body="form"
+                  data-params="editable"
                   data-url	="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' profile.id profile.user.username 'family' %}"
                   data-map	= '{"family":"#family"}'
                   ><img src="{% static 'img/bootstrap-icons/person-plus.svg' %}"></button>

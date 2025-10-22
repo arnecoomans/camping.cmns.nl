@@ -8,7 +8,7 @@
               name="filter_by_distance" 
               {% if user.profile.filter_by_distance %}checked{% endif %}
               data-action
-              data-params='{"filter_by_distance":"{% if user.profile.filter_by_distance %}false{% else %}true{% endif %}"}'
+              data-body='{"filter_by_distance":"{% if user.profile.filter_by_distance %}false{% else %}true{% endif %}"}'
               data-url="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' user.profile.id user.username 'filter_by_distance' %}"
               data-method="POST"
               data-map='{"filter_by_distance":"#filter_by_distance"}'

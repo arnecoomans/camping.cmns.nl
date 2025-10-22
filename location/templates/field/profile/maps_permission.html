@@ -8,7 +8,7 @@
               name="maps_permission" 
               {% if user.profile.maps_permission %}checked{% endif %}
               data-action
-              data-params='{"maps_permission":"{% if user.profile.maps_permission %}false{% else %}true{% endif %}"}'
+              data-body='{"maps_permission":"{% if user.profile.maps_permission %}false{% else %}true{% endif %}"}'
               data-url="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' user.profile.id user.username 'maps_permission' %}"
               data-method="POST"
               data-map='{"maps_permission":"#maps_permission"}'

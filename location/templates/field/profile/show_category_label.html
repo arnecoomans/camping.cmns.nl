@@ -8,7 +8,7 @@
               name="show_category_label" 
               {% if user.profile.show_category_label %}checked{% endif %}
               data-action
-              data-params='{"show_category_label":"{% if user.profile.show_category_label %}false{% else %}true{% endif %}"}'
+              data-body='{"show_category_label":"{% if user.profile.show_category_label %}false{% else %}true{% endif %}"}'
               data-url="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'profile' user.profile.id user.username 'show_category_label' %}"
               data-method="POST"
               data-map='{"show_category_label":"#show_category_label"}'

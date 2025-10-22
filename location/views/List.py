@@ -9,7 +9,7 @@ from django.db import IntegrityError
 from django.conf import settings
 from django.http import Http404
 
-from .snippets.filter_class import FilterClass
+from cmnsd.views.cmnsd_filter import FilterMixin
 
 from location.models.List import List, ListLocation, ListDistance
 from location.models.Location import Location
@@ -39,7 +39,7 @@ def calculateDistances(request, list):
       return True
     
 
-class ListListView(FilterClass, ListView):
+class ListListView(FilterMixin, ListView):
   model = List
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -65,7 +65,7 @@ class ListListView(FilterClass, ListView):
     return queryset
   
 
-class ListDetailView(FilterClass, DetailView):
+class ListDetailView(FilterMixin, DetailView):
   model = List
 
   def get_template_names(self):
@@ -166,7 +166,7 @@ class EditList(UpdateView):
 
 
 ''' Edit ListLocation '''
-class EditListLocation(FilterClass, UpdateView):
+class EditListLocation(FilterMixin, UpdateView):
   model = ListLocation
   fields = ['comment', 'visibility', 'nights', 'price', 'media', 'show_on_route']
   
@@ -232,7 +232,7 @@ class UndeleteList(UpdateView):
   
 
 ''' ADD LOCATION TO LIST '''
-class AddLocationToList(FilterClass, UpdateView):
+class AddLocationToList(FilterMixin, UpdateView):
   model = ListLocation
   fields = ['locations']
   steps = 10
@@ -428,7 +428,7 @@ class ListLocationDown(ListLocationUpDown):
   def get(self, request, *args, **kwargs):
     return super().get(request, direction='down', *args, **kwargs)
 
-class AutomatedFavoriteList(FilterClass, ListView):
+class AutomatedFavoriteList(FilterMixin, ListView):
   model = Location
   template_name = 'location/list_favorite_detail.html'
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-03 09:31+0100\n"
+"POT-Creation-Date: 2025-10-23 17:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,68 +18,570 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: location/models/Comment.py:19
+#: cmnsd/models/Tag.py:11 location/models/Geo.py:11 location/models/List.py:94
+#: location/models/Location.py:34 location/models/Location.py:119
+#: location/models/Location.py:171
+msgid "Identifier in URL"
+msgstr ""
+
+#: cmnsd/models/Tag.py:11 location/models/Geo.py:11 location/models/List.py:94
+#: location/models/Location.py:34 location/models/Location.py:119
+#: location/models/Location.py:171
+msgid "automatically generated"
+msgstr ""
+
+#: cmnsd/models/Tag.py:12
+msgid "Name of tag"
+msgstr ""
+
+#: cmnsd/models/cmnsd_basemodel.py:32
+msgid "Short unique ID for public URL use"
+msgstr ""
+
+#: cmnsd/models/cmnsd_basemodel.py:36
+msgid "Concept"
+msgstr ""
+
+#: cmnsd/models/cmnsd_basemodel.py:37
+msgid "Published"
+msgstr ""
+
+#: cmnsd/models/cmnsd_basemodel.py:38
+msgid "Revoked"
+msgstr ""
+
+#: cmnsd/models/cmnsd_basemodel.py:39
+msgid "Deleted"
+msgstr ""
+
+#: cmnsd/models/cmnsd_basemodel.py:108 location/models/base_model.py:12
+#: location/templates/element/reusable_comment_textarea.html:16
+#: location/templates/element/reusable_description_textarea.html:22
+#: location/templates/field/location_visibility.html:18
+#: location/templates/location/comment_add.html:13
+#: location/templates/location/comment_form.html:33
+msgid "public"
+msgstr ""
+
+#: cmnsd/models/cmnsd_basemodel.py:109 location/models/base_model.py:13
+msgid "commmunity"
+msgstr ""
+
+#: cmnsd/models/cmnsd_basemodel.py:110 location/models/base_model.py:14
+#: location/templates/element/reusable_comment_textarea.html:14
+#: location/templates/element/reusable_description_textarea.html:20
+#: location/templates/field/location_visibility.html:16
+#: location/templates/field/profile/family.html:4
+#: location/templates/field/profile/family.html:36
+#: location/templates/field/profile/family.html:46
+#: location/templates/location/comment_add.html:11
+#: location/templates/location/comment_form.html:31
+msgid "family"
+msgstr ""
+
+#: cmnsd/models/cmnsd_basemodel.py:111 location/models/base_model.py:15
+#: location/templates/element/reusable_comment_textarea.html:13
+#: location/templates/element/reusable_description_textarea.html:19
+#: location/templates/field/location_visibility.html:15
+#: location/templates/location/comment_add.html:10
+#: location/templates/location/comment_form.html:30
+msgid "private"
+msgstr ""
+
+#: cmnsd/models/cmnsd_basemodel.py:138
+msgid "sites"
+msgstr ""
+
+#: cmnsd/templates/field/link.html:1
+#, python-format
+msgid "Open '%(linkname)s' in a new window"
+msgstr ""
+
+#: cmnsd/templatetags/humanize_date.py:60
+#, python-format
+msgctxt "time difference"
+msgid "%(count)d hour"
+msgstr ""
+
+#: cmnsd/templatetags/humanize_date.py:61
+#, python-format
+msgctxt "time difference"
+msgid "%(count)d hours"
+msgstr ""
+
+#: cmnsd/templatetags/humanize_date.py:63
+#, python-format
+msgctxt "time difference"
+msgid "%(count)d minute"
+msgstr ""
+
+#: cmnsd/templatetags/humanize_date.py:64
+#, python-format
+msgctxt "time difference"
+msgid "%(count)d minutes"
+msgstr ""
+
+#: cmnsd/templatetags/humanize_date.py:66
+msgctxt "time difference"
+msgid "just now"
+msgstr ""
+
+#: cmnsd/templatetags/humanize_date.py:68
+#, python-format
+msgctxt "time difference"
+msgid "%(count)d day"
+msgstr ""
+
+#: cmnsd/templatetags/humanize_date.py:69
+#, python-format
+msgctxt "time difference"
+msgid "%(count)d days"
+msgstr ""
+
+#: cmnsd/templatetags/humanize_date.py:72
+#, python-format
+msgctxt "time difference"
+msgid "%(count)d week"
+msgstr ""
+
+#: cmnsd/templatetags/humanize_date.py:73
+#, python-format
+msgctxt "time difference"
+msgid "%(count)d weeks"
+msgstr ""
+
+#: cmnsd/templatetags/humanize_date.py:76
+#, python-format
+msgctxt "time difference"
+msgid "%(count)d month"
+msgstr ""
+
+#: cmnsd/templatetags/humanize_date.py:77
+#, python-format
+msgctxt "time difference"
+msgid "%(count)d months"
+msgstr ""
+
+#: cmnsd/templatetags/humanize_date.py:80
+#, python-format
+msgctxt "time difference future"
+msgid "in %(text)s"
+msgstr ""
+
+#: cmnsd/templatetags/humanize_date.py:82
+#, python-format
+msgctxt "time difference past"
+msgid "%(text)s ago"
+msgstr ""
+
+#: cmnsd/views/ajax__crud__util.py:25
+msgid "no model detected for update"
+msgstr ""
+
+#: cmnsd/views/ajax__crud__util.py:27
+msgid "no object detected for update"
+msgstr ""
+
+#: cmnsd/views/ajax__crud_delete.py:17
+msgid "object '{}' marked as deleted"
+msgstr ""
+
+#: cmnsd/views/ajax__crud_delete.py:25
+msgid "failed to mark object as deleted{}"
+msgstr ""
+
+#: cmnsd/views/ajax__crud_delete.py:26
+msgid "failed to mark object as deleted"
+msgstr ""
+
+#: cmnsd/views/ajax__crud_update.py:40
+msgid "an unexpected error occured when updating fields of {}{}"
+msgstr ""
+
+#: cmnsd/views/ajax__crud_update.py:106
+msgid "Malformed key '{}' skipped while building payload."
+msgstr ""
+
+#: cmnsd/views/ajax__crud_update.py:160
+msgid "invalid model metadata — cannot initialize object"
+msgstr ""
+
+#: cmnsd/views/ajax__crud_update.py:204
+msgid "could not initialize object for model '{}': {}"
+msgstr ""
+
+#: cmnsd/views/ajax__crud_update.py:255
+msgid "field '{}' is of an unsupported type for update{}"
+msgstr ""
+
+#: cmnsd/views/ajax__crud_update.py:265 cmnsd/views/ajax__crud_update.py:273
+#: cmnsd/views/ajax__crud_update.py:280
+msgid "field '{}' does not exist on object {} '{}'"
+msgstr ""
+
+#: cmnsd/views/ajax__utils_response.py:94
+msgid "error when encoding response to JSON{}"
+msgstr ""
+
+#: cmnsd/views/ajax__utils_response.py:100
+msgid "unexpected error when encoding response to JSON: {}"
+msgstr ""
+
+#: cmnsd/views/ajax__utils_response.py:127
+msgid "error rendering template '{}': {}"
+msgstr ""
+
+#: cmnsd/views/ajax__utils_response.py:142
+msgid "error decoding JSON from rendered template '{}': {}"
+msgstr ""
+
+#: cmnsd/views/ajax__utils_response.py:149
+msgid "searched for templates: {}"
+msgstr ""
+
+#: cmnsd/views/ajax__utils_response.py:150
+msgid "{} template for '{}:{}' not found in field/ when rendering field"
+msgstr ""
+
+#: cmnsd/views/ajax__utils_response.py:163 cmnsd/views/ajax_dispatch.py:128
+msgid "field '{}' is not found in {} '{}'"
+msgstr ""
+
+#: cmnsd/views/ajax__utils_response.py:165
+#: cmnsd/views/ajax__utils_response.py:167
+msgid "unexpected error retrieving field '{}' from {} '{}': {}"
+msgstr ""
+
+#: cmnsd/views/ajax__utils_response.py:274
+msgid "Message template not found when rendering message"
+msgstr ""
+
+#: cmnsd/views/ajax_dispatch.py:60
+msgid "an error occurred during request processing{}"
+msgstr ""
+
+#: cmnsd/views/ajax_dispatch.py:91
+msgid "at least two identifiers are required for object lookup"
+msgstr ""
+
+#: cmnsd/views/ajax_dispatch.py:94
+msgid "model is required for object lookup"
+msgstr ""
+
+#: cmnsd/views/ajax_dispatch.py:112
+msgid "model is required for field lookup"
+msgstr ""
+
+#: cmnsd/views/ajax_dispatch.py:115
+msgid "object is required for field lookup"
+msgstr ""
+
+#: cmnsd/views/ajax_dispatch.py:137
+msgid "field '{}' could not be set in {} '{}'{}"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:69
+msgid "no field with the name '{}' could be found in model '{}'"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:120
+msgid "access to field '{}' is blocked in configuration"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:127
+msgid "access to field '{}' is restricted to staff users"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:138
+msgid "access to field '{}' is blocked in model configuration"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:198
+msgid "error occurred while fetching related objects for field '{}'{}"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:209
+msgid "error occurred while calling field '{}'{}"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:346
+msgid "could not resolve display value for field '{}' with value '{}'{}"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:402
+msgid "invalid boolean value '{}'"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:422
+msgid "invalid JSON value for field '{}'"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:435
+msgid "error casting value '{}' to correct type for field '{}'{}"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:491
+msgid "invalid choice '{}' for field '{}'"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:521
+msgid ""
+"cannot update {}'s simple field '{}' with value '{}' because value does not "
+"belong to a {}"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:546
+msgid ""
+"cannot update {}'s foreign key field '{}' with value '{}' because value does "
+"not belong to a {}"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:549
+msgid ""
+"cannot update {}'s foreign key field '{}' with value '{}' because related "
+"model could not be determined"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:593
+msgid "unable to set value of {} to {}{}"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:599
+msgid ""
+"cannot update {}'s related field '{}' with value '{}' because value does not "
+"belong to a {}"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:602
+msgid ""
+"cannot update {}'s related field '{}' with value '{}' because related model "
+"could not be determined"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:637
+msgid "removed '{}' '{}' from {} {}"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:641
+msgid "unable to remove value of {} to {}{}"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:651
+msgid "added '{}' '{}' to '{}' '{}'"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:655
+msgid "unable to add value of {} to {}{}"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:684
+msgid "Invalid identifier format for related object lookup: {}"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:689
+msgid ""
+"Maximum recursion depth ({}) exceeded resolving related objects for '{}'."
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:795
+msgid ""
+"maximum recursion depth ({}) exceeded while creating related objects for "
+"model '{}'"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:803
+msgid ""
+"creation of new related objects is not allowed for foreign key field '{}'"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:809
+msgid "creation of new related objects is not allowed for related field '{}'"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:849
+msgid "created new '{}' '{}'"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:858
+msgid "error creating new related object for the given arguments: {}{}"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_field.py:885
+msgid "invalid name '{}': no valid parts found"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_model.py:46
+msgid "access to model '{}' is blocked in application configuration"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_model.py:83
+msgid "no model with the name '{}' could be found"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_model.py:87
+msgid ""
+"multiple models with the name '{}' were found. specify 'app_label.modelname' "
+"instead."
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_object.py:47
+msgid "no valid model supplied in meta_object.__init__"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_object.py:64
+msgid "no valid identifiers supplied for object lookup in model '{}'"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_object.py:74
+msgid "multiple objects were found for the given arguments: {}"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_object.py:77
+msgid ""
+"you do not have permission to access the requested {} with given arguments {}"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_object.py:78
+msgid "no object could be found in this querysetfor the given arguments: {}"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_object.py:87
+msgid "no object to commit changes to"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_object.py:92
+msgid "error committing changes to {} '{}': {}{}"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_object.py:106
+msgid "succesfully updated {} with the following change:"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_object.py:108
+msgid "succesfully updated {} with the following {} changes:"
+msgstr ""
+
+#: cmnsd/views/ajax_utils_meta_object.py:114
+msgid "changed field '{}' from '{}' to '{}'"
+msgstr ""
+
+#: cmnsd/views/cmnsd_filter.py:49
+msgid "an error occurred while filtering{}"
+msgstr ""
+
+#: cmnsd/views/cmnsd_filter.py:59 cmnsd/views/cmnsd_filter.py:62
+msgid "field '{}' is not allowed for searching due to security reasons."
+msgstr ""
+
+#: cmnsd/views/cmnsd_filter.py:74
+msgid "you must be logged in to view these items"
+msgstr ""
+
+#: cmnsd/views/cmnsd_filter.py:333
+msgid "an error occurred while searching{}"
+msgstr ""
+
+#: cmnsd/views/utils__request.py:32
+msgid "Invalid source(s): {}"
+msgstr ""
+
+#: cmnsd/views/utils__request.py:76
+msgid "Error fetching value: {}"
+msgstr ""
+
+#: cmnsd/views/utils__request.py:79
+msgid "Value '{}' not found in request."
+msgstr ""
+
+#: cmnsd/views/utils__request.py:81
+msgid " Falling back to default: '{}'"
+msgstr ""
+
+#: location/models/Comment.py:15
+#: location/templates/location/comment_form.html:7
+msgid "on"
+msgstr ""
+
+#: location/models/Comment.py:23
 msgid "Comment"
 msgstr ""
 
-#: location/models/Comment.py:20
+#: location/models/Comment.py:24
 msgid "Comments"
 msgstr ""
 
-#: location/models/List.py:32 location/models/List.py:62
-#: location/models/List.py:85 location/models/List.py:228
+#: location/models/Geo.py:16
+msgid "add order to countries for sorting in distance sorted overview"
+msgstr ""
+
+#: location/models/Geo.py:16
+msgid "only works for countries"
+msgstr ""
+
+#: location/models/Geo.py:18
+msgid "cached average distance to center of this region"
+msgstr ""
+
+#: location/models/Geo.py:18
+msgid "in km"
+msgstr ""
+
+#: location/models/List.py:33 location/models/List.py:63
+#: location/models/List.py:86 location/models/List.py:237
+#: location/templates/object/location_visitors.html:29
 msgid "unknown"
 msgstr ""
 
-#: location/models/List.py:34 location/models/List.py:64
+#: location/models/List.py:35 location/models/List.py:65
 msgid "under one minute"
 msgstr ""
 
-#: location/models/List.py:87 location/models/List.py:230
+#: location/models/List.py:88 location/models/List.py:239
 msgid "under 1 km"
 msgstr ""
 
-#: location/models/List.py:96 location/models/Location.py:37
-#: location/models/Location.py:145
+#: location/models/List.py:97 location/models/Location.py:37
+#: location/models/Location.py:174
 msgid "Name of location as it is identified by"
 msgstr ""
 
-#: location/models/List.py:97 location/models/List.py:146
-#: location/models/Location.py:39 location/models/Location.py:132
-#: location/models/Location.py:150
+#: location/models/List.py:98 location/models/List.py:155
+#: location/models/Location.py:39 location/models/Location.py:145
+#: location/models/Location.py:162
 msgid "Markdown is supported"
 msgstr ""
 
-#: location/models/List.py:100 location/models/List.py:109
+#: location/models/List.py:101
+msgid "should this list appear at locations when adding a location to a list"
+msgstr ""
+
+#: location/models/List.py:104
 #: location/templates/location/list_favorite_detail.html:6
 #: location/templates/location/list_list.html:11
 #: location/templates/location/list_list_detail.html:6
 #: location/templates/location/list_trip_detail.html:6
 #: location/templates/location/listlocation_form.html:13
+#: location/views/List.py:79
 msgid "list"
 msgstr ""
 
-#: location/models/List.py:101
+#: location/models/List.py:105
 msgid "trip"
 msgstr ""
 
-#: location/models/List.py:106
+#: location/models/List.py:110
 msgid "Show map on list page"
 msgstr ""
 
-#: location/models/List.py:110 location/templates/location/list_list.html:7
-#: location/templates/location/location/location_detail.html:157
-#: location/templates/snippets/add_list_form.html:4 location/views/List.py:46
-#: templates/navigation.html:44
-msgid "lists"
+#: location/models/List.py:117 location/templates/field/chain.html:2
+#: location/templates/partial/chain.html:2 location/views/List.py:79
+msgid "by"
 msgstr ""
 
-#: location/models/List.py:157
-msgid "list-location"
-msgstr ""
-
-#: location/models/List.py:158
-msgid "list-locations"
+#: location/models/List.py:173
+#: location/templates/partial/location_breadcrumb.html:4
+#: location/templates/snippets/location_list_filters.html:53
+msgid "in"
 msgstr ""
 
 #: location/models/Location.py:38
@@ -98,270 +600,684 @@ msgstr ""
 msgid "primary link for location"
 msgstr ""
 
-#: location/models/Location.py:83 location/models/Location.py:95
+#: location/models/Location.py:84 location/models/Location.py:96
+#: templates/navigation.html:98
 msgid "search"
 msgstr ""
 
-#: location/models/Location.py:109
+#: location/models/Location.py:111
+msgid "no url"
+msgstr ""
+
+#: location/models/Location.py:120
 msgid "Name of category"
 msgstr ""
 
-#: location/models/Location.py:146
+#: location/models/Location.py:160
+msgid "Slug of size"
+msgstr ""
+
+#: location/models/Location.py:161
+msgid "Name of size as displayed"
+msgstr ""
+
+#: location/models/Location.py:175
 msgid ""
 "Full street address of location, including as much information as possible, "
 "such as city, region, country"
 msgstr ""
 
-#: location/models/Location.py:148
+#: location/models/Location.py:177
 msgid "Name of owner(s), if known"
 msgstr ""
 
-#: location/models/Location.py:153
+#: location/models/Location.py:182
 msgid ""
 "Add links to related websites, such as blogs refering to this location or "
 "review websites"
 msgstr ""
 
-#: location/models/Location.py:162
+#: location/models/Location.py:191
 msgid "Meta description taken from website, if available"
 msgstr ""
 
+#: location/models/Location.py:193
+msgid "distance to central location in departure region"
+msgstr ""
+
+#: location/models/Location.py:193
+msgid "in kilometers"
+msgstr ""
+
+#: location/models/Location.py:196 location/models/Location.py:197
+msgid "Coordinates"
+msgstr ""
+
+#: location/models/Location.py:196 location/models/Location.py:197
+msgid "fetched from location service based on name and/or address"
+msgstr ""
+
+#: location/models/Location.py:412
+msgid "did not detect address of"
+msgstr ""
+
+#: location/models/Location.py:412
+msgid "so cannot detect region"
+msgstr ""
+
 #: location/models/Profile.py:18
-#: location/templates/location/profile_form.html:43
-#: location/templates/location/profile_form.html:156
-#: location/templates/location/profile_form.html:180
-msgid "family members"
+#, python-brace-format
+msgid "Use {address} as placeholder"
 msgstr ""
 
 #: location/models/Profile.py:21
-#: location/templates/location/list_trip_detail.html:50
-msgid "distance"
+msgid "Navigation app"
 msgstr ""
 
 #: location/models/Profile.py:22
-#: location/templates/location/location/location_list.html:14
+msgid "Navigation apps"
+msgstr ""
+
+#: location/models/Profile.py:29
+msgid "personal notes"
+msgstr ""
+
+#: location/models/Profile.py:32
+msgid "family members"
+msgstr ""
+
+#: location/models/Profile.py:37
+#: location/templates/location/list_trip_detail.html:51
+msgid "distance"
+msgstr ""
+
+#: location/models/Profile.py:38
+#: location/templates/location/location/location_list.html:13
 msgid "region"
 msgstr ""
 
-#: location/models/Profile.py:23
+#: location/models/Profile.py:39
 msgid "date added"
 msgstr ""
 
-#: location/models/Profile.py:24
+#: location/models/Profile.py:40
 msgid "date modified"
 msgstr ""
 
-#: location/models/Profile.py:31
+#: location/models/Profile.py:47
 msgid ""
 "It is possible to \"unlike\" a location. Enable this field to hide the least-"
 "liked locations"
 msgstr ""
 
-#: location/models/Profile.py:32
+#: location/models/Profile.py:48
 msgid "Give permission to load Google Maps map on location detail page"
 msgstr ""
 
-#: location/models/Profile.py:34
+#: location/models/Profile.py:50
 msgid "Show category label on location list page"
 msgstr ""
 
-#: location/models/Profile.py:35
+#: location/models/Profile.py:51
 msgid "Allow to filter locations by distance"
 msgstr ""
 
-#: location/models/Profile.py:66
-#: location/templates/location/profile_form.html:238
+#: location/models/Profile.py:69 location/templates/location/profile.html:6
+msgid "profile of"
+msgstr ""
+
+#: location/models/Profile.py:105 location/templates/location/profile.html:109
 #: location/templates/location/visitedin_form.html:27
+#: location/templates/object/location_visitors.html:30
 msgid "january"
 msgstr ""
 
-#: location/models/Profile.py:66
-#: location/templates/location/profile_form.html:239
+#: location/models/Profile.py:105 location/templates/location/profile.html:110
+#: location/templates/object/location_visitors.html:31
 msgid "february"
 msgstr ""
 
-#: location/models/Profile.py:66
-#: location/templates/location/profile_form.html:240
+#: location/models/Profile.py:105 location/templates/location/profile.html:111
 #: location/templates/location/visitedin_form.html:29
+#: location/templates/object/location_visitors.html:32
 msgid "march"
 msgstr ""
 
-#: location/models/Profile.py:66
-#: location/templates/location/profile_form.html:241
+#: location/models/Profile.py:105 location/templates/location/profile.html:112
 #: location/templates/location/visitedin_form.html:30
+#: location/templates/object/location_visitors.html:33
 msgid "april"
 msgstr ""
 
-#: location/models/Profile.py:66
-#: location/templates/location/profile_form.html:242
+#: location/models/Profile.py:105 location/templates/location/profile.html:113
 #: location/templates/location/visitedin_form.html:31
+#: location/templates/object/location_visitors.html:34
 msgid "may"
 msgstr ""
 
-#: location/models/Profile.py:66
-#: location/templates/location/profile_form.html:243
+#: location/models/Profile.py:105 location/templates/location/profile.html:114
 #: location/templates/location/visitedin_form.html:32
+#: location/templates/object/location_visitors.html:35
 msgid "june"
 msgstr ""
 
-#: location/models/Profile.py:66
-#: location/templates/location/profile_form.html:244
+#: location/models/Profile.py:105 location/templates/location/profile.html:115
+#: location/templates/object/location_visitors.html:36
 msgid "july"
 msgstr ""
 
-#: location/models/Profile.py:66
-#: location/templates/location/profile_form.html:245
+#: location/models/Profile.py:105 location/templates/location/profile.html:116
 #: location/templates/location/visitedin_form.html:34
+#: location/templates/object/location_visitors.html:37
 msgid "august"
 msgstr ""
 
-#: location/models/Profile.py:66
-#: location/templates/location/profile_form.html:246
+#: location/models/Profile.py:105 location/templates/location/profile.html:117
 #: location/templates/location/visitedin_form.html:35
+#: location/templates/object/location_visitors.html:38
 msgid "september"
 msgstr ""
 
-#: location/models/Profile.py:66
-#: location/templates/location/profile_form.html:247
+#: location/models/Profile.py:105 location/templates/location/profile.html:118
 #: location/templates/location/visitedin_form.html:36
+#: location/templates/object/location_visitors.html:39
 msgid "october"
 msgstr ""
 
-#: location/models/Profile.py:66
-#: location/templates/location/profile_form.html:248
+#: location/models/Profile.py:105 location/templates/location/profile.html:119
 #: location/templates/location/visitedin_form.html:37
+#: location/templates/object/location_visitors.html:40
 msgid "november"
 msgstr ""
 
-#: location/models/Profile.py:66
-#: location/templates/location/profile_form.html:249
+#: location/models/Profile.py:105 location/templates/location/profile.html:120
 #: location/templates/location/visitedin_form.html:38
+#: location/templates/object/location_visitors.html:41
 msgid "december"
 msgstr ""
 
-#: location/models/Tag.py:11
-msgid "Name of tag"
-msgstr ""
-
-#: location/models/base_model.py:12
-#: location/templates/location/comment_add.html:13
-#: location/templates/location/comment_form.html:33
-#: location/templates/partial/comment_add.html:14
-msgid "public"
-msgstr ""
-
-#: location/models/base_model.py:13
-msgid "commmunity"
-msgstr ""
-
-#: location/models/base_model.py:14
-#: location/templates/location/comment_add.html:11
-#: location/templates/location/comment_form.html:31
-#: location/templates/partial/comment_add.html:12
-msgid "family"
-msgstr ""
-
-#: location/models/base_model.py:15
-#: location/templates/location/comment_add.html:10
-#: location/templates/location/comment_form.html:30
-#: location/templates/partial/comment_add.html:11
-msgid "private"
-msgstr ""
-
 #: location/models/base_model.py:20
+#: location/templates/field/location_status.html:16
 msgid "published"
 msgstr ""
 
 #: location/models/base_model.py:21
+#: location/templates/field/location_status.html:17
 msgid "revoked"
 msgstr ""
 
 #: location/models/base_model.py:22
+#: location/templates/field/location_status.html:18
+#: location/views/Profile.py:130
 msgid "deleted"
 msgstr ""
 
-#: location/templates/location/chain_form.html:6
-#: location/templates/segment/location_attributes.html:23
-#: location/templates/snippets/location_list_filters.html:107
-#: location/views/Toggle.py:67
+#: location/templates/element/reusable_comment_textarea.html:5
+#: location/templates/element/reusable_description_textarea.html:10
+#: location/templates/field/location_visibility.html:3
+#: location/templates/snippets/location_list_filters.html:131
+msgid "visibility"
+msgstr ""
+
+#: location/templates/element/reusable_comment_textarea.html:12
+#: location/templates/element/reusable_description_textarea.html:18
+#: location/templates/location/comment_add.html:9
+#: location/templates/location/comment_add.html:15
+#: location/templates/location/comment_form.html:29
+#: location/templates/location/comment_form.html:36
+msgid "select comment visibility"
+msgstr ""
+
+#: location/templates/element/reusable_comment_textarea.html:15
+#: location/templates/element/reusable_description_textarea.html:21
+#: location/templates/field/location_visibility.html:17
+#: location/templates/location/comment_add.html:12
+#: location/templates/location/comment_form.html:32
+msgid "community"
+msgstr ""
+
+#: location/templates/element/reusable_comment_textarea.html:20
+#: location/templates/element/reusable_description_textarea.html:26
+#: location/templates/field/profile/notes.html:13
+msgid "save changes to"
+msgstr ""
+
+#: location/templates/element/reusable_comment_textarea.html:20
+#: location/templates/element/reusable_description_textarea.html:26
+#: location/templates/field/descriptions.html:14
+#: location/templates/location/location/description_form.html:34
+#: location/templates/location/location/location_form.html:6
+#: location/templates/location/location/location_form.html:136
+msgid "add"
+msgstr ""
+
+#: location/templates/element/reusable_comment_textarea.html:20
+#: location/templates/location/listlocation_form.html:21
+#: location/templates/object/comment.html:35
+#: location/templates/object/comment.html:55
+msgid "comment"
+msgstr ""
+
+#: location/templates/element/reusable_description_textarea.html:4
+msgid "all description visibilities have been used"
+msgstr ""
+
+#: location/templates/element/reusable_description_textarea.html:4
+msgid "please edit an existing description"
+msgstr ""
+
+#: location/templates/element/reusable_description_textarea.html:26
+#: location/templates/field/descriptions.html:14
+#: location/templates/location/list_form.html:14
+#: location/templates/location/location/description_form.html:42
+#: location/templates/location/location/location_form.html:28
+#: location/templates/location/location/location_form.html:141
+#: location/views/location/location_edit.py:366
+#: location/views/location/location_edit.py:369
+msgid "description"
+msgstr ""
+
+#: location/templates/element/reusable_description_textarea.html:38
+#: location/templates/element/reusable_edit_button.html:6
+#: location/templates/field/address.html:32
+#: location/templates/field/profile/family.html:36
+#: location/templates/field/profile/home.html:44
+#: location/templates/field/profile/ignored_tags.html:34
+#: location/templates/field/profile/user.html:19
+#: location/templates/object/comment.html:35
+msgid "stop editing"
+msgstr ""
+
+#: location/templates/element/reusable_edit_button.html:15
+#: location/templates/field/address.html:41
+#: location/templates/field/profile/family.html:46
+#: location/templates/field/profile/home.html:54
+#: location/templates/field/profile/ignored_tags.html:43
+#: location/templates/field/profile/user.html:29
+#: location/templates/location/list_list_detail.html:20
+#: location/templates/location/list_list_detail.html:23
+#: location/templates/location/list_trip_detail.html:20
+#: location/templates/location/list_trip_detail.html:23
+#: location/templates/location/location/location_form.html:6
+#: location/templates/object/comment.html:55
+#: location/templates/object/description.html:21
+#: location/views/location/location_edit.py:37 templates/navigation.html:62
+msgid "edit"
+msgstr ""
+
+#: location/templates/field/address.html:2
+#: location/templates/field/address.html:32
+#: location/templates/location/location/location_form.html:63
+msgid "address"
+msgstr ""
+
+#: location/templates/field/address.html:16
+msgid "enter address"
+msgstr ""
+
+#: location/templates/field/address.html:57
+msgid "navigate"
+msgstr ""
+
+#: location/templates/field/categories.html:1
+#: location/templates/location/location/location_form.html:41
+#: location/templates/snippets/location_list_filters.html:102
+msgid "category"
+msgstr ""
+
+#: location/templates/field/categories.html:21
+msgid "add category"
+msgstr ""
+
+#: location/templates/field/categories.html:21
+#: location/templates/field/chains.html:21
+#: location/templates/field/links.html:24
+#: location/templates/field/profile/home.html:21
+#: location/templates/field/profile/ignored_tags.html:72
+#: location/templates/field/tags.html:19
+#: location/templates/object/location_lists.html:27
+msgid "start typing to see suggestions"
+msgstr ""
+
+#: location/templates/field/chain.html:6
+#: location/templates/partial/chain.html:5
+#, python-format
+msgid "%(chain)s is part of %(parent)s "
+msgstr ""
+
+#: location/templates/field/chains.html:1
+msgid "chains"
+msgstr ""
+
+#: location/templates/field/chains.html:21 location/views/Chain.py:17
+msgid "add chain"
+msgstr ""
+
+#: location/templates/field/comments.html:10
+#: location/templates/location/comment_form.html:9
+msgid "add comment"
+msgstr ""
+
+#: location/templates/field/descriptions.html:20
+msgid "add description"
+msgstr ""
+
+#: location/templates/field/link.html:1
+#: location/templates/location/visitedin_form.html:6
+msgid "visit"
+msgstr ""
+
+#: location/templates/field/links.html:2
+msgid "links"
+msgstr ""
+
+#: location/templates/field/links.html:8
+msgid "no links available"
+msgstr ""
+
+#: location/templates/field/links.html:24
+msgid "add link"
+msgstr ""
+
+#: location/templates/field/location_favorite_of.html:17
+msgid "you like"
+msgstr ""
+
+#: location/templates/field/location_favorite_of.html:17
+msgid "like"
+msgstr ""
+
+#: location/templates/field/location_favorite_of.html:17
+#: location/templates/field/location_least_liked_of.html:17
+msgid "this location"
+msgstr ""
+
+#: location/templates/field/location_least_liked_of.html:17
+msgid "do not like"
+msgstr ""
+
+#: location/templates/field/location_status.html:3
+#: location/templates/location/location/location_detail.html:8
+#: location/templates/location/location/location_detail.html:14
+#: location/templates/location/location/location_form.html:91
+msgid "status"
+msgstr ""
+
+#: location/templates/field/location_status.html:14
+msgid "select location status"
+msgstr ""
+
+#: location/templates/field/location_status.html:15
+msgid "concept"
+msgstr ""
+
+#: location/templates/field/location_visibility.html:14
+msgid "select location visibility"
+msgstr ""
+
+#: location/templates/field/name.html:13
+msgid "enter location name"
+msgstr ""
+
+#: location/templates/field/owners_names.html:3
+msgid "owners names"
+msgstr ""
+
+#: location/templates/field/owners_names.html:17
+msgid "enter owners names"
+msgstr ""
+
+#: location/templates/field/phone.html:3
+#: location/templates/location/location/location_form.html:70
+msgid "phone"
+msgstr ""
+
+#: location/templates/field/phone.html:17
+msgid "enter phonenumber"
+msgstr ""
+
+#: location/templates/field/phone.html:26
+msgid "call phone number"
+msgstr ""
+
+#: location/templates/field/phone.html:27
+msgid "send whatsapp message"
+msgstr ""
+
+#: location/templates/field/profile/family.html:16
+msgid "are you sure you want to remove this family member"
+msgstr ""
+
+#: location/templates/field/profile/family.html:18
+msgid "remove family member"
+msgstr ""
+
+#: location/templates/field/profile/family.html:25
+msgid ""
+"\n"
+"        A family member is someone you are closely related to, and want to "
+"share information with on this platform.\n"
+"        People who you have marked as family have access to all information "
+"you mark as 'family visible'. This is a great\n"
+"        way to keep comments and lists private within your family circle.\n"
+"      "
+msgstr ""
+
+#: location/templates/field/profile/family.html:67
+msgid "select a family member"
+msgstr ""
+
+#: location/templates/field/profile/family.html:95
+msgid "add family member"
+msgstr ""
+
+#: location/templates/field/profile/family.html:115
+msgid "you are family of"
+msgstr ""
+
+#: location/templates/field/profile/family.html:128
+msgid "add family member back"
+msgstr ""
+
+#: location/templates/field/profile/family.html:135
+msgid ""
+"\n"
+"        People who have marked you as family can share information with you "
+"that is marked as 'family visible'.\n"
+"        Having you marked as family does not automatically mark them as your "
+"family, and does not give them access to\n"
+"        information you have marked as 'family visible'.\n"
+"      "
+msgstr ""
+
+#: location/templates/field/profile/favorites.html:4
+msgid "favorite locations"
+msgstr ""
+
+#: location/templates/field/profile/favorites.html:19
+msgid "ignored locations"
+msgstr ""
+
+#: location/templates/field/profile/filter_by_distance.html:2
+#: location/templates/field/profile/filter_by_distance.html:16
+msgid "allow filtering on distance"
+msgstr ""
+
+#: location/templates/field/profile/home.html:4
+msgid "home"
+msgstr ""
+
+#: location/templates/field/profile/home.html:21
+msgid "add home"
+msgstr ""
+
+#: location/templates/field/profile/home.html:44
+#: location/templates/field/profile/home.html:54
+#: location/templates/field/profile/user.html:5
+#: location/templates/field/profile/user.html:19
+#: location/templates/field/profile/user.html:29
+#: templates/registration/user_register_form.html:26
+msgid "first name"
+msgstr ""
+
+#: location/templates/field/profile/ignored_tags.html:4
+msgid "ignored tags"
+msgstr ""
+
+#: location/templates/field/profile/ignored_tags.html:8
+#: location/templates/field/tag.html:2 location/templates/partial/tag.html:2
+#: location/templates/snippets/tag.html:1
+msgid "see details of tag"
+msgstr ""
+
+#: location/templates/field/profile/ignored_tags.html:19
+msgid "are you sure you want to remove this ignored tag"
+msgstr ""
+
+#: location/templates/field/profile/ignored_tags.html:21
+msgid "remove ignored tag"
+msgstr ""
+
+#: location/templates/field/profile/ignored_tags.html:26
+msgid "no ignored tags"
+msgstr ""
+
+#: location/templates/field/profile/ignored_tags.html:57
+msgid "ignore tag"
+msgstr ""
+
+#: location/templates/field/profile/ignored_tags.html:72
+#: location/templates/field/tags.html:19
+#: location/templates/location/tag_list.html:56 location/views/Tag.py:48
+#: location/views/Tag.py:96 templates/navigation.html:57
+msgid "add tag"
+msgstr ""
+
+#: location/templates/field/profile/maps_permission.html:2
+msgid "google maps"
+msgstr ""
+
+#: location/templates/field/profile/maps_permission.html:16
+msgid "on location page, always allow google maps"
+msgstr ""
+
+#: location/templates/field/profile/maps_permission.html:18
+msgid "permission currently granted for this session"
+msgstr ""
+
+#: location/templates/field/profile/maps_permission.html:18
+msgid "revoke"
+msgstr ""
+
+#: location/templates/field/profile/navigationapps.html:3
+msgid "external apps"
+msgstr ""
+
+#: location/templates/field/profile/notes.html:5
+#: location/templates/field/profile/notes.html:13
+msgid "notes"
+msgstr ""
+
+#: location/templates/field/profile/order.html:4
+msgid "order locations by"
+msgstr ""
+
+#: location/templates/field/profile/show_category_label.html:2
+msgid "show category labels"
+msgstr ""
+
+#: location/templates/field/profile/show_category_label.html:16
+msgid "on location page, always show category labels"
+msgstr ""
+
+#: location/templates/field/profile/user.html:41
+#: templates/registration/user_register_form.html:32
+msgid "last name"
+msgstr ""
+
+#: location/templates/field/profile/user.html:55
+msgid "email"
+msgstr ""
+
+#: location/templates/field/profile/user.html:65
+#: templates/registration/snippet_login.html:7
+#: templates/registration/user_register_form.html:16
+msgid "username"
+msgstr ""
+
+#: location/templates/field/size.html:2
+#: location/templates/snippets/location_list_filters.html:117
+msgid "size"
+msgstr ""
+
+#: location/templates/field/size.html:2
+msgid "size is available for camping or glamping"
+msgstr ""
+
+#: location/templates/field/size.html:25
+msgid "no size specified"
+msgstr ""
+
+#: location/templates/field/tags.html:1
+#: location/templates/location/tag_list.html:7 location/views/Tag.py:22
+#: location/views/Tag.py:48 location/views/Tag.py:96 location/views/Tag.py:149
+#: templates/navigation.html:33
+msgid "tags"
+msgstr ""
+
+#: location/templates/location/chain_form.html:5
+#: location/templates/snippets/location_list_filters.html:110
+#: location/views/Chain.py:17
 msgid "chain"
 msgstr ""
 
-#: location/templates/location/chain_form.html:10
+#: location/templates/location/chain_form.html:9
 #: location/templates/location/list_form.html:10
 #: location/templates/location/location/location_form.html:18
 #: location/templates/location/tag_form.html:10
 msgid "name"
 msgstr ""
 
-#: location/templates/location/chain_form.html:14
+#: location/templates/location/chain_form.html:13
 #: location/templates/location/tag_form.html:14
 msgid "parent"
 msgstr ""
 
-#: location/templates/location/chain_form.html:16
+#: location/templates/location/chain_form.html:15
 #: location/templates/location/tag_form.html:16
 msgid "select parent"
 msgstr ""
 
-#: location/templates/location/chain_form.html:26
+#: location/templates/location/chain_form.html:25
 #: location/templates/location/comment_form.html:46
-#: location/templates/location/list_form.html:45
+#: location/templates/location/list_form.html:51
 #: location/templates/location/listlocation_form.html:74
 #: location/templates/location/media_form.html:40
-#: location/templates/location/tag_form.html:49
+#: location/templates/location/tag_form.html:59
 #: location/templates/location/tag_location_form.html:22
 msgid "submit"
 msgstr ""
 
-#: location/templates/location/chain_form.html:27
+#: location/templates/location/chain_form.html:26
 #: location/templates/location/comment_form.html:47
-#: location/templates/location/list_form.html:46
+#: location/templates/location/list_form.html:52
 #: location/templates/location/listlocation_form.html:75
 #: location/templates/location/media_form.html:41
-#: location/templates/location/tag_form.html:50
+#: location/templates/location/tag_form.html:60
 #: location/templates/location/tag_location_form.html:24
 msgid "cancel"
 msgstr ""
 
 #: location/templates/location/comment_add.html:6
-#: location/templates/partial/comment_add.html:7
 msgid "add your comment"
 msgstr ""
 
-#: location/templates/location/comment_add.html:9
-#: location/templates/location/comment_add.html:15
-#: location/templates/location/comment_form.html:29
-#: location/templates/location/comment_form.html:36
-#: location/templates/partial/comment_add.html:10
-#: location/templates/partial/comment_add.html:16
-msgid "select comment visibility"
-msgstr ""
-
-#: location/templates/location/comment_add.html:12
-#: location/templates/location/comment_form.html:32
-#: location/templates/partial/comment_add.html:13
-msgid "community"
-msgstr ""
-
 #: location/templates/location/comment_add.html:16
-#: location/templates/partial/comment_add.html:17
 msgid "share comment"
 msgstr ""
 
 #: location/templates/location/comment_form.html:7
 msgid "comment by"
-msgstr ""
-
-#: location/templates/location/comment_form.html:7
-#: location/templates/partial/comment.html:7
-#: location/templates/snippets/comment.html:9
-msgid "on"
-msgstr ""
-
-#: location/templates/location/comment_form.html:9
-#: location/templates/partial/comment_add.html:3
-msgid "add comment"
 msgstr ""
 
 #: location/templates/location/comment_form.html:16
@@ -373,9 +1289,14 @@ msgid "select comment location"
 msgstr ""
 
 #: location/templates/location/comment_list.html:7
-#: location/templates/location/location/location_detail.html:185
+#: location/templates/location/location/location_detail.html:183
 #: templates/navigation.html:39
 msgid "comments"
+msgstr ""
+
+#: location/templates/location/comment_list.html:14
+#: location/templates/location/comment_list.html:17
+msgid "no comments available"
 msgstr ""
 
 #: location/templates/location/dashboard.html:6
@@ -384,9 +1305,8 @@ msgstr ""
 
 #: location/templates/location/list_favorite_detail.html:6
 #: location/templates/location/list_list.html:20
-#: location/templates/location/profile_form.html:121
-#: location/templates/snippets/location_list_filters.html:48
-#: location/views/List.py:436
+#: location/templates/snippets/location_list_filters.html:50
+#: location/views/List.py:437
 msgid "favorites"
 msgstr ""
 
@@ -401,11 +1321,12 @@ msgstr ""
 #: location/templates/location/list_list_detail.html:7
 #: location/templates/location/list_trip_detail.html:7
 #: location/templates/location/listlocation_form.html:62
-#: location/templates/location/location/location_detail.html:34
-#: location/templates/location/location/location_form.html:55
-#: location/templates/location/location/location_list.html:57
+#: location/templates/location/location/location_form.html:53
+#: location/templates/location/location/location_list.html:56
 #: location/templates/location/media_form.html:21
+#: location/templates/location/tag_form.html:46
 #: location/templates/partial/actionlist.html:10
+#: location/templates/partial/location_breadcrumb.html:10
 msgid "viewable by"
 msgstr ""
 
@@ -421,8 +1342,7 @@ msgid ""
 msgstr ""
 
 #: location/templates/location/list_favorite_detail.html:27
-#: location/templates/location/list_list_detail.html:57
-#: location/templates/location/location/location_detail.html:27
+#: location/templates/location/list_list_detail.html:58
 #: location/templates/snippets/location_flashcard.html:8
 msgid "marked"
 msgstr ""
@@ -430,12 +1350,10 @@ msgstr ""
 #: location/templates/location/list_favorite_detail.html:30
 #: location/templates/location/list_favorite_detail.html:31
 #: location/templates/location/list_favorite_detail.html:32
-#: location/templates/location/list_list_detail.html:60
-#: location/templates/location/list_list_detail.html:61
-#: location/templates/location/list_list_detail.html:62
-#: location/templates/location/location/location_detail.html:29
-#: location/templates/location/location/location_detail.html:30
-#: location/templates/location/location/location_detail.html:31
+#: location/templates/partial/category.html:1
+#: location/templates/partial/location_breadcrumb.html:5
+#: location/templates/partial/location_breadcrumb.html:6
+#: location/templates/partial/location_breadcrumb.html:7
 #: location/templates/snippets/location_flashcard.html:11
 #: location/templates/snippets/location_flashcard.html:12
 #: location/templates/snippets/location_flashcard.html:13
@@ -446,20 +1364,22 @@ msgstr ""
 msgid "to add a location, visit the location and set as favorite"
 msgstr ""
 
-#: location/templates/location/list_form.html:14
-#: location/templates/location/location/description_form.html:42
-#: location/templates/location/location/location_detail.html:62
-#: location/templates/location/location/location_form.html:28
-#: location/templates/location/location/location_form.html:144
-msgid "description"
-msgstr ""
-
 #: location/templates/location/list_form.html:28
 msgid "template"
 msgstr ""
 
 #: location/templates/location/list_form.html:39
+msgid "allow new locations to this list"
+msgstr ""
+
+#: location/templates/location/list_form.html:45
 msgid "show map"
+msgstr ""
+
+#: location/templates/location/list_list.html:7 location/views/List.py:46
+#: location/views/List.py:122 location/views/List.py:160
+#: templates/navigation.html:44
+msgid "lists"
 msgstr ""
 
 #: location/templates/location/list_list.html:12
@@ -483,13 +1403,14 @@ msgid "there are no lists to show at this moment"
 msgstr ""
 
 #: location/templates/location/list_list.html:38
-#: location/templates/location/location/location_list.html:65
+#: location/templates/location/location/location_list.html:64
 #: location/templates/location/tag_list.html:46
-#: location/templates/snippets/list_comments.html:8
 msgid "locations and activities are often available to registered users"
 msgstr ""
 
-#: location/templates/location/list_list.html:48 templates/navigation.html:58
+#: location/templates/location/list_list.html:48
+#: location/templates/object/location_lists.html:27 location/views/List.py:122
+#: templates/navigation.html:58
 msgid "add list"
 msgstr ""
 
@@ -503,97 +1424,81 @@ msgstr ""
 msgid "last changed"
 msgstr ""
 
-#: location/templates/location/list_list_detail.html:19
-#: location/templates/location/list_list_detail.html:22
-#: location/templates/location/list_trip_detail.html:19
-#: location/templates/location/list_trip_detail.html:22
-#: location/templates/location/location/location_form.html:6
-#: location/templates/partial/comment.html:16
-#: location/templates/partial/comment.html:19
-#: location/templates/snippets/comment.html:20
-#: location/templates/snippets/comment.html:23
-msgid "edit"
+#: location/templates/location/list_list_detail.html:8
+#: location/templates/location/list_trip_detail.html:8
+msgid "new locations can not be added to this list"
 msgstr ""
 
-#: location/templates/location/list_list_detail.html:19
 #: location/templates/location/list_list_detail.html:20
-#: location/templates/location/list_trip_detail.html:19
+#: location/templates/location/list_list_detail.html:21
 #: location/templates/location/list_trip_detail.html:20
+#: location/templates/location/list_trip_detail.html:21
 msgid "my list"
 msgstr ""
 
-#: location/templates/location/list_list_detail.html:20
-#: location/templates/location/list_list_detail.html:23
-#: location/templates/location/list_trip_detail.html:20
-#: location/templates/location/list_trip_detail.html:23
-#: location/templates/location/media_list.html:29
-#: location/templates/location/media_list.html:32
-#: location/templates/location/tag_detail.html:15
-#: location/templates/partial/comment.html:17
-#: location/templates/partial/comment.html:20
-#: location/templates/snippets/comment.html:21
-#: location/templates/snippets/comment.html:24
+#: location/templates/location/list_list_detail.html:21
+#: location/templates/location/list_list_detail.html:24
+#: location/templates/location/list_trip_detail.html:21
+#: location/templates/location/list_trip_detail.html:24
 msgid "delete"
 msgstr ""
 
-#: location/templates/location/list_list_detail.html:22
 #: location/templates/location/list_list_detail.html:23
-#: location/templates/location/list_trip_detail.html:22
+#: location/templates/location/list_list_detail.html:24
 #: location/templates/location/list_trip_detail.html:23
+#: location/templates/location/list_trip_detail.html:24
 msgid "this list"
 msgstr ""
 
-#: location/templates/location/list_list_detail.html:26
-#: location/templates/location/list_trip_detail.html:26
-#: location/templates/location/media_list.html:35
+#: location/templates/location/list_list_detail.html:27
+#: location/templates/location/list_trip_detail.html:27
+#: location/templates/location/media_list.html:37
 msgid "edit my list"
 msgstr ""
 
-#: location/templates/location/list_list_detail.html:26
-#: location/templates/location/list_trip_detail.html:26
+#: location/templates/location/list_list_detail.html:27
+#: location/templates/location/list_trip_detail.html:27
 msgid "edit this list"
 msgstr ""
 
-#: location/templates/location/list_list_detail.html:26
-#: location/templates/location/list_trip_detail.html:26
-#: location/templates/location/media_list.html:35
-#: location/templates/partial/actionlist.html:38
-#: location/templates/partial/comment.html:23
-#: location/templates/snippets/comment.html:27 templates/navigation.html:63
+#: location/templates/location/list_list_detail.html:27
+#: location/templates/location/list_trip_detail.html:27
+#: location/templates/location/media_list.html:37
+#: location/templates/partial/actionlist.html:39 templates/navigation.html:63
 #: templates/navigation.html:72
 msgid "in admin"
 msgstr ""
 
-#: location/templates/location/list_list_detail.html:31
-#: location/templates/location/list_trip_detail.html:31
+#: location/templates/location/list_list_detail.html:32
+#: location/templates/location/list_trip_detail.html:32
 msgid "start from home"
 msgstr ""
 
-#: location/templates/location/list_list_detail.html:32
-#: location/templates/location/list_trip_detail.html:32
+#: location/templates/location/list_list_detail.html:33
+#: location/templates/location/list_trip_detail.html:33
 msgid "end at home"
 msgstr ""
 
-#: location/templates/location/list_list_detail.html:67
+#: location/templates/location/list_list_detail.html:63
 msgid "distance to"
 msgstr ""
 
-#: location/templates/location/list_trip_detail.html:50
-#: location/templates/location/list_trip_detail.html:81
+#: location/templates/location/list_trip_detail.html:51
+#: location/templates/location/list_trip_detail.html:82
 msgid "distance from"
 msgstr ""
 
-#: location/templates/location/list_trip_detail.html:50
+#: location/templates/location/list_trip_detail.html:51
 msgid "previous location"
 msgstr ""
 
-#: location/templates/location/list_trip_detail.html:51
+#: location/templates/location/list_trip_detail.html:52
 msgid "travel time"
 msgstr ""
 
-#: location/templates/location/list_trip_detail.html:52
+#: location/templates/location/list_trip_detail.html:53
 #: location/templates/location/listlocation_form.html:17
-#: location/templates/location/location/location_list.html:16
+#: location/templates/location/location/location_list.html:15
 #: location/templates/location/media_form.html:31
 #: location/templates/location/tag_list.html:28
 #: location/templates/location/tag_list.html:37
@@ -603,72 +1508,68 @@ msgid_plural "locations"
 msgstr[0] ""
 msgstr[1] ""
 
-#: location/templates/location/list_trip_detail.html:53
-#: location/templates/location/location/location_list.html:15
+#: location/templates/location/list_trip_detail.html:54
+#: location/templates/location/location/location_list.html:14
 msgid "department"
 msgstr ""
 
-#: location/templates/location/list_trip_detail.html:54
+#: location/templates/location/list_trip_detail.html:55
 #: location/templates/location/listlocation_form.html:44
 msgid "nights"
 msgstr ""
 
-#: location/templates/location/list_trip_detail.html:55
+#: location/templates/location/list_trip_detail.html:56
 #: location/templates/location/listlocation_form.html:51
 msgid "price"
 msgstr ""
 
-#: location/templates/location/list_trip_detail.html:63
+#: location/templates/location/list_trip_detail.html:64
 msgid "no locations have been added to this list"
 msgstr ""
 
-#: location/templates/location/list_trip_detail.html:63
+#: location/templates/location/list_trip_detail.html:64
 msgid "by you"
 msgstr ""
 
-#: location/templates/location/list_trip_detail.html:63
+#: location/templates/location/list_trip_detail.html:64
 msgid "by the list owner"
 msgstr ""
 
-#: location/templates/location/list_trip_detail.html:67
+#: location/templates/location/list_trip_detail.html:68
 msgid ""
 "to add a location or activity to this list, visit the location or activity "
 "and select \"add to list\""
 msgstr ""
 
-#: location/templates/location/list_trip_detail.html:72
-#: location/templates/location/location/location_detail.html:199
+#: location/templates/location/list_trip_detail.html:73
 msgid "sign in"
 msgstr ""
 
-#: location/templates/location/list_trip_detail.html:72
-#: location/templates/location/location/location_detail.html:199
-#: location/templates/location/profile_form.html:198
+#: location/templates/location/list_trip_detail.html:73
+#: location/templates/location/profile.html:69
 msgid "or"
 msgstr ""
 
-#: location/templates/location/list_trip_detail.html:72
-#: location/templates/location/location/location_detail.html:199
+#: location/templates/location/list_trip_detail.html:73
 #: templates/navigation.html:88
 #: templates/registration/user_register_form.html:6
 #: templates/registration/user_register_form.html:54
 msgid "register"
 msgstr ""
 
-#: location/templates/location/list_trip_detail.html:72
+#: location/templates/location/list_trip_detail.html:73
 msgid "to manage your own lists"
 msgstr ""
 
-#: location/templates/location/list_trip_detail.html:81
+#: location/templates/location/list_trip_detail.html:82
+#: location/views/Media.py:109 location/views/location/location_edit.py:201
+#: location/views/location/location_edit.py:310
+#: location/views/location/location_edit.py:312
 msgid "to"
 msgstr ""
 
-#: location/templates/location/list_trip_detail.html:81
+#: location/templates/location/list_trip_detail.html:82
 msgid "is"
-msgstr ""
-
-#: location/templates/location/listlocation_form.html:21
-msgid "comment"
 msgstr ""
 
 #: location/templates/location/listlocation_form.html:26
@@ -699,20 +1600,9 @@ msgstr ""
 msgid "add description to location"
 msgstr ""
 
-#: location/templates/location/location/description_form.html:34
-#: location/templates/location/location/location_form.html:6
-#: location/templates/location/location/location_form.html:139
-#: location/templates/location/location/location_form.html:179
-#: location/templates/location/profile_form.html:180
-#: location/templates/location/profile_form.html:184
-#: location/templates/partial/addattribute.html:8
-msgid "add"
-msgstr ""
-
 #: location/templates/location/location/description_form.html:51
 #: location/templates/location/location/link_form.html:23
-#: location/templates/location/location/location_form.html:106
-#: location/templates/location/profile_form.html:116
+#: location/templates/location/location/location_form.html:103
 msgid "save changes"
 msgstr ""
 
@@ -721,204 +1611,149 @@ msgid "edit link"
 msgstr ""
 
 #: location/templates/location/location/link_form.html:9
-#: location/templates/location/location/location_form.html:37
-#: location/templates/location/location/location_form.html:184
+#: location/templates/location/location/location_form.html:35
 msgid "link title"
 msgstr ""
 
 #: location/templates/location/location/link_form.html:9
-#: location/templates/location/location/location_form.html:37
-#: location/templates/location/location/location_form.html:184
+#: location/templates/location/location/location_form.html:35
 msgid "keep empty to generate automatically"
 msgstr ""
 
 #: location/templates/location/location/link_form.html:10
-#: location/templates/location/location/location_form.html:185
 msgid "https://example.com/"
 msgstr ""
 
 #: location/templates/location/location/link_form.html:13
-#: location/templates/location/location/location_form.html:188
 msgid "is primary link for location"
 msgstr ""
 
-#: location/templates/location/location/location_detail.html:9
-#: location/templates/location/location/location_detail.html:15
+#: location/templates/location/location/location_detail.html:8
+#: location/templates/location/location/location_detail.html:14
 msgid "This location is not visible"
 msgstr ""
 
-#: location/templates/location/location/location_detail.html:9
-#: location/templates/location/location/location_detail.html:15
-#: location/templates/location/location/location_form.html:94
-msgid "status"
+#: location/templates/location/location/location_detail.html:25
+#, python-format
+msgid "Added on %(date)s by %(user)s"
 msgstr ""
 
-#: location/templates/location/location/location_detail.html:62
-msgid "added by"
-msgstr ""
-
-#: location/templates/location/location/location_detail.html:62
-#: location/templates/location/location/location_form.html:129
-msgid "for"
-msgstr ""
-
-#: location/templates/location/location/location_detail.html:70
-#: location/templates/location/location/location_form.html:66
-msgid "address"
-msgstr ""
-
-#: location/templates/location/location/location_detail.html:83
-#: location/templates/location/location/location_form.html:35
-msgid "website"
-msgstr ""
-
-#: location/templates/location/location/location_detail.html:96
-msgid "owners names"
-msgstr ""
-
-#: location/templates/location/location/location_detail.html:102
-#: location/templates/location/location/location_form.html:73
-msgid "phone"
-msgstr ""
-
-#: location/templates/location/location/location_detail.html:108
+#: location/templates/location/location/location_detail.html:80
 msgid "home of"
 msgstr ""
 
-#: location/templates/location/location/location_detail.html:116
-#: location/templates/location/location/location_list_map.html:10
+#: location/templates/location/location/location_detail.html:87
+#: location/templates/location/location/location_list_map.html:9
 msgid "on the map"
 msgstr ""
 
-#: location/templates/location/location/location_detail.html:120
-#: location/templates/location/location/location_list_map.html:14
+#: location/templates/location/location/location_detail.html:91
+#: location/templates/location/location/location_list_map.html:13
 msgid "this site uses google maps to show the location of this object on a map"
 msgstr ""
 
-#: location/templates/location/location/location_detail.html:121
-#: location/templates/location/location/location_list_map.html:15
+#: location/templates/location/location/location_detail.html:92
+#: location/templates/location/location/location_list_map.html:14
 msgid "this means your data will be shared with google when the request loads"
 msgstr ""
 
-#: location/templates/location/location/location_detail.html:124
-#: location/templates/location/location/location_list_map.html:18
+#: location/templates/location/location/location_detail.html:95
+#: location/templates/location/location/location_list_map.html:17
 msgid "allow once"
 msgstr ""
 
-#: location/templates/location/location/location_detail.html:125
-#: location/templates/location/location/location_list_map.html:19
+#: location/templates/location/location/location_detail.html:96
+#: location/templates/location/location/location_list_map.html:18
 msgid "allow for this session"
 msgstr ""
 
-#: location/templates/location/location/location_detail.html:126
-#: location/templates/location/location/location_list_map.html:20
+#: location/templates/location/location/location_detail.html:97
+#: location/templates/location/location/location_list_map.html:19
 msgid "always allow"
 msgstr ""
 
-#: location/templates/location/location/location_detail.html:131
-#: location/templates/location/location/location_list_map.html:25
+#: location/templates/location/location/location_detail.html:102
+#: location/templates/location/location/location_list_map.html:24
 msgid "on google maps"
 msgstr ""
 
-#: location/templates/location/location/location_detail.html:132
-#: location/templates/location/location/location_list_map.html:26
+#: location/templates/location/location/location_detail.html:103
+#: location/templates/location/location/location_list_map.html:25
 msgid "navigate to from home"
 msgstr ""
 
-#: location/templates/location/location/location_detail.html:133
-#: location/templates/location/location/location_list_map.html:27
+#: location/templates/location/location/location_detail.html:104
+#: location/templates/location/location/location_list_map.html:26
 msgid "navigate from"
 msgstr ""
 
-#: location/templates/location/location/location_detail.html:146
-msgid "link"
+#: location/templates/location/location/location_detail.html:114
+msgid "more information"
 msgstr ""
 
-#: location/templates/location/location/location_detail.html:146
-#: location/templates/location/location/location_form.html:161
-msgid "links"
+#: location/templates/location/location/location_detail.html:143
+msgid "your information"
 msgstr ""
 
-#: location/templates/location/location/location_detail.html:161
-#: location/templates/partial/chain.html:3
-#: location/templates/snippets/add_list_form.html:17
-#: location/templates/snippets/chain.html:3
-msgid "by"
+#: location/templates/location/location/location_detail.html:159
+msgid "distance from home"
 msgstr ""
 
-#: location/templates/location/location/location_detail.html:173
-msgid "your visits"
-msgstr ""
-
-#: location/templates/location/location/location_detail.html:199
-msgid "to comment"
-msgstr ""
-
-#: location/templates/location/location/location_detail.html:199
-msgid "or see comments shared with the community"
-msgstr ""
-
-#: location/templates/location/location/location_detail.html:203
-msgid "you do not have permission to comment on this location"
-msgstr ""
-
-#: location/templates/location/location/location_detail.html:211
+#: location/templates/location/location/location_detail.html:194
 msgid "nearby"
 msgstr ""
 
-#: location/templates/location/location/location_form.html:43
-#: location/templates/segment/location_attributes.html:9
-#: location/templates/snippets/location_list_filters.html:100
-#: location/views/Toggle.py:61
-msgid "category"
+#: location/templates/location/location/location_detail.html:278
+msgid "visited before"
 msgstr ""
 
-#: location/templates/location/location/location_form.html:69
-msgid "address will be fetched by google based on name when empty"
+#: location/templates/location/location/location_form.html:33
+msgid "website"
 msgstr ""
 
-#: location/templates/location/location/location_form.html:77
+#: location/templates/location/location/location_form.html:63
+msgid "fetched automatically from Google if not supplied"
+msgstr ""
+
+#: location/templates/location/location/location_form.html:74
 msgid "owners"
 msgstr ""
 
-#: location/templates/location/location/location_form.html:82
+#: location/templates/location/location/location_form.html:79
 msgid "user"
 msgstr ""
 
-#: location/templates/location/location/location_form.html:110
-#: location/templates/location/location/location_form.html:112
+#: location/templates/location/location/location_form.html:107
+#: location/templates/location/location/location_form.html:109
 msgid "terug naar"
 msgstr ""
 
-#: location/templates/location/location/location_form.html:123
+#: location/templates/location/location/location_form.html:120
 msgid "descriptions"
 msgstr ""
 
-#: location/templates/location/location/location_form.html:129
+#: location/templates/location/location/location_form.html:126
+#: location/templates/object/description.html:11
 msgid "description added by"
 msgstr ""
 
-#: location/templates/location/location/location_form.html:167
-msgid "primary"
+#: location/templates/location/location/location_form.html:126
+msgid "for"
 msgstr ""
 
-#: location/templates/location/location/location_form.html:260
-msgid "did you mean"
-msgstr ""
-
-#: location/templates/location/location/location_list.html:13
+#: location/templates/location/location/location_list.html:12
 msgid "country"
 msgstr ""
 
-#: location/templates/location/location/location_list.html:63
+#: location/templates/location/location/location_list.html:62
 msgid "there are no locations to show at this moment"
 msgstr ""
 
-#: location/templates/location/location/location_list.html:76
+#: location/templates/location/location/location_list.html:75
 msgid "add activity"
 msgstr ""
 
-#: location/templates/location/location/location_list.html:78
+#: location/templates/location/location/location_list.html:77
 msgid "add location"
 msgstr ""
 
@@ -926,7 +1761,7 @@ msgstr ""
 msgid "update media"
 msgstr ""
 
-#: location/templates/location/media_form.html:6
+#: location/templates/location/media_form.html:6 location/views/Media.py:33
 msgid "add media"
 msgstr ""
 
@@ -947,160 +1782,45 @@ msgid "media of"
 msgstr ""
 
 #: location/templates/location/media_list.html:28
-#: location/templates/location/media_list.html:31
+#: location/templates/location/media_list.html:32
 msgid "refresh"
 msgstr ""
 
 #: location/templates/location/media_list.html:28
-#: location/templates/location/media_list.html:29
 msgid "my image"
 msgstr ""
 
-#: location/templates/location/media_list.html:31
 #: location/templates/location/media_list.html:32
 msgid "this image"
 msgstr ""
 
-#: location/templates/location/media_list.html:35
+#: location/templates/location/media_list.html:37
 msgid "edit this image"
 msgstr ""
 
-#: location/templates/location/profile_form.html:6
-msgid "profile of"
+#: location/templates/location/profile.html:8
+msgid "account details"
 msgstr ""
 
-#: location/templates/location/profile_form.html:11
-msgid "your information"
+#: location/templates/location/profile.html:24
+msgid "account settings"
 msgstr ""
 
-#: location/templates/location/profile_form.html:13
-#: templates/registration/user_register_form.html:26
-msgid "first name"
+#: location/templates/location/profile.html:34
+msgid "site settings"
 msgstr ""
 
-#: location/templates/location/profile_form.html:17
-#: templates/registration/user_register_form.html:32
-msgid "last name"
-msgstr ""
-
-#: location/templates/location/profile_form.html:21
-#: templates/registration/snippet_login.html:7
-#: templates/registration/user_register_form.html:16
-msgid "username"
-msgstr ""
-
-#: location/templates/location/profile_form.html:25
-msgid "email"
-msgstr ""
-
-#: location/templates/location/profile_form.html:31
-msgid "home"
-msgstr ""
-
-#: location/templates/location/profile_form.html:46
-msgid "has home"
-msgstr ""
-
-#: location/templates/location/profile_form.html:46
-msgid "has no home"
-msgstr ""
-
-#: location/templates/location/profile_form.html:56
-msgid "settings"
-msgstr ""
-
-#: location/templates/location/profile_form.html:59
-msgid "order locations by"
-msgstr ""
-
-#: location/templates/location/profile_form.html:70
-msgid "ignored tags"
-msgstr ""
-
-#: location/templates/location/profile_form.html:81
-msgid "google maps"
-msgstr ""
-
-#: location/templates/location/profile_form.html:85
-msgid "on location page, always allow google maps"
-msgstr ""
-
-#: location/templates/location/profile_form.html:87
-msgid "permission currently granted for this session"
-msgstr ""
-
-#: location/templates/location/profile_form.html:87
-msgid "revoke"
-msgstr ""
-
-#: location/templates/location/profile_form.html:94
-msgid "category labels"
-msgstr ""
-
-#: location/templates/location/profile_form.html:98
-msgid "show category labels in list view"
-msgstr ""
-
-#: location/templates/location/profile_form.html:104
-msgid "filter on distance"
-msgstr ""
-
-#: location/templates/location/profile_form.html:108
-msgid "allow filtering on distance"
-msgstr ""
-
-#: location/templates/location/profile_form.html:124
-#: location/templates/location/profile_form.html:135
-#: location/templates/snippets/location_list_filters.html:26
-#: location/templates/snippets/location_list_filters.html:29
-#: location/templates/snippets/location_list_filters.html:32
-#: location/templates/snippets/location_list_filters.html:41
-msgid "remove"
-msgstr ""
-
-#: location/templates/location/profile_form.html:124
-msgid "from favorites"
-msgstr ""
-
-#: location/templates/location/profile_form.html:132
-msgid "least liked"
-msgstr ""
-
-#: location/templates/location/profile_form.html:135
-msgid "from least-liked"
-msgstr ""
-
-#: location/templates/location/profile_form.html:145
-msgid "hide disliked locations from search results"
-msgstr ""
-
-#: location/templates/location/profile_form.html:159
-msgid "remove family member "
-msgstr ""
-
-#: location/templates/location/profile_form.html:166
-msgid "you are marked family of"
-msgstr ""
-
-#: location/templates/location/profile_form.html:184
-msgid "to your family"
-msgstr ""
-
-#: location/templates/location/profile_form.html:187
-msgid "no users available to add to your family"
-msgstr ""
-
-#: location/templates/location/profile_form.html:197
+#: location/templates/location/profile.html:68
 msgid "visits"
 msgstr ""
 
-#: location/templates/location/profile_form.html:198
+#: location/templates/location/profile.html:69
 #: location/templates/snippets/location_list_filters.html:8
 msgid "show all"
 msgstr ""
 
-#: location/templates/location/profile_form.html:222
-#: location/templates/location/profile_form.html:258
+#: location/templates/location/profile.html:93
+#: location/templates/location/profile.html:129
 #: location/templates/location/visitedin_form.html:12
 #: location/templates/location/visitedin_form.html:48
 msgid "add visit"
@@ -1109,8 +1829,8 @@ msgstr ""
 #: location/templates/location/tag_detail.html:6
 #: location/templates/location/tag_list.html:11
 #: location/templates/location/tag_location_form.html:10
-#: location/templates/snippets/location_list_filters.html:114
-#: location/views/Toggle.py:55
+#: location/templates/snippets/location_list_filters.html:124
+#: location/views/Tag.py:36 location/views/Tag.py:134
 msgid "tag"
 msgstr ""
 
@@ -1131,13 +1851,9 @@ msgid "hidden from filter options"
 msgstr ""
 
 #: location/templates/location/tag_detail.html:13
-#: location/templates/partial/actionlist.html:35
-#: location/templates/partial/actionlist.html:38
+#: location/templates/partial/actionlist.html:36
+#: location/templates/partial/actionlist.html:39
 msgid "edit information of"
-msgstr ""
-
-#: location/templates/location/tag_detail.html:15
-msgid "restore"
 msgstr ""
 
 #: location/templates/location/tag_form.html:26
@@ -1152,12 +1868,6 @@ msgstr ""
 msgid "hide tag from filter overview"
 msgstr ""
 
-#: location/templates/location/tag_list.html:7
-#: location/templates/segment/location_attributes.html:37
-#: location/views/Tag.py:22 templates/navigation.html:33
-msgid "tags"
-msgstr ""
-
 #: location/templates/location/tag_list.html:29
 #: location/templates/location/tag_list.html:38
 msgid "activity"
@@ -1169,16 +1879,8 @@ msgstr[1] ""
 msgid "there are no tags to show at this moment"
 msgstr ""
 
-#: location/templates/location/tag_list.html:56 templates/navigation.html:57
-msgid "add tag"
-msgstr ""
-
 #: location/templates/location/tag_location_form.html:23
 msgid "edit tags for location"
-msgstr ""
-
-#: location/templates/location/visitedin_form.html:6
-msgid "visit"
 msgstr ""
 
 #: location/templates/location/visitedin_form.html:12
@@ -1194,181 +1896,94 @@ msgstr ""
 msgid "juli"
 msgstr ""
 
+#: location/templates/object/comment.html:4
+#, python-format
+msgid "%(user)s commented %(time)s for %(audience)s on"
+msgstr ""
+
+#: location/templates/object/comment.html:4
+msgid "see details of"
+msgstr ""
+
+#: location/templates/object/comment.html:22
+msgid "last edited"
+msgstr ""
+
+#: location/templates/object/comment.html:23
+msgid "commented by"
+msgstr ""
+
+#: location/templates/object/comment.html:43
+msgid "delete comment"
+msgstr ""
+
+#: location/templates/object/comment.html:47
+msgid "are you sure you want to delete this comment?"
+msgstr ""
+
+#: location/templates/object/description.html:11
+msgid "visible for"
+msgstr ""
+
+#: location/templates/object/location_lists.html:1
+msgid "your lists"
+msgstr ""
+
+#: location/templates/object/location_visitors.html:1
+msgid "your visits"
+msgstr ""
+
+#: location/templates/object/location_visitors.html:46
+msgid "year"
+msgstr ""
+
 #: location/templates/partial/actionlist.html:6
 #: location/templates/snippets/location_link.html:1
 msgid "this is marked as your home"
 msgstr ""
 
-#: location/templates/partial/actionlist.html:16
-msgid "you like"
-msgstr ""
-
-#: location/templates/partial/actionlist.html:16
-msgid "like"
-msgstr ""
-
-#: location/templates/partial/actionlist.html:16
-#: location/templates/partial/actionlist.html:20
-msgid "this location"
-msgstr ""
-
-#: location/templates/partial/actionlist.html:20
-msgid "you don't like"
-msgstr ""
-
-#: location/templates/partial/actionlist.html:20
-msgid "dislike"
-msgstr ""
-
-#: location/templates/partial/actionlist.html:24
+#: location/templates/partial/actionlist.html:25
 msgid "add media to"
 msgstr ""
 
-#: location/templates/partial/actionlist.html:42
+#: location/templates/partial/actionlist.html:44
 msgid "from"
 msgstr ""
 
-#: location/templates/partial/actionlist.html:44
+#: location/templates/partial/actionlist.html:46
 msgid "calculate distance from home to"
 msgstr ""
 
-#: location/templates/partial/actionlist.html:48
+#: location/templates/partial/actionlist.html:51
 msgid "geographical distance from"
 msgstr ""
 
-#: location/templates/partial/actionlist.html:48
+#: location/templates/partial/actionlist.html:51
 msgid "to this location"
 msgstr ""
 
-#: location/templates/partial/actionlist.html:48
+#: location/templates/partial/actionlist.html:51
 msgid "km"
 msgstr ""
 
-#: location/templates/partial/actionlist.html:48
+#: location/templates/partial/actionlist.html:51
 msgid "straight line"
 msgstr ""
 
-#: location/templates/partial/actionlist.html:52
+#: location/templates/partial/actionlist.html:55
 msgid "reset location data and fetch again"
 msgstr ""
 
-#: location/templates/partial/addattribute.html:5
-msgid "start typing"
+#: location/templates/partial/location.html:1
+msgid "see details of location"
 msgstr ""
 
-#: location/templates/partial/category.html:2
-#: location/templates/partial/chain.html:5
-#: location/templates/partial/tag.html:7
-#, python-format
-msgid "Remove &quot;%(name)s&quot; from %(location_name)s"
+#: location/templates/partial/navigation_app.html:1
+msgid "navigate to"
 msgstr ""
 
-#: location/templates/partial/chain.html:7
-#, python-format
-msgid "%(chain)s is part of %(parent)s "
-msgstr ""
-
-#: location/templates/partial/comment.html:3
-#: location/templates/snippets/comment.html:5
-msgctxt "how long ago"
-msgid "ago"
-msgstr ""
-
-#: location/templates/partial/comment.html:4
-#: location/templates/snippets/comment.html:6
-msgid "see all comments by"
-msgstr ""
-
-#: location/templates/partial/comment.html:5
-#: location/templates/snippets/comment.html:7
-msgid "commented"
-msgstr ""
-
-#: location/templates/partial/comment.html:6
-#: location/templates/snippets/comment.html:8
-msgctxt "who is object directed at"
-msgid "to"
-msgstr ""
-
-#: location/templates/partial/comment.html:6
-#: location/templates/snippets/comment.html:8
-msgid "comment can be viewed by"
-msgstr ""
-
-#: location/templates/partial/comment.html:6
-#: location/templates/snippets/comment.html:8
-msgid "everyone"
-msgstr ""
-
-#: location/templates/partial/comment.html:6
-#: location/templates/snippets/comment.html:8
-msgid "registered and logged in users"
-msgstr ""
-
-#: location/templates/partial/comment.html:6
-#: location/templates/snippets/comment.html:8
-msgid "logged in users marked as family in commenters profile"
-msgstr ""
-
-#: location/templates/partial/comment.html:6
-#: location/templates/snippets/comment.html:8
-msgid "only you"
-msgstr ""
-
-#: location/templates/partial/comment.html:9
-msgid "see details of"
-msgstr ""
-
-#: location/templates/partial/comment.html:16
-#: location/templates/partial/comment.html:17
-#: location/templates/snippets/comment.html:20
-#: location/templates/snippets/comment.html:21
-msgid "my comment"
-msgstr ""
-
-#: location/templates/partial/comment.html:19
-#: location/templates/partial/comment.html:20
-#: location/templates/snippets/comment.html:23
-#: location/templates/snippets/comment.html:24
-msgid "this comment"
-msgstr ""
-
-#: location/templates/partial/comment.html:23
-#: location/templates/snippets/comment.html:27
-msgid "edit my comment"
-msgstr ""
-
-#: location/templates/partial/comment.html:23
-#: location/templates/snippets/comment.html:27
-msgid "edit this comment"
-msgstr ""
-
-#: location/templates/partial/tag.html:2 location/templates/snippets/tag.html:1
-msgid "see details of tag"
-msgstr ""
-
-#: location/templates/segment/location_attributes.html:4
-msgid "more information"
-msgstr ""
-
-#: location/templates/snippets/add_list_form.html:6
-msgid "create new list with"
-msgstr ""
-
-#: location/templates/snippets/add_list_form.html:11
-msgid "create new list"
-msgstr ""
-
-#: location/templates/snippets/add_list_form.html:13
-msgid "bucketlist"
-msgstr ""
-
-#: location/templates/snippets/add_list_form.html:23
-msgid "add to list"
-msgstr ""
-
-#: location/templates/snippets/list_comments.html:6
-msgid "there are no comments to show at this moment"
+#: location/templates/partial/navigation_app.html:1
+msgid "using"
 msgstr ""
 
 #: location/templates/snippets/location_flashcard.html:21
@@ -1418,48 +2033,47 @@ msgstr ""
 #: location/templates/snippets/location_list_filters.html:26
 #: location/templates/snippets/location_list_filters.html:29
 #: location/templates/snippets/location_list_filters.html:32
-#: location/templates/snippets/location_list_filters.html:41
+#: location/templates/snippets/location_list_filters.html:42
+msgid "remove"
+msgstr ""
+
+#: location/templates/snippets/location_list_filters.html:26
+#: location/templates/snippets/location_list_filters.html:29
+#: location/templates/snippets/location_list_filters.html:32
+#: location/templates/snippets/location_list_filters.html:42
 msgid "from filter"
 msgstr ""
 
-#: location/templates/snippets/location_list_filters.html:48
+#: location/templates/snippets/location_list_filters.html:50
 msgid "show only favorites"
 msgstr ""
 
-#: location/templates/snippets/location_list_filters.html:51
+#: location/templates/snippets/location_list_filters.html:53
 msgid "visited"
 msgstr ""
 
-#: location/templates/snippets/location_list_filters.html:51
-msgid "in"
-msgstr ""
-
-#: location/templates/snippets/location_list_filters.html:51
+#: location/templates/snippets/location_list_filters.html:53
 msgid "all visited locations"
 msgstr ""
 
-#: location/templates/snippets/location_list_filters.html:59
-#: location/templates/snippets/location_list_filters.html:132
+#: location/templates/snippets/location_list_filters.html:61
+#: location/templates/snippets/location_list_filters.html:142
 msgid "distance between"
 msgstr ""
 
-#: location/templates/snippets/location_list_filters.html:70
+#: location/templates/snippets/location_list_filters.html:72
 msgid "filter by"
 msgstr ""
 
-#: location/templates/snippets/location_list_filters.html:74
+#: location/templates/snippets/location_list_filters.html:76
 msgid "list locations in"
 msgstr ""
 
-#: location/templates/snippets/location_list_filters.html:121
-msgid "visibility"
-msgstr ""
-
-#: location/templates/snippets/location_list_filters.html:132
+#: location/templates/snippets/location_list_filters.html:142
 msgid "in a straight line from central location"
 msgstr ""
 
-#: location/templates/snippets/location_list_filters.html:147
+#: location/templates/snippets/location_list_filters.html:157
 msgid "filter"
 msgstr ""
 
@@ -1481,218 +2095,659 @@ msgid ""
 "manage your own lists"
 msgstr ""
 
-#: location/templates/snippets/select_tag_for_location.html:3
-msgid "new tag"
+#: location/views/Chain.py:44
+msgid "created chain:"
+msgstr ""
+
+#: location/views/Chain.py:46 location/views/Chain.py:49
+msgid "chain cannot be created"
+msgstr ""
+
+#: location/views/Chain.py:46
+msgid "a chain with this name already exists"
+msgstr ""
+
+#: location/views/Comment.py:23
+msgid "Comment added to"
+msgstr ""
+
+#: location/views/Comment.py:51
+msgid "can not find user"
+msgstr ""
+
+#: location/views/Comment.py:51
+msgid "to list comments of"
+msgstr ""
+
+#: location/views/List.py:38
+msgid "Can calculate a maximum of"
+msgstr ""
+
+#: location/views/List.py:38
+msgid "distances at a time"
+msgstr ""
+
+#: location/views/List.py:104 location/views/List.py:255
+#: location/views/List.py:267
+msgid "selected list does not exist"
 msgstr ""
 
 #: location/views/List.py:106
 msgid "no list found with the name"
 msgstr ""
 
-#: location/views/Profile.py:179
+#: location/views/List.py:143
+msgid "created list:"
+msgstr ""
+
+#: location/views/List.py:145 location/views/List.py:148
+msgid "list cannot be created"
+msgstr ""
+
+#: location/views/List.py:145
+msgid "a list with this name already exists"
+msgstr ""
+
+#: location/views/List.py:160 templates/navigation.html:71
+#: templates/navigation.html:72
+msgid "edit list"
+msgstr ""
+
+#: location/views/List.py:183 location/views/Profile.py:54
+#: location/views/Profile.py:82 location/views/Profile.py:106
+#: location/views/Tag.py:103 location/views/location/location_edit.py:97
+msgid "Form cannot be saved because of the following error(s)"
+msgstr ""
+
+#: location/views/List.py:188
+msgid "succesfully changed data"
+msgstr ""
+
+#: location/views/List.py:190
+msgid "no changes made"
+msgstr ""
+
+#: location/views/List.py:208 location/views/List.py:211
+#: location/views/List.py:226 location/views/List.py:229
+#: location/views/List.py:312 location/views/List.py:338
+#: location/views/List.py:363 location/views/List.py:388
+msgid "List"
+msgstr ""
+
+#: location/views/List.py:208
+msgid "has been removed"
+msgstr ""
+
+#: location/views/List.py:208 location/views/List.py:226
+#: location/views/List.py:330 location/views/List.py:334
+#: location/views/Tag.py:134
+msgid "Undo"
+msgstr ""
+
+#: location/views/List.py:211
+msgid "cannot be removed"
+msgstr ""
+
+#: location/views/List.py:211 location/views/List.py:229
+#: location/views/List.py:312 location/views/List.py:338
+#: location/views/List.py:363 location/views/List.py:388
+msgid "This is not your list"
+msgstr ""
+
+#: location/views/List.py:226
+msgid "has been restored"
+msgstr ""
+
+#: location/views/List.py:226
+msgid "and made visible to"
+msgstr ""
+
+#: location/views/List.py:229
+msgid "cannot be restored"
+msgstr ""
+
+#: location/views/List.py:277
+msgid "add new location before home"
+msgstr ""
+
+#: location/views/List.py:296
+msgid "was not added to list"
+msgstr ""
+
+#: location/views/List.py:296
+msgid "This is already the last location on the list"
+msgstr ""
+
+#: location/views/List.py:305
+msgid "Added"
+msgstr ""
+
+#: location/views/List.py:305 location/views/List.py:334
+msgid "to list"
+msgstr ""
+
+#: location/views/List.py:309
+msgid "Could not calculate distances for"
+msgstr ""
+
+#: location/views/List.py:312 location/views/List.py:338
+#: location/views/List.py:363 location/views/List.py:388
+msgid "cannot be modified"
+msgstr ""
+
+#: location/views/List.py:330
+msgid "Removed"
+msgstr ""
+
+#: location/views/List.py:330
+msgid "from list"
+msgstr ""
+
+#: location/views/List.py:334
+msgid "Restpred"
+msgstr ""
+
+#: location/views/List.py:358
+msgid "now departs from"
+msgstr ""
+
+#: location/views/List.py:382
+msgid "now ends at"
+msgstr ""
+
+#: location/views/List.py:385
+msgid "already ends at"
+msgstr ""
+
+#: location/views/List.py:401 location/views/List.py:410
+msgid "cannot move location"
+msgstr ""
+
+#: location/views/List.py:401 location/views/List.py:410
+msgid "location is"
+msgstr ""
+
+#: location/views/List.py:401
+msgid "not in list"
+msgstr ""
+
+#: location/views/List.py:410
+msgid "first"
+msgstr ""
+
+#: location/views/List.py:410
+msgid "last"
+msgstr ""
+
+#: location/views/List.py:410 location/views/List.py:418
+msgid "in list"
+msgstr ""
+
+#: location/views/List.py:418
+msgid "moved location"
+msgstr ""
+
+#: location/views/Media.py:33 location/views/Media.py:129
+#: location/views/Media.py:203
+msgid "media"
+msgstr ""
+
+#: location/views/Media.py:41
+msgid "the form cannot be processed: too little or too many files selected"
+msgstr ""
+
+#: location/views/Media.py:61
+msgid "detected .heic-image, converting to jpeg"
+msgstr ""
+
+#: location/views/Media.py:67
+msgid "file already exists, selecting a different filename"
+msgstr ""
+
+#: location/views/Media.py:87
+msgid "detected large image, resizing to maximum of"
+msgstr ""
+
+#: location/views/Media.py:93
+msgid "the resolution of the uploaded image is very low"
+msgstr ""
+
+#: location/views/Media.py:93
+msgid "You might want to concider using a high resulution image"
+msgstr ""
+
+#: location/views/Media.py:109
+msgid "succesfully added image"
+msgstr ""
+
+#: location/views/Media.py:120
+msgid "updated timestamp for image"
+msgstr ""
+
+#: location/views/Media.py:120
+msgid "and moved up in ordering"
+msgstr ""
+
+#: location/views/Media.py:129
+msgid "list media"
+msgstr ""
+
+#: location/views/Profile.py:32 location/views/Profile.py:217
+msgid "created profile for "
+msgstr ""
+
+#: location/views/Profile.py:43 location/views/Profile.py:78
+#: location/views/Profile.py:99
+msgid "profile"
+msgstr ""
+
+#: location/views/Profile.py:43
+msgid "edit your profile"
+msgstr ""
+
+#: location/views/Profile.py:69
+msgid "Your changes have been saved"
+msgstr ""
+
+#: location/views/Profile.py:78
+msgid "add your visit"
+msgstr ""
+
+#: location/views/Profile.py:99
+msgid "edit your visit to"
+msgstr ""
+
+#: location/views/Profile.py:111 location/views/Profile.py:124
+msgid "cannot proceed with operation"
+msgstr ""
+
+#: location/views/Profile.py:111 location/views/Profile.py:124
+msgid "you can only edit your own item"
+msgstr ""
+
+#: location/views/Profile.py:130
+msgid "succesfully"
+msgstr ""
+
+#: location/views/Profile.py:130 location/views/Tag.py:134
+msgid "restored"
+msgstr ""
+
+#: location/views/Profile.py:130
+msgid "your visit to"
+msgstr ""
+
+#: location/views/Profile.py:166
+msgid "Error when registering"
+msgstr ""
+
+#: location/views/Profile.py:166
+msgid "Username or e-mail is already registered"
+msgstr ""
+
+#: location/views/Profile.py:166
+msgid "You can"
+msgstr ""
+
+#: location/views/Profile.py:166
+msgid "log in here"
+msgstr ""
+
+#: location/views/Profile.py:172 location/views/Profile.py:175
+msgid "Your password does not meet the requirements"
+msgstr ""
+
+#: location/views/Profile.py:175
+msgid "The password cannot overlap with the username"
+msgstr ""
+
+#: location/views/Profile.py:181
 msgid ""
 "Succesfully registered your account. Please log in with your username and "
 "chosen password."
 msgstr ""
 
-#: location/views/Toggle.py:73
-msgid "favorite"
+#: location/views/Profile.py:197
+msgid "revoked allowing google maps for "
 msgstr ""
 
-#: location/views/Toggle.py:81
-msgid "least-liked"
+#: location/views/Profile.py:197 location/views/Profile.py:201
+msgid "this session"
 msgstr ""
 
-#: location/views/Toggle.py:164
-msgid "Removed {} from {} {}"
+#: location/views/Profile.py:201 location/views/Profile.py:235
+msgid "allow google maps for "
 msgstr ""
 
-#: location/views/Toggle.py:169
-msgid "Added {} to {} {}"
+#: location/views/Profile.py:223
+msgid "You are not logged in"
 msgstr ""
 
-#: location/views/Toggle.py:279
-msgid "restored {}"
+#: location/views/Profile.py:231
+msgid "do not allow google maps for "
 msgstr ""
 
-#: location/views/Toggle.py:283
-msgid "removed {}"
+#: location/views/Tag.py:66
+msgid "protected tag"
 msgstr ""
 
-#: location/views/json/comment.py:26
-msgid "you need to be logged in to comment"
+#: location/views/Tag.py:66
+msgid "cannot be used"
 msgstr ""
 
-#: location/views/json/comment.py:33
-msgid "no valid location slug provided"
+#: location/views/Tag.py:78
+msgid "created tag:"
 msgstr ""
 
-#: location/views/json/comment.py:36
-msgid "location not found"
+#: location/views/Tag.py:80 location/views/Tag.py:83
+msgid "tag cannot be created"
 msgstr ""
 
-#: location/views/json/comment.py:55
-msgid "comment too short"
+#: location/views/Tag.py:80
+msgid "a tag with this name already exists"
 msgstr ""
 
-#: location/views/json/comment.py:65
-msgid "you already commented this"
+#: location/views/Tag.py:110
+msgid "changes to tag saved"
 msgstr ""
 
-#: location/views/json/comment.py:69
-msgid "comment added"
+#: location/views/Tag.py:113
+msgid "no changes to tag made"
+msgstr ""
+
+#: location/views/Tag.py:123
+msgid "you are not authorized for this action"
+msgstr ""
+
+#: location/views/Tag.py:123 location/views/Tag.py:127
+msgid "delete or undelete tag"
+msgstr ""
+
+#: location/views/Tag.py:127
+msgid "unable to"
+msgstr ""
+
+#: location/views/Tag.py:127
+msgid "Tag has children. Remove children from tag before deleting"
+msgstr ""
+
+#: location/views/Tag.py:134 location/views/location/location_edit.py:366
+msgid "removed"
+msgstr ""
+
+#: location/views/Tag.py:149
+msgid "add tag to"
+msgstr ""
+
+#: location/views/Translations.py:12
+msgid "Netherlands"
+msgstr ""
+
+#: location/views/Translations.py:13
+msgid "Belgium"
+msgstr ""
+
+#: location/views/Translations.py:14
+msgid "Germany"
+msgstr ""
+
+#: location/views/Translations.py:15
+msgid "France"
+msgstr ""
+
+#: location/views/Translations.py:16
+msgid "Spain"
+msgstr ""
+
+#: location/views/Translations.py:17
+msgid "Italy"
+msgstr ""
+
+#: location/views/Translations.py:18
+msgid "United Kingdom"
+msgstr ""
+
+#: location/views/Translations.py:19
+msgid "United States"
+msgstr ""
+
+#: location/views/Translations.py:20
+msgid "Canada"
+msgstr ""
+
+#: location/views/Translations.py:21
+msgid "Australia"
+msgstr ""
+
+#: location/views/Translations.py:22
+msgid "Indonesia"
+msgstr ""
+
+#: location/views/Translations.py:25
+msgid "Vosges"
+msgstr ""
+
+#: location/views/Translations.py:28
+msgid "Bed & Breakfast"
+msgstr ""
+
+#: location/views/Translations.py:29
+msgid "Camping"
+msgstr ""
+
+#: location/views/Translations.py:30
+msgid "Hotel"
+msgstr ""
+
+#: location/views/Translations.py:31
+msgid "Chalet"
+msgstr ""
+
+#: location/views/Translations.py:32
+msgid "Gite"
+msgstr ""
+
+#: location/views/Translations.py:33
+msgid "Glamping (Safaritent)"
+msgstr ""
+
+#: location/views/Translations.py:34
+msgid "Mobile Home"
+msgstr ""
+
+#: location/views/Translations.py:35 location/views/Translations.py:37
+msgid "Resort"
+msgstr ""
+
+#: location/views/Translations.py:36
+msgid "Villa"
+msgstr ""
+
+#: location/views/Translations.py:40
+msgid "Sight-to-see"
+msgstr ""
+
+#: location/views/Translations.py:41
+msgid "Transit (one nighter)"
+msgstr ""
+
+#: location/views/Translations.py:42
+msgid "Beach"
+msgstr ""
+
+#: location/views/Translations.py:43
+msgid "City"
+msgstr ""
+
+#: location/views/Translations.py:44
+msgid "Museum"
+msgstr ""
+
+#: location/views/Translations.py:45
+msgid "Park"
+msgstr ""
+
+#: location/views/Translations.py:46
+msgid "Rest-stop"
+msgstr ""
+
+#: location/views/Translations.py:47
+msgid "Restaurant"
+msgstr ""
+
+#: location/views/Translations.py:48
+msgid "Sauna"
+msgstr ""
+
+#: location/views/Translations.py:49
+msgid "Shop"
+msgstr ""
+
+#: location/views/Translations.py:50
+msgid "Swimmingpool"
+msgstr ""
+
+#: location/views/Translations.py:51
+msgid "Theatre"
+msgstr ""
+
+#: location/views/Translations.py:52
+msgid "Theme-park"
+msgstr ""
+
+#: location/views/Translations.py:53
+msgid "Village"
+msgstr ""
+
+#: location/views/Translations.py:54
+msgid "Walk"
+msgstr ""
+
+#: location/views/Translations.py:55
+msgid "Winery"
+msgstr ""
+
+#: location/views/Translations.py:56
+msgid "Zoo"
+msgstr ""
+
+#: location/views/location/location_edit.py:104
+#: location/views/location/location_edit.py:170
+msgid "visibility of your home is set to family"
+msgstr ""
+
+#: location/views/location/location_edit.py:112
+msgid "you are not authorized to change the user. Keeping user"
+msgstr ""
+
+#: location/views/location/location_edit.py:118
+msgid "changed information of location"
+msgstr ""
+
+#: location/views/location/location_edit.py:122
+msgid "no changed made to"
 msgstr ""
 
 #: location/views/location/location_edit.py:162
 msgid "location or activity"
 msgstr ""
 
-#: location/views/translations.py:12
-msgid "Netherlands"
+#: location/views/location/location_edit.py:182
+msgid "added new location"
 msgstr ""
 
-#: location/views/translations.py:13
-msgid "Belgium"
+#: location/views/location/location_edit.py:201
+#: location/views/location/location_edit.py:424
+#: location/views/location/location_edit.py:441
+msgid "added link"
 msgstr ""
 
-#: location/views/translations.py:14
-msgid "Germany"
+#: location/views/location/location_edit.py:204
+msgid "failed to add new location"
 msgstr ""
 
-#: location/views/translations.py:15
-msgid "France"
+#: location/views/location/location_edit.py:204
+msgid "A location with this name already exists:"
 msgstr ""
 
-#: location/views/translations.py:16
-msgid "Spain"
+#: location/views/location/location_edit.py:270
+msgid "removed distance to home"
 msgstr ""
 
-#: location/views/translations.py:17
-msgid "Italy"
+#: location/views/location/location_edit.py:280
+msgid "location does not exist"
 msgstr ""
 
-#: location/views/translations.py:18
-msgid "United Kingdom"
+#: location/views/location/location_edit.py:284
+msgid "cannot calculate distance for this location"
 msgstr ""
 
-#: location/views/translations.py:19
-msgid "United States"
+#: location/views/location/location_edit.py:284
+msgid "origin and destination are the same"
 msgstr ""
 
-#: location/views/translations.py:20
-msgid "Canada"
+#: location/views/location/location_edit.py:310
+#: location/views/location/location_edit.py:424
+msgid "created and"
 msgstr ""
 
-#: location/views/translations.py:21
-msgid "Australia"
+#: location/views/location/location_edit.py:310
+#: location/views/location/location_edit.py:312
+msgid "added description"
 msgstr ""
 
-#: location/views/translations.py:22
-msgid "Indonesia"
+#: location/views/location/location_edit.py:314
+msgid "you did not supply a description"
 msgstr ""
 
-#: location/views/translations.py:25
-msgid "Vosges"
+#: location/views/location/location_edit.py:346
+msgid "changed description"
 msgstr ""
 
-#: location/views/translations.py:28
-msgid "Bed & Breakfast"
+#: location/views/location/location_edit.py:369
+msgid "added"
 msgstr ""
 
-#: location/views/translations.py:29
-msgid "Camping"
+#: location/views/location/location_edit.py:370
+#: location/views/location/location_edit.py:438
+#: location/views/location/location_edit.py:441
+msgid "undo"
 msgstr ""
 
-#: location/views/translations.py:30
-msgid "Hotel"
+#: location/views/location/location_edit.py:382
+msgid "removed location"
 msgstr ""
 
-#: location/views/translations.py:31
-msgid "Chalet"
+#: location/views/location/location_edit.py:385
+msgid "added location"
 msgstr ""
 
-#: location/views/translations.py:32
-msgid "Gite"
+#: location/views/location/location_edit.py:413
+msgid "updated link"
 msgstr ""
 
-#: location/views/translations.py:33
-msgid "Glamping (Safaritent)"
+#: location/views/location/location_edit.py:426
+msgid "you did not supply a valid URL"
 msgstr ""
 
-#: location/views/translations.py:34
-msgid "Mobile Home"
+#: location/views/location/location_edit.py:438
+msgid "removed link"
 msgstr ""
 
-#: location/views/translations.py:35
-msgid "Resort"
+#: location/views/location/location_edit.py:459
+msgid "editing link"
 msgstr ""
 
-#: location/views/translations.py:36
-msgid "Villa"
+#: location/views/location/location_edit.py:462
+msgid "you are not authorized to edit this link"
 msgstr ""
 
-#: location/views/translations.py:39
-msgid "Sight-to-seen"
+#: location/views/location/location_list.py:291
+msgid "Single search result found for"
 msgstr ""
 
-#: location/views/translations.py:40
-msgid "Transit (one nighter)"
-msgstr ""
-
-#: location/views/translations.py:41
-msgid "Beach"
-msgstr ""
-
-#: location/views/translations.py:42
-msgid "City"
-msgstr ""
-
-#: location/views/translations.py:43
-msgid "Museum"
-msgstr ""
-
-#: location/views/translations.py:44
-msgid "Park"
-msgstr ""
-
-#: location/views/translations.py:45
-msgid "Rest-stop"
-msgstr ""
-
-#: location/views/translations.py:46
-msgid "Restaurant"
-msgstr ""
-
-#: location/views/translations.py:47
-msgid "Sauna"
-msgstr ""
-
-#: location/views/translations.py:48
-msgid "Shop"
-msgstr ""
-
-#: location/views/translations.py:49
-msgid "Swimmingpool"
-msgstr ""
-
-#: location/views/translations.py:50
-msgid "Theatre"
-msgstr ""
-
-#: location/views/translations.py:51
-msgid "Theme-park"
-msgstr ""
-
-#: location/views/translations.py:52
-msgid "Village"
-msgstr ""
-
-#: location/views/translations.py:53
-msgid "Winery"
-msgstr ""
-
-#: location/views/translations.py:54
-msgid "Zoo"
+#: location/views/location/location_list.py:291
+msgid "Redirecting to location"
 msgstr ""
 
 #: templates/navigation.html:22
@@ -1707,12 +2762,8 @@ msgstr ""
 msgid "add location or activity"
 msgstr ""
 
-#: templates/navigation.html:62 templates/navigation.html:63
+#: templates/navigation.html:63
 msgid "edit location"
-msgstr ""
-
-#: templates/navigation.html:71 templates/navigation.html:72
-msgid "edit list"
 msgstr ""
 
 #: templates/navigation.html:76
@@ -1808,10 +2859,10 @@ msgstr ""
 msgid "login here"
 msgstr ""
 
-#: vknt/settings.py:121
+#: vknt/settings.py:129
 msgid "English"
 msgstr ""
 
-#: vknt/settings.py:122
+#: vknt/settings.py:130
 msgid "Dutch"
 msgstr ""

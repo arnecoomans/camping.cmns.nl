@@ -1,4 +1,0 @@
-{% load i18n %}
-{% for chain in chains %}
-  <a href="{% url 'location:search' %}?chain={{ chain.slug }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate location.getPCategory|capfirst %} {% translate 'by' %} {{ chain.name }}">{{ chain.name|title }}</a>{% if chain.parent and user.is_authenticated %} - <a href="{% if location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}?chain={{ chain.parent.slug }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate location.getPCategory|capfirst %} {% translate 'by' %} {{ chain.parent.name }}">{{ chain.parent.name|title }}</a>{% if not forloop.last %}, {% endif %}{% endif %}
-{% endfor %}

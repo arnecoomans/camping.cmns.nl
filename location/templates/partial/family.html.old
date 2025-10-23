@@ -1,4 +1,0 @@
-<span class="family member">
-  {{ member.get_full_name|default:member.username }}<a>
-  <a href="" class="toggable"><sup>[x]</sup></a>
-</span>{% if not forloop.last %}, {% endif %}

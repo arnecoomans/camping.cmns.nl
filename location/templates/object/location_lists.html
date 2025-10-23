@@ -29,7 +29,7 @@
           data-autosuggest
           data-url="{% url 'cmnsd:dispatch' 'list'%}"
           data-param="{{ search_query_character}}"
-          data-extra-params='{"format":"json", "exclude": "locations__location__slug:{{ location.slug }}"}'
+          data-extra-params='{"format":"json", "is_editable": "1", "exclude": "locations__location__slug:{{ location.slug }}"}'
           data-container="list"
           data-field-input="name"
           data-field-hidden="slug"

@@ -10,7 +10,11 @@
       <div id="comment-{{ comment.id }}">
         {% include 'object/comment.html' %}
       </div>
+    {% empty %}
+      <p>{% translate 'no comments available'|capfirst %}.</p>
     {% endfor %}
+  {% else %}
+    <p>{% translate 'no comments available'|capfirst %}.</p>
   {% endif %}
 </div>
 

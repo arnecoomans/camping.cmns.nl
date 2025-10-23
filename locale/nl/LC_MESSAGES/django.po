@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-11-03 09:34+0100\n"
-"PO-Revision-Date: 2024-11-03 09:41+0100\n"
+"PO-Revision-Date: 2025-10-23 17:29+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.8\n"
 
 #: location/models/Comment.py:19
 msgid "Comment"
@@ -1283,7 +1283,7 @@ msgstr "Verwijder &quot;%(name)s&quot; van %(location_name)s"
 #: location/templates/partial/chain.html:7
 #, python-format
 msgid "%(chain)s is part of %(parent)s "
-msgstr "%(chaiin)s is onderdeel van %(parent)s"
+msgstr "%(chain)s is onderdeel van %(parent)s "
 
 #: location/templates/partial/comment.html:3
 #: location/templates/snippets/comment.html:5

@@ -15,7 +15,7 @@
     </ul>
   {% endif %}
   <!-- Show Tag Contents -->
-  {% for location in tag.locations.all %}
+  {% for location in tag.locations.all|filter_by_visibility:user|filter_by_status %}
     {% include 'snippets/location_flashcard.html' %}
   {% endfor %}
   <!-- Tag Children -->

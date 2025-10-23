@@ -19,7 +19,11 @@
       </div>
     </form>
   {% else %}
-    <a href="{% url 'location:search' %}?size__slug={{ location.size.slug }}">{% if location.size %}{{ location.size.slug|upper }} - {% translate location.size.name|capfirst %}</a>{% endif %}
+    {% if location.size %}
+      <a href="{% url 'location:search' %}?size__slug={{ location.size.slug }}">{% if location.size %}{{ location.size.slug|upper }} - {% translate location.size.name|capfirst %}</a>{% endif %}
+    {% else %}
+      <span class="text-muted">{% translate 'no size specified'|capfirst %}</span>
+    {% endif %}
   {% endif %}
 </div>
 <div class="col-1 button-col">

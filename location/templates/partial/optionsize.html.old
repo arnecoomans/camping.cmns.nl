@@ -1,1 +1,0 @@
-<option value="{{ object.slug }}"{% if object ==  location.size %} selected{% endif %}>{{ object.name }}</option>

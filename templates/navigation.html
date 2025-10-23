@@ -57,7 +57,7 @@
               <li><hr class="dropdown-divider"></li>
               <!-- Edit content -->
               {% if location %}
-                <li><a class="dropdown-item" href="{% url 'location:EditLocation' location.slug %}">{% translate 'edit location'|title %}</a></li>
+                <li><a class="dropdown-item" href="{{ location.get_absolute_url }}?editable">{% translate 'edit'|capfirst %} {{ location.name }}</a></li>
                 {% if user.is_superuser %}<li><a class="dropdown-item" href="/admin/location/location/{{ location.id }}/change/">{% translate 'edit location'|title %} {% translate 'in admin'|title %}</a></li>{% endif %}
               {% endif %}
               {% comment %} {% if tag %}

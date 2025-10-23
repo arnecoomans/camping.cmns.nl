@@ -135,7 +135,7 @@ class StackView(FilterClass, ListView):
     queryset = Media.objects.filter(location__slug=self.kwargs['slug'])
     queryset = self.filter_status(queryset)
     queryset = self.filter_visibility(queryset)
-    return queryset
+    return queryset.distinct()
   
 class MediaStreamView(DetailView, FilterClass):
   model = Media

@@ -10,6 +10,7 @@ from django.conf import settings
 from .snippets.filter_class import FilterClass
 
 from location.models.Comment import Comment
+from location.models.Location import Location
 
 class AddComment(CreateView):
   model = Comment
@@ -32,7 +33,10 @@ class CommentListView(FilterClass, ListView):
 
   def get_queryset(self):
     queryset = Comment.objects.all()
+    locations = Location.objects.all()
+    locations = self.filter(locations)
     queryset = self.filter(queryset)
+    queryset = queryset.filter(location__in=locations.values_list('id', flat=True))
     queryset = queryset.order_by('-date_modified').distinct()
     return queryset
 
@@ -47,43 +51,10 @@ class CommentByUserListView(FilterClass, ListView):
       messages.add_message(self.request, messages.ERROR, f"{ _('can not find user') } { _('to list comments of') }.")
       return Comment.objects.none()
     queryset = Comment.objects.filter(user=user)
+    locations = Location.objects.all()
+    locations = self.filter(locations)
+    queryset = self.filter(queryset)
+    queryset = queryset.filter(location__in=locations.values_list('id', flat=True))
     queryset = self.filter(queryset)
     queryset = queryset.order_by('-date_modified').distinct()
     return queryset
-
-
-# class DeleteComment(UpdateView):
-#   model = Comment
-#   fields = ['status']
-
-#   def get(self, request, *args, **kwargs):
-#     comment = Comment.objects.get(pk=self.kwargs['pk'])
-#     ''' Only allow action from Comment User or Staff'''
-#     if comment.user == self.request.user or self.request.user.is_superuser():
-#       ''' Mark comment as deleted '''
-#       comment.status = 'x'
-#       messages.add_message(self.request, messages.SUCCESS, f"{ _('Comment') } \"{ comment }\"  { _('has been removed')}. <a href=\"{reverse('location:UndeleteComment', args=[comment.id])}\">{ _('Undo') }</a>.")
-#     else:
-#       ''' Share errormessage that the comment cannot be modified '''
-#       messages.add_message(self.request, messages.ERROR, f"{ _('Comment') } \"{ comment }\" { _('cannot be removed')}. { _('This is not your comment')}")
-#     comment.save()
-#     ''' Redirect to image, also listing comments '''
-#     return redirect('location:location', comment.location.slug)
-  
-# class UndeleteComment(UpdateView):
-#   model = Comment
-#   fields = ['status']
-
-#   def get(self, request, *args, **kwargs):
-#     comment = Comment.objects.get(pk=self.kwargs['pk'])
-#     ''' Only allow action from Comment User or Staff'''
-#     if comment.user == self.request.user or self.request.user.is_superuser():
-#       ''' Mark comment as deleted '''
-#       comment.status = 'p'
-#       messages.add_message(self.request, messages.SUCCESS, f"{ _('Comment') } \"{ comment }\"  { _('has been restored')}. <a href=\"{reverse('location:DeleteComment', args=[comment.id])}\">{ _('Undo') }</a>.")
-#     else:
-#       ''' Share errormessage that the comment cannot be modified '''
-#       messages.add_message(self.request, messages.ERROR, f"{ _('Comment') } \"{ comment }\" { _('cannot be removed')}. { _('This is not your comment')}")
-#     comment.save()
-#     ''' Redirect to image, also listing comments '''
-#     return redirect('location:location', comment.location.slug)

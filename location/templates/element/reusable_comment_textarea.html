@@ -1,4 +1,4 @@
-{% if perms.location.add_comment or perms.location.change_comment %}{% load static %}
+{% if user.is_authenticated %}{% load static %}
   <form>
     <textarea name="content" class="form-control" data-autoresize>{{ comment.content }}</textarea>
     <div class="input-group">

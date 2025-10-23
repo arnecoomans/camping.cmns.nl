@@ -49,7 +49,16 @@
         {% include 'field/descriptions.html' %}
       </div>
       <div class="spacer"></div>
-        
+      <!-- LOCATION DETAILS -->
+      {% if ajax.editable %}
+        <div id="visibility">
+          {% include 'field/location_visibility.html' %}
+        </div>
+        <div id="status">
+          {% include 'field/location_status.html' %}
+        </div>
+        <div class="spacer"></div>
+      {% endif %}
       <!-- Location Address Details -->
       <div id="address">
         {% include 'field/address.html' %}

@@ -6,6 +6,6 @@
   {% if location.region %}<a href="{% if location.isActivity %}{% url 'location:ListActivitiesByRegion' location.country.slug location.region.slug %}{% else %}{% url 'location:ListLocationsByRegion' location.country.slug location.region.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.region }}">{% translate location.region.name|title %}</a>,{% endif %}
   {% if location.country %}<a href="{% if location.isActivity %}{% url 'location:ListActivitiesByCountry' location.country %}{% else %}{% url 'location:ListLocationsByCountry' location.country %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'see all in'|capfirst %} {{ location.country }}">{% translate location.country.name|title %}</a>{% endif %}.
 {% endif %}
-{% if user.is_authenticated %}
+{% if user.is_authenticated and not ajax.editable %}
   {% translate 'viewable by'|capfirst %} {% translate location.get_visibility_display %}.
 {% endif %}

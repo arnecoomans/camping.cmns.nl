@@ -1,15 +1,17 @@
 {% load static %}{% load i18n %}
-  {% for comment in location.comments.all|filter_by_status|filter_by_visibility:request.user %}
-    <div id="comment-{{ comment.id }}">
-      {% include 'object/comment.html' %}
+{% for comment in location.comments.all|filter_by_status|filter_by_visibility:request.user %}
+  <div id="comment-{{ comment.id }}">
+    {% include 'object/comment.html' %}
+  </div>
+{% endfor %}
+{% if perms.location.add_comment or perms.location.change_comment %}
+  <div class="row">
+    <div class="col-3 title-col">
+        {% translate 'add comment'|capfirst %}:
     </div>
-  {% endfor %}
-<div class="row">
-  <div class="col-3 title-col">
-    {% translate 'add comment'|capfirst %}:
+    <div class="col-8">
+      {% include 'element/reusable_comment_textarea.html' with comment=new_comment %}
+    </div>
+    <div class="col-1 button-col"></div>
   </div>
-  <div class="col-8">
-    {% include 'element/reusable_comment_textarea.html' with comment=new_comment %}
-  </div>
-  <div class="col-1 button-col"></div>
-</div>
+{% endif %}

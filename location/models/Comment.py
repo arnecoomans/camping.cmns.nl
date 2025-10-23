@@ -11,7 +11,10 @@ class Comment(VisibilityModel, BaseModel):
   location            = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='comments')
 
   def __str__(self):
-    return f"{ self.user.get_full_name() if self.user.get_full_name() else self.user.username } { _('on') } {self.location.name}"
+    try:
+      return f"{ self.user.get_full_name() if self.user.get_full_name() else self.user.username } { _('on') } {self.location.name}"
+    except:
+      return f"Comment {self.id}"
 
   def get_absolute_url(self):
     return reverse_lazy('location:location',  kwargs={'slug': self.location.slug }) + '#comments'

@@ -1,6 +1,7 @@
 /** Location Header */
 div.card>header.withmedia,
-div.location>header.withmedia {
+div.location>header.withmedia,
+div.activity>header.withmedia {
   background-color: rgba(50,50,50,0.2);
   background-position: center center;
   background-repeat: no-repeat;
@@ -15,7 +16,11 @@ div.card>header.withmedia>span,
 div.location>header.withmedia>h1,
 div.location>header.withmedia>span,
 div.location>header.withmedia>div>h1,
-div.location>header.withmedia>div>span {
+div.location>header.withmedia>div>span,
+div.activity>header.withmedia>h1,
+div.activity>header.withmedia>span,
+div.activity>header.withmedia>div>h1,
+div.activity>header.withmedia>div>span {
   background-color: rgba(255, 255, 255, 0.6);
 }
 div.card>header>h1,

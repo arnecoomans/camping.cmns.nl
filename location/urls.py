@@ -47,6 +47,8 @@ urlpatterns = [
   path('search/<country>/<region>/', views.AllSearchView.as_view(), name='SearchByRegion'),
   path('search/<country>/<region>/<department>/', views.AllSearchView.as_view(), name='SearchByDepartment'),
 
+  path('s/<str:token>/', views.ShortLocationUrlView.as_view(), name='ShortLocation'),
+
   path('comment/add/', views.AddComment.as_view(), name='AddComment'),
   path('comment/<pk>/edit/', views.EditComment.as_view(), name='EditComment'),
   path('comments/', views.CommentListView.as_view(), name='comments'),

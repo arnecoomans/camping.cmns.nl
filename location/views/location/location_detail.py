@@ -1,9 +1,11 @@
+from django.http import Http404
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 
 from django.utils.translation import gettext as _
 from django.conf import settings
 from django.shortcuts import redirect
+from django.http import Http404
 
 # from ..snippets.filter_class import FilterClass
 from ..snippets.order_media import order_media
@@ -225,3 +227,22 @@ class LocationView(FilterMixin, ListView):
       return True
     ''' Check for maps permission in session '''
     return True if self.request.session.get('maps_permission', False) else False
+
+
+class ShortLocationUrlView(DetailView):
+  ''' Short Location URL View
+      This view handles short URLs for locations, redirecting to the full location detail page.
+      Example: /loc/short-slug/ redirects to /location/long-slug/
+  '''
+  model = Location
+  
+  def get_object(self, queryset = ...):
+    try:
+      object = Location.objects.get(token=self.kwargs['token'])
+      return object
+    except Location.DoesNotExist:
+      raise Http404
+
+  def get(self, request, *args, **kwargs):
+    self.object = self.get_object()
+    return redirect(self.object.get_absolute_url())

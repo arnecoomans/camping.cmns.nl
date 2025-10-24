@@ -158,7 +158,7 @@ class LocationAdmin(SlugDefaultAdmin):
     updated = queryset.update(visibility=new_visibility)
     self.message_user(request, f"Updated {updated} objects.", level=messages.SUCCESS)
   
-  readonly_fields = ["formatted_json"]
+  readonly_fields = ["formatted_json", "token"]
   def formatted_json(self, obj):
     """Pretty-print JSON data in a <pre> block for readability."""
     if not obj.cached_google:

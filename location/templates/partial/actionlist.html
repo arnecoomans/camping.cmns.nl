@@ -19,6 +19,14 @@
       <!-- Disliked -->
       <li><a href="#" class="toggable" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if location in user.profile.dislike.all %}{% translate "you don't like"|capfirst %}{% else %}{% translate 'dislike'|capfirst %}{% endif %} {% translate 'this location' %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}#666{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#heartbreak{% if location in user.profile.dislike.all %}-fill{% endif %}"/></svg></a></li>
     {% endif %} {% endcomment %}
+    <!-- Short Link -->
+
+    <li><a  href="{% url 'location:ShortLocation' location.token %}" data-action="copy"
+            data-text="https://{{ request.get_host }}{% url 'location:ShortLocation' location.token %}"
+            data-message="Short link to {{ location.name }} ({{ request.get_host }}{% url 'location:ShortLocation' location.token %}) copied"
+            data-bs-toggle="tooltip" 
+            data-bs-placement="top" 
+            title="{% translate 'copy short link to'|capfirst %} {{ location.name }}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#link-45deg"/></svg></a></li>
     <!-- Add media -->
     {% if perms.location.add_media %}
       <li><a href="{% url 'location:AddMediaToLocation' location.slug %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'add media to'|capfirst %} {% translate location.getCategory %}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#camera"/></svg></a>

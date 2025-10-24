@@ -24,6 +24,8 @@ from location.models.Location import Location, Size
 class LocationListMaster(FilterMixin, RequestMixin):
   template_name = 'location/location/location_list.html'
 
+  def get_show_all_statusses(self):
+    return True if self.request.GET.get('show_all_statusses', 'false').lower() == 'true' and self.request.user.is_authenticated else False
   def get_default_order(self):
     if hasattr(self.request.user, 'profile'):
       return self.request.user.profile.order
@@ -163,51 +165,11 @@ class LocationListMaster(FilterMixin, RequestMixin):
       Uses get_active_filters to determine filters that need to be processed
   '''
   def filter_queryset(self, queryset):
-    ''' Apply straight forward filters 
-        Map filters to search query or maximum of 2 search queries
-    '''
-    mapping = {
-      'country': 'location__parent__parent__slug__iexact',
-      'region': 'location__parent__slug__iexact',
-      'department': 'location__slug__iexact',
-      'category': ['category__slug__in', 'additional_category__slug__in'],
-      'tag': 'tags__slug__in',
-      'chain': ['chain__slug__in', 'chain__parent__slug__in'],
-      'visibility': 'visibility__in',
-      'size': 'size__slug__in',
-    }
     ''' Apply filters '''
-    queryset = self.filter(queryset)
-    # for field, map in mapping.items():
-    #   if self.get_active_filters(field):
-    #     if type(map) == str:
-    #       queryset = queryset.filter(**{map: self.get_active_filters(field)})
-    #     elif type(map) == list:
-    #       queryset = queryset.filter(**{map[0]: self.get_active_filters(field)}) | queryset.filter(**{map[1]: self.get_active_filters(field)})
-    #   ''' Apply filters that require login and a user with a profile '''
-    # if hasattr(self.request.user, 'profile'):
-    #   if self.get_active_filters('favorites'):
-    #     queryset = queryset.filter(favorite_of__user=self.request.user)
-    #   if self.get_active_filters('visited') == True:
-    #     queryset = queryset.filter(slug__in=self.request.user.visits.filter(status='p').values_list('location__slug', flat=True))
-    #   elif self.get_active_filters('visited'):
-    #     queryset = queryset.filter(slug__in=self.request.user.visits.filter(status='p', year=self.get_active_filters('visited')).values_list('location__slug', flat=True))
-    # ''' Free Text Search Filters '''
-    # if self.get_active_filters('q'):
-    #   query = self.get_active_filters('q')
-    #   for q in query:
-    #     queryset = queryset.filter(name__icontains=q) |\
-    #                queryset.filter(address__icontains=q) |\
-    #                queryset.filter(owners_names__icontains=q) |\
-    #                queryset.filter(descriptions__description=q) |\
-    #                queryset.filter(category__name__icontains=q) |\
-    #                queryset.filter(additional_category__name__icontains=q) |\
-    #                queryset.filter(chains__name__icontains=q) |\
-    #                queryset.filter(chains__parent__name__icontains=q) |\
-    #                queryset.filter(tags__name__icontains=q) |\
-    #                queryset.filter(location__name__icontains=q) |\
-    #                queryset.filter(location__parent__name__icontains=q) |\
-    #                queryset.filter(location__parent__parent__name__icontains=q)
+    if hasattr(self, 'search') and callable(getattr(self, 'search')):
+      queryset = self.search(queryset, suppress_search=False, allow_staff=self.get_show_all_statusses())
+
+    # queryset = self.filter(queryset, allow_staff=self.get_show_all_statusses())
     ''' Min and Max Distance '''
     if self.get_active_filters('dist_min'):
       queryset = queryset.filter(distance_to_departure_center__gt=self.get_active_filters('dist_min'))
@@ -261,7 +223,7 @@ class LocationListMaster(FilterMixin, RequestMixin):
     elif self.get_scope() == 'activities':
       queryset = queryset.filter(category__slug=settings.ACTIVITY_SLUG) | queryset.filter(category__parent__slug=settings.ACTIVITY_SLUG)
     ''' Visibility '''
-    queryset = self.filter_status(queryset)
+    queryset = self.filter_status(queryset, allow_staff=self.get_show_all_statusses())
     queryset = self.filter_visibility(queryset)
     ''' Filtering '''
     queryset = self.filter_queryset(queryset)

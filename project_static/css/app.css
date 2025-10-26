@@ -52,6 +52,12 @@ div#map {
 div#map > p:first-child {
   margin-top: 140px;
 }
+.location-revoked,
+.location-deleted {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
 /* HTML marker styles */
 /* .location-tag {
   background-color: #4285F4;

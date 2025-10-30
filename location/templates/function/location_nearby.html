@@ -1,0 +1,5 @@
+<h2>{% translate 'Nearby Locations' %}</h2>
+
+{% for loc in location.nearby %}
+  {% include 'snippets/location_flashcard.html' with location=loc %}
+{% endfor %}

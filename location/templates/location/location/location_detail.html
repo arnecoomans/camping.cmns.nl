@@ -179,25 +179,19 @@
       <!-- Comments -->
       <div class="comments card" id="comments">
         <div class="row">
-            <div class="col-12">
-              <h2>{% translate 'comments'|capfirst %}:</h2>
-            </div>
+          <div class="col-12">
+            <h2>{% translate 'comments'|capfirst %}:</h2>
           </div>
+        </div>
         {% include 'field/comments.html'%}
       </div>
 
       
 
       <!-- Nearby -->
-      {% if nearby_locations|length > 1%}
-        <div class="nearby card">
-          <h2>{% translate 'nearby'|capfirst %}</h2>
-          {% for location in nearby_locations %}
-            {% comment %} <li>{% include 'snippets/location_link.html' with location=location.0 %} ( {{ location.1|floatformat }} km)</a> {% endcomment %}
-            {% include 'snippets/location_flashcard.html' with location=location.0 distance=location.1 %}
-          {% endfor %}
-        </div>
-      {% endif %}
+      <div class="nearby locations card" id="nearby">
+        {% include 'function/location_nearby.html' %}
+      </div>
       {% endif %}
     {% endif %}
   </div>

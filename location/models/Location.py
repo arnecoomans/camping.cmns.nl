@@ -19,8 +19,12 @@ from html import escape
 from urllib.parse import urlparse
 from geopy import distance, exc
 from geopy.geocoders import GoogleV3
+from geopy.distance import geodesic
 
 from cmnsd.models.cmnsd_basemodel import BaseModel, VisibilityModel
+from cmnsd.models.cmnsd_basemethod import ajax_function
+from cmnsd.views.cmnsd_filter import FilterMixin
+
 # from .base_model import BaseModel
 from .Geo import Region
 from .Tag import Tag
@@ -63,7 +67,7 @@ class Link(VisibilityModel,BaseModel):
 
   def __str__(self) -> str:
     return self.get_title()
-    
+
   def get_title(self):
     if self.name:
       return self.name
@@ -166,7 +170,7 @@ class Size(BaseModel):
   
 ''' Location model
 '''
-class Location(VisibilityModel,BaseModel):
+class Location(FilterMixin, VisibilityModel,BaseModel):
   ''' Internal Identifier '''
   slug                = models.CharField(max_length=255, unique=True, help_text=f"{ _('Identifier in URL') } ({ _('automatically generated') })")
 
@@ -220,6 +224,21 @@ class Location(VisibilityModel,BaseModel):
     if self.location:
       self.location.calculate_average_distance_to_center()
     return super(Location, self).save(*args, **kwargs)
+
+  @ajax_function
+  def nearby(self, request=None, range=None):
+    range = range if range else getattr(settings, 'NEARBY_RANGE', 50)
+    all_locations = Location.objects.exclude(pk=self.id)
+    all_locations = self.filter(all_locations, request=request, suppress_search=True)
+    # all_locations = self.filter_visibility(all_locations)
+    nearby_locations = []
+    
+    for location in all_locations:
+      distance = geodesic((self.coord_lat, self.coord_lng), (location.coord_lat, location.coord_lng)).kilometers
+      if distance <= range:
+        nearby_locations.append((location, distance))
+    nearby_locations.sort(key=lambda x: x[1])
+    return [x[0] for x in nearby_locations]
 
   ''' Data Access Functions '''
   def addToChangelog(self, message):

@@ -188,10 +188,13 @@
 
       
 
-      <!-- Nearby -->
-      <div class="nearby locations card" id="nearby">
-        {% include 'function/location_nearby.html' %}
-      </div>
+        <!-- Nearby -->
+        {% if location.nearby %}
+          <div class="nearby locations card" id="nearby">
+            {% comment %} {% include 'function/location_nearby.html' %} {% endcomment %}
+          </div>
+        {% endif %}
+
       {% endif %}
     {% endif %}
   </div>
@@ -293,3 +296,11 @@
 
 
 {% block cmnsdInit %}{% endblock %}
+{% block cmnsdPostInit %}
+cmnsd.loadContent({
+  url: '{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'nearby' %}?range={% if user.is_authenticated %}50{% else %}20{% endif %}',
+  map: {
+    nearby: '#nearby',
+  }
+});
+{% endblock %}

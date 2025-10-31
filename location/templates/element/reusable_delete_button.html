@@ -1,4 +1,4 @@
-{% if ajax.editable %}
+{% if ajax.editable and perms.location.change_location %}
   <a href="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug field %}"
               data-action
               data-method="PATCH"

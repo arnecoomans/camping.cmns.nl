@@ -227,9 +227,11 @@ class Location(FilterMixin, VisibilityModel,BaseModel):
 
   @ajax_function
   def nearby(self, request=None, range=None):
+    range = self._get_value_from_request('range', default=None, silent=True, request=request)
     range = range if range else getattr(settings, 'NEARBY_RANGE', 50)
+    range = float(range)
     all_locations = Location.objects.exclude(pk=self.id)
-    all_locations = self.filter(all_locations, request=request, suppress_search=True)
+    all_locations = self.filter(all_locations, request=request, suppress_search=False)
     # all_locations = self.filter_visibility(all_locations)
     nearby_locations = []
     

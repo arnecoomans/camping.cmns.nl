@@ -1,7 +1,7 @@
 {% load static %}<div class="row">
   <div class="col-3 title-col">{% translate 'address'|title %}:</div>
   <div class="col-8">
-    {% if ajax.editable %}
+    {% if ajax.editable and perms.location.change_location %}
       <form class="cmnd-autosuggest"
           action="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'address' %}"
           data-action

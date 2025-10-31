@@ -191,6 +191,9 @@ class DescriptionAdmin(DefaultAdmin):
   list_display = ('description', 'visibility', 'location')
   pass
 
+class TagAdmin(SlugDefaultAdmin):
+  list_display = ['name', 'slug', 'visibility']
+
 class ProfileAdmin(DefaultAdmin):
   form = ProfileForm
 
@@ -225,7 +228,7 @@ admin.site.register(Location, LocationAdmin)
 admin.site.register(Chain, SlugDefaultAdmin)
 admin.site.register(Link, LinkAdmin)
 admin.site.register(Geo.Region, RegionAdmin)
-admin.site.register(Tag, SlugDefaultAdmin)
+admin.site.register(Tag, TagAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(List, SlugDefaultAdmin)
 admin.site.register(ListLocation, ListLocationAdmin)

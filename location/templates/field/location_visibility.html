@@ -1,4 +1,4 @@
-{% if user.is_authenticated %}{% load static %}
+{% if user.is_authenticated and perms.location.change_location%}{% load static %}
   <div class="row">
     <div class="col-3 title-col">{% translate 'visibility'|capfirst %}:</div>
     <div class="col-8">

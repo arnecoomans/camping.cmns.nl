@@ -6,7 +6,7 @@
 {% endfor %}
 {% if location.get_available_description_visibilities|length > 0 and user.is_authenticated and perms.location.change_location %}
   <div class="description card" id="description-new">
-    {% if ajax.add %}
+    {% if ajax.add and perms.location.change_location %}
       {% include 'element/reusable_description_textarea.html' with description=None location=location %}
     {% else %}
       <button type="button" 

@@ -7,9 +7,9 @@
     {% endif %}
     <!-- Visibility -->
     {% if location.visibility in 'f,q' %}
-      <li><a href="{% if location.isActivity %}{% url 'location:EditActivity' location.slug %}{% else %}{% url 'location:EditLocation' location.slug %}{% endif %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'viewable by'|capfirst %} {{ location.get_visibility_display }}">
+      <li>
         <svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}" ><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#{% if location.visibility == 'q' %}person{% else %}people{% endif %}"/></svg>
-      </a></li>
+      </li>
     {% endif %}
     
       <!-- Favorite -->

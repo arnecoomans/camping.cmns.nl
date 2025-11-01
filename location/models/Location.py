@@ -22,8 +22,9 @@ from geopy.geocoders import GoogleV3
 from geopy.distance import geodesic
 
 from cmnsd.models.cmnsd_basemodel import BaseModel, VisibilityModel
-from cmnsd.models.cmnsd_basemethod import ajax_function
+from cmnsd.models.cmnsd_basemethod import ajax_function, searchable_function
 from cmnsd.views.cmnsd_filter import FilterMixin
+from cmnsd.views.utils__request import RequestMixin
 
 # from .base_model import BaseModel
 from .Geo import Region
@@ -170,7 +171,7 @@ class Size(BaseModel):
   
 ''' Location model
 '''
-class Location(FilterMixin, VisibilityModel,BaseModel):
+class Location(RequestMixin, FilterMixin, VisibilityModel,BaseModel):
   ''' Internal Identifier '''
   slug                = models.CharField(max_length=255, unique=True, help_text=f"{ _('Identifier in URL') } ({ _('automatically generated') })")
 
@@ -241,6 +242,15 @@ class Location(FilterMixin, VisibilityModel,BaseModel):
         nearby_locations.append((location, distance))
     nearby_locations.sort(key=lambda x: x[1])
     return [x[0] for x in nearby_locations]
+
+  @ajax_function
+  @searchable_function
+  def visited(self, user=None, request=None):
+    if not user:
+      if not request or not request.user.is_authenticated:
+        return False
+      user = request.user
+    return self.visitors.filter(user=user).exists()
 
   ''' Data Access Functions '''
   def addToChangelog(self, message):

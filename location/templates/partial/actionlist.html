@@ -16,9 +16,9 @@
       <li id="favorite_of">{% include "field/location_favorite_of.html"%}</li>
       <li id="least_liked_of">{% include "field/location_least_liked_of.html"%}</li>
     <!-- Short Link -->
-    <li><a  href="{% url 'location:ShortLocation' location.token %}" data-action="copy"
-            data-text="https://{{ request.get_host }}{% url 'location:ShortLocation' location.token %}"
-            data-message="Short link to {{ location.name }} ({{ request.get_host }}{% url 'location:ShortLocation' location.token %}) copied"
+    <li><a  data-copy
+            data-text="https://{{ request.get_host }}{{ location.get_absolute_url }}"
+            data-message="Short link to {{ location.name }} ({{ request.get_host }}{{ location.get_absolute_url }}) copied"
             data-bs-toggle="tooltip" 
             data-bs-placement="top" 
             title="{% translate 'copy short link to'|capfirst %} {{ location.name }}"><svg class="bi" width="16" height="16" fill="{% if media|length > 0 %}white{% else %}currentColor{% endif %}"><use xlink:href="{% static 'bootstrap-icons/bootstrap-icons.svg' %}#link-45deg"/></svg></a></li>

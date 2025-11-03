@@ -3,7 +3,7 @@
   <div class="alert alert-warning" role="alert">
     {% translate 'all description visibilities have been used'|capfirst %}. {% translate 'please edit an existing description'|capfirst %}.
   </div>
-{% else if perms.location.change_location%}
+{% elif perms.location.change_location%}
   <form>
     <textarea name="descriptions__description" class="form-control" data-autoresize>{{ description.description }}</textarea>
     <div class="input-group">

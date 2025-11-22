@@ -227,6 +227,13 @@ class Location(RequestMixin, FilterMixin, VisibilityModel,BaseModel):
     return super(Location, self).save(*args, **kwargs)
 
   @ajax_function
+  def categories(self):
+    return {
+      'category': self.category,
+      'additional_category': self.additional_category,
+    }
+  
+  @ajax_function
   def nearby(self, request=None, range=None):
     range = self._get_value_from_request('range', default=None, silent=True, request=request)
     range = range if range else getattr(settings, 'NEARBY_RANGE', 50)

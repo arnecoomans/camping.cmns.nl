@@ -11,7 +11,8 @@
       data-action
       data-method="POST"
       data-body="form"
-      data-map='{"category":"#category", "additional_category":"#category"}'
+      data-refresh-url="{% url 'cmnsd:dispatch_field_of_object_by_id_and_slug' 'location' location.id location.slug 'categories' %}?editable"
+      data-refresh-map='{"categories":"#categories"}'
     >
       <div class="input-group">
         <input
@@ -23,7 +24,7 @@
           data-autosuggest
           data-url="{% url 'cmnsd:dispatch' 'categories'%}"
           data-param="{{ search_query_character}}"
-          data-extra-params='{"format":"json", "exclude": "locations__slug:{{ location.slug }}", "exclude": "slug:{{ activity_slug|default:"activity" }}"}'
+          data-extra-params='{"format":"json", "exclude": "locations__slug:{{ location.slug }}", "exclude": "slug:{{ activity_slug|default:"activity" }},slug:{{ location.category.slug }},{% for category in location.additional_category.all %}slug:{{ category.slug }}{% if not forloop.last %},{% endif %}{% endfor %}"}'
           data-container="category"
           data-field-input="name"
           data-field-hidden="slug"
@@ -37,5 +38,5 @@
   {% endif %}
 </div>
 <div class="col-1 button-col">
-  {% include 'element/reusable_edit_button.html' with field='category' %}
+  {% include 'element/reusable_edit_button.html' with field='categories' %}
 </div>

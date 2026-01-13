@@ -13,6 +13,9 @@ googlemaps >= 4.10.0
 # Markdown
 Markdown >= 3.9
 
+# Dateutil
+python-dateutil >= 2.9.0
+
 # Heic to JPG
 pillow-heif >= 1.1.0
 

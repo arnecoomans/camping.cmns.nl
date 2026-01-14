@@ -235,6 +235,11 @@ class Location(RequestMixin, FilterMixin, VisibilityModel,BaseModel):
   
   @ajax_function
   def nearby(self, request=None, range=None):
+    self.request = getattr(self, "request", request)
+    """ Return cached value """
+    if hasattr(self, '_nearby_cache'):
+      return self._nearby_cache
+    """ Calculate nearby locations within range (in kilometers) """
     range = self._get_value_from_request('range', default=None, silent=True, request=request)
     range = range if range else getattr(settings, 'NEARBY_RANGE', 50)
     range = float(range)
@@ -248,7 +253,8 @@ class Location(RequestMixin, FilterMixin, VisibilityModel,BaseModel):
       if distance <= range:
         nearby_locations.append((location, distance))
     nearby_locations.sort(key=lambda x: x[1])
-    return [x[0] for x in nearby_locations]
+    self._nearby_cache = [x[0] for x in nearby_locations]
+    return self._nearby_cache
 
   @ajax_function
   @searchable_function

@@ -294,6 +294,13 @@ class Location(RequestMixin, FilterMixin, VisibilityModel,BaseModel):
       if request:
         messages.add_message(request, messages.ERROR, mark_safe(message))
       return message
+    except Exception as e:
+      message = f"Unexpected error when fetching geodata for { self.name }"
+      if getattr(settings, 'DEBUG', False):
+        message += f": <br />{ e }"
+      if request:
+        messages.add_message(request, messages.ERROR, mark_safe(message))
+      return message
     ''' Store address from geolocation '''
     if hasattr(location, 'address') and location != None:
       self.addToChangelog(f"Changed address from { self.address } to { location.address }")
@@ -400,6 +407,13 @@ class Location(RequestMixin, FilterMixin, VisibilityModel,BaseModel):
       if request:
         messages.add_message(request, messages.ERROR, mark_safe(message))
       return message
+    except Exception as e:
+      message = f"Unexpected error when fetching geodata for { self.name }"
+      if getattr(settings, 'DEBUG', False):
+        message += f": <br />{ e }"
+      if request:
+        messages.add_message(request, messages.ERROR, mark_safe(message))
+      return message
     ''' Identify Region, department and country '''
     if location:
       self.cached_google = location.raw
@@ -411,25 +425,6 @@ class Location(RequestMixin, FilterMixin, VisibilityModel,BaseModel):
       region_slug     = data['region_slug']
       department      = data['department']
       department_slug = data['department_slug']
-      # for field in location.raw['address_components']:
-      #   if 'country' in field['types']:
-      #     country = field['long_name']
-      #     country_slug = field['short_name']
-      #   elif 'administrative_area_level_1' in field['types']:
-      #     region = field['long_name']
-      #     region_slug = field['short_name']
-      #   elif 'sublocality_level_1' in field['types']:
-      #     region = field['long_name']
-      #     region_slug = field['short_name']
-      #   elif 'administrative_area_level_2' in field['types']:
-      #     department = field['long_name']
-      #     department_slug = field['short_name']
-      #   elif 'administrative_area_level_3' in field['types']:
-      #     department = field['long_name']
-      #     department_slug = field['short_name']
-      #   elif 'locality' in field['types'] and 'political' in field['types']:
-      #     department = field['long_name']
-      #     department_slug = field['short_name']
         
       ''' Check if Country, Region and Department exists '''
       countryObject, created = Region.objects.get_or_create(

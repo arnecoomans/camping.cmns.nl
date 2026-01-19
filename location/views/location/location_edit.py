@@ -180,14 +180,14 @@ class AddLocation(CreateView):
         user=self.request.user,
       )
       messages.add_message(self.request, messages.SUCCESS, f"{ _('added new location') }: \"{ location.name }\"")
-      ''' Add description to location '''
-      description = self.request.POST.get('description', False)
-      if description:
-        object = Description.objects.get_or_create(description=description, defaults={
-                                              'user': self.request.user, 
-                                              'visibility': form.cleaned_data['visibility'] if 'visibility' in form.cleaned_data else 'c',
-                                            })
-        location.descriptions.add(object[0])
+      # ''' Add description to location '''
+      # description = self.request.POST.get('description', False)
+      # if description:
+      #   object = Description.objects.get_or_create(description=description, defaults={
+      #                                         'user': self.request.user, 
+      #                                         'visibility': form.cleaned_data['visibility'] if 'visibility' in form.cleaned_data else 'c',
+      #                                       })
+      #   location.descriptions.add(object[0])
       ''' Add link to Location 
           Link is a separate object, so we need to create it first
           Object has title, url, user and visibility

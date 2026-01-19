@@ -23,11 +23,11 @@
           <div class="col-9"><div id="namemessages"></div></div>
         </div>
         {% if not location %}
-          <!-- Description -->
+          {% comment %} <!-- Description -->
           <div class="row">
             <div class="col-3 title-col"><label for="description">{% translate 'description'|capfirst %}:</div>
             <div class="col-9"><textarea class="form-control" name="description" id="description" rows="8">{{ location.description }}</textarea></div>
-          </div>
+          </div> {% endcomment %}
           <!-- Link when creating a location -->
           <div class="row">
             <div class="col-3 title-col"><label for="link">{% translate 'website'|capfirst %}:</div>

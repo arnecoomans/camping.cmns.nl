@@ -44,7 +44,7 @@ class Description(VisibilityModel, BaseModel):
   
   def locs(self):
     return self.locations.all()
-    
+  
   class Meta:
     # 👇 ensure it's concrete
     abstract = False
@@ -145,11 +145,13 @@ class Location(RequestMixin, FilterMixin, VisibilityModel,BaseModel):
   @ajax_function
   @searchable_function
   def visited(self, user=None, request=None):
-    if not user:
-      if not request or not request.user.is_authenticated:
-        return False
-      user = request.user
-    return self.visitors.filter(user=user).exists()
+    if not hasattr(self, '_visited_cache'):
+      if not user:
+        if not request or not request.user.is_authenticated:
+          return False
+        user = request.user
+      self._visited_cache = self.visitors.filter(user=user).exists()
+    return self._visited_cache
 
   ''' Data Access Functions '''
   def addToChangelog(self, message):

@@ -181,9 +181,6 @@ class Location(RequestMixin, FilterMixin, VisibilityModel,BaseModel):
   phone               = models.CharField(max_length=32, null=True, blank=True)
   owners_names        = models.CharField(max_length=255, blank=True, help_text=_('Name of owner(s), if known'))
 
-  # description         = models.TextField(blank=True, help_text=_('Markdown is supported'))
-  # descriptions        = models.ManyToManyField(Description, blank=True, related_name='locations')
-
   links               = models.ManyToManyField(Link, blank=True, help_text=_('Add links to related websites, such as blogs refering to this location or review websites'))
   chains              = models.ManyToManyField(Chain, blank=True, related_name='locations')
 

@@ -242,7 +242,6 @@ class Location(RequestMixin, FilterMixin, VisibilityModel,BaseModel):
     range = float(range)
     all_locations = Location.objects.exclude(pk=self.id)
     all_locations = self.filter(all_locations, request=request, suppress_search=False)
-    # all_locations = self.filter_visibility(all_locations)
     nearby_locations = []
     
     for location in all_locations:

@@ -15,8 +15,8 @@ from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
-from html import escape
-from urllib.parse import urlparse
+# from html import escape
+# from urllib.parse import urlparse
 from geopy import distance, exc
 from geopy.geocoders import GoogleV3
 from geopy.distance import geodesic
@@ -29,120 +29,9 @@ from cmnsd.views.utils__request import RequestMixin
 # from .base_model import BaseModel
 from .Geo import Region
 from .Tag import Tag
-
-''' Location Chain model
-    When a location is part of a chain (mother company), it can be useful to locate other locations by the 
-    same chain. Since often services and level of quality are alike. 
-'''
-class Chain(models.Model):
-  ''' Internal Identifier '''
-  slug                = models.CharField(max_length=255, unique=True, help_text=f"{ _('Identifier in URL') } ({ _('automatically generated') })")
-
-  ''' Location information '''
-  name                = models.CharField(max_length=255, help_text=_('Name of location as it is identified by'))
-  website             = models.CharField(max_length=512, blank=True, help_text=_('Full website address of location'))
-  description         = models.TextField(blank=True, help_text=_('Markdown is supported'))
-
-  parent              = models.ForeignKey('self', null=True, blank=True, on_delete=models.DO_NOTHING, related_name='children')
-
-  ''' Record Meta information '''
-  date_added          = models.DateTimeField(editable=False, auto_now_add=True)
-  date_modified       = models.DateTimeField(editable=False, auto_now=True)
-  user                = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-
-  def __str__(self):
-    if self.parent:
-      return f"{ self.name } ({ self.parent })"
-    return self.name
-
-  def get_absolute_url(self):
-    return reverse_lazy('location:locations') + f"?chain={ self.slug }"
-  
-''' Links model
-    Any location may have multiple links related to the location, such as several review websites
-'''
-class Link(VisibilityModel,BaseModel):
-  name                = models.CharField(max_length=255, blank=True, help_text=_('Title of link, optional'))
-  url                 = models.CharField(max_length=512, unique=True, help_text=_('full url of link'))
-  primary             = models.BooleanField(default=False, help_text=_('primary link for location'))  
-
-  def __str__(self) -> str:
-    return self.get_title()
-
-  def get_title(self):
-    if self.name:
-      return self.name
-    hostname = self.hostname()
-    if 'google' in hostname:
-      ''' Google Maps results 
-          Return the search query as title
-          Search query is the string after /maps/search/
-      '''
-      if 'maps/' in self.url:
-        query = self.url.split('/')
-        counter = 0
-        for q in query:
-          if 'search' in q:
-            query = query[counter+1].replace('+', ' ').capitalize()
-            break
-          counter += 1
-        query = query if len(query) > 0 else _('search')
-        return f"{ query } on { hostname.capitalize() } Maps"
-      ''' Google search results 
-          Return the search query as title
-          Search query is the string after ?q=    
-      '''
-      query = urlparse(self.url).query
-      query = query.split('&')
-      for q in query:
-        if 'q=' in q:
-          query = q.replace('q=', '')
-          break
-      query = query if str(query) != "['']" else _('search').capitalize()
-      return f"{ query } on { hostname.capitalize() }"
-    return hostname
-  
-  def save(self, *args, **kwargs):
-    ''' Enforce URL to be correct '''
-    if not self.url.startswith('http://') and not self.url.startswith('https://'):
-      self.url = f"https://{ self.url }"
-    return super(Link, self).save(*args, **kwargs)
-    
-  def hostname(self):
-    if urlparse(self.url).hostname:
-      return urlparse(self.url).hostname.replace('www.', '')
-    elif self.url:
-      return self.url
-    return _('no url')
-  
-  class Meta:
-        ordering = ['-primary', 'url']
-
-''' Category model
-'''
-class Category(models.Model):
-  slug                = models.CharField(max_length=255, unique=True, help_text=f"{ _('Identifier in URL') } ({ _('automatically generated') })")
-  name                = models.CharField(max_length=255, help_text=_('Name of category'))
-  parent              = models.ForeignKey("self", on_delete=models.CASCADE, related_name='children', null=True, blank=True)
-  
-  ''' Record Meta information '''
-  date_added          = models.DateTimeField(editable=False, auto_now_add=True)
-  date_modified       = models.DateTimeField(editable=False, auto_now=True)
-  user                = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-
-  class Meta:
-    verbose_name_plural = 'categories'
-    ordering = ['parent__name', 'name']
-
-  def __str__(self) -> str:
-    if self.parent:
-      return f"{ self.parent.name }: { self.name }"
-    return self.name
-  
-  def get_absolute_url(self):
-    return reverse_lazy('location:locations') + f"?category={ self.slug }"
-  
-  js_template_name = 'categories'
+from .Chain import Chain
+from .Link import Link
+from .Category import Category
 
 
 ''' Description Model '''
@@ -155,6 +44,7 @@ class Description(VisibilityModel, BaseModel):
   
   def locs(self):
     return self.locations.all()
+  
   class Meta:
     # 👇 ensure it's concrete
     abstract = False
@@ -180,9 +70,6 @@ class Location(RequestMixin, FilterMixin, VisibilityModel,BaseModel):
   address             = models.CharField(max_length=512, blank=True, help_text=_('Full street address of location, including as much information as possible, such as city, region, country'))
   phone               = models.CharField(max_length=32, null=True, blank=True)
   owners_names        = models.CharField(max_length=255, blank=True, help_text=_('Name of owner(s), if known'))
-
-  # description         = models.TextField(blank=True, help_text=_('Markdown is supported'))
-  # descriptions        = models.ManyToManyField(Description, blank=True, related_name='locations')
 
   links               = models.ManyToManyField(Link, blank=True, help_text=_('Add links to related websites, such as blogs refering to this location or review websites'))
   chains              = models.ManyToManyField(Chain, blank=True, related_name='locations')
@@ -245,7 +132,6 @@ class Location(RequestMixin, FilterMixin, VisibilityModel,BaseModel):
     range = float(range)
     all_locations = Location.objects.exclude(pk=self.id)
     all_locations = self.filter(all_locations, request=request, suppress_search=False)
-    # all_locations = self.filter_visibility(all_locations)
     nearby_locations = []
     
     for location in all_locations:
@@ -259,11 +145,13 @@ class Location(RequestMixin, FilterMixin, VisibilityModel,BaseModel):
   @ajax_function
   @searchable_function
   def visited(self, user=None, request=None):
-    if not user:
-      if not request or not request.user.is_authenticated:
-        return False
-      user = request.user
-    return self.visitors.filter(user=user).exists()
+    if not hasattr(self, '_visited_cache'):
+      if not user:
+        if not request or not request.user.is_authenticated:
+          return False
+        user = request.user
+      self._visited_cache = self.visitors.filter(user=user).exists()
+    return self._visited_cache
 
   ''' Data Access Functions '''
   def addToChangelog(self, message):

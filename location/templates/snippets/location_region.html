@@ -1,0 +1,1 @@
+<a href="{% if location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}?location__parent__slug={{ location.region.slug }}">{% translate location.region.name %}</a>

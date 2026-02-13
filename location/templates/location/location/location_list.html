@@ -21,7 +21,7 @@
             <tr class="d-flex">
               <td class="col-12">
                 {% if location.department %}
-                  <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByCountry' location.country.slug %}{% else %}{% url 'location:ListLocationsByCountry' location.country.slug %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{% endif %}{% translate location.country.name|default:'n/a' %}{% if location.department %}</a>
+                  <a href="{% if location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}?location__parent__parent__slug={{ location.country.slug }}">{% translate location.country.name %}</a>
                 {% endif %}
               </td>
             </tr>
@@ -32,7 +32,7 @@
                 <td class="col-1"></td>
                 <td class="col-11">
                   {% if location.location %}
-                    <a href="{% if location.isActivity %}{% url 'location:ListActivitiesByRegion' location.country.slug location.region.slug %}{% else %}{% url 'location:ListLocationsByRegion' location.country.slug location.region.slug %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{% endif %}{% translate location.region.name %}{% if location.location %}</a>
+                    <a href="{% if location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}?location__parent__slug={{ location.region.slug }}">{% translate location.region.name %}</a>
                   {% endif %}
                 </td>
               </tr>
@@ -44,7 +44,7 @@
                 <td class="col-2"></td>
                 <td class="col-10">
                   {% if location.location %}
-                    <a href="{% if location.isActivity %}{% url 'location:ListLActivitiesByDepartment' location.country.slug location.region.slug location.department.slug %}{% else %}{% url 'location:ListLocationsByDepartment' location.country.slug location.region.slug location.department.slug %}{% endif %}{% include 'snippets/filter_url_queryparams.html' %}">{% endif %}{% translate location.department.name %}{% if location.location %}</a>
+                    <a href="{% if location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}?location__slug={{ location.department.slug }}">{% translate location.department.name %}</a>
                   {% endif %}
                 </td>
               </tr>

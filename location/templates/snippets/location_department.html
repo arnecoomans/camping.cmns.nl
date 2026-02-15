@@ -1,1 +1,1 @@
-<a href="{% if location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}?location__slug={{ location.department.slug }}">{% translate location.department.name %}</a>
+<a href="{% if location.isActivity %}{% url 'location:activities' %}{% else %}{% url 'location:locations' %}{% endif %}{% update_query_params request add=location.department.slug to='location__slug' %}">{% translate location.department.name %}</a>

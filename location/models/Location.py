@@ -122,6 +122,8 @@ class Location(RequestMixin, FilterMixin, VisibilityModel,BaseModel):
   
   @ajax_function
   def nearby(self, request=None, range=None):
+    if hasattr(self, '_nearby_cache'):
+      return self._nearby_cache
     self.request = getattr(self, "request", request)
     """ Return cached value """
     if hasattr(self, '_nearby_cache'):

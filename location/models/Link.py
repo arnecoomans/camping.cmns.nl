@@ -56,11 +56,14 @@ class Link(VisibilityModel,BaseModel):
     return super(Link, self).save(*args, **kwargs)
     
   def hostname(self):
-    if urlparse(self.url).hostname:
-      return urlparse(self.url).hostname.replace('www.', '')
-    elif self.url:
-      return self.url
-    return _('no url')
+    if not hasattr(self, '_hostname'):
+      if urlparse(self.url).hostname:
+        self._hostname = urlparse(self.url).hostname.replace('www.', '')
+      elif self.url:
+        self._hostname = self.url
+      else:
+        self._hostname = _('no url')
+    return self._hostname
   
   class Meta:
         ordering = ['-primary', 'url']

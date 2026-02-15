@@ -125,28 +125,38 @@ class List(VisibilityModel, BaseModel):
     return reverse_lazy("location:list", kwargs={"slug": self.slug})
   
   def getFilteredLocations(self):
-    return ListLocation.objects.filter(list__id=self.id, status='p')
+    if not hasattr(self, '_filtered_locations'):
+      self._filtered_locations = ListLocation.objects.filter(list__id=self.id, status='p')
+    return self._filtered_locations
 
   def getDistance(self):
-    distance = 0
-    for location in self.location.all():
-      if location.getDistanceToPrevious():
-        distance += location.getDataToPrevious().distance
-    return metersToKilometers(distance)
-  
+    if not hasattr(self, '_distance'):
+      distance = 0
+      for location in self.location.all():
+        if location.getDistanceToPrevious():
+          distance += location.getDataToPrevious().distance
+      self._distance = metersToKilometers(distance)
+    return self._distance
+
   def getTime(self):
-    time = 0
-    for location in self.location.all():
-      if location.getDistanceToPrevious():
-        time += location.getDataToPrevious().time
-    return secondsToTime(time)
+    if not hasattr(self, '_time'):
+      time = 0
+      for location in self.location.all():
+        if location.getDistanceToPrevious():
+          time += location.getDataToPrevious().time
+      self._time = secondsToTime(time)
+    return self._time
   
   def getNights(self):
-    return self.location.aggregate(Sum('nights'))['nights__sum']
+    if not hasattr(self, '_nights'):
+      self._nights = self.location.aggregate(Sum('nights'))['nights__sum']
+    return self._nights
   
   def getPrice(self):
-    return self.location.aggregate(Sum('price'))['price__sum']
-
+    if not hasattr(self, '_price'):
+      self._price = self.location.aggregate(Sum('price'))['price__sum']
+    return self._price
+  
 class ListLocation(VisibilityModel,BaseModel):
   list                = models.ForeignKey(List, related_name='locations', on_delete=models.CASCADE)
   location            = models.ForeignKey(Location, related_name='lists', on_delete=models.CASCADE)
@@ -176,32 +186,53 @@ class ListLocation(VisibilityModel,BaseModel):
     return reverse_lazy("location:list", kwargs={"slug": self.list.slug})
 
   def getPrevious(self):
-    return ListLocation.objects.filter(list=self.list, order__lte=self.order).exclude(pk=self.pk).filter(status='p').last()
+    if not hasattr(self, '_previous'):
+       self._previous = ListLocation.objects.filter(list=self.list, order__lte=self.order).exclude(pk=self.pk).filter(status='p').last()
+    return self._previous
   def getNext(self):
-    return ListLocation.objects.filter(list=self.list, order__gte=self.order).exclude(pk=self.pk).filter(status='p').first()
+    if not hasattr(self, '_next'):
+       self._next = ListLocation.objects.filter(list=self.list, order__gte=self.order).exclude(pk=self.pk).filter(status='p').first() 
+    return self._next
   def getPreviousLocation(self):
-    return ListLocation.objects.filter(list=self.list, order__lte=self.order).exclude(pk=self.pk).filter(status='p').exclude(location__category__parent__slug='activity').last()
+    if not hasattr(self, '_previous_location'):
+       self._previous_location = ListLocation.objects.filter(list=self.list, order__lte=self.order).exclude(pk=self.pk).filter(status='p').exclude(location__category__parent__slug='activity').last()
+    return self._previous_location
   def getNextLocation(self):
-    return ListLocation.objects.filter(list=self.list, order__gte=self.order).exclude(pk=self.pk).filter(status='p').exclude(location__category__parent__slug='activity').first()
+    if not hasattr(self, '_next_location'):
+       self._next_location = ListLocation.objects.filter(list=self.list, order__gte=self.order).exclude(pk=self.pk).filter(status='p').exclude(location__category__parent__slug='activity').first()
+    return self._next_location
   
   def getDataToPrevious(self):
-    if self.getPrevious():
-      data = ListDistance.objects.filter(origin__slug=self.getPrevious().location.slug, destination__slug=self.location.slug).last()
-      return data
+    if not hasattr(self, '_data_to_previous'):
+      self._data_to_previous = None
+      if self.getPrevious():
+        self._data_to_previous = ListDistance.objects.filter(origin__slug=self.getPrevious().location.slug, destination__slug=self.location.slug).last()
+      return self._data_to_previous
   def getDistanceToPrevious(self):
-    if self.getDataToPrevious():
-      return self.getDataToPrevious().getDistance()
+    if not hasattr(self, '_distance_to_previous'):
+      self._distance_to_previous = None
+      if self.getDataToPrevious():
+        self._distance_to_previous = self.getDataToPrevious().getDistance()
+      return self._distance_to_previous
   def getTimeToPrevious(self):
-    if self.getDataToPrevious():
-      return self.getDataToPrevious().getTime()
+    if not hasattr(self, '_time_to_previous'):
+      self._time_to_previous = None
+      if self.getDataToPrevious():
+        self._time_to_previous = self.getDataToPrevious().getTime()
+      return self._time_to_previous
   def getShortTimeToPrevious(self):
-    if self.getDataToPrevious():
-      return self.getDataToPrevious().getShortTime()
-
+    if not hasattr(self, '_short_time_to_previous'):
+      self._short_time_to_previous = None
+      if self.getDataToPrevious():
+        self._short_time_to_previous = self.getDataToPrevious().getShortTime()
+    return self._short_time_to_previous
   def getDataToPreviousLocation(self):
-    if self.getPreviousLocation():
-      data = ListDistance.objects.filter(origin__slug=self.getPreviousLocation().location.slug, destination__slug=self.location.slug).last()
-      return data
+    if not hasattr(self, '_data_to_previous_location'):
+      self._data_to_previous_location = None
+      if self.getPreviousLocation():
+        data = ListDistance.objects.filter(origin__slug=self.getPreviousLocation().location.slug, destination__slug=self.location.slug).last()
+        self._data_to_previous_location = data
+    return self._data_to_previous_location
   def getDistanceToPreviousLocation(self):
     if self.getDataToPreviousLocation():
       return self.getDataToPreviousLocation().getDistance()

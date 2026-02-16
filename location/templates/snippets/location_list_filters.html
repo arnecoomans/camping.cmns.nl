@@ -23,13 +23,13 @@
         {% if 'country' in active_filters or 'region' in active_filters or department in active_filters %}
           <li> 
             {% if 'country' in active_filters %}
-              <a href="{% url 'location:locations' %}{% update_query_params request av%}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location_list.first.country|default:active_filters.country|title }} {% translate 'from filter' %}">{% translate location_list.first.country.name|default:active_filters.country|title %}</a>
+              <a href="{% url 'location:locations' %}{% update_query_params request remove=active_filters.country to='location__parent__parent__slug' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location_list.first.country|default:active_filters.country|title }} {% translate 'from filter' %}">{% translate location_list.first.country.name|default:active_filters.country|title %}</a>
             {% endif %}
             {% if 'region' in active_filters %}
-              &gt; <a href="{% url 'location:ListLocationsByCountry' active_filters.country %}{% update_query_params request %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location_list.first.region|default:active_filters.region|title }} {% translate 'from filter' %}">{% translate location_list.first.region.name|default:active_filters.region|title %}</a>
+              &gt; <a href="{% url 'location:locations' %}{% update_query_params request remove=active_filters.region to='location__parent__slug' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location_list.first.region|default:active_filters.region|title }} {% translate 'from filter' %}">{% translate location_list.first.region.name|default:active_filters.region|title %}</a>
             {% endif %}
             {% if 'department' in active_filters %}
-              &gt; <a href="{% url 'location:ListLocationsByRegion' active_filters.country active_filters.region %}{% update_query_params request %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location_list.first.department|default:active_filters.department|title }} {% translate 'from filter' %}">{% translate location_list.first.department.name|default:active_filters.department|title %}</a>
+              &gt; <a href="{% url 'location:locations' %}{% update_query_params request remove=active_filters.department to='location__slug' %}" data-bs-toggle="tooltip" data-bs-placement="top" title="{% translate 'remove'|capfirst %} {{ location_list.first.department|default:active_filters.department|title }} {% translate 'from filter' %}">{% translate location_list.first.department.name|default:active_filters.department|title %}</a>
             {% endif %}
           </li>
         {% endif %}

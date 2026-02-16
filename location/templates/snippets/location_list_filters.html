@@ -78,19 +78,20 @@
         {% if available_filters.countries.all.count > 1 %}
           {% for country in available_filters.countries.all  %}
             {% if country.location__parent__parent__name %}
-              <a href="{% if scope == 'locations' %}{% url 'location:ListLocationsByCountry' country.location__parent__parent__slug %}{% elif scope == 'activities' %}{% url 'location:ListActivitiesByCountry' country.location__parent__parent__slug %}{% else %}{% url 'location:SearchByCountry' country.location__parent__parent__slug %}{% endif %}{% update_query_params request %}">{% translate country.location__parent__parent__name|title %}</a>{% if not forloop.last %}, {% endif %} 
+              <a href="{% if scope == 'locations' %}{% url 'location:locations' %}{% elif scope == 'activities' %}{% url 'location:activities' %}{% else %}{% url 'location:search' %}{% endif %}{% update_query_params request add=country.location__parent__parent__slug to='location__parent__parent__slug' %}">{% translate country.location__parent__parent__name|title %}</a>{% if not forloop.last %}, {% endif %} 
             {% endif %}
           {% endfor %}
         {% elif available_filters.regions.all.count > 1 %}
           {% for region in available_filters.regions.all %}
             {% if region.location__parent__name %}
-              <a href="{% if scope == 'locations' %}{% url 'location:ListLocationsByRegion' available_filters.countries.first.location__parent__parent__slug region.location__parent__slug %}{% elif scope == 'activities' %}{% url 'location:ListActivitiesByRegion' available_filters.countries.first.location__parent__parent__slug region.location__parent__slug %}{% else %}{% url 'location:SearchByRegion' available_filters.countries.first.location__parent__parent__slug region.location__parent__slug %}{% endif %}{% update_query_params request %}">{% translate region.location__parent__name|title %}</a>{% if not forloop.last %}, {% endif %} 
+              <a href="{% if scope == 'locations' %}{% url 'location:locations' %}{% elif scope == 'activities' %}{% url 'location:activities' %}{% else %}{% url 'location:search' %}{% endif %}{% update_query_params request add=region.location__parent__slug to='location__parent__slug' %}">{% translate region.location__parent__name|title %}</a>{% if not forloop.last %}, {% endif %} 
             {% endif %}
           {% endfor %}
         {% elif available_filters.departments.all.count > 1%}
           {% for department in available_filters.departments.all %}
             {% if department.location__name %}
-              <a href="{% if scope == 'locations' %}{% url 'location:ListLocationsByDepartment' available_filters.countries.first.location__parent__parent__slug available_filters.regions.first.location__parent__slug department.location__slug%}{% elif scope == 'activities' %}{% url 'location:ListLActivitiesByDepartment' available_filters.countries.first.location__parent__parent__slug available_filters.regions.first.location__parent__slug department.location__slug %}{% else %}{% url 'location:SearchByDepartment' available_filters.countries.first.location__parent__parent__slug available_filters.regions.first.location__parent__slug department.location__slug %}{% endif %}{% update_query_params request %}">{% translate department.location__name|title %}</a>{% if not forloop.last %}, {% endif %} 
+              <a href="{% if scope == 'locations' %}{% url 'location:locations' %}{% elif scope == 'activities' %}{% url 'location:activities' %}{% else %}{% url 'location:search' %}{% endif %}{% update_query_params request add=department.location__slug to='location__slug' %}">{% translate department.location__slug|title %}</a>{% if not forloop.last %}, {% endif %} 
+              {% comment %} <a href="{% if scope == 'locations' %}{% url 'location:ListLocationsByDepartment' available_filters.countries.first.location__parent__parent__slug available_filters.regions.first.location__parent__slug department.location__slug%}{% elif scope == 'activities' %}{% url 'location:ListLActivitiesByDepartment' available_filters.countries.first.location__parent__parent__slug available_filters.regions.first.location__parent__slug department.location__slug %}{% else %}{% url 'location:SearchByDepartment' available_filters.countries.first.location__parent__parent__slug available_filters.regions.first.location__parent__slug department.location__slug %}{% endif %}{% update_query_params request %}">{% translate department.location__name|title %}</a>{% if not forloop.last %}, {% endif %}  {% endcomment %}
             {% endif %}
           {% endfor %}
         {% endif %}

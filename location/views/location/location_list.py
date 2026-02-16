@@ -44,12 +44,12 @@ class LocationListMaster(FilterMixin, RequestMixin):
     else:
       self.active_filters = {}
       ''' Fetch Active Filters '''
-      ''' Kwargs filters 
-          are part of the url structure and defined in urls.py
-      '''
-      for field in ['country', 'region', 'department', ]:
-        if field in self.kwargs:
-          self.active_filters[field] = self.kwargs[field]
+      # ''' Kwargs filters 
+      #     are part of the url structure and defined in urls.py
+      # '''
+      # for field in ['country', 'region', 'department', ]:
+      #   if field in self.kwargs:
+      #     self.active_filters[field] = self.kwargs[field]
       ''' Query filters
           are part of the request but not part of the url
       '''
@@ -62,6 +62,15 @@ class LocationListMaster(FilterMixin, RequestMixin):
           ''' Strip whitespaces for all items in list'''
           value = [word.strip() for word in value]
           self.active_filters[field] = value
+      ''' Query Alias Filters '''
+      aliasses = {
+        'location__parent__parent__slug': 'country',
+        'location__parent__slug': 'region',
+        'location__slug': 'department',
+      }
+      for key, value in aliasses.items():
+        if self.request.GET.get(key, False):
+          self.active_filters[value] = self.request.GET.get(key, '').split(',')
       ''' Boolean filters 
           If query is mentioned in query without value, it should be set as True
           If the query has a value, the value should be set
